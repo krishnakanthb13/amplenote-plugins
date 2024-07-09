@@ -1,7 +1,7 @@
 ﻿---
 title: Timestamp
 uuid: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce
-version: 479
+version: 692
 created: '2024-07-08T14:42:30+05:30'
 tags:
   - '-location/amplenote/plugins'
@@ -9,12 +9,20 @@ tags:
 
 | | |
 |-|-|
-|name|Timestamp<!-- {"cell":{"colwidth":474}} -->|
-|icon|update<!-- {"cell":{"colwidth":474}} -->|
-|description|Different types of Timestamps. Every variety that you can think of.<!-- {"cell":{"colwidth":474}} -->|
-|instructions|<!-- {"cell":{"colwidth":474}} -->|
-|setting|date format<!-- {"cell":{"colwidth":474}} -->|
-1. Timestamp: Digital <mark style="color:#E5569E;">\[Fully customizable options available! Play around with the date formats and enjoy Timestamping your Notes.\]<!-- {"cycleColor":"32"} --></mark>
+|name<!-- {"cell":{"colwidth":116}} -->|Timestamp<!-- {"cell":{"colwidth":474}} -->|
+|icon<!-- {"cell":{"colwidth":116}} -->|update<!-- {"cell":{"colwidth":474}} -->|
+|description<!-- {"cell":{"colwidth":116}} -->|Different types of Timestamps. Every variety that you can think of.<!-- {"cell":{"colwidth":474}} -->|
+|instructions<!-- {"cell":{"colwidth":116}} -->|<!-- {"cell":{"colwidth":474}} -->|
+|setting<!-- {"cell":{"colwidth":116}} -->|timestamp for numeric - structure<!-- {"cell":{"colwidth":474}} -->|
+|setting<!-- {"cell":{"colwidth":116}} -->|timestamp text - pre script<!-- {"cell":{"colwidth":219}} -->|
+|setting<!-- {"cell":{"colwidth":116}} -->|timestamp text - post script<!-- {"cell":{"colwidth":219}} -->|
+1. <mark>Timestamp: Digital</mark> 
+
+    1. <mark style="color:#E5569E;">For Whom: \[Fully customizable options available! Play around with the date formats and enjoy Timestamping your Notes.\]<!-- {"cycleColor":"32"} --></mark>
+
+        1. <mark style="color:#9AD62A;">(Use cases, are limitless, all the options that a Time can give you!<!-- {"cycleColor":"26"} --></mark>
+
+    1. <mark style="color:#F8D616;">How To:<!-- {"cycleColor":"25"} --></mark> 
 
     1. [List of Options][^1] 
 
@@ -22,279 +30,436 @@ tags:
 
     1. [Code Explanation][^3] 
 
-1. Timestamp: Analog
+1. <mark>Timestamp: Analog</mark>
 
-1. Timestamp: Text
+    1. <mark style="color:#E5569E;">For Whom: \[This version is for them who are used to check the ticking hands to tell them the time.\]<!-- {"cycleColor":"32"} --></mark>
 
-1. Timestamp: Unix
+        1. <mark style="color:#9AD62A;">(Use cases, if you are used to the Analog-ness and only a hand position can make you visualize the spatial gap to the next quarter or half of the day and feel the time)<!-- {"cycleColor":"26"} --></mark>
+
+    1. <mark style="color:#F8D616;">How To:<!-- {"cycleColor":"25"} --></mark> 
+
+1. <mark>Timestamp: Text</mark> 
+
+    1. <mark style="color:#E5569E;">For Whom: \[This version is for them who like to read time through text more than skimming numbers.\]<!-- {"cycleColor":"32"} --></mark>
+
+        1. <mark style="color:#9AD62A;">(Very useful if you are like me, someone used to hearing the time or someone telling you the time!)<!-- {"cycleColor":"26"} --></mark>
+
+    1. <mark style="color:#F8D616;">How To:<!-- {"cycleColor":"25"} --></mark> 
+
+1. <mark>Timestamp: Unix</mark> 
+
+    1. <mark style="color:#E5569E;">For Whom: \[Straight forward, just enters the Timestamp in Unix Format. If you need it!\]<!-- {"cycleColor":"32"} --></mark>
+
+        1. <mark style="color:#9AD62A;">(Use cases may be, creating a Unique number to search for, instead of words!)<!-- {"cycleColor":"26"} --></mark>
+
+    1. <mark style="color:#F8D616;">How To:<!-- {"cycleColor":"25"} --></mark> 
 
 
-  ```
-  {
-      insertText: {
-        "Digital": async function(app) {
-              // -------------------- Utility Function: Count Characters --------------------
-              function countChar(str, char) {
-                let count = 0;
-                for (let i = 0; i < str.length; i++) {
-                  if (str[i] === char) {
-                    count++;
+      ```
+      {
+          insertText: {
+      
+              "Digital": async function(app) {
+                  // -------------------- Utility Function: Count Characters --------------------
+                  function countChar(str, char) {
+                      let count = 0;
+                      for (let i = 0; i < str.length; i++) {
+                          if (str[i] === char) {
+                              count++;
+                          }
+                      }
+                      return count;
                   }
-                }
-                return count;
-              }
-            
-              // -------------------- Function: Format Date --------------------
-              // Main function to format date strings based on the provided format
-              function formatDate(dateString, dateObj) {
-                // Define various parts of the date
-                const year = dateObj.getFullYear().toString();
-                const yearShort = year.slice(-2);
-                const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-                const monthFull = getMonthFull(dateObj.getMonth());
-                const monthAbbreviation = getMonthAbbreviation(dateObj.getMonth());
-                const day = dateObj.getDate().toString().padStart(2, '0');
-                const daySuffix = getDaySuffix(day);
-                const hours12 = (dateObj.getHours() % 12 || 12).toString().padStart(2, '0');
-                const hours24 = dateObj.getHours().toString().padStart(2, '0');
-                const minutes = dateObj.getMinutes().toString().padStart(2, '0');
-                const minutesFraction = (dateObj.getMinutes() / 60).toFixed(2);
-                const seconds = dateObj.getSeconds().toString().padStart(2, '0');
-                const milliseconds = dateObj.getMilliseconds().toString().padStart(3, '0');
-                const ampmText = dateObj.getHours() < 12 ? 'AM' : 'PM';
-                const timeZoneOffset = getTimeZoneOffset(dateObj);
-                const timeZoneComplete = getTimeZoneComplete(dateObj);
-                const timeZoneOffsetHHMM = getTimeZoneOffsetHHMM(dateObj);
-                const timeZoneAbbreviation = getTimeZoneAbbreviation(dateObj);
-                const timeZoneOffsetTime = getTimeZoneOffsetTime(dateObj);
-                const hours24PlusMinutes = (parseInt(hours24) + parseFloat(minutesFraction)).toFixed(2);
-                const hours12PlusMinutes = (parseInt(hours12) + parseFloat(minutesFraction)).toFixed(2);
-                const dayOfWeek = getDayOfWeek(dateObj);
-                const dayOfWeekShort = getDayOfWeekShort(dateObj);
-                const dayOfWeekNumberSunday = getDayOfWeekNumber(dateObj, 'Sunday');
-                const dayOfWeekNumberMonday = getDayOfWeekNumber(dateObj, 'Monday');
-                const weekOfYearNumber = getWeekOfYearNumber(dateObj);
-                const dayOfYear = getDayOfYear(dateObj);
-                let formattedString = '';
-            
-                // -------------------- Helper Function: Get Full Month Name --------------------
-                function getMonthFull(month) {
-                  const monthsFull = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                  ];
-                  return monthsFull[month];
-                }
-            
-                // -------------------- Helper Function: Get Month Abbreviation --------------------
-                function getMonthAbbreviation(month) {
-                  const monthsAbbreviations = [
-                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                  ];
-                  return monthsAbbreviations[month];
-                }
-            
-                // -------------------- Helper Function: Get Day Suffix --------------------
-                function getDaySuffix(day) {
-                  if (day >= 11 && day <= 13) {
-                    return 'th';
+      
+                  // -------------------- Function: Format Date --------------------
+                  // Main function to format date strings based on the provided format
+                  function formatDate(dateString, dateObj) {
+                      // Define various parts of the date
+                      const year = dateObj.getFullYear().toString();
+                      const yearShort = year.slice(-2);
+                      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+                      const monthFull = getMonthFull(dateObj.getMonth());
+                      const monthAbbreviation = getMonthAbbreviation(dateObj.getMonth());
+                      const day = dateObj.getDate().toString().padStart(2, '0');
+                      const daySuffix = getDaySuffix(day);
+                      const hours12 = (dateObj.getHours() % 12 || 12).toString().padStart(2, '0');
+                      const hours24 = dateObj.getHours().toString().padStart(2, '0');
+                      const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+                      const minutesFraction = (dateObj.getMinutes() / 60).toFixed(2);
+                      const seconds = dateObj.getSeconds().toString().padStart(2, '0');
+                      const milliseconds = dateObj.getMilliseconds().toString().padStart(3, '0');
+                      const ampmText = dateObj.getHours() < 12 ? 'AM' : 'PM';
+                      const timeZoneOffset = getTimeZoneOffset(dateObj);
+                      const timeZoneComplete = getTimeZoneComplete(dateObj);
+                      const timeZoneOffsetHHMM = getTimeZoneOffsetHHMM(dateObj);
+                      const timeZoneAbbreviation = getTimeZoneAbbreviation(dateObj);
+                      const timeZoneOffsetTime = getTimeZoneOffsetTime(dateObj);
+                      const hours24PlusMinutes = (parseInt(hours24) + parseFloat(minutesFraction)).toFixed(2);
+                      const hours12PlusMinutes = (parseInt(hours12) + parseFloat(minutesFraction)).toFixed(2);
+                      const dayOfWeek = getDayOfWeek(dateObj);
+                      const dayOfWeekShort = getDayOfWeekShort(dateObj);
+                      const dayOfWeekNumberSunday = getDayOfWeekNumber(dateObj, 'Sunday');
+                      const dayOfWeekNumberMonday = getDayOfWeekNumber(dateObj, 'Monday');
+                      const weekOfYearNumber = getWeekOfYearNumber(dateObj);
+                      const dayOfYear = getDayOfYear(dateObj);
+                      let formattedString = '';
+      
+                      // -------------------- Helper Function: Get Full Month Name --------------------
+                      function getMonthFull(month) {
+                          const monthsFull = [
+                              'January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'
+                          ];
+                          return monthsFull[month];
+                      }
+      
+                      // -------------------- Helper Function: Get Month Abbreviation --------------------
+                      function getMonthAbbreviation(month) {
+                          const monthsAbbreviations = [
+                              'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                          ];
+                          return monthsAbbreviations[month];
+                      }
+      
+                      // -------------------- Helper Function: Get Day Suffix --------------------
+                      function getDaySuffix(day) {
+                          if (day >= 11 && day <= 13) {
+                              return 'th';
+                          }
+                          switch (day % 10) {
+                              case 1:
+                                  return 'st';
+                              case 2:
+                                  return 'nd';
+                              case 3:
+                                  return 'rd';
+                              default:
+                                  return 'th';
+                          }
+                      }
+      
+                      // -------------------- Helper Function: Get Time Zone Offset --------------------
+                      function getTimeZoneOffset(date) {
+                          const offsetMinutes = date.getTimezoneOffset();
+                          const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60).toString().padStart(2, '0');
+                          const offsetMinutesFormatted = (Math.abs(offsetMinutes) % 60).toString().padStart(2, '0');
+                          const sign = offsetMinutes <= 0 ? '+' : '-';
+                          return `${sign}${offsetHours}:${offsetMinutesFormatted}`;
+                      }
+      
+                      // -------------------- Helper Function: Get Full Time Zone Info --------------------
+                      function getTimeZoneComplete() {
+                          const dateString = new Date().toString();
+                          const abbreviation = dateString.match(/([A-Z]+[\+-][0-9]+.*)/)[1];
+                          return abbreviation || 'Unknown TZ';
+                      }
+      
+                      // -------------------- Helper Function: Get Time Zone Offset HHMM --------------------
+                      function getTimeZoneOffsetHHMM() {
+                          const dateString = new Date().toString();
+                          const abbreviation = dateString.match(/([A-Z]+[\+-][0-9]+)/)[1];
+                          return abbreviation || 'Unknown TZ';
+                      }
+      
+                      // -------------------- Helper Function: Get Time Zone Abbreviation --------------------
+                      function getTimeZoneAbbreviation() {
+                          const dateString = new Date().toString();
+                          const abbreviation = dateString.match(/\(([A-Za-z\s].*)\)/)[1];
+                          return abbreviation || 'Unknown TZ';
+                      }
+      
+                      // -------------------- Helper Function: Get Time Zone Offset Time --------------------
+                      function getTimeZoneOffsetTime() {
+                          const dateString = new Date().toString();
+                          const abbreviation = dateString.match(/([-\+][0-9]+)\s/)[1];
+                          return abbreviation || 'Unknown TZ';
+                      }
+      
+                      // -------------------- Helper Function: Get Day of the Week --------------------
+                      function getDayOfWeek(date) {
+                          const daysOfWeek = [
+                              'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+                          ];
+                          return daysOfWeek[date.getDay()];
+                      }
+      
+                      // -------------------- Helper Function: Get Short Day of the Week --------------------
+                      function getDayOfWeekShort(date) {
+                          const daysOfWeekShort = [
+                              'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+                          ];
+                          return daysOfWeekShort[date.getDay()];
+                      }
+      
+                      // -------------------- Helper Function: Get Day of the Week Number --------------------
+                      function getDayOfWeekNumber(date, startDay) {
+                          const day = date.getDay();
+                          return startDay === 'Monday' ? (day === 0 ? 7 : day) : day + 1;
+                      }
+      
+                      // -------------------- Helper Function: Get Week of the Year Number --------------------
+                      function getWeekOfYearNumber(date) {
+                          const start = new Date(date.getFullYear(), 0, 1);
+                          const diff = (date - start + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60000)) / 86400000;
+                          return Math.ceil((diff + start.getDay() + 1) / 7);
+                      }
+      
+                      // -------------------- Helper Function: Get Day of the Year --------------------
+                      function getDayOfYear(date) {
+                          const start = new Date(date.getFullYear(), 0, 0);
+                          const diff = (date - start + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60000)) / 86400000;
+                          return Math.floor(diff);
+                      }
+      
+                      // -------------------- Building the Formatted String --------------------
+                      for (let i = 0; i < dateString.length; i++) {
+                          switch (dateString[i]) {
+                              case 'Y':
+                                  formattedString += year;
+                                  break;
+                              case 'y':
+                                  formattedString += yearShort;
+                                  break;
+                              case 'm':
+                                  formattedString += month;
+                                  break;
+                              case 'b':
+                                  formattedString += monthAbbreviation;
+                                  break;
+                              case 'M':
+                                  formattedString += monthFull;
+                                  break;
+                              case 'd':
+                                  formattedString += day;
+                                  break;
+                              case 'o':
+                                  formattedString += daySuffix;
+                                  break;
+                              case 'h':
+                                  formattedString += hours12;
+                                  break;
+                              case 'H':
+                                  formattedString += hours24;
+                                  break;
+                              case 'n':
+                                  formattedString += minutes;
+                                  break;
+                              case 'N':
+                                  formattedString += minutesFraction;
+                                  break;
+                              case 's':
+                                  formattedString += seconds;
+                                  break;
+                              case 'S':
+                                  formattedString += milliseconds;
+                                  break;
+                              case 'A':
+                                  formattedString += ampmText;
+                                  break;
+                              case 'I':
+                                  formattedString += hours24PlusMinutes;
+                                  break;
+                              case 'i':
+                                  formattedString += hours12PlusMinutes;
+                                  break;
+                              case 'V':
+                                  formattedString += timeZoneOffset;
+                                  break;
+                              case 'x':
+                                  formattedString += timeZoneOffsetHHMM;
+                                  break;
+                              case 'z':
+                                  formattedString += timeZoneOffsetTime;
+                                  break;
+                              case 'B':
+                                  formattedString += timeZoneComplete;
+                                  break;
+                              case 't':
+                                  formattedString += timeZoneAbbreviation;
+                                  break;
+                              case 'C':
+                                  formattedString += dayOfWeek;
+                                  break;
+                              case 'c':
+                                  formattedString += dayOfWeekShort;
+                                  break;
+                              case 'U':
+                                  formattedString += dayOfWeekNumberSunday;
+                                  break;
+                              case 'u':
+                                  formattedString += dayOfWeekNumberMonday;
+                                  break;
+                              case 'K':
+                                  formattedString += weekOfYearNumber;
+                                  break;
+                              case 'J':
+                                  formattedString += dayOfYear;
+                                  break;
+                              default:
+                                  formattedString += dateString[i];
+                                  break;
+                          }
+                      }
+      
+                      return formattedString;
                   }
-                  switch (day % 10) {
-                    case 1:
-                      return 'st';
-                    case 2:
-                      return 'nd';
-                    case 3:
-                      return 'rd';
-                    default:
-                      return 'th';
+      
+                  // -------------------- Main Process --------------------
+                  // Get settings from the main application and create the time stamp
+                  let formatString = String(app.settings["timestamp for numeric - structure"]);
+                  let today = new Date();
+                  let timeStamp = formatDate(formatString, today);
+                  return timeStamp;
+      
+              },
+              "Analog": async function(app) {},
+              "Text": async function(app) {
+      
+                  // -------------------- Utility Function: Count Characters --------------------
+                  function countChar(str, char) {
+                      let count = 0;
+                      for (let i = 0; i < str.length; i++) {
+                          if (str[i] === char) {
+                              count++;
+                          }
+                      }
+                      return count;
                   }
-                }
-            
-                // -------------------- Helper Function: Get Time Zone Offset --------------------
-                function getTimeZoneOffset(date) {
-                  const offsetMinutes = date.getTimezoneOffset();
-                  const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60).toString().padStart(2, '0');
-                  const offsetMinutesFormatted = (Math.abs(offsetMinutes) % 60).toString().padStart(2, '0');
-                  const sign = offsetMinutes <= 0 ? '+' : '-';
-                  return `${sign}${offsetHours}:${offsetMinutesFormatted}`;
-                }
-            
-                // -------------------- Helper Function: Get Full Time Zone Info --------------------
-                function getTimeZoneComplete() {
-                  const dateString = new Date().toString();
-                  const abbreviation = dateString.match(/([A-Z]+[\+-][0-9]+.*)/)[1];
-                  return abbreviation || 'Unknown TZ';
-                }
-            
-                // -------------------- Helper Function: Get Time Zone Offset HHMM --------------------
-                function getTimeZoneOffsetHHMM() {
-                  const dateString = new Date().toString();
-                  const abbreviation = dateString.match(/([A-Z]+[\+-][0-9]+)/)[1];
-                  return abbreviation || 'Unknown TZ';
-                }
-            
-                // -------------------- Helper Function: Get Time Zone Abbreviation --------------------
-                function getTimeZoneAbbreviation() {
-                  const dateString = new Date().toString();
-                  const abbreviation = dateString.match(/\(([A-Za-z\s].*)\)/)[1];
-                  return abbreviation || 'Unknown TZ';
-                }
-            
-                // -------------------- Helper Function: Get Time Zone Offset Time --------------------
-                function getTimeZoneOffsetTime() {
-                  const dateString = new Date().toString();
-                  const abbreviation = dateString.match(/([-\+][0-9]+)\s/)[1];
-                  return abbreviation || 'Unknown TZ';
-                }
-            
-                // -------------------- Helper Function: Get Day of the Week --------------------
-                function getDayOfWeek(date) {
-                  const daysOfWeek = [
-                    'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
-                  ];
-                  return daysOfWeek[date.getDay()];
-                }
-            
-                // -------------------- Helper Function: Get Short Day of the Week --------------------
-                function getDayOfWeekShort(date) {
-                  const daysOfWeekShort = [
-                    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
-                  ];
-                  return daysOfWeekShort[date.getDay()];
-                }
-            
-                // -------------------- Helper Function: Get Day of the Week Number --------------------
-                function getDayOfWeekNumber(date, startDay) {
-                  const day = date.getDay();
-                  return startDay === 'Monday' ? (day === 0 ? 7 : day) : day + 1;
-                }
-            
-                // -------------------- Helper Function: Get Week of the Year Number --------------------
-                function getWeekOfYearNumber(date) {
-                  const start = new Date(date.getFullYear(), 0, 1);
-                  const diff = (date - start + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60000)) / 86400000;
-                  return Math.ceil((diff + start.getDay() + 1) / 7);
-                }
-            
-                // -------------------- Helper Function: Get Day of the Year --------------------
-                function getDayOfYear(date) {
-                  const start = new Date(date.getFullYear(), 0, 0);
-                  const diff = (date - start + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60000)) / 86400000;
-                  return Math.floor(diff);
-                }
-            
-                // -------------------- Building the Formatted String --------------------
-                for (let i = 0; i < dateString.length; i++) {
-                  switch (dateString[i]) {
-                    case 'Y':
-                      formattedString += year;
-                      break;
-                    case 'y':
-                      formattedString += yearShort;
-                      break;
-                    case 'm':
-                      formattedString += month;
-                      break;
-                    case 'b':
-                      formattedString += monthAbbreviation;
-                      break;
-                    case 'M':
-                      formattedString += monthFull;
-                      break;
-                    case 'd':
-                      formattedString += day;
-                      break;
-                    case 'o':
-                      formattedString += daySuffix;
-                      break;
-                    case 'h':
-                      formattedString += hours12;
-                      break;
-                    case 'H':
-                      formattedString += hours24;
-                      break;
-                    case 'n':
-                      formattedString += minutes;
-                      break;
-                    case 'N':
-                      formattedString += minutesFraction;
-                      break;
-                    case 's':
-                      formattedString += seconds;
-                      break;
-                    case 'S':
-                      formattedString += milliseconds;
-                      break;
-                    case 'A':
-                      formattedString += ampmText;
-                      break;
-                    case 'I':
-                      formattedString += hours24PlusMinutes;
-                      break;
-                    case 'i':
-                      formattedString += hours12PlusMinutes;
-                      break;
-                    case 'V':
-                      formattedString += timeZoneOffset;
-                      break;
-                    case 'x':
-                      formattedString += timeZoneOffsetHHMM;
-                      break;
-                    case 'z':
-                      formattedString += timeZoneOffsetTime;
-                      break;
-                    case 'B':
-                      formattedString += timeZoneComplete;
-                      break;
-                    case 't':
-                      formattedString += timeZoneAbbreviation;
-                      break;
-                    case 'C':
-                      formattedString += dayOfWeek;
-                      break;
-                    case 'c':
-                      formattedString += dayOfWeekShort;
-                      break;
-                    case 'U':
-                      formattedString += dayOfWeekNumberSunday;
-                      break;
-                    case 'u':
-                      formattedString += dayOfWeekNumberMonday;
-                      break;
-                    case 'K':
-                      formattedString += weekOfYearNumber;
-                      break;
-                    case 'J':
-                      formattedString += dayOfYear;
-                      break;
-                    default:
-                      formattedString += dateString[i];
-                      break;
+                  // -------------------- Function: Format Date --------------------
+                  // Main function to format date strings based on the provided format
+                  // Function to get Text time
+                  function getTextualTime(hour, minutes) {
+                      if (hour > 23 || hour < 0 || minutes > 59 || minutes < 0) {
+                          return "Invalid time";
+                      }
+      
+                      if (minutes === 0) {
+                          return `It's ${convertHour(hour)} o'clock`;
+                      }
+      
+                      if (minutes === 15) {
+                          return `It's a quarter past ${convertHour(hour)}`;
+                      }
+      
+                      if (minutes === 30) {
+                          return `It's half past ${convertHour(hour)}`;
+                      }
+      
+                      if (minutes === 45) {
+                          return `It's a quarter to ${convertHour((hour + 1) % 24)}`;
+                      }
+      
+                      if (minutes < 30) {
+                          return `It's ${convertMinutes(minutes)} past ${convertHour(hour)}`;
+                      }
+      
+                      return `It's ${convertMinutes(60 - minutes)} to ${convertHour((hour + 1) % 24)}`;
                   }
-                }
-            
-                return formattedString;
-              }
-            
-              // -------------------- Main Process --------------------
-              // Get settings from the main application and create the time stamp
-              let formatString = String(app.settings["date format"]);
-              let today = new Date();
-              let timeStamp = formatDate(formatString, today);
-              return timeStamp;
-  	},
-        "Analog": async function(app) {
-  	},
-        "Text": async function(app) {
-  	},
-        "Unix": async function(app) {
-  	},
-  }
-  }
-  
-  ```
+      
+                  // -------------------- Helper Function: Converting Hours --------------------
+                  function convertHour(hour) {
+                      const hours = [
+                          "Twelve", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven"
+                      ];
+                      return hours[hour % 12];
+                  }
+      
+                  // -------------------- Helper Function: Converting Minutes --------------------      
+                  function convertMinutes(minutes) {
+                      const minutesText = [
+                          "Oh", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+                          "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen",
+                          "Eighteen", "Nineteen"
+                      ];
+                      if (minutes < 20) {
+                          return minutesText[minutes];
+                      }
+                      const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty"];
+                      const tensDigit = Math.floor(minutes / 10);
+                      const unitDigit = minutes % 10;
+                      return unitDigit === 0 ? tens[tensDigit] : `${tens[tensDigit]}-${minutesText[unitDigit]}`;
+                  }
+      
+                  // -------------------- Helper Function: Converting As Proper Text --------------------  
+                  function getCurrentTimeTextual() {
+                      const now = new Date();
+                      const hour = now.getHours();
+                      const minutes = now.getMinutes();
+                      return getTextualTime(hour, minutes);
+                  }
+      
+                  // -------------------- Main Process --------------------
+                  // Get Textual time and pre and post scripts that the user want to add.
+                  var CurrentTimeTextual = getCurrentTimeTextual();
+                  var prescript = String(app.settings["timestamp text - pre script"]);
+                  var postscript = String(app.settings["timestamp text - post script"]);
+      
+                  // Initialize empty strings for conditional content
+                  var formattedText = "";
+      
+                  // Check if prescript is present and add it to formattedText
+                  if (prescript) {
+                      formattedText += prescript + " ";
+                  }
+      
+                  // Add the main content with first letter capitalized and a full stop
+                  formattedText += CurrentTimeTextual.charAt(0).toUpperCase() + CurrentTimeTextual.slice(1) + ".";
+      
+                  // Check if postscript is present and add it to formattedText
+                  if (postscript) {
+                      formattedText += " " + postscript;
+                  }
+      
+                  return formattedText;
+      
+              },
+              "Unix": async function(app) {
+      
+                  // -------------------- Utility Function: Count Characters --------------------
+                  function countChar(str, char) {
+                      let count = 0;
+                      for (let i = 0; i < str.length; i++) {
+                          if (str[i] === char) {
+                              count++;
+                          }
+                      }
+                      return count;
+                  }
+                  // -------------------- Function: Format Date --------------------
+                  // Main function to format date strings based on the provided format
+                  // Function to get Unix time
+                  function getUnixTime() {
+                      // Check if performance API is supported
+                      var isPerformanceSupported = (
+                          window.performance &&
+                          window.performance.now &&
+                          window.performance.timing &&
+                          window.performance.timing.navigationStart
+                      );
+      
+                      // Get the timestamp in milliseconds
+                      var timeStampInMs = (
+                          isPerformanceSupported ?
+                          window.performance.now() + window.performance.timing.navigationStart :
+                          Date.now()
+                      );
+      
+                      // Convert milliseconds to seconds for Unix time
+                      var unixTime = Math.floor(timeStampInMs / 1000);
+      
+                      return unixTime;
+                  }
+                  // -------------------- Main Process --------------------
+                  // Get Unix time and convert it to string
+                  var unixTimeString = getUnixTime().toString();
+      
+                  return unixTimeString;
+      
+              },
+          }
+      }
+      ```
 
 ---
 
@@ -304,7 +469,11 @@ tags:
 
 - July 08th, 2024 (15:06:17) - Made this Public - [https://public.amplenote.com/qMzEXtAnVzeHR6nDLdWacfDR](https://public.amplenote.com/qMzEXtAnVzeHR6nDLdWacfDR) 
 
-- July 09th, 2024 (00:28:50) - Completed the Digital Timestamp Part of this Code!
+- July 09th, 2024 (00:28:50) - Completed the Numeric Timestamp Part of this Code!
+
+- July 09th, 2024 (16:10:52) - Completed the Unix Timestamp Part of this Code!
+
+- July 09th, 2024 (17:02:42) - Completed the Text Timestamp Part of this Code!
 
 ---
 
@@ -316,9 +485,13 @@ tags:
 
     - Analog Timestamp
 
-    - Text Timestamp
+    - ~~Text Timestamp~~
 
-    - Unix Timestamp
+    - ~~Unix Timestamp~~
+
+---
+
+[Code Explanation][^4]  For Curios Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀
 
 ---
 
@@ -452,7 +625,23 @@ tags:
 
     - YYYY-DDD <mark style="color:#44C9DE;">(e.g., 2024-189 for the 189th day of 2024)<!-- {"cycleColor":"28"} --></mark> = `Y-J`
 
+    ---
+
+    Do not limit yourself to these. Play around with all the List of Options available. Happy Timestamping!
+
 [^3]: [Code Explanation]()
+
+    <mark>**1. Utility Function: Count Characters**:</mark> This function counts the occurrences of a specific character in a string.
+
+    <mark>**2. Function: Format Date**:</mark> The main function to format the date string based on the given format.
+
+    <mark>**3. Helper Functions**:</mark> Several helper functions (`getMonthFull`, `getMonthAbbreviation`, etc.) are used to get specific parts of the date, like the full month name, month abbreviation, day suffix, etc.
+
+    <mark>**4. Building the Formatted String**:</mark> This section processes each character in the format string and builds the final formatted date string by switching on the format characters.
+
+    <mark>**5. Main Process**:</mark> This section retrieves the date format from the app's settings, gets the current date, formats it using the `formatDate` function, and returns the formatted timestamp.
+
+[^4]: [Code Explanation]()
 
     <mark>**1. Utility Function: Count Characters**:</mark> This function counts the occurrences of a specific character in a string.
 
