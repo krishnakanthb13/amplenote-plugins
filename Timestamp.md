@@ -1,7 +1,7 @@
 ﻿---
 title: Timestamp
 uuid: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce
-version: 692
+version: 735
 created: '2024-07-08T14:42:30+05:30'
 tags:
   - '-location/amplenote/plugins'
@@ -13,7 +13,7 @@ tags:
 |icon<!-- {"cell":{"colwidth":116}} -->|update<!-- {"cell":{"colwidth":474}} -->|
 |description<!-- {"cell":{"colwidth":116}} -->|Different types of Timestamps. Every variety that you can think of.<!-- {"cell":{"colwidth":474}} -->|
 |instructions<!-- {"cell":{"colwidth":116}} -->|<!-- {"cell":{"colwidth":474}} -->|
-|setting<!-- {"cell":{"colwidth":116}} -->|timestamp for numeric - structure<!-- {"cell":{"colwidth":474}} -->|
+|setting<!-- {"cell":{"colwidth":105}} -->|timestamp for digital - structure<!-- {"cell":{"colwidth":277}} -->|
 |setting<!-- {"cell":{"colwidth":116}} -->|timestamp text - pre script<!-- {"cell":{"colwidth":219}} -->|
 |setting<!-- {"cell":{"colwidth":116}} -->|timestamp text - post script<!-- {"cell":{"colwidth":219}} -->|
 1. <mark>Timestamp: Digital</mark> 
@@ -307,13 +307,155 @@ tags:
       
                   // -------------------- Main Process --------------------
                   // Get settings from the main application and create the time stamp
-                  let formatString = String(app.settings["timestamp for numeric - structure"]);
+                  let formatString = String(app.settings["timestamp for digital - structure"]);
                   let today = new Date();
                   let timeStamp = formatDate(formatString, today);
                   return timeStamp;
       
               },
-              "Analog": async function(app) {},
+              "Analog": async function(app) {
+      
+                  // -------------------- Utility Function: Count Characters --------------------
+                  function countChar(str, char) {
+                      let count = 0;
+                      for (let i = 0; i < str.length; i++) {
+                          if (str[i] === char) {
+                              count++;
+                          }
+                      }
+                      return count;
+                  }
+      
+                      // -------------------- Function: Generate SVG --------------------
+                  // Main function to format date strings based on the provided format
+          function generateClockSVG() {
+        // Get the current time
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+      
+        // Calculate the angles for the hands
+        const secondAngle = seconds * 6;
+        const minuteAngle = minutes * 6 + seconds * 0.1;
+        const hourAngle = (hours % 12) * 30 + minutes * 0.5;
+      
+        // SVG content
+        const svgContent1 = `
+      <svg width="80" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- Clock face -->
+        <circle cx="50" cy="50" r="48" stroke="#333" stroke-width="4" fill="#1c1c1c"/>
+        <!-- Hour hand -->
+        <line x1="50" y1="50" x2="50" y2="30" stroke="#ccc" stroke-width="5" transform="rotate(${hourAngle}, 50, 50)"/>
+        <!-- Minute hand -->
+        <line x1="50" y1="50" x2="50" y2="20" stroke="#ccc" stroke-width="3" transform="rotate(${minuteAngle}, 50, 50)"/>
+        <!-- Second hand -->
+        <line x1="50" y1="50" x2="50" y2="10" stroke="#fff" stroke-width="1" transform="rotate(${secondAngle}, 50, 50)"/>
+        <!-- Center circle -->
+        <circle cx="50" cy="50" r="3" fill="#fff"/>
+        <!-- Hour ticks -->
+        <g stroke="#666" stroke-width="2">
+          <line x1="50" y1="2" x2="50" y2="8"/>
+          <line x1="50" y1="92" x2="50" y2="98"/>
+          <line x1="2" y1="50" x2="8" y2="50"/>
+          <line x1="92" y1="50" x2="98" y2="50"/>
+        </g>
+        <!-- Minute ticks -->
+        <g stroke="#555" stroke-width="1">
+          <line x1="50" y1="4" x2="50" y2="6"/>
+          <line x1="50" y1="94" x2="50" y2="96"/>
+          <line x1="4" y1="50" x2="6" y2="50"/>
+          <line x1="94" y1="50" x2="96" y2="50"/>
+        </g>
+      </svg>
+        `;
+      
+        const svgContent2 = `
+      <svg width="80" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- Clock face -->
+        <circle cx="50" cy="50" r="48" stroke="#ccc" stroke-width="4" fill="#f9f9f9"/>
+        <!-- Hour hand -->
+        <line x1="50" y1="50" x2="50" y2="30" stroke="#333" stroke-width="5" transform="rotate(${hourAngle}, 50, 50)"/>
+        <!-- Minute hand -->
+        <line x1="50" y1="50" x2="50" y2="20" stroke="#333" stroke-width="3" transform="rotate(${minuteAngle}, 50, 50)"/>
+        <!-- Second hand -->
+        <line x1="50" y1="50" x2="50" y2="10" stroke="#333" stroke-width="1" transform="rotate(${secondAngle}, 50, 50)"/>
+        <!-- Center circle -->
+        <circle cx="50" cy="50" r="3" fill="#333"/>
+        <!-- Hour ticks -->
+        <g stroke="#bbb" stroke-width="2">
+          <line x1="50" y1="2" x2="50" y2="8"/>
+          <line x1="50" y1="92" x2="50" y2="98"/>
+          <line x1="2" y1="50" x2="8" y2="50"/>
+          <line x1="92" y1="50" x2="98" y2="50"/>
+        </g>
+        <!-- Minute ticks -->
+        <g stroke="#aaa" stroke-width="1">
+          <line x1="50" y1="4" x2="50" y2="6"/>
+          <line x1="50" y1="94" x2="50" y2="96"/>
+          <line x1="4" y1="50" x2="6" y2="50"/>
+          <line x1="94" y1="50" x2="96" y2="50"/>
+        </g>
+      </svg>
+              `;
+      
+              const svgContent3 = `
+      <svg width="80" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- Clock face -->
+        <circle cx="50" cy="50" r="48" stroke="#00ff00" stroke-width="4" fill="#000"/>
+        <!-- Hour hand -->
+        <line x1="50" y1="50" x2="50" y2="30" stroke="#ff00ff" stroke-width="5" transform="rotate(${hourAngle}, 50, 50)"/>
+        <!-- Minute hand -->
+        <line x1="50" y1="50" x2="50" y2="20" stroke="#00ffff" stroke-width="3" transform="rotate(${minuteAngle}, 50, 50)"/>
+        <!-- Second hand -->
+        <line x1="50" y1="50" x2="50" y2="10" stroke="#ffff00" stroke-width="1" transform="rotate(${secondAngle}, 50, 50)"/>
+        <!-- Center circle -->
+        <circle cx="50" cy="50" r="3" fill="#ff00ff"/>
+        <!-- Hour ticks -->
+        <g stroke="#00ff00" stroke-width="2">
+          <line x1="50" y1="2" x2="50" y2="8"/>
+          <line x1="50" y1="92" x2="50" y2="98"/>
+          <line x1="2" y1="50" x2="8" y2="50"/>
+          <line x1="92" y1="50" x2="98" y2="50"/>
+        </g>
+        <!-- Minute ticks -->
+        <g stroke="#00ff00" stroke-width="1">
+          <line x1="50" y1="4" x2="50" y2="6"/>
+          <line x1="50" y1="94" x2="50" y2="96"/>
+          <line x1="4" y1="50" x2="6" y2="50"/>
+          <line x1="94" y1="50" x2="96" y2="50"/>
+        </g>
+      </svg>
+              `;
+      
+                              // -------------------- Main Process --------------------
+                  // Get settings from the main application and create the SVG
+            // Return the SVG string
+      let svgContent;
+      
+      // Assuming condition is based on some variable or logic
+      let condition = "Light"; // Replace with your actual condition
+      
+      if (app.settings["theme - dark / light / neon"] === "dark") {
+        svgContent = svgContent1; // Replace svgContent1 with your content for Dark mode
+      } else if (app.settings["theme - dark / light / neon"] === "light") {
+        svgContent = svgContent2; // Replace svgContent2 with your content for Light mode
+      } else if (app.settings["theme - dark / light / neon"] === "neon") {
+        svgContent = svgContent3; // Replace svgContent3 with your content for neon mode
+      } else {
+        // Handle default case if needed
+      }
+      
+      return svgContent;
+      }
+          // Usage example
+      const svgImage = generateClockSVG();
+          
+          // `app.context.pluginUUID` is always supplied - it is the UUID of the plugin note
+          await app.context.replaceSelection(svgImage);
+          return null;
+                
+              },
               "Text": async function(app) {
       
                   // -------------------- Utility Function: Count Characters --------------------
@@ -457,7 +599,70 @@ tags:
                   return unixTimeString;
       
               },
+          },
+      
+      replaceText: {
+              "Convert to Dia": async function (app, text) {
+                  text = text.trim();
+                  await this._toDiagram(app, text);  // Pass text to _toDiagram
+                  return null;
+              }
+          },
+          async _toDiagram(app, text) {
+               
+                  // Create a Blob from the SVG text
+                  const svgBlob = new Blob([text], { type: 'image/svg+xml;charset=utf-8' });
+                  const svgDataURL = await this._dataURLFromBlob(svgBlob);
+                  const pngDataURL = await this._svgToPng(svgDataURL);
+                  const noteHandle = { uuid: app.context.noteUUID };
+                  const fileURL = await app.attachNoteMedia(noteHandle, pngDataURL);
+                  const appendedFileURL = fileURL + '?text=' + window.encodeURIComponent(window.btoa(text));
+                  
+                  const time = new Date().toLocaleString();
+                  
+                  // Generate the desired output format
+                  const output = `![${time || ''}](${fileURL})`+' '+app.settings["post script"]+'.';
+                  
+                  // Insert the formatted output into the note
+                  app.context.replaceSelection(output).trim();
+                  return null;
+              
+          },
+          async _svgToPng(svgBase64) {
+              return new Promise(function (resolve, reject) {
+                  let image = new Image();
+                  image.src = svgBase64;
+                  image.onload = function () {
+                      let canvas = document.createElement('canvas');
+                      canvas.width = image.width;
+                      canvas.height = image.height;
+                      let context = canvas.getContext('2d');
+                      context.drawImage(image, 0, 0);
+                      let output = canvas.toDataURL('image/png');
+                      resolve(output);
+                  };
+                  image.onerror = function (error) {
+                      reject(new Error(`Image load error: ${error}`));
+                  };
+              });
+          },
+          async _dataURLFromBlob(blob) {
+              return new Promise((resolve, reject) => {
+                  const reader = new FileReader();
+      
+                  reader.onload = event => {
+                      resolve(event.target.result);
+                  };
+      
+                  reader.onerror = function (event) {
+                      reader.abort();
+                      reject(new Error(`File read error: ${event.target.error}`));
+                  };
+      
+                  reader.readAsDataURL(blob);
+              });
           }
+        
       }
       ```
 
@@ -469,11 +674,13 @@ tags:
 
 - July 08th, 2024 (15:06:17) - Made this Public - [https://public.amplenote.com/qMzEXtAnVzeHR6nDLdWacfDR](https://public.amplenote.com/qMzEXtAnVzeHR6nDLdWacfDR) 
 
-- July 09th, 2024 (00:28:50) - Completed the Numeric Timestamp Part of this Code!
+- July 09th, 2024 (00:28:50) - Completed the Numeric / Digital Timestamp Part of this Code!
 
 - July 09th, 2024 (16:10:52) - Completed the Unix Timestamp Part of this Code!
 
 - July 09th, 2024 (17:02:42) - Completed the Text Timestamp Part of this Code!
+
+- \
 
 ---
 
@@ -481,13 +688,15 @@ tags:
 
 - Refer notes and start building one by one.
 
-    - ~~Numeric Timestamp~~
+    - ~~Numeric / Digital  Timestamp~~
 
     - Analog Timestamp
 
     - ~~Text Timestamp~~
 
     - ~~Unix Timestamp~~
+
+- Building, Formatting and Testing the Final Format
 
 ---
 
