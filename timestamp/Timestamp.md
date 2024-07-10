@@ -1,49 +1,11 @@
 ﻿---
 title: Timestamp
 uuid: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce
-version: 1450
+version: 1471
 created: '2024-07-08T14:42:30+05:30'
 tags:
   - '-location/amplenote/plugins'
 ---
-
-1. [Welcome Note:](#Welcome_Note:) 
-
-    1. [Table - Plugin Parameters:](#Table_-_Plugin_Parameters:) 
-
-    1. [Initial Things TODO after installation: ](#Initial_Things_TODO_after_installation:_) 
-
-    1. [Demo:](#Demo:) 
-
-        1. [General - Calling the Plugin - Timestamp](#General_-_Calling_the_Plugin_-_Timestamp) 
-
-        1. [Timestamp: Plugin Settings](#Timestamp:_Plugin_Settings) 
-
-        1. [Timestamp: Digital ](#Timestamp:_Digital_) 
-
-        1. [Timestamp: Analog](#Timestamp:_Analog) 
-
-        1. [Timestamp: Text ](#Timestamp:_Text_) 
-
-        1. [Timestamp: Unix ](#Timestamp:_Unix_) 
-
-    1. [Documentation:](#Documentation:) 
-
-        1. [Timestamp: Digital.](#Timestamp:_Digital.) 
-
-        1. [Timestamp: Analog.](#Timestamp:_Analog.) 
-
-        1. [Timestamp: Text.](#Timestamp:_Text.) 
-
-        1. [Timestamp: Unix.](#Timestamp:_Unix.) 
-
-    1. [Code Base:](#Code_Base:) 
-
-    1. [Additional Information:](#Additional_Information:) 
-
-        1. [Change Log:](#Change_Log:) 
-
-        1. [Implemented & Upcoming:](#Implemented_&_Upcoming:) 
 
 ---
 
@@ -161,7 +123,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     1. [List of Options][^3]  <mark style="color:#CE60D7;">\[27 Different Options\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [Best Formats][^4]  <mark style="color:#CE60D7;">\[Fell free to build your own\].<!-- {"cycleColor":"31"} --></mark>
+    1. [Best Formats][^4]   <mark style="color:#CE60D7;">\[Feel free to build your own combinations\].<!-- {"cycleColor":"31"} --></mark>
 
 ### <mark>Timestamp: Analog.</mark>
 
@@ -179,7 +141,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
         1. <mark style="color:#F8D616;">This should only take a couple of seconds, voilà you have your Analog Clock.<!-- {"cycleColor":"25"} --></mark> <mark style="color:#CE60D7;">\[You have three Themes that you can choose from, along with some Post Scripting features\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [Templates - Pre and Post Scripts][^5]  <mark style="color:#CE60D7;">\[Fell free to build your own\].<!-- {"cycleColor":"31"} --></mark>
+    1. [Templates - Pre and Post Scripts][^5]   <mark style="color:#CE60D7;">\[Feel free to build your own combinations\].<!-- {"cycleColor":"31"} --></mark>
 
 ### <mark>Timestamp: Text.</mark>
 
@@ -195,7 +157,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
         1. <mark style="color:#F8D616;">This will insert the Time in text format (telling the time!)<!-- {"cycleColor":"25"} --></mark> <mark style="color:#CE60D7;">\[You have Pre and Post Scripting features\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [Templates - Pre and Post Scripts][^6]  <mark style="color:#CE60D7;">\[Fell free to build your own\].<!-- {"cycleColor":"31"} --></mark>
+    1. [Templates - Pre and Post Scripts][^6]  <mark style="color:#CE60D7;">\[Feel free to build your own combinations\].<!-- {"cycleColor":"31"} --></mark>
 
 ### <mark>Timestamp: Unix.</mark>
 
@@ -854,6 +816,8 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
 - July 10th, 2024 (14:01:48) - Completed the Demo, Text, Visual, Testing as well!
 
+- July 10th, 2024 (15:45:55) - Completed wide range of Testing!
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -882,9 +846,9 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     - ~~Testing the Final Format~~
 
-        - Different Browsers
+        - ~~Different Browsers + Desktop App~~
 
-        - On Android Mobile
+        - ~~On Android Mobile~~
 
     - Roll-out \[Approval Pending! + Next Steps!\]
 
@@ -901,6 +865,48 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 Time Invested For this Plugin: 6h 45m + 5h 18m + 6 12m = Totaling up to 18h 16m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 ---
+
+1. [Welcome Note:](#Welcome_Note:) 
+
+    1. [Table - Plugin Parameters:](#Table_-_Plugin_Parameters:) 
+
+    1. [Initial Things TODO after installation: ](#Initial_Things_TODO_after_installation:_) 
+
+    1. [Demo:](#Demo:) 
+
+        1. [General - Calling the Plugin - Timestamp](#General_-_Calling_the_Plugin_-_Timestamp) 
+
+        1. [Timestamp: Plugin Settings](#Timestamp:_Plugin_Settings) 
+
+        1. [Timestamp: Digital ](#Timestamp:_Digital_) 
+
+        1. [Timestamp: Analog](#Timestamp:_Analog) 
+
+        1. [Timestamp: Text ](#Timestamp:_Text_) 
+
+        1. [Timestamp: Unix ](#Timestamp:_Unix_) 
+
+    1. [Documentation:](#Documentation:) 
+
+        1. [Timestamp: Digital.](#Timestamp:_Digital.) 
+
+        1. [Timestamp: Analog.](#Timestamp:_Analog.) 
+
+        1. [Timestamp: Text.](#Timestamp:_Text.) 
+
+        1. [Timestamp: Unix.](#Timestamp:_Unix.) 
+
+    1. [Code Base:](#Code_Base:) 
+
+    1. [Additional Information:](#Additional_Information:) 
+
+        1. [Change Log:](#Change_Log:) 
+
+        1. [Implemented & Upcoming:](#Implemented_&_Upcoming:) 
+
+---
+
+ 
 
 [^1]: Plugins >
     Timestamp
