@@ -1,7 +1,7 @@
 ﻿---
 title: Timestamp
 uuid: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce
-version: 1406
+version: 1450
 created: '2024-07-08T14:42:30+05:30'
 tags:
   - '-location/amplenote/plugins'
@@ -29,13 +29,13 @@ tags:
 
     1. [Documentation:](#Documentation:) 
 
-        1. [Timestamp: Digital ](#Timestamp:_Digital_) 
+        1. [Timestamp: Digital.](#Timestamp:_Digital.) 
 
-        1. [Timestamp: Analog](#Timestamp:_Analog) 
+        1. [Timestamp: Analog.](#Timestamp:_Analog.) 
 
-        1. [Timestamp: Text ](#Timestamp:_Text_) 
+        1. [Timestamp: Text.](#Timestamp:_Text.) 
 
-        1. [Timestamp: Unix ](#Timestamp:_Unix_) 
+        1. [Timestamp: Unix.](#Timestamp:_Unix.) 
 
     1. [Code Base:](#Code_Base:) 
 
@@ -145,7 +145,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
 ## <mark style="color:#F8D616;">Documentation:<!-- {"cycleColor":"25"} --></mark>
 
-### <mark>Timestamp: Digital</mark> 
+### <mark>Timestamp: Digital.</mark>
 
 1. <mark style="color:#E5569E;">For Whom: \[Fully customizable options available! Play around with the date formats and enjoy Timestamping your Notes.\]<!-- {"cycleColor":"32"} --></mark><!-- {"indent":1} -->
 
@@ -159,11 +159,11 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
         1. <mark style="color:#F8D616;">Current Timestamp will be inserted at the cursor location.<!-- {"cycleColor":"25"} --></mark> <mark style="color:#CE60D7;">\[This can be customized using below List of Options\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [List of Options][^3] 
+    1. [List of Options][^3]  <mark style="color:#CE60D7;">\[27 Different Options\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [Best Formats][^4]  
+    1. [Best Formats][^4]  <mark style="color:#CE60D7;">\[Fell free to build your own\].<!-- {"cycleColor":"31"} --></mark>
 
-### <mark>Timestamp: Analog</mark>
+### <mark>Timestamp: Analog.</mark>
 
 1. <mark style="color:#E5569E;">For Whom: \[This version is for them who are used to check the ticking hands to tell them the time.\]<!-- {"cycleColor":"32"} --></mark><!-- {"indent":1} -->
 
@@ -179,9 +179,9 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
         1. <mark style="color:#F8D616;">This should only take a couple of seconds, voilà you have your Analog Clock.<!-- {"cycleColor":"25"} --></mark> <mark style="color:#CE60D7;">\[You have three Themes that you can choose from, along with some Post Scripting features\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [Templates - Pre and Post Scripts][^5] 
+    1. [Templates - Pre and Post Scripts][^5]  <mark style="color:#CE60D7;">\[Fell free to build your own\].<!-- {"cycleColor":"31"} --></mark>
 
-### <mark>Timestamp: Text</mark> 
+### <mark>Timestamp: Text.</mark>
 
 1. <mark style="color:#E5569E;">For Whom: \[This version is for them who like to read time through text more than skimming numbers.\]<!-- {"cycleColor":"32"} --></mark><!-- {"indent":1} -->
 
@@ -195,9 +195,9 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
         1. <mark style="color:#F8D616;">This will insert the Time in text format (telling the time!)<!-- {"cycleColor":"25"} --></mark> <mark style="color:#CE60D7;">\[You have Pre and Post Scripting features\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [Templates - Pre and Post Scripts][^6] 
+    1. [Templates - Pre and Post Scripts][^6]  <mark style="color:#CE60D7;">\[Fell free to build your own\].<!-- {"cycleColor":"31"} --></mark>
 
-### <mark>Timestamp: Unix</mark> 
+### <mark>Timestamp: Unix.</mark>
 
 1. <mark style="color:#E5569E;">For Whom: \[Straight forward, just enters the Timestamp in Unix Format. If you need it!\]<!-- {"cycleColor":"32"} --></mark><!-- {"indent":1} -->
 
@@ -882,6 +882,10 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     - ~~Testing the Final Format~~
 
+        - Different Browsers
+
+        - On Android Mobile
+
     - Roll-out \[Approval Pending! + Next Steps!\]
 
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
@@ -891,6 +895,10 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 ---
 
 [Code Explanation][^7]  For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
+
+---
+
+Time Invested For this Plugin: 6h 45m + 5h 18m + 6 12m = Totaling up to 18h 16m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 ---
 
