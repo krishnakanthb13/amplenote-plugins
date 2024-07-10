@@ -1,7 +1,7 @@
 ﻿---
 title: Timestamp
 uuid: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce
-version: 1311
+version: 1406
 created: '2024-07-08T14:42:30+05:30'
 tags:
   - '-location/amplenote/plugins'
@@ -13,7 +13,29 @@ tags:
 
     1. [Initial Things TODO after installation: ](#Initial_Things_TODO_after_installation:_) 
 
+    1. [Demo:](#Demo:) 
+
+        1. [General - Calling the Plugin - Timestamp](#General_-_Calling_the_Plugin_-_Timestamp) 
+
+        1. [Timestamp: Plugin Settings](#Timestamp:_Plugin_Settings) 
+
+        1. [Timestamp: Digital ](#Timestamp:_Digital_) 
+
+        1. [Timestamp: Analog](#Timestamp:_Analog) 
+
+        1. [Timestamp: Text ](#Timestamp:_Text_) 
+
+        1. [Timestamp: Unix ](#Timestamp:_Unix_) 
+
     1. [Documentation:](#Documentation:) 
+
+        1. [Timestamp: Digital ](#Timestamp:_Digital_) 
+
+        1. [Timestamp: Analog](#Timestamp:_Analog) 
+
+        1. [Timestamp: Text ](#Timestamp:_Text_) 
+
+        1. [Timestamp: Unix ](#Timestamp:_Unix_) 
 
     1. [Code Base:](#Code_Base:) 
 
@@ -21,7 +43,7 @@ tags:
 
         1. [Change Log:](#Change_Log:) 
 
-        1. [Next TODO:](#Next_TODO:) 
+        1. [Implemented & Upcoming:](#Implemented_&_Upcoming:) 
 
 ---
 
@@ -42,7 +64,6 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 |name<!-- {"cell":{"colwidth":116}} -->|Timestamp<!-- {"cell":{"colwidth":572}} -->|
 |icon<!-- {"cell":{"colwidth":116}} -->|update<!-- {"cell":{"colwidth":572}} -->|
 |description<!-- {"cell":{"colwidth":116}} -->|Different types of Timestamps. Every possibility that you can think of. You can modify them based on your needs using the info given in the below details using the different details in the below (View note Link).<!-- {"cell":{"colwidth":572}} -->|
-|instructions<!-- {"cell":{"colwidth":116}} -->|<!-- {"cell":{"colwidth":572}} -->|
 |setting<!-- {"cell":{"colwidth":105}} -->|timestamp for digital - structure<!-- {"cell":{"colwidth":572}} -->|
 |setting<!-- {"cell":{"colwidth":116}} -->|timestamp text - pre script<!-- {"cell":{"colwidth":572}} -->|
 |setting<!-- {"cell":{"colwidth":116}} -->|timestamp text - post script<!-- {"cell":{"colwidth":572}} -->|
@@ -80,21 +101,45 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
 ## <mark style="color:#F8D616;">Demo:<!-- {"cycleColor":"25"} --></mark>
 
+### <mark>General - Calling the Plugin - Timestamp</mark>
+
+![](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif)
+
+---
+
+### <mark>Timestamp: Plugin Settings</mark>
+
+[Plugin Settings](https://www.amplenote.com/account/plugins)  > Timestamp
+
+![a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png|557](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png) [^1]
+
+---
+
 ### <mark>Timestamp: Digital</mark> 
 
-\
+![](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif)
+
+---
 
 ### <mark>Timestamp: Analog</mark>
 
-\
+![6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif|744](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif)
+
+![f3642964-b336-4910-ad6c-03a52e99c1a8.gif|744](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif)
+
+![](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png) [^2]
+
+---
 
 ### <mark>Timestamp: Text</mark> 
 
-\
+![](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif)
+
+---
 
 ### <mark>Timestamp: Unix</mark> 
 
-\
+![2bca9c21-a772-4848-82b5-b051d1e0fd86.gif|648](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif)
 
 ---
 
@@ -114,9 +159,9 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
         1. <mark style="color:#F8D616;">Current Timestamp will be inserted at the cursor location.<!-- {"cycleColor":"25"} --></mark> <mark style="color:#CE60D7;">\[This can be customized using below List of Options\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [List of Options][^1] 
+    1. [List of Options][^3] 
 
-    1. [Best Formats][^2]  
+    1. [Best Formats][^4]  
 
 ### <mark>Timestamp: Analog</mark>
 
@@ -134,7 +179,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
         1. <mark style="color:#F8D616;">This should only take a couple of seconds, voilà you have your Analog Clock.<!-- {"cycleColor":"25"} --></mark> <mark style="color:#CE60D7;">\[You have three Themes that you can choose from, along with some Post Scripting features\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [Templates - Pre and Post Scripts][^3] 
+    1. [Templates - Pre and Post Scripts][^5] 
 
 ### <mark>Timestamp: Text</mark> 
 
@@ -150,7 +195,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
         1. <mark style="color:#F8D616;">This will insert the Time in text format (telling the time!)<!-- {"cycleColor":"25"} --></mark> <mark style="color:#CE60D7;">\[You have Pre and Post Scripting features\].<!-- {"cycleColor":"31"} --></mark>
 
-    1. [Templates - Pre and Post Scripts][^4] 
+    1. [Templates - Pre and Post Scripts][^6] 
 
 ### <mark>Timestamp: Unix</mark> 
 
@@ -807,9 +852,11 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
 - July 10th, 2024 (12:35:10) - Completed the Building and Formatting of the overall Document!
 
+- July 10th, 2024 (14:01:48) - Completed the Demo, Text, Visual, Testing as well!
+
 ---
 
-### <mark style="color:#F5614C;">**Upcoming:**<!-- {"cycleColor":"23"} --></mark>
+### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
 
 - ~~Refer notes and start building one by one.~~
 
@@ -827,17 +874,15 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     - ~~Formatting~~
 
-    - Documenting
+    - ~~Documenting & Demo~~
 
-    - Demo
+        - ~~Text~~
 
-        - Text
+        - ~~Visual~~
 
-        - Visual
+    - ~~Testing the Final Format~~
 
-    - Testing the Final Format
-
-    - Roll-out
+    - Roll-out \[Approval Pending! + Next Steps!\]
 
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 
@@ -845,11 +890,34 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
 ---
 
-[Code Explanation][^5]  For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
+[Code Explanation][^7]  For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
 
 ---
 
-[^1]: [List of Options]()
+[^1]: Plugins >
+    Timestamp
+    Different types of Timestamps. Every possibility that you can think of. You can modify them
+    based on your needs using the info given in the below details using the different details in the
+    below (View note Link).
+    Settings
+    timestamp for digital - structure
+    M do, Y (H:n:s)
+    timestamp text - pre script
+    Hello!
+    timestamp text - post script
+    What's on your mind?..
+    timestamp analog - theme - dark / light / neon
+    light
+    timestamp analog - post script
+    What's on your mind?..
+    SAVE CHANGES
+    Cancel
+
+[^2]: What's on your mind?...
+    What's on your mind?..
+    What's on your mind?..
+
+[^3]: [List of Options]()
 
     ---
 
@@ -945,7 +1013,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     ---
 
-[^2]: [Best Formats]()
+[^4]: [Best Formats]()
 
     <mark>General:</mark>
 
@@ -983,7 +1051,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     Do not limit yourself to these. Play around with all the List of Options available. Happy Timestamping!
 
-[^3]: [Templates - Pre and Post Scripts]()
+[^5]: [Templates - Pre and Post Scripts]()
 
     <mark style="color:#8D68DA;">**Pre-Script (How's Your Day?)**<!-- {"cycleColor":"30"} --></mark>
 
@@ -1017,7 +1085,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     \
 
-[^4]: [Templates - Pre and Post Scripts]()
+[^6]: [Templates - Pre and Post Scripts]()
 
     <mark style="color:#8D68DA;">**Pre-Script (How's Your Day?)**<!-- {"cycleColor":"30"} --></mark>
 
@@ -1049,7 +1117,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     - **"Just checking in at @now. Quick brain dump - what needs your attention?"**
 
-[^5]: [Code Explanation]()
+[^7]: [Code Explanation]()
 
     <mark>**1. Utility Function: Count Characters**:</mark> This function counts the occurrences of a specific character in a string.
 
