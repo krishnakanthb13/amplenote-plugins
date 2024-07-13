@@ -1,11 +1,11 @@
 ﻿---
 title: Metadata 1.0 Docs
 uuid: c46c5e60-4066-11ef-832f-26e37c279344
-version: 164
+version: 169
 created: '2024-07-12T21:22:39+05:30'
 tags:
-  - '-1-inbox'
   - '-location/amplenote/mine'
+  - '-9-permanent'
 ---
 
 # <mark style="color:#F8D616;">Readme:<!-- {"cycleColor":"25"} --></mark>
@@ -50,7 +50,11 @@ tags:
 
 ![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif)
 
-- <mark style="color:#F8914D;">Published only<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!).<!-- {"cycleColor":"25"} --></mark><!-- {"indent":1} -->
+![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/a6ddfbec-3ef5-4af5-9f65-ee67cc394d1f.png) [^2]
+
+- <mark style="color:#F8914D;">Published only (Table format)<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!).<!-- {"cycleColor":"25"} --></mark><!-- {"indent":1} -->
+
+    - <mark style="color:#F8914D;">Raw data<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Gives you Note Name, UUID, Tags.<!-- {"cycleColor":"25"} --></mark>
 
 ---
 
@@ -86,4 +90,13 @@ tags:
     Select format (Mandatory)
     SUBMIT
     Cancel
+
+[^2]: Select format (Mandatory)
+    Both (Table format)
+    Names only
+    Tags only
+    te
+    Published only (Table format)
+    DE
+    Raw data
 

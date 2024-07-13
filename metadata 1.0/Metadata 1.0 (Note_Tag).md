@@ -1,11 +1,11 @@
 ﻿---
 title: Metadata 1.0 (Note_Tag)
 uuid: af332c24-4064-11ef-b9a5-6ef34fa959ce
-version: 500
+version: 521
 created: '2024-07-12T21:07:43+05:30'
 tags:
   - '-location/amplenote/mine'
-  - '-1-inbox'
+  - '-9-permanent'
 ---
 
 # <mark style="color:#9AD62A;">Welcome Note:<!-- {"cycleColor":"26"} --></mark>
@@ -52,7 +52,11 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
 ![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif)
 
-- <mark style="color:#F8914D;">Published only<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!).<!-- {"cycleColor":"25"} --></mark><!-- {"indent":1} -->
+![](https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/0643aa05-b3dd-4682-b883-a1b205b11c77.png) [^3]
+
+- <mark style="color:#F8914D;">Published only (Table format)<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!).<!-- {"cycleColor":"25"} --></mark><!-- {"indent":1} -->
+
+    - <mark style="color:#F8914D;">Raw data<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Gives you Note Name, UUID, Tags.<!-- {"cycleColor":"25"} --></mark>
 
 ---
 
@@ -223,7 +227,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
                   { label: "Both (Table format)", value: "both_table" },
                   { label: "Names only", value: "names_only" },
                   { label: "Tags only", value: "tags_only" }, // I have updated the code to give distinct tags!
-                  { label: "Published only (Table format)", value: "published_only" }
+                  { label: "Published only (Table format)", value: "published_only" },
+                  { label: "Raw data", value: "raw_data" }
                 ]
               }
             ]
@@ -298,6 +303,13 @@ Well having a Graph view is excellent, still having a good old view of the list 
               if (publicURL) {
                 publicResults.push(`| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | [${publicURL}](${publicURL}) |`);
               }
+              } else if (insertFormat === "raw_data") {
+              results.add(`${note.name} | ${note.uuid} | ${tagString}`);
+              // This is an another optional way to get the raw data!
+              //} else if (insertFormat === "raw_data") {
+              //results.add(`Note Name: ${note.name}`);
+              //results.add(`UUID: ${note.uuid}`);
+              //results.add(`Tags: ${tagString}`);
             }
           }
 
@@ -329,6 +341,9 @@ Well having a Graph view is excellent, still having a good old view of the list 
               let url = parts[2];
               return `"${name.replace(/"/g, '""')}", "${url.replace(/"/g, '""')}"`;
             }).join("\n");
+          } else if (insertFormat === "raw_data") {
+            resultText = results.join("\n");
+            resultCSV = results.map(item => `"${item.replace(/"/g, '""')}"`).join("\n");
           } else {
             resultText = results.join("\n");
             resultCSV = results.map(item => `"${item.replace(/"/g, '""')}"`).join("\n");
@@ -476,7 +491,7 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
 ---
 
-[Code Explanation!][^3] For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
+[Code Explanation!][^4] For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
 
 ---
 
@@ -559,7 +574,16 @@ Time Invested For this Plugin: 10h 45m + 5h 48m = Totaling up to 16+h. \[Not inc
     SUBMIT
     Cancel
 
-[^3]: [Code Explanation!]()
+[^3]: Select format (Mandatory)
+    Both (Table format)
+    Names only
+    Tags only
+    te
+    Published only (Table format)
+    DE
+    Raw data
+
+[^4]: [Code Explanation!]()
 
     Sure! Here's a high-level explanation of the provided code:
 
