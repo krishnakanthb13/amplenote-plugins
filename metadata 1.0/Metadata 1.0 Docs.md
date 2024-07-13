@@ -1,7 +1,7 @@
 ﻿---
 title: Metadata 1.0 Docs
 uuid: c46c5e60-4066-11ef-832f-26e37c279344
-version: 163
+version: 164
 created: '2024-07-12T21:22:39+05:30'
 tags:
   - '-1-inbox'
@@ -49,6 +49,8 @@ tags:
 ### <mark>Insert / Export Options; Select format \[Mandatory\]</mark>
 
 ![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif)
+
+- <mark style="color:#F8914D;">Published only<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!).<!-- {"cycleColor":"25"} --></mark><!-- {"indent":1} -->
 
 ---
 

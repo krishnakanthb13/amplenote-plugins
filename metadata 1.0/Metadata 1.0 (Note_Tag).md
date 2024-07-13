@@ -1,7 +1,7 @@
 ﻿---
 title: Metadata 1.0 (Note_Tag)
 uuid: af332c24-4064-11ef-b9a5-6ef34fa959ce
-version: 458
+version: 500
 created: '2024-07-12T21:07:43+05:30'
 tags:
   - '-location/amplenote/mine'
@@ -51,6 +51,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
 ### <mark>Insert / Export Options; Select format \[Mandatory\]</mark>
 
 ![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif)
+
+- <mark style="color:#F8914D;">Published only<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!).<!-- {"cycleColor":"25"} --></mark><!-- {"indent":1} -->
 
 ---
 
@@ -140,6 +142,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
         - Tags only
 
+        - Published only (Table format)
+
 ### <mark>Internal Processing</mark>
 
 1. <mark style="color:#F8D616;">**Capturing User Input**:<!-- {"cycleColor":"25"} --></mark> The user's input is captured and stored in variables. If the user cancels the operation, an alert is shown and the process stops.
@@ -218,7 +222,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
                 options: [
                   { label: "Both (Table format)", value: "both_table" },
                   { label: "Names only", value: "names_only" },
-                  { label: "Tags only", value: "tags_only" } // I have updated the code to give distinct tags!
+                  { label: "Tags only", value: "tags_only" }, // I have updated the code to give distinct tags!
+                  { label: "Published only (Table format)", value: "published_only" }
                 ]
               }
             ]
@@ -269,6 +274,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
           // Fetch tags for each note and generate results
           const self = this;
           let results = new Set();
+          let publicResults = [];
+          
           for (let note of notes) {
             let tags = note.tags;
 
@@ -286,6 +293,11 @@ Well having a Graph view is excellent, still having a good old view of the list 
               results.add(noteLink);
             } else if (insertFormat === "tags_only") {
               tags.forEach(tag => results.add(tag));
+            } else if (insertFormat === "published_only") {
+              const publicURL = await app.getNotePublicURL({ uuid: note.uuid });
+              if (publicURL) {
+                publicResults.push(`| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | [${publicURL}](${publicURL}) |`);
+              }
             }
           }
 
@@ -307,8 +319,15 @@ Well having a Graph view is excellent, still having a good old view of the list 
               let parts = row.split('|').map(s => s.trim());
               let name = parts[1];
               let tags = parts[2];
-              //Remove space here after the comma if you want it that way
-              return `"${name.replace(/"/g, '""')}", "${tags.replace(/"/g, '""')}"`; 
+              return `"${name.replace(/"/g, '""')}", "${tags.replace(/"/g, '""')}"`;
+            }).join("\n");
+          } else if (insertFormat === "published_only") {
+            resultText = "| Notes | Public URL |\n|---|---|\n" + publicResults.join("\n");
+            resultCSV = "Notes,Public URL\n" + publicResults.map(row => {
+              let parts = row.split('|').map(s => s.trim());
+              let name = parts[1];
+              let url = parts[2];
+              return `"${name.replace(/"/g, '""')}", "${url.replace(/"/g, '""')}"`;
             }).join("\n");
           } else {
             resultText = results.join("\n");
@@ -399,6 +418,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
 - July 12th, 2024 - Built the sort for tags, within the group of tags, different exporter functions and notes, tags separately list feature.
 
+- July 13th, 2024 - Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!)
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -444,6 +465,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
     - ~~Append it~~
 
 -  ~~Handling more than 3 tag selections. \[Popping out of the window, unable to select the next tag, Reach out!\]~~
+
+- ~~Add Published Notes Listing~~
 
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 
