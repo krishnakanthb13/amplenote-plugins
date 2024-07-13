@@ -1,7 +1,7 @@
 ﻿---
 title: Metadata 1.0 (Note_Tag)
 uuid: af332c24-4064-11ef-b9a5-6ef34fa959ce
-version: 521
+version: 531
 created: '2024-07-12T21:07:43+05:30'
 tags:
   - '-location/amplenote/mine'
@@ -147,6 +147,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
         - Tags only
 
         - Published only (Table format)
+
+        - Raw data
 
 ### <mark>Internal Processing</mark>
 
@@ -433,7 +435,7 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
 - July 12th, 2024 - Built the sort for tags, within the group of tags, different exporter functions and notes, tags separately list feature.
 
-- July 13th, 2024 - Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!)
+- July 13th, 2024 - Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!). Also Added Raw Data dump (Contains note name, uuid, tags).
 
 ---
 
@@ -482,6 +484,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
 -  ~~Handling more than 3 tag selections. \[Popping out of the window, unable to select the next tag, Reach out!\]~~
 
 - ~~Add Published Notes Listing~~
+
+- ~~Add Raw data dump~~
 
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 
