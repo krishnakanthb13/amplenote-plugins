@@ -44,18 +44,32 @@
                   { label: "Both (Table format)", value: "both_table" },
                   { label: "Names only", value: "names_only" },
                   { label: "Tags only", value: "tags_only" }, // I have updated the code to give distinct tags!
-                  { label: "Published only (Table format)", value: "published_only" }
+                  { label: "Published only (Table format)", value: "published_only" },
+                  { label: "Raw data", value: "raw_data" }
                 ]
               }
             ]
           });
 
+          // Check if result is falsy
           if (!result) {
-            app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
-            return;
+              app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+              return;
           }
 
           const [tagNames, nameFilter, sortOption, sortTagOption, sortTags, insertOption, insertFormat] = result;
+
+          // Check if at least one of the required variables is selected
+          if (!tagNames && !nameFilter && !sortOption && !sortTagOption && !sortTags) {
+              app.alert("Note: At least one of Optional Items (tagNames, nameFilter, sortOption, sortTagOption, or sortTags) must be selected");
+              return;
+          }
+          
+          // Check if both insertOption and insertFormat are selected
+          if (!insertOption || !insertFormat) {
+              app.alert("Note: Both insertOption and insertFormat (Mandatory Fields) must be selected");
+              return;
+          }
           
           // If tagNames is empty, set it to an empty array
           const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
@@ -119,6 +133,13 @@
               if (publicURL) {
                 publicResults.push(`| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | [${publicURL}](${publicURL}) |`);
               }
+              } else if (insertFormat === "raw_data") {
+              results.add(`${note.name} | ${note.uuid} | ${tagString}`);
+              // This is an another optional way to get the raw data!
+              //} else if (insertFormat === "raw_data") {
+              //results.add(`Note Name: ${note.name}`);
+              //results.add(`UUID: ${note.uuid}`);
+              //results.add(`Tags: ${tagString}`);
             }
           }
 
@@ -150,6 +171,9 @@
               let url = parts[2];
               return `"${name.replace(/"/g, '""')}", "${url.replace(/"/g, '""')}"`;
             }).join("\n");
+          } else if (insertFormat === "raw_data") {
+            resultText = results.join("\n");
+            resultCSV = results.map(item => `"${item.replace(/"/g, '""')}"`).join("\n");
           } else {
             resultText = results.join("\n");
             resultCSV = results.map(item => `"${item.replace(/"/g, '""')}"`).join("\n");
