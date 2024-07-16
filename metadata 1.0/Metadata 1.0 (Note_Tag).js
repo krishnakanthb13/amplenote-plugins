@@ -1,155 +1,114 @@
 (() => {
     var Meta_1 = {
         insertText: {
+            // Function to insert text based on user inputs
             "Name_Tag": async function(app) {
                 try {
+                    // Prompting the user to enter filter criteria
                     const result = await app.prompt("Enter your filter criteria (Anyone or Both [Name_Tag]!)", {
-                        inputs: [{
+                        inputs: [
+                            // Tag selection input
+                            {
                                 label: "Select Tags to filter (Max 3)",
                                 type: "tags",
                                 limit: 3,
                                 placeholder: "Enter tag/'s' (Max 3)"
                             },
+                            // Name filter input
                             {
                                 label: "Type Partial or Full name of the Note",
                                 type: "string",
                                 placeholder: "Enter Partial or Full name"
                             },
+                            // Sort by note name option
                             {
                                 label: "Sort by Note Name",
                                 type: "select",
-                                options: [{
-                                        label: "None (Default)",
-                                        value: ""
-                                    },
-                                    {
-                                        label: "Ascending (ASC)",
-                                        value: "asc"
-                                    },
-                                    {
-                                        label: "Descending (DESC)",
-                                        value: "desc"
-                                    }
+                                options: [
+                                    { label: "None (Default)", value: "" },
+                                    { label: "Ascending (ASC)", value: "asc" },
+                                    { label: "Descending (DESC)", value: "desc" }
                                 ]
                             },
+                            // Sort by tags option
                             {
                                 label: "Sort by Tags",
                                 type: "select",
-                                options: [{
-                                        label: "None (Default)",
-                                        value: ""
-                                    },
-                                    {
-                                        label: "Ascending (ASC)",
-                                        value: "asc"
-                                    },
-                                    {
-                                        label: "Descending (DESC)",
-                                        value: "desc"
-                                    }
+                                options: [
+                                    { label: "None (Default)", value: "" },
+                                    { label: "Ascending (ASC)", value: "asc" },
+                                    { label: "Descending (DESC)", value: "desc" }
                                 ]
                             },
+                            // Alphabetically sort tags within a note
                             {
                                 label: "Sort tags alphabetically (within a Note!)",
                                 type: "checkbox"
                             },
+                            // Insert / Export options
                             {
                                 label: "Insert / Export options (Mandatory)",
                                 type: "select",
-                                options: [{
-                                        label: "Insert into current note",
-                                        value: "current_note"
-                                    },
-                                    {
-                                        label: "Insert into new note",
-                                        value: "new_note"
-                                    },
-                                    {
-                                        label: "Download as markdown",
-                                        value: "download_md"
-                                    },
-                                    {
-                                        label: "Download as CSV",
-                                        value: "download_csv"
-                                    },
-                                    {
-                                        label: "Download as TXT",
-                                        value: "download_txt"
-                                    }
+                                options: [
+                                    { label: "Insert into current note", value: "current_note" },
+                                    { label: "Insert into new note", value: "new_note" },
+                                    { label: "Download as markdown", value: "download_md" },
+                                    { label: "Download as CSV", value: "download_csv" },
+                                    { label: "Download as TXT", value: "download_txt" }
                                 ]
                             },
+                            // Format selection option
                             {
                                 label: "Select format (Mandatory)",
                                 type: "select",
-                                options: [{
-                                        label: "Both (Table format)",
-                                        value: "both_table"
-                                    },
-                                    {
-                                        label: "Names only",
-                                        value: "names_only"
-                                    },
-                                    {
-                                        label: "Tags only",
-                                        value: "tags_only"
-                                    }, // I have updated the code to give distinct tags!
-                                    {
-                                        label: "Published only (Table format)",
-                                        value: "published_only"
-                                    },
-                                    {
-                                        label: "Raw data",
-                                        value: "raw_data"
-                                    }
+                                options: [
+                                    { label: "Both (Table format)", value: "both_table" },
+                                    { label: "Names only", value: "names_only" },
+                                    { label: "Tags only", value: "tags_only" },
+                                    { label: "Published only (Table format)", value: "published_only" },
+                                    { label: "Raw data", value: "raw_data" }
                                 ]
                             }
                         ]
                     });
 
-                    // Check if result is falsy
+                    // If the result is falsy, the user has canceled the operation
                     if (!result) {
                         app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
                         return;
                     }
 
+                    // Destructuring user inputs
                     const [tagNames, nameFilter, sortOption, sortTagOption, sortTags, insertOption, insertFormat] = result;
 
-                    // Check if at least one of the required variables is selected
+                    // Ensure at least one of the required variables is selected
                     if (!tagNames && !nameFilter && !sortOption && !sortTagOption && !sortTags) {
                         app.alert("Note: At least one of Optional Items (tagNames, nameFilter, sortOption, sortTagOption, or sortTags) must be selected");
                         return;
                     }
 
-                    // Check if both insertOption and insertFormat are selected
+                    // Ensure both insertOption and insertFormat are selected
                     if (!insertOption || !insertFormat) {
                         app.alert("Note: Both insertOption and insertFormat (Mandatory Fields) must be selected");
                         return;
                     }
 
-                    // If tagNames is empty, set it to an empty array
+                    // Split tags into an array
                     const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
-
                     let notes = [];
 
-                    // If there are tags, filter notes by each tag and accumulate results
+                    // Filter notes based on tags
                     if (tagsArray.length > 0) {
                         for (let tag of tagsArray) {
-                            let taggedNotes = await app.filterNotes({
-                                tag
-                            });
+                            let taggedNotes = await app.filterNotes({ tag });
                             notes = notes.concat(taggedNotes);
                         }
                     } else {
-                        // If no tags are provided, fetch all notes
                         notes = await app.filterNotes({});
                     }
 
                     // Remove duplicate notes
-                    notes = notes.filter((note, index, self) =>
-                        index === self.findIndex((n) => (
-                            n.uuid === note.uuid
-                        ))
-                    );
+                    notes = notes.filter((note, index, self) => index === self.findIndex((n) => n.uuid === note.uuid));
 
                     // Further filter notes by name if a name filter is provided
                     if (nameFilter) {
@@ -186,9 +145,7 @@
                         } else if (insertFormat === "tags_only") {
                             tags.forEach(tag => results.add(tag));
                         } else if (insertFormat === "published_only") {
-                            const publicURL = await app.getNotePublicURL({
-                                uuid: note.uuid
-                            });
+                            const publicURL = await app.getNotePublicURL({ uuid: note.uuid });
                             if (publicURL) {
                                 publicResults.push(`| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | [${publicURL}](${publicURL}) |`);
                             }
@@ -254,25 +211,21 @@
 - Sort tags alphabetically within a Note: ${sortTags ? "Yes" : "No"}
 - Insert option: ${insertOption}
 - Format to insert: ${insertFormat}
+- Filename: ${filename}
 `;
 
                     // Append the summary to the result text
                     resultText += `\n\n${inputSummary}`;
                     resultCSV += `\n\n${inputSummary.replace(/[\n]/g, "")}`;
 
+                    // Perform actions based on the insert option
                     if (insertOption === "current_note") {
                         await app.context.replaceSelection(resultText);
                     } else if (insertOption === "new_note") {
                         let noteUUID = await app.createNote("Metadata 1.0 Report", ["metadata-reports"]);
-                        await app.insertContent({
-                                uuid: noteUUID
-                            },
-                            resultText
-                        );
+                        await app.insertContent({ uuid: noteUUID }, resultText);
                     } else if (insertOption === "download_md") {
-                        let blob = new Blob([resultText], {
-                            type: "text/markdown;charset=utf-8"
-                        });
+                        let blob = new Blob([resultText], { type: "text/markdown;charset=utf-8" });
                         let link = document.createElement("a");
                         link.href = URL.createObjectURL(blob);
                         link.download = `${filename}.md`;
@@ -280,9 +233,7 @@
                         link.click();
                         document.body.removeChild(link);
                     } else if (insertOption === "download_csv") {
-                        let blob = new Blob([resultCSV], {
-                            type: "text/csv;charset=utf-8"
-                        });
+                        let blob = new Blob([resultCSV], { type: "text/csv;charset=utf-8" });
                         let link = document.createElement("a");
                         link.href = URL.createObjectURL(blob);
                         link.download = `${filename}.csv`;
@@ -290,9 +241,7 @@
                         link.click();
                         document.body.removeChild(link);
                     } else if (insertOption === "download_txt") {
-                        let blob = new Blob([resultText], {
-                            type: "text/plain;charset=utf-8"
-                        });
+                        let blob = new Blob([resultText], { type: "text/plain;charset=utf-8" });
                         let link = document.createElement("a");
                         link.href = URL.createObjectURL(blob);
                         link.download = `${filename}.txt`;
@@ -308,10 +257,12 @@
                 }
             }
         },
+        // Function to create Markdown link from note handle
         _createMDLinkFromNoteHandle(noteHandle) {
             return `[${noteHandle.name}](https://www.amplenote.com/notes/${noteHandle.uuid})`;
         }
     };
+
     var plugin_default = Meta_1;
     return Meta_1;
 })()
