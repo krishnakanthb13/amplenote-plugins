@@ -21,9 +21,55 @@
             return convertToSmallCaps(text);
         case 'superscript':
             return convertToSuperscript(text);
+        case 'wide_text':
+            return convertToWideText(text);
+        case 'reverse_text':
+            return reverseText(text);
+        case 'upside_down_text':
+            return flipUpsideDown(text);
         default:
             return text;
     }
+}
+
+function flipUpsideDown(text) {
+    const upsideDownMap = {
+        'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ᴉ',
+        'j': 'ɾ', 'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u', 'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ',
+        's': 's', 't': 'ʇ', 'u': 'n', 'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z',
+        'A': '∀', 'B': 'q', 'C': 'Ɔ', 'D': 'p', 'E': 'Ǝ', 'F': 'Ⅎ', 'G': 'פ', 'H': 'H', 'I': 'I',
+        'J': 'ſ', 'K': 'ʞ', 'L': '˥', 'M': 'W', 'N': 'N', 'O': 'O', 'P': 'Ԁ', 'Q': 'Q', 'R': 'ᴚ',
+        'S': 'S', 'T': '⊥', 'U': '∩', 'V': 'Λ', 'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
+        '0': '0', '1': 'Ɩ', '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ', '6': '9', '7': 'ㄥ', '8': '8', '9': '6',
+        '!': '¡', '?': '¿', '+': '+', '-': '-', '=': '=', '*': '*', '%': '%', '$': '$', '&': '⅋', '#': '#',
+        '@': '@', '^': '^', '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{', '<': '>', '>': '<',
+        '/': '/', '|': '|', '\\': '\\', '~': '~', '`': '`', ',': "'", '.': '.', ':': ':', ';': ';', '\'': ',',
+        '"': '"', '_': '_', ' ': ' '
+    };
+
+    return text.split('').reverse().map(c => upsideDownMap[c] || c).join('');
+}
+
+function reverseText(text) {
+    return text.split('').reverse().join('');
+}
+
+function convertToWideText(text) {
+    const wideMap = {
+        'a': 'ａ', 'b': 'ｂ', 'c': 'ｃ', 'd': 'ｄ', 'e': 'ｅ', 'f': 'ｆ', 'g': 'ｇ', 'h': 'ｈ', 'i': 'ｉ',
+        'j': 'ｊ', 'k': 'ｋ', 'l': 'ｌ', 'm': 'ｍ', 'n': 'ｎ', 'o': 'ｏ', 'p': 'ｐ', 'q': 'ｑ', 'r': 'ｒ',
+        's': 'ｓ', 't': 'ｔ', 'u': 'ｕ', 'v': 'ｖ', 'w': 'ｗ', 'x': 'ｘ', 'y': 'ｙ', 'z': 'ｚ',
+        'A': 'Ａ', 'B': 'Ｂ', 'C': 'Ｃ', 'D': 'Ｄ', 'E': 'Ｅ', 'F': 'Ｆ', 'G': 'Ｇ', 'H': 'Ｈ', 'I': 'Ｉ',
+        'J': 'Ｊ', 'K': 'Ｋ', 'L': 'Ｌ', 'M': 'Ｍ', 'N': 'Ｎ', 'O': 'Ｏ', 'P': 'Ｐ', 'Q': 'Ｑ', 'R': 'Ｒ',
+        'S': 'Ｓ', 'T': 'Ｔ', 'U': 'Ｕ', 'V': 'Ｖ', 'W': 'Ｗ', 'X': 'Ｘ', 'Y': 'Ｙ', 'Z': 'Ｚ',
+        '0': '０', '1': '１', '2': '２', '3': '３', '4': '４', '5': '５', '6': '６', '7': '７', '8': '８', '9': '９',
+        '!': '！', '?': '？', '+': '＋', '-': '－', '=': '＝', '*': '＊', '%': '％', '$': '＄', '&': '＆', '#': '＃',
+        '@': '＠', '^': '＾', '(': '（', ')': '）', '[': '［', ']': '］', '{': '｛', '}': '｝', '<': '＜', '>': '＞',
+        '/': '／', '|': '｜', '\\': '＼', '~': '～', '`': '｀', ',': '，', '.': '．', ':': '：', ';': '；', '\'': '＇',
+        '"': '＂', '_': '＿', ' ': '　'
+    };
+
+    return text.split('').map(c => wideMap[c] || c).join('');
 }
 
 function convertToSmallCaps(text) {
@@ -81,8 +127,11 @@ var TextMagiQ1 = {
                                 { label: "aLtErNaTiNg CASE", value: "alternating_case" },
                                 { label: "lnVeRsE Case", value: "inverse_case" },
                                 { label: "RanDom cAsE", value: "random_case" },
-                                { label: "Small Caps", value: "small_caps" },
-                                { label: "Superscript", value: "superscript" }
+                                { label: "Reverse Text", value: "reverse_text" },
+                                { label: "Small Caps (Irreversible)", value: "small_caps" },
+                                { label: "Superscript (Irreversible)", value: "superscript" },
+                                { label: "Wide Text (Irreversible)", value: "wide_text" },
+                                { label: "Upside Down Text (Irreversible)", value: "upside_down_text" }
                             ]
                         }
                     ]
