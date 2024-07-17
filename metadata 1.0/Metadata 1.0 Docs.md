@@ -1,7 +1,7 @@
 ﻿---
 title: Metadata 1.0 Docs
 uuid: c46c5e60-4066-11ef-832f-26e37c279344
-version: 169
+version: 199
 created: '2024-07-12T21:22:39+05:30'
 tags:
   - '-location/amplenote/mine'
@@ -15,6 +15,14 @@ tags:
 - You have extensive methods to filter that data that you are looking for.
 
 - You have multiple ways to place your requested data in.
+
+---
+
+## <mark style="color:#F8D616;">⚠ Warning:<!-- {"cycleColor":"25"} --></mark>
+
+- <mark style="color:#F5614C;">If any of your Notes does not have a name, the this will throw an Error - `TypeError: Cannot read properties of null (reading 'localeCompare')`<!-- {"cycleColor":"23"} --></mark>
+
+    - Identified on July 15th, 2024 (23:26:22). Needs further analysis how to handle this or ignore these records! For a future day indeed!
 
 ---
 
@@ -58,7 +66,153 @@ tags:
 
 ---
 
+## <mark style="color:#F8D616;">Detailed breakdown:<!-- {"cycleColor":"25"} --></mark>
+
+### <mark>High-Level Functionality</mark>
+
+1. **User Input Prompting**:
+
+    1. Prompts the user for various filter criteria and options.
+
+    1. Collects tags, name filter, sorting options, and format options from the user.
+
+1. **Filtering and Sorting Notes**:
+
+    1. Filters notes based on user-provided tags and name.
+
+    1. Sorts the filtered notes based on user-selected options (note name, tags).
+
+1. **Generating and Exporting Results**:
+
+    1. Generates a formatted output based on the user’s input.
+
+    1. Allows the user to either insert the output into a note, create a new note, or download the output in different formats (Markdown, CSV, TXT).
+
+### <mark>Detailed Breakdown</mark>
+
+### <mark>Prompting User for Input</mark>
+
+- **app.prompt**:
+
+    - Prompts the user to enter filter criteria.
+
+    - Inputs include tags, name filter, sorting options, and export options.
+
+    - Ensures the user selects required fields (`insertOption` and `insertFormat`).
+
+### <mark>Filtering and Sorting Notes</mark>
+
+- **Tag Filtering**:
+
+    - Splits user-entered tags into an array.
+
+    - Filters notes based on these tags using `app.filterNotes`.
+
+    - Removes duplicate notes.
+
+- **Name Filtering**:
+
+    - Filters notes further if a name filter is provided.
+
+- **Sorting Notes**:
+
+    - Sorts notes by name (ascending or descending) based on user selection.
+
+    - Fetches tags for each note and sorts tags alphabetically within a note if the user selected that option.
+
+    - Sorts the final list of results based on the selected tag sorting option.
+
+### <mark>Generating and Exporting Results</mark>
+
+- **Formatting Results**:
+
+    - Formats results based on user-selected format options (`both_table`, `names_only`, `tags_only`, `published_only`, `raw_data`).
+
+    - Adds the formatted results to a set to ensure uniqueness.
+
+- **Creating Markdown Links**:
+
+    - Creates Markdown links from note handles.
+
+- **Generating File Content**:
+
+    - Creates the result text and CSV content based on the selected format.
+
+    - Generates a filename based on the current date and time.
+
+    - Appends a summary of input selections to the result text and CSV content.
+
+- **Inserting or Downloading Results**:
+
+    - Inserts the result text into the current or a new note based on user selection.
+
+    - Allows the user to download the result in Markdown, CSV, or TXT format.
+
+### <mark>Sorting Options</mark>
+
+1. **Sort by Note Name**:
+
+    1. `sortOption`: Sorts notes by their names.
+
+        1. `asc`: Ascending order.
+
+        1. `desc`: Descending order.
+
+1. **Sort by Tags**:
+
+    1. `sortTagOption`: Sorts the list of results by tags.
+
+        1. `asc`: Ascending order.
+
+        1. `desc`: Descending order.
+
+1. **Sort Tags Alphabetically within a Note**:
+
+    1. `sortTags`: Boolean option to sort tags within a note alphabetically.
+
+### <mark>Example Workflow</mark>
+
+1. **User Input**:
+
+    1. Tags: `tag1, tag2`
+
+    1. Name filter: `Note`
+
+    1. Sort by note name: `asc`
+
+    1. Sort tags alphabetically: `true`
+
+    1. Insert option: `new_note`
+
+    1. Format: `both_table`
+
+1. **Filtering**:
+
+    1. Filters notes containing `tag1` or `tag2`.
+
+    1. Further filters notes with names containing `Note`.
+
+1. **Sorting**:
+
+    1. Sorts the filtered notes by name in ascending order.
+
+    1. Sorts tags within each note alphabetically.
+
+1. **Result Generation**:
+
+    1. Creates a table with note names and their tags.
+
+    1. Inserts the table into a new note.
+
+### <mark>Conclusion</mark>
+
+The code provides a comprehensive solution for filtering, sorting, and exporting notes based on user-defined criteria. Ensuring the correct application of sorting options is crucial for achieving the desired output. If sorting does not work as expected, it may be due to the interplay between different sorting options and the handling of duplicate notes.
+
+---
+
 1. [Readme:](#Readme:) 
+
+    1. [⚠ Warning:](#__Warning:) 
 
     1. [Demo: ](#Demo:_) 
 
@@ -71,6 +225,24 @@ tags:
         1. [Sort by Note Name;  Tags; Tags (Within a Note)](#Sort_by_Note_Name;__Tags;_Tags_(Within_a_Note)) 
 
         1. [Insert / Export Options; Select format \[Mandatory\]](#Insert_/_Export_Options;_Select_format__Mandatory_) 
+
+    1. [Detailed breakdown:](#Detailed_breakdown:) 
+
+        1. [High-Level Functionality](#High-Level_Functionality) 
+
+        1. [Detailed Breakdown](#Detailed_Breakdown) 
+
+        1. [Prompting User for Input](#Prompting_User_for_Input) 
+
+        1. [Filtering and Sorting Notes](#Filtering_and_Sorting_Notes) 
+
+        1. [Generating and Exporting Results](#Generating_and_Exporting_Results) 
+
+        1. [Sorting Options](#Sorting_Options) 
+
+        1. [Example Workflow](#Example_Workflow) 
+
+        1. [Conclusion](#Conclusion) 
 
 ---
 
