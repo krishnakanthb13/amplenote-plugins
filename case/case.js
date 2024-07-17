@@ -31,9 +31,41 @@
             return textToMorse(text);
         case 'morse_code_reverse':
             return morseToText(text);
+        case 'binary_translate':
+            return textToBinary(text);
+        case 'binary_reverse':
+            return binaryToText(text);
+        case 'mirror_text':
+            return mirrorText(text);
         default:
             return text;
     }
+}
+
+function mirrorText(text) {
+    const mirrorMap = {
+        'a': 'ɒ', 'b': 'd', 'c': 'ɔ', 'd': 'b', 'e': 'ɘ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ı', 'j': 'ſ', 'k': 'ʞ',
+        'l': 'l', 'm': 'ɯ', 'n': 'u', 'o': 'o', 'p': 'q', 'q': 'p', 'r': 'ɹ', 's': 's', 't': 'ʇ', 'u': 'n', 'v': 'ʌ',
+        'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z',
+        'A': '∀', 'B': 'B', 'C': 'Ɔ', 'D': 'D', 'E': 'Ǝ', 'F': 'Ⅎ', 'G': '⅁', 'H': 'H', 'I': 'I', 'J': 'ſ', 'K': 'K',
+        'L': '⅂', 'M': 'W', 'N': 'N', 'O': 'O', 'P': 'Ԁ', 'Q': 'Q', 'R': 'ᴚ', 'S': 'S', 'T': '⊥', 'U': '∩', 'V': 'Λ',
+        'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
+        '0': '0', '1': 'Ɩ', '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ', '6': '9', '7': 'ㄥ', '8': '8', '9': '6',
+        '.': '˙', ',': "'", '?': '¿', '\'': ',', '!': '¡',
+        '(': ')', ')': '(', '{': '}', '}': '{', '[': ']', ']': '[', '<': '>', '>': '<', '/': '\\', '\\': '/',
+        '&': '⅋', '_': '‾', '"': '``', '`': '"', ';': '؛', ':': ':', '^': 'v', 'v': '^', '@': '@', '#': '#', '$': '$',
+        '%': '%', '*': '*', '+': '+', '-': '-', '=': '=', '~': '~'
+    };
+
+    return text.split('').reverse().map(char => mirrorMap[char] || char).join('');
+}
+
+function textToBinary(text) {
+    return text.split('').map(char => char.charCodeAt(0).toString(2)).join(' ');
+}
+
+function binaryToText(binary) {
+    return binary.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
 }
 
 function textToMorse(text) {
@@ -169,7 +201,10 @@ var TextMagiQ1 = {
                                 { label: "Wide Text (Irreversible)", value: "wide_text" },
                                 { label: "Upside Down Text (Irreversible)", value: "upside_down_text" },
                                 { label: "Morse Code -> Text", value: "morse_code_reverse" },
-                                { label: "Text -> Morse Code", value: "morse_code_translate" }
+                                { label: "Text -> Morse Code", value: "morse_code_translate" },
+                                { label: "Binary -> Text", value: "binary_reverse" },
+                                { label: "Text -> Binary", value: "binary_translate" },
+                                { label: "Mirror Text", value: "mirror_text" }
                             ]
                         }
                     ]
