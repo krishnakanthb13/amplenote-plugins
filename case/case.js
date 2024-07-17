@@ -1,24 +1,25 @@
 (() => {
     var TextMagiQ1 = {
         replaceText: {
-            "Name_Tag": async function(app, text) {
+            "Case_Capitalization": async function(app, text) {
                 try {
                     // Simulate user input for transformation type
 					
 					const result = await app.prompt("Select text transformation", {
                         inputs: [
                             {
-                                label: "Select text transformation",
+                                label: "Select Case transformation",
                                 type: "select",
                                 options: [
                                     { label: "None", value: "" },
                                     { label: "Sentence case", value: "sentence_case" },
-                                    { label: "lower case", value: "lower_case" },
                                     { label: "UPPER CASE", value: "upper_case" },
+                                    { label: "lower case", value: "lower_case" },
                                     { label: "Capitalized Case", value: "capitalized_case" },
-                                    { label: "aLtErNaTiNg CASE", value: "alternating_case" },
                                     { label: "Title Case", value: "title_case" },
-                                    { label: "lnVeRsE Case", value: "inverse_case" }
+                                    { label: "aLtErNaTiNg CASE", value: "alternating_case" },
+                                    { label: "lnVeRsE Case", value: "inverse_case" },
+                                    { label: "RanDom cAsE", value: "random_case" }
                                 ]
                             }
                         ]
@@ -53,9 +54,11 @@
             case 'alternating_case':
                 return text.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
             case 'title_case':
-                return text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                return text.toLowerCase().replace(/\b(?:an?|the|and|or|but|for|nor|on|at|to|by|with|about|of)\b|\b\w/g, function(c) { return c.toUpperCase(); });
             case 'inverse_case':
                 return text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
+            case 'random_case':
+                return text.split('').map(c => Math.random() < 0.5 ? c.toLowerCase() : c.toUpperCase()).join('');
             default:
                 return text;
         }
