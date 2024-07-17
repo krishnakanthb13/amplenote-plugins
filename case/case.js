@@ -360,7 +360,8 @@ var TextMagiQ1 = {
                                 { label: "Italic (Not Working!)", value: "italic" },
                                 { label: "Strikethrough (Not Working!)", value: "strikethrough" },
                                 { label: "Underline (Not Working!)", value: "underline" },
-                                { label: "Fraktur", value: "fraktur" }
+                                { label: "Fraktur", value: "fraktur" },
+                                { label: "Fraktur (Bold)", value: "fraktur_bold" }
                             ]
                         }
                     ]
