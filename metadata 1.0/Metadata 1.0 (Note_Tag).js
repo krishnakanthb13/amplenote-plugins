@@ -110,6 +110,13 @@
                     // Remove duplicate notes
                     notes = notes.filter((note, index, self) => index === self.findIndex((n) => n.uuid === note.uuid));
 
+                    // Sort the final list of results based on the selected tag sorting option
+                    if (sortTagOption === "asc") {
+                        notes.sort((a, b) => a.tags.join(", ").localeCompare(b.tags.join(", ")));
+                    } else if (sortTagOption === "desc") {
+                        notes.sort((a, b) => b.tags.join(", ").localeCompare(a.tags.join(", ")));
+                    }
+
                     // Further filter notes by name if a name filter is provided
                     if (nameFilter) {
                         notes = notes.filter(note => note.name.includes(nameFilter));
@@ -160,13 +167,6 @@
                     }
 
                     results = Array.from(results);
-
-                    // Sort the final list of results based on the selected tag sorting option
-                    if (sortTagOption === "asc") {
-                        results.sort((a, b) => a.localeCompare(b));
-                    } else if (sortTagOption === "desc") {
-                        results.sort((a, b) => b.localeCompare(a));
-                    }
 
                     // Generate the final text, CSV, and TXT content
                     let resultText;
