@@ -37,9 +37,29 @@
             return binaryToText(text);
         case 'mirror_text':
             return mirrorText(text);
+        case 'zalgo_text':
+            return zalgoText(text);
         default:
             return text;
     }
+}
+
+function zalgoText(text) {
+    const zalgoChars = [
+        '\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311', '\u0306', '\u0310',
+        '\u0352', '\u0357', '\u0351', '\u0307', '\u0308', '\u030a', '\u0342', '\u0343',
+        '\u0344', '\u034a', '\u034b', '\u034c', '\u0303', '\u0302', '\u030c', '\u0350',
+        '\u0300', '\u0301', '\u030b', '\u030f', '\u0312', '\u0313', '\u0314', '\u033d',
+        '\u0309', '\u0363', '\u0364', '\u0365', '\u0366', '\u0367', '\u0368', '\u0369',
+        '\u036a', '\u036b', '\u036c', '\u036d', '\u036e', '\u036f', '\u033e', '\u035b'
+    ];
+
+    function getRandomZalgo() {
+        const rand = Math.floor(Math.random() * zalgoChars.length);
+        return zalgoChars[rand];
+    }
+
+    return text.split('').map(char => char + getRandomZalgo()).join('');
 }
 
 function mirrorText(text) {
@@ -204,7 +224,8 @@ var TextMagiQ1 = {
                                 { label: "Text -> Morse Code", value: "morse_code_translate" },
                                 { label: "Binary -> Text", value: "binary_reverse" },
                                 { label: "Text -> Binary", value: "binary_translate" },
-                                { label: "Mirror Text", value: "mirror_text" }
+                                { label: "Mirror Text", value: "mirror_text" },
+                                { label: "Zalgo Text", value: "zalgo_text" }
                             ]
                         }
                     ]
