@@ -27,9 +27,45 @@
             return reverseText(text);
         case 'upside_down_text':
             return flipUpsideDown(text);
+        case 'morse_code_translate':
+            return textToMorse(text);
+        case 'morse_code_reverse':
+            return morseToText(text);
         default:
             return text;
     }
+}
+
+function textToMorse(text) {
+    const morseMap = {
+        'a': '.-', 'b': '-...', 'c': '-.-.', 'd': '-..', 'e': '.', 'f': '..-.', 'g': '--.', 'h': '....', 'i': '..', 'j': '.---',
+        'k': '-.-', 'l': '.-..', 'm': '--', 'n': '-.', 'o': '---', 'p': '.--.', 'q': '--.-', 'r': '.-.', 's': '...', 't': '-',
+        'u': '..-', 'v': '...-', 'w': '.--', 'x': '-..-', 'y': '-.--', 'z': '--..',
+        '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
+        '6': '-....', '7': '--...', '8': '---..', '9': '----.',
+        '.': '.-.-.-', ',': '--..--', '?': '..--..', '\'': '.----.', '!': '-.-.--',
+        '/': '-..-.', '(': '-.--.', ')': '-.--.-', '&': '.-...', ':': '---...', ';': '-.-.-.',
+        '=': '-...-', '+': '.-.-.', '-': '-....-', '_': '..--.-', '"': '.-..-.', '$': '...-..-',
+        '@': '.--.-.'
+    };
+
+    return text.toLowerCase().split('').map(c => morseMap[c] || '').join(' ');
+}
+
+function morseToText(text) {
+    const morseReverseMap = {
+        '.-': 'a', '-...': 'b', '-.-.': 'c', '-..': 'd', '.': 'e', '..-.': 'f', '--.': 'g', '....': 'h', '..': 'i', '.---': 'j',
+        '-.-': 'k', '.-..': 'l', '--': 'm', '-.': 'n', '---': 'o', '.--.': 'p', '--.-': 'q', '.-.': 'r', '...': 's', '-': 't',
+        '..-': 'u', '...-': 'v', '.--': 'w', '-..-': 'x', '-.--': 'y', '--..': 'z',
+        '-----': '0', '.----': '1', '..---': '2', '...--': '3', '....-': '4', '.....': '5',
+        '-....': '6', '--...': '7', '---..': '8', '----.': '9',
+        '.-.-.-': '.', '--..--': ',', '..--..': '?', '.----.': '\'', '-.-.--': '!',
+        '-..-.': '/', '-.--.': '(', '-.--.-': ')', '.-...': '&', '---...': ':', '-.-.-.': ';',
+        '-...-': '=', '.-.-.': '+', '-....-': '-', '..--.-': '_', '.-..-.': '"', '...-..-': '$',
+        '.--.-.': '@'
+    };
+
+    return text.split(' ').map(m => morseReverseMap[m] || '').join('');
 }
 
 function flipUpsideDown(text) {
@@ -131,7 +167,9 @@ var TextMagiQ1 = {
                                 { label: "Small Caps (Irreversible)", value: "small_caps" },
                                 { label: "Superscript (Irreversible)", value: "superscript" },
                                 { label: "Wide Text (Irreversible)", value: "wide_text" },
-                                { label: "Upside Down Text (Irreversible)", value: "upside_down_text" }
+                                { label: "Upside Down Text (Irreversible)", value: "upside_down_text" },
+                                { label: "Morse Code -> Text", value: "morse_code_reverse" },
+                                { label: "Text -> Morse Code", value: "morse_code_translate" }
                             ]
                         }
                     ]
