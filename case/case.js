@@ -51,11 +51,256 @@
             return convertToFraktur(text);
         case 'fraktur_bold':
             return convertToFrakturBold(text);
+        case 'squared':
+            return convertToSquared(text);
+        case 'squared_inverted':
+            return convertToSquaredInverted(text);
+        case 'circled':
+            return convertToCircled(text);
+        case 'circled_inverted':
+            return convertToCircledInverted(text);
         default:
             return text;
     }
 }
 
+
+function convertToSquared(text) {
+    const squaredMap = {
+        'A': '\u1D400',
+        'B': '\u1D401',
+        'C': '\u1D402',
+        'D': '\u1D403',
+        'E': '\u1D404',
+        'F': '\u1D405',
+        'G': '\u1D406',
+        'H': '\u1D407',
+        'I': '\u1D408',
+        'J': '\u1D409',
+        'K': '\u1D40A',
+        'L': '\u1D40B',
+        'M': '\u1D40C',
+        'N': '\u1D40D',
+        'O': '\u1D40E',
+        'P': '\u1D40F',
+        'Q': '\u1D410',
+        'R': '\u1D411',
+        'S': '\u1D412',
+        'T': '\u1D413',
+        'U': '\u1D414',
+        'V': '\u1D415',
+        'W': '\u1D416',
+        'X': '\u1D417',
+        'Y': '\u1D418',
+        'Z': '\u1D419',
+        'a': '\u1D41A',
+        'b': '\u1D41B',
+        'c': '\u1D41C',
+        'd': '\u1D41D',
+        'e': '\u1D41E',
+        'f': '\u1D41F',
+        'g': '\u1D420',
+        'h': '\u1D421',
+        'i': '\u1D422',
+        'j': '\u1D423',
+        'k': '\u1D424',
+        'l': '\u1D425',
+        'm': '\u1D426',
+        'n': '\u1D427',
+        'o': '\u1D428',
+        'p': '\u1D429',
+        'q': '\u1D42A',
+        'r': '\u1D42B',
+        's': '\u1D42C',
+        't': '\u1D42D',
+        'u': '\u1D42E',
+        'v': '\u1D42F',
+        'w': '\u1D430',
+        'x': '\u1D431',
+        'y': '\u1D432',
+        'z': '\u1D433'
+    };
+
+    return Array.from(text).map(char => squaredMap[char] || char).join('');
+}
+
+function convertToSquaredInverted(text) {
+    const squaredInvertedMap = {
+        'A': '\u1D7D8',
+        'B': '\u1D7D9',
+        'C': '\u1D7DA',
+        'D': '\u1D7DB',
+        'E': '\u1D7DC',
+        'F': '\u1D7DD',
+        'G': '\u1D7DE',
+        'H': '\u1D7DF',
+        'I': '\u1D7E0',
+        'J': '\u1D7E1',
+        'K': '\u1D7E2',
+        'L': '\u1D7E3',
+        'M': '\u1D7E4',
+        'N': '\u1D7E5',
+        'O': '\u1D7E6',
+        'P': '\u1D7E7',
+        'Q': '\u1D7E8',
+        'R': '\u1D7E9',
+        'S': '\u1D7EA',
+        'T': '\u1D7EB',
+        'U': '\u1D7EC',
+        'V': '\u1D7ED',
+        'W': '\u1D7EE',
+        'X': '\u1D7EF',
+        'Y': '\u1D7F0',
+        'Z': '\u1D7F1',
+        'a': '\u1D7F2',
+        'b': '\u1D7F3',
+        'c': '\u1D7F4',
+        'd': '\u1D7F5',
+        'e': '\u1D7F6',
+        'f': '\u1D7F7',
+        'g': '\u1D7F8',
+        'h': '\u1D7F9',
+        'i': '\u1D7FA',
+        'j': '\u1D7FB',
+        'k': '\u1D7FC',
+        'l': '\u1D7FD',
+        'm': '\u1D7FE',
+        'n': '\u1D7FF',
+        'o': '\u1D800',
+        'p': '\u1D801',
+        'q': '\u1D802',
+        'r': '\u1D803',
+        's': '\u1D804',
+        't': '\u1D805',
+        'u': '\u1D806',
+        'v': '\u1D807',
+        'w': '\u1D808',
+        'x': '\u1D809',
+        'y': '\u1D80A',
+        'z': '\u1D80B'
+    };
+
+    return Array.from(text).map(char => squaredInvertedMap[char] || char).join('');
+}
+
+function convertToCircled(text) {
+    const circledMap = {
+        'A': '\u24B6',
+        'B': '\u24B7',
+        'C': '\u24B8',
+        'D': '\u24B9',
+        'E': '\u24BA',
+        'F': '\u24BB',
+        'G': '\u24BC',
+        'H': '\u24BD',
+        'I': '\u24BE',
+        'J': '\u24BF',
+        'K': '\u24C0',
+        'L': '\u24C1',
+        'M': '\u24C2',
+        'N': '\u24C3',
+        'O': '\u24C4',
+        'P': '\u24C5',
+        'Q': '\u24C6',
+        'R': '\u24C7',
+        'S': '\u24C8',
+        'T': '\u24C9',
+        'U': '\u24CA',
+        'V': '\u24CB',
+        'W': '\u24CC',
+        'X': '\u24CD',
+        'Y': '\u24CE',
+        'Z': '\u24CF',
+        'a': '\u24D0',
+        'b': '\u24D1',
+        'c': '\u24D2',
+        'd': '\u24D3',
+        'e': '\u24D4',
+        'f': '\u24D5',
+        'g': '\u24D6',
+        'h': '\u24D7',
+        'i': '\u24D8',
+        'j': '\u24D9',
+        'k': '\u24DA',
+        'l': '\u24DB',
+        'm': '\u24DC',
+        'n': '\u24DD',
+        'o': '\u24DE',
+        'p': '\u24DF',
+        'q': '\u24E0',
+        'r': '\u24E1',
+        's': '\u24E2',
+        't': '\u24E3',
+        'u': '\u24E4',
+        'v': '\u24E5',
+        'w': '\u24E6',
+        'x': '\u24E7',
+        'y': '\u24E8',
+        'z': '\u24E9'
+    };
+
+    return Array.from(text).map(char => circledMap[char] || char).join('');
+}
+
+function convertToCircledInverted(text) {
+    const circledInvertedMap = {
+        'A': '\u24B6',
+        'B': '\u24B7',
+        'C': '\u24B8',
+        'D': '\u24B9',
+        'E': '\u24BA',
+        'F': '\u24BB',
+        'G': '\u24BC',
+        'H': '\u24BD',
+        'I': '\u24BE',
+        'J': '\u24BF',
+        'K': '\u24C0',
+        'L': '\u24C1',
+        'M': '\u24C2',
+        'N': '\u24C3',
+        'O': '\u24C4',
+        'P': '\u24C5',
+        'Q': '\u24C6',
+        'R': '\u24C7',
+        'S': '\u24C8',
+        'T': '\u24C9',
+        'U': '\u24CA',
+        'V': '\u24CB',
+        'W': '\u24CC',
+        'X': '\u24CD',
+        'Y': '\u24CE',
+        'Z': '\u24CF',
+        'a': '\u24D0',
+        'b': '\u24D1',
+        'c': '\u24D2',
+        'd': '\u24D3',
+        'e': '\u24D4',
+        'f': '\u24D5',
+        'g': '\u24D6',
+        'h': '\u24D7',
+        'i': '\u24D8',
+        'j': '\u24D9',
+        'k': '\u24DA',
+        'l': '\u24DB',
+        'm': '\u24DC',
+        'n': '\u24DD',
+        'o': '\u24DE',
+        'p': '\u24DF',
+        'q': '\u24E0',
+        'r': '\u24E1',
+        's': '\u24E2',
+        't': '\u24E3',
+        'u': '\u24E4',
+        'v': '\u24E5',
+        'w': '\u24E6',
+        'x': '\u24E7',
+        'y': '\u24E8',
+        'z': '\u24E9'
+    };
+
+    return Array.from(text).map(char => circledInvertedMap[char] || char).join('');
+}
+  
 function convertToFraktur(text) {
     const frakturMap = {
         'A': '\uD835\uDD38',
@@ -171,7 +416,7 @@ function convertToFrakturBold(text) {
         'z': '\uD835\uDDA3'
     };
 
-    return text.split('').map(char => frakturBoldMap[char] || char).join('');
+    return Array.from(text).map(char => frakturBoldMap[char] || char).join('');
 }
 
 function zalgoText(text) {
@@ -361,7 +606,11 @@ var TextMagiQ1 = {
                                 { label: "Strikethrough (Not Working!)", value: "strikethrough" },
                                 { label: "Underline (Not Working!)", value: "underline" },
                                 { label: "Fraktur", value: "fraktur" },
-                                { label: "Fraktur (Bold)", value: "fraktur_bold" }
+                                { label: "Fraktur (Bold) (Working Weird!)", value: "fraktur_bold" },
+                                { label: "Squared (Working Weird!)", value: "squared" },
+                                { label: "Squared (Inverted) (Working Weird!)", value: "squared_inverted" },
+                                { label: "Circled", value: "circled" },
+                                { label: "Circled (Inverted) (Working Weird!)", value: "circled_inverted" }
                             ]
                         }
                     ]
