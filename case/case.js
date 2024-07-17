@@ -39,9 +39,139 @@
             return mirrorText(text);
         case 'zalgo_text':
             return zalgoText(text);
+        case 'bold':
+            return `**${text}**`;
+        case 'italic':
+            return `*${text}*`;
+        case 'strikethrough':
+            return `~~${text}~~`;
+        case 'underline':
+            return `<u>${text}</u>`;
+        case 'fraktur':
+            return convertToFraktur(text);
+        case 'fraktur_bold':
+            return convertToFrakturBold(text);
         default:
             return text;
     }
+}
+
+function convertToFraktur(text) {
+    const frakturMap = {
+        'A': '\uD835\uDD38',
+        'B': '\uD835\uDD39',
+        'C': '\uD835\uDD3A',
+        'D': '\uD835\uDD3B',
+        'E': '\uD835\uDD3C',
+        'F': '\uD835\uDD3D',
+        'G': '\uD835\uDD3E',
+        'H': '\uD835\uDD3F',
+        'I': '\uD835\uDD40',
+        'J': '\uD835\uDD41',
+        'K': '\uD835\uDD42',
+        'L': '\uD835\uDD43',
+        'M': '\uD835\uDD44',
+        'N': '\uD835\uDD45',
+        'O': '\uD835\uDD46',
+        'P': '\uD835\uDD47',
+        'Q': '\uD835\uDD48',
+        'R': '\uD835\uDD49',
+        'S': '\uD835\uDD4A',
+        'T': '\uD835\uDD4B',
+        'U': '\uD835\uDD4C',
+        'V': '\uD835\uDD4D',
+        'W': '\uD835\uDD4E',
+        'X': '\uD835\uDD4F',
+        'Y': '\uD835\uDD50',
+        'Z': '\uD835\uDD51',
+        'a': '\uD835\uDD52',
+        'b': '\uD835\uDD53',
+        'c': '\uD835\uDD54',
+        'd': '\uD835\uDD55',
+        'e': '\uD835\uDD56',
+        'f': '\uD835\uDD57',
+        'g': '\uD835\uDD58',
+        'h': '\uD835\uDD59',
+        'i': '\uD835\uDD5A',
+        'j': '\uD835\uDD5B',
+        'k': '\uD835\uDD5C',
+        'l': '\uD835\uDD5D',
+        'm': '\uD835\uDD5E',
+        'n': '\uD835\uDD5F',
+        'o': '\uD835\uDD60',
+        'p': '\uD835\uDD61',
+        'q': '\uD835\uDD62',
+        'r': '\uD835\uDD63',
+        's': '\uD835\uDD64',
+        't': '\uD835\uDD65',
+        'u': '\uD835\uDD66',
+        'v': '\uD835\uDD67',
+        'w': '\uD835\uDD68',
+        'x': '\uD835\uDD69',
+        'y': '\uD835\uDD6A',
+        'z': '\uD835\uDD6B'
+    };
+
+    return text.split('').map(char => frakturMap[char] || char).join('');
+}
+
+function convertToFrakturBold(text) {
+    const frakturBoldMap = {
+        'A': '\uD835\uDD70',
+        'B': '\uD835\uDD71',
+        'C': '\uD835\uDD72',
+        'D': '\uD835\uDD73',
+        'E': '\uD835\uDD74',
+        'F': '\uD835\uDD75',
+        'G': '\uD835\uDD76',
+        'H': '\uD835\uDD77',
+        'I': '\uD835\uDD78',
+        'J': '\uD835\uDD79',
+        'K': '\uD835\uDD7A',
+        'L': '\uD835\uDD7B',
+        'M': '\uD835\uDD7C',
+        'N': '\uD835\uDD7D',
+        'O': '\uD835\uDD7E',
+        'P': '\uD835\uDD7F',
+        'Q': '\uD835\uDD80',
+        'R': '\uD835\uDD81',
+        'S': '\uD835\uDD82',
+        'T': '\uD835\uDD83',
+        'U': '\uD835\uDD84',
+        'V': '\uD835\uDD85',
+        'W': '\uD835\uDD86',
+        'X': '\uD835\uDD87',
+        'Y': '\uD835\uDD88',
+        'Z': '\uD835\uDD89',
+        'a': '\uD835\uDD8A',
+        'b': '\uD835\uDD8B',
+        'c': '\uD835\uDD8C',
+        'd': '\uD835\uDD8D',
+        'e': '\uD835\uDD8E',
+        'f': '\uD835\uDD8F',
+        'g': '\uD835\uDD90',
+        'h': '\uD835\uDD91',
+        'i': '\uD835\uDD92',
+        'j': '\uD835\uDD93',
+        'k': '\uD835\uDD94',
+        'l': '\uD835\uDD95',
+        'm': '\uD835\uDD96',
+        'n': '\uD835\uDD97',
+        'o': '\uD835\uDD98',
+        'p': '\uD835\uDD99',
+        'q': '\uD835\uDD9A',
+        'r': '\uD835\uDD9B',
+        's': '\uD835\uDD9C',
+        't': '\uD835\uDD9D',
+        'u': '\uD835\uDD9E',
+        'v': '\uD835\uDD9F',
+        'w': '\uD835\uDDA0',
+        'x': '\uD835\uDDA1',
+        'y': '\uD835\uDDA2',
+        'z': '\uD835\uDDA3'
+    };
+
+    return text.split('').map(char => frakturBoldMap[char] || char).join('');
 }
 
 function zalgoText(text) {
@@ -225,7 +355,12 @@ var TextMagiQ1 = {
                                 { label: "Binary -> Text", value: "binary_reverse" },
                                 { label: "Text -> Binary", value: "binary_translate" },
                                 { label: "Mirror Text", value: "mirror_text" },
-                                { label: "Zalgo Text", value: "zalgo_text" }
+                                { label: "Zalgo Text (Not Working!)", value: "zalgo_text" },
+                                { label: "Bold (Not Working!)", value: "bold" },
+                                { label: "Italic (Not Working!)", value: "italic" },
+                                { label: "Strikethrough (Not Working!)", value: "strikethrough" },
+                                { label: "Underline (Not Working!)", value: "underline" },
+                                { label: "Fraktur", value: "fraktur" }
                             ]
                         }
                     ]
