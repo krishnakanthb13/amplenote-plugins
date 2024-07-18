@@ -626,9 +626,9 @@ function convertToSuperscript(text) {
 }
   
 // Add transformation options to a select element
-var TextMagiQ1 = {
+var TextMagiQ = {
     replaceText: {
-        "Case_Capitalization": async function(app, text) {
+        "Fontastic": async function(app, text) {
             try {
                 // Simulate user input for transformation type
                 const result = await app.prompt("Select text transformation", {
@@ -647,12 +647,12 @@ var TextMagiQ1 = {
                                 { label: "Case: lnVeRsE Case", value: "inverse_case" },
                               
                                 { label: "Special: RanDom cAsE", value: "random_case" },
-                                { label: "Special: Small Caps (Irreversible)", value: "small_caps" },
-                                { label: "Special: Superscript (Irreversible)", value: "superscript" },
-                                { label: "Special: Wide Text (Irreversible)", value: "wide_text" },
+                                { label: "Special: Small Caps (Immutable)", value: "small_caps" },
+                                { label: "Special: Superscript (Immutable)", value: "superscript" },
+                                { label: "Special: Wide Text (Immutable)", value: "wide_text" },
                               
                                 { label: "Flip: Reverse Text", value: "reverse_text" },
-                                { label: "Flip: Upside Down Text (Irreversible)", value: "upside_down_text" },
+                                { label: "Flip: Upside Down Text (Immutable)", value: "upside_down_text" },
 
                                 { label: "Code: Text -> Morse Code", value: "morse_code_translate" },
                                 { label: "Code: Morse Code -> Text", value: "morse_code_reverse" },
@@ -660,20 +660,20 @@ var TextMagiQ1 = {
                                 { label: "Code: Binary -> Text", value: "binary_reverse" },
 
                                 { label: "Visual: Mirror Text", value: "mirror_text" },
-                                { label: "Visual: Zalgo Text (Not Working!)", value: "zalgo_text" },
+                                { label: "Visual: Zalgo Text", value: "zalgo_text" },
                               
-                                { label: "Bold (Not Working!)", value: "bold" },
-                                { label: "Italic (Not Working!)", value: "italic" },
-                                { label: "Strikethrough (Not Working!)", value: "strikethrough" },
-                                { label: "Underline (Not Working!)", value: "underline" },
+                                //{ label: "Bold (Not Working!)", value: "bold" },
+                                //{ label: "Italic (Not Working!)", value: "italic" },
+                                //{ label: "Strikethrough (Not Working!)", value: "strikethrough" },
+                                //{ label: "Underline (Not Working!)", value: "underline" },
                               
-                                { label: "Unicode: Fraktur", value: "fraktur" },
-                                { label: "Unicode: Fraktur (Bold) (Working Weird!)", value: "fraktur_bold" },
+                                //{ label: "Unicode: Fraktur", value: "fraktur" },
+                                //{ label: "Unicode: Fraktur (Bold) (Working Weird!)", value: "fraktur_bold" },
                               
-                                { label: "Unicode: Squared (Working Weird!)", value: "squared" },
-                                { label: "Unicode: Squared (Inverted) (Working Weird!)", value: "squared_inverted" },
-                                { label: "Unicode: Circled", value: "circled" },
-                                { label: "Unicode: Circled (Inverted) (Working Weird!)", value: "circled_inverted" }
+                                //{ label: "Unicode: Squared (Working Weird!)", value: "squared" },
+                                //{ label: "Unicode: Squared (Inverted) (Working Weird!)", value: "squared_inverted" },
+                                { label: "Unicode: Circled", value: "circled" }
+                                //,{ label: "Unicode: Circled (Inverted) (Working Weird!)", value: "circled_inverted" }
                             ]
                         }
                     ]
@@ -695,7 +695,7 @@ var TextMagiQ1 = {
     }
 };
 
-var plugin_default = TextMagiQ1;
-return TextMagiQ1;
+var plugin_default = TextMagiQ;
+return TextMagiQ;
 
 })()
