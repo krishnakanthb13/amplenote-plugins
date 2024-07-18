@@ -548,6 +548,20 @@
             text = text.trim();
             await this._toDiagram(app, text); // Pass text to _toDiagram
             return null;
+        },
+        "UnixToDateTime": async function(app, text) {
+        text = text.trim();
+        if (/^\d+$/.test(text)) {
+            const timestamp = parseInt(text, 10);
+            if (!isNaN(timestamp)) {
+                const date = new Date(timestamp * 1000);
+                return date.toLocaleString();
+            } else {
+                return "Invalid Unix timestamp";
+            }
+        } else {
+            return "Invalid input for Unix timestamp";
+        }
         }
     },
     async _toDiagram(app, text) {
