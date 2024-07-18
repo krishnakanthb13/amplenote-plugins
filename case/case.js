@@ -1,70 +1,101 @@
 (() => {
+    // Function to transform text based on the specified transformation type
     function transformText(text, transformType) {
-    switch (transformType) {
-        case 'sentence_case':
-            return text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
-        case 'lower_case':
-            return text.toLowerCase();
-        case 'upper_case':
-            return text.toUpperCase();
-        case 'capitalized_case':
-            return text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-        case 'alternating_case':
-            return text.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
-        case 'title_case':
-            return text.toLowerCase().replace(/\b(?:an?|the|and|or|but|for|nor|on|at|to|by|with|about|of)\b|\b\w/g, function(c) { return c.toUpperCase(); });
-        case 'inverse_case':
-            return text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
-        case 'random_case':
-            return text.split('').map(c => Math.random() < 0.5 ? c.toLowerCase() : c.toUpperCase()).join('');
-        case 'small_caps':
-            return convertToSmallCaps(text);
-        case 'superscript':
-            return convertToSuperscript(text);
-        case 'wide_text':
-            return convertToWideText(text);
-        case 'reverse_text':
-            return reverseText(text);
-        case 'upside_down_text':
-            return flipUpsideDown(text);
-        case 'morse_code_translate':
-            return textToMorse(text);
-        case 'morse_code_reverse':
-            return morseToText(text);
-        case 'binary_translate':
-            return textToBinary(text);
-        case 'binary_reverse':
-            return binaryToText(text);
-        case 'mirror_text':
-            return mirrorText(text);
-        case 'zalgo_text':
-            return zalgoText(text);
-        case 'bold':
-            return `**${text}**`;
-        case 'italic':
-            return `*${text}*`;
-        case 'strikethrough':
-            return `~~${text}~~`;
-        case 'underline':
-            return `<u>${text}</u>`;
-        case 'fraktur':
-            return convertToFraktur(text);
-        case 'fraktur_bold':
-            return convertToFrakturBold(text);
-        case 'squared':
-            return convertToSquared(text);
-        case 'squared_inverted':
-            return convertToSquaredInverted(text);
-        case 'circled':
-            return convertToCircled(text);
-        case 'circled_inverted':
-            return convertToCircledInverted(text);
-        default:
-            return text;
+        switch (transformType) {
+            case 'sentence_case':
+                // Convert to sentence case: First letter of each sentence capitalized
+                return text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
+            case 'lower_case':
+                // Convert to lower case
+                return text.toLowerCase();
+            case 'upper_case':
+                // Convert to upper case
+                return text.toUpperCase();
+            case 'capitalized_case':
+                // Convert to capitalized case: First letter of each word capitalized
+                return text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+            case 'alternating_case':
+                // Convert to alternating case: Alternate between lower and upper case
+                return text.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
+            case 'title_case':
+                // Convert to title case: First letter of each major word capitalized
+                return text.toLowerCase().replace(/\b(?:an?|the|and|or|but|for|nor|on|at|to|by|with|about|of)\b|\b\w/g, c => c.toUpperCase());
+            case 'inverse_case':
+                // Convert to inverse case: Lowercase letters to uppercase and vice versa
+                return text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
+            case 'random_case':
+                // Convert to random case: Randomly change case of each letter
+                return text.split('').map(c => Math.random() < 0.5 ? c.toLowerCase() : c.toUpperCase()).join('');
+            case 'small_caps':
+                // Convert to small caps (custom function)
+                return convertToSmallCaps(text);
+            case 'superscript':
+                // Convert to superscript (custom function)
+                return convertToSuperscript(text);
+            case 'wide_text':
+                // Convert to wide text (custom function)
+                return convertToWideText(text);
+            case 'reverse_text':
+                // Reverse the text
+                return reverseText(text);
+            case 'upside_down_text':
+                // Flip text upside down (custom function)
+                return flipUpsideDown(text);
+            case 'morse_code_translate':
+                // Convert text to Morse code (custom function)
+                return textToMorse(text);
+            case 'morse_code_reverse':
+                // Convert Morse code to text (custom function)
+                return morseToText(text);
+            case 'binary_translate':
+                // Convert text to binary (custom function)
+                return textToBinary(text);
+            case 'binary_reverse':
+                // Convert binary to text (custom function)
+                return binaryToText(text);
+            case 'mirror_text':
+                // Convert text to mirror text (custom function)
+                return mirrorText(text);
+            case 'zalgo_text':
+                // Convert text to Zalgo text (custom function)
+                return zalgoText(text);
+            case 'bold':
+                // Make text bold
+                return `**${text}**`;
+            case 'italic':
+                // Make text italic
+                return `*${text}*`;
+            case 'strikethrough':
+                // Strike through the text
+                return `~~${text}~~`;
+            case 'underline':
+                // Underline the text
+                return `<u>${text}</u>`;
+            case 'fraktur':
+                // Convert to Fraktur script (custom function)
+                return convertToFraktur(text);
+            case 'fraktur_bold':
+                // Convert to bold Fraktur script (custom function)
+                return convertToFrakturBold(text);
+            case 'squared':
+                // Convert to squared text (custom function)
+                return convertToSquared(text);
+            case 'squared_inverted':
+                // Convert to squared inverted text (custom function)
+                return convertToSquaredInverted(text);
+            case 'circled':
+                // Convert to circled text (custom function)
+                return convertToCircled(text);
+            case 'circled_inverted':
+                // Convert to circled inverted text (custom function)
+                return convertToCircledInverted(text);
+            default:
+                // Return original text if no transformation type matches
+                return text;
+        }
     }
-}
 
-
+// Convert text to squared characters
 function convertToSquared(text) {
     const squaredMap = {
         'A': '\u1D400',
@@ -124,6 +155,7 @@ function convertToSquared(text) {
     return Array.from(text).map(char => squaredMap[char] || char).join('');
 }
 
+// Convert text to squared inverted characters
 function convertToSquaredInverted(text) {
     const squaredInvertedMap = {
         'A': '\u1D7D8',
@@ -183,6 +215,7 @@ function convertToSquaredInverted(text) {
     return Array.from(text).map(char => squaredInvertedMap[char] || char).join('');
 }
 
+// Convert text to circled characters
 function convertToCircled(text) {
     const circledMap = {
         'A': '\u24B6',
@@ -242,6 +275,7 @@ function convertToCircled(text) {
     return Array.from(text).map(char => circledMap[char] || char).join('');
 }
 
+  // Convert text to circled inverted characters
 function convertToCircledInverted(text) {
     const circledInvertedMap = {
         'A': '\u24B6',
@@ -300,7 +334,8 @@ function convertToCircledInverted(text) {
 
     return Array.from(text).map(char => circledInvertedMap[char] || char).join('');
 }
-  
+
+  // Convert text to fraktur characters
 function convertToFraktur(text) {
     const frakturMap = {
         'A': '\uD835\uDD38',
@@ -360,6 +395,7 @@ function convertToFraktur(text) {
     return text.split('').map(char => frakturMap[char] || char).join('');
 }
 
+  // Convert text to Fraktur Bold characters
 function convertToFrakturBold(text) {
     const frakturBoldMap = {
         'A': '\uD835\uDD70',
@@ -419,6 +455,7 @@ function convertToFrakturBold(text) {
     return Array.from(text).map(char => frakturBoldMap[char] || char).join('');
 }
 
+    // Convert text to zalgo characters
 function zalgoText(text) {
     const zalgoChars = [
         '\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311', '\u0306', '\u0310',
@@ -436,7 +473,8 @@ function zalgoText(text) {
 
     return text.split('').map(char => char + getRandomZalgo()).join('');
 }
-
+  
+// Convert text to mirrorText characters
 function mirrorText(text) {
     const mirrorMap = {
         'a': 'ɒ', 'b': 'd', 'c': 'ɔ', 'd': 'b', 'e': 'ɘ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ı', 'j': 'ſ', 'k': 'ʞ',
@@ -454,15 +492,18 @@ function mirrorText(text) {
 
     return text.split('').reverse().map(char => mirrorMap[char] || char).join('');
 }
-
+  
+// Convert text to textToBinary characters
 function textToBinary(text) {
     return text.split('').map(char => char.charCodeAt(0).toString(2)).join(' ');
 }
-
+  
+// Convert text to binaryToText characters
 function binaryToText(binary) {
     return binary.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
 }
-
+  
+// Convert text to textToMorse characters
 function textToMorse(text) {
     const morseMap = {
         'a': '.-', 'b': '-...', 'c': '-.-.', 'd': '-..', 'e': '.', 'f': '..-.', 'g': '--.', 'h': '....', 'i': '..', 'j': '.---',
@@ -478,7 +519,8 @@ function textToMorse(text) {
 
     return text.toLowerCase().split('').map(c => morseMap[c] || '').join(' ');
 }
-
+  
+// Convert text to morseToText characters
 function morseToText(text) {
     const morseReverseMap = {
         '.-': 'a', '-...': 'b', '-.-.': 'c', '-..': 'd', '.': 'e', '..-.': 'f', '--.': 'g', '....': 'h', '..': 'i', '.---': 'j',
@@ -494,7 +536,8 @@ function morseToText(text) {
 
     return text.split(' ').map(m => morseReverseMap[m] || '').join('');
 }
-
+  
+// Convert text to flipUpsideDown characters
 function flipUpsideDown(text) {
     const upsideDownMap = {
         'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ᴉ',
@@ -513,10 +556,12 @@ function flipUpsideDown(text) {
     return text.split('').reverse().map(c => upsideDownMap[c] || c).join('');
 }
 
+// Convert text to reverseText characters
 function reverseText(text) {
     return text.split('').reverse().join('');
 }
-
+  
+// Convert text to convertToWideText characters
 function convertToWideText(text) {
     const wideMap = {
         'a': 'ａ', 'b': 'ｂ', 'c': 'ｃ', 'd': 'ｄ', 'e': 'ｅ', 'f': 'ｆ', 'g': 'ｇ', 'h': 'ｈ', 'i': 'ｉ',
@@ -534,7 +579,8 @@ function convertToWideText(text) {
 
     return text.split('').map(c => wideMap[c] || c).join('');
 }
-
+  
+// Convert text to convertToSmallCaps characters
 function convertToSmallCaps(text) {
     const smallCapsMap = {
         'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ',
@@ -547,7 +593,8 @@ function convertToSmallCaps(text) {
 
     return text.split('').map(c => smallCapsMap[c] || c).join('');
 }
-
+  
+// Convert text to convertToSmallCaps characters
 function convertToSuperscript(text) {
     const superscriptMap = {
         'a': 'ᵃ', 'b': 'ᵇ', 'c': 'ᶜ', 'd': 'ᵈ', 'e': 'ᵉ', 'f': 'ᶠ', 'g': 'ᵍ', 'h': 'ʰ', 'i': 'ⁱ',
@@ -569,7 +616,8 @@ function convertToSuperscript(text) {
 
     return text.split('').map(c => superscriptMap[c] || c).join('');
 }
-
+  
+// Add transformation options to a select element
 var TextMagiQ1 = {
     replaceText: {
         "Case_Capitalization": async function(app, text) {
