@@ -630,35 +630,42 @@ var TextMagiQ1 = {
                             type: "select",
                             options: [
                                 { label: "None", value: "" },
-                                { label: "Sentence case", value: "sentence_case" },
-                                { label: "UPPER CASE", value: "upper_case" },
-                                { label: "lower case", value: "lower_case" },
-                                { label: "Capitalized Case", value: "capitalized_case" },
-                                { label: "Title Case", value: "title_case" },
-                                { label: "aLtErNaTiNg CASE", value: "alternating_case" },
-                                { label: "lnVeRsE Case", value: "inverse_case" },
-                                { label: "RanDom cAsE", value: "random_case" },
-                                { label: "Reverse Text", value: "reverse_text" },
-                                { label: "Small Caps (Irreversible)", value: "small_caps" },
-                                { label: "Superscript (Irreversible)", value: "superscript" },
-                                { label: "Wide Text (Irreversible)", value: "wide_text" },
-                                { label: "Upside Down Text (Irreversible)", value: "upside_down_text" },
-                                { label: "Morse Code -> Text", value: "morse_code_reverse" },
-                                { label: "Text -> Morse Code", value: "morse_code_translate" },
-                                { label: "Binary -> Text", value: "binary_reverse" },
-                                { label: "Text -> Binary", value: "binary_translate" },
-                                { label: "Mirror Text", value: "mirror_text" },
-                                { label: "Zalgo Text (Not Working!)", value: "zalgo_text" },
+                                { label: "Case: Sentence case", value: "sentence_case" },
+                                { label: "Case: UPPER CASE", value: "upper_case" },
+                                { label: "Case: lower case", value: "lower_case" },
+                                { label: "Case: Capitalized Case", value: "capitalized_case" },
+                                { label: "Case: Title Case", value: "title_case" },
+                                { label: "Case: aLtErNaTiNg CASE", value: "alternating_case" },
+                                { label: "Case: lnVeRsE Case", value: "inverse_case" },
+                              
+                                { label: "Special: RanDom cAsE", value: "random_case" },
+                                { label: "Special: Small Caps (Irreversible)", value: "small_caps" },
+                                { label: "Special: Superscript (Irreversible)", value: "superscript" },
+                                { label: "Special: Wide Text (Irreversible)", value: "wide_text" },
+                              
+                                { label: "Flip: Reverse Text", value: "reverse_text" },
+                                { label: "Flip: Upside Down Text (Irreversible)", value: "upside_down_text" },
+
+                                { label: "Code: Text -> Morse Code", value: "morse_code_translate" },
+                                { label: "Code: Morse Code -> Text", value: "morse_code_reverse" },
+                                { label: "Code: Text -> Binary", value: "binary_translate" },
+                                { label: "Code: Binary -> Text", value: "binary_reverse" },
+
+                                { label: "Visual: Mirror Text", value: "mirror_text" },
+                                { label: "Visual: Zalgo Text (Not Working!)", value: "zalgo_text" },
+                              
                                 { label: "Bold (Not Working!)", value: "bold" },
                                 { label: "Italic (Not Working!)", value: "italic" },
                                 { label: "Strikethrough (Not Working!)", value: "strikethrough" },
                                 { label: "Underline (Not Working!)", value: "underline" },
-                                { label: "Fraktur", value: "fraktur" },
-                                { label: "Fraktur (Bold) (Working Weird!)", value: "fraktur_bold" },
-                                { label: "Squared (Working Weird!)", value: "squared" },
-                                { label: "Squared (Inverted) (Working Weird!)", value: "squared_inverted" },
-                                { label: "Circled", value: "circled" },
-                                { label: "Circled (Inverted) (Working Weird!)", value: "circled_inverted" }
+                              
+                                { label: "Unicode: Fraktur", value: "fraktur" },
+                                { label: "Unicode: Fraktur (Bold) (Working Weird!)", value: "fraktur_bold" },
+                              
+                                { label: "Unicode: Squared (Working Weird!)", value: "squared" },
+                                { label: "Unicode: Squared (Inverted) (Working Weird!)", value: "squared_inverted" },
+                                { label: "Unicode: Circled", value: "circled" },
+                                { label: "Unicode: Circled (Inverted) (Working Weird!)", value: "circled_inverted" }
                             ]
                         }
                     ]
@@ -668,7 +675,7 @@ var TextMagiQ1 = {
 
                 const transformedText = transformText(text, textTransform);
 
-                alert("Transformed text:" + transformedText);
+                //alert("Transformed text:" + transformedText);
 
                 return transformedText; // Return transformed text
 
