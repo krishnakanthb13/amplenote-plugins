@@ -471,7 +471,15 @@ function zalgoText(text) {
         return zalgoChars[rand];
     }
 
-    return text.split('').map(char => char + getRandomZalgo()).join('');
+    //return text.split('').map(char => char + getRandomZalgo()).join('');
+    // increase the level of craziness where i < (number)
+    return text.split('').map(char => {
+        let crazyChar = char;
+        for (let i = 0; i < 4; i++) {
+            crazyChar += getRandomZalgo();
+        }
+        return crazyChar;
+    }).join('');
 }
   
 // Convert text to mirrorText characters
