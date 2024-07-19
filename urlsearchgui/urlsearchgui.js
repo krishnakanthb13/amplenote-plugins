@@ -6,10 +6,10 @@
                 try {
                     // Prompting the user to enter filter criteria
                     const result = await app.prompt("Enter your Search Filter criteria. >> Hit: Group Details: (folders.):archived,deleted,vault,plugin (no-tag):untagged (shared):created,public,shared,shareReceived,notCreated,shareSent (creation-date.):thisWeek,today (low-level-queries.):saving,stale,indexing (Notes-contain-tasks.):taskLists", {
-						      actions: [
-								{ icon: "content_paste_go", label: "Save and Open" , value: "save" },
-								{ icon: "open_in_new", label: "Open" , value: "open" },
-							  ],
+                        actions: [
+                            { icon: "content_paste_go", label: "Save and Open", value: "save" },
+                            { icon: "open_in_new", label: "Open", value: "open" },
+                        ],
                         inputs: [
                             // Group selection input
                             {
@@ -43,7 +43,7 @@
                                 type: "string",
                                 placeholder: "Partial / Full Keyword"
                             },
-							// Search in Tasks
+                            // Search in Tasks
                             {
                                 label: "Search in Tasks",
                                 type: "checkbox"
@@ -71,10 +71,9 @@
                     const tagsArrayEx = tagEx ? tagEx.split(',').map(tag => tag.trim()) : [];
                     const groupArrayIn = groupIn ? groupIn.split(',').map(gp => gp.trim()) : [];
                     const groupArrayEx = groupEx ? groupEx.split(',').map(gp => gp.trim()) : [];
-                    
+
                     // Base URL
-                    let baseUrl = "https://www.amplenote.com/notes?";
-                    let baseUrltask = "https://www.amplenote.com/notes/tasks?";
+                    let baseUrl = taskOrnote ? "https://www.amplenote.com/notes/tasks?" : "https://www.amplenote.com/notes?";
 
 
                     app.alert("URL and Search Query Pasted and Opened / Opened directly!");
