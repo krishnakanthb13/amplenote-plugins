@@ -1,162 +1,163 @@
 (() => {
     var USG = {
         insertText: {
-            // Function to insert text based on user inputs
-            "Name_Tag": async function(app) {
+            "Hack": async function(app) {
                 try {
-                    // Prompting the user to enter filter criteria
+                    const noteHandles = await app.filterNotes();
+                    const noteHandlesE = await app.filterNotes();
                     const result = await app.prompt("Enter your Search Filter criteria. >> Hit: Group Details: (FOLDERS):archived,deleted,vault,plugin, (NO-TAG):untagged, (SHARED):created,public,shared,shareReceived,notCreated,shareSent, (CREATION-DATE):thisWeek,today, (NOTES-CONTAIN-TASKS):taskLists, (LOW-LEVEL-QUERIES):saving,stale,indexing,", {
                         actions: [
                             { icon: "content_paste_go", label: "Save to New Note", value: "new_note" },
                             { icon: "open_in_new", label: "Directly Open Url", value: "open" },
                         ],
                         inputs: [
-                            // Group selection input
-                            {
-                                label: "Enter Groups to Include",
-                                type: "string",
-                                placeholder: "CopyPaste the Groups from above"
-                            },
-                            // Group exclusion input
-                            {
-                                label: "Enter Groups to Exclude",
-                                type: "string",
-                                placeholder: "CopyPaste the Groups from above"
-                            },
-                            // Tag selection input
-                            {
-                                label: "Select Tags to Include (Max 3)",
-                                type: "tags",
-                                limit: 3,
-                                placeholder: "Enter tag/'s' (Max 3)"
-                            },
-                            // Tag exclusion input
-                            {
-                                label: "Select Tags to Exclude (Max 3)",
-                                type: "tags",
-                                limit: 3,
-                                placeholder: "Enter tag/'s' (Max 3)"
-                            },
-                            // Search keyword
-                            {
-                                label: "Enter keyword",
-                                type: "string",
-                                placeholder: "Partial / Full Keyword"
-                            },
-                            // Search in Tasks
-                            {
-                                label: "Search in Tasks",
-                                type: "checkbox"
-                            },
+                            { label: "Enter Groups to Include (Only for Notes)", type: "string", placeholder: "CopyPaste the Groups from above" },
+                            { label: "Enter Groups to Exclude (Only for Notes)", type: "string", placeholder: "CopyPaste the Groups from above" },
+                            { label: "Select Tags to Include (Only for Notes, Tasks)", type: "tags", limit: 3, placeholder: "Enter tag/'s' (Max 3)" },
+                            { label: "Select Tags to Exclude (Only for Notes, Tasks)", type: "tags", limit: 3, placeholder: "Enter tag/'s' (Max 3)" },
+                            { label: "Enter keyword", type: "string", placeholder: "Partial / Full Keyword" },
+                            { label: "Search in", type: "select", options: [{ label: "Notes (Only Tags, Groups)", value: "" }, { label: "Tasks (Only Notes, Tags)", value: "task" }, { label: "Calendar (Only Notes)", value: "cal" }] },
+                            { label: "Select a Note to Include (Only for Calendar, Tasks)", type: "note", placeholder: "Select a Note", options: noteHandles },
+                            { label: "Select a Note to Exclude (Only for Calendar, Tasks)", type: "note", placeholder: "Select a Note", options: noteHandlesE }
                         ]
                     });
 
-                    // If the result is falsy, the user has canceled the operation
                     if (!result) {
                         app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
                         return;
                     }
 
-                    // Destructuring user inputs
-                    const [groupIn, groupEx, tagIn, tagEx, searchTxt, taskOrnote, actionResult] = result;
+                    const [groupIn, groupEx, tagIn, tagEx, searchTxt, taskOrnote, noteIn, noteEx, actionResult] = result;
 
-                    // Ensure at least one of the required variables is selected
-                    if (!groupIn && !groupEx && !tagIn && !tagEx && !searchTxt) {
-                        app.alert("Note: At least one of Optional Items (Group Include, Group Exclude, Tag Include, Tag Exclude, or Search Text) must be selected");
+                    if (!groupIn && !groupEx && !tagIn && !tagEx && !searchTxt && !noteIn && !noteEx) {
+                        app.alert("Note: At least one of Optional Items (Group Include, Group Exclude, Tag Include, Tag Exclude, Note Include, Note Exclude, or Search Text) must be selected");
                         return;
                     }
 
-                    // Split tags and groups into arrays
                     const tagsArrayIn = tagIn ? tagIn.split(',').map(tag => tag.trim()) : [];
                     const tagsArrayEx = tagEx ? tagEx.split(',').map(tag => tag.trim()) : [];
                     const groupArrayIn = groupIn ? groupIn.split(',').map(gp => gp.trim()) : [];
                     const groupArrayEx = groupEx ? groupEx.split(',').map(gp => gp.trim()) : [];
 
-                    // Base URL
-                    let baseUrl = taskOrnote ? "https://www.amplenote.com/notes/tasks?" : "https://www.amplenote.com/notes?";
+                    const referrenceUuidIn = noteIn ? noteIn.uuid.split(',').map(note => note.trim()) : [];
+                    const referrenceUuidEx = noteEx ? noteEx.uuid.split(',').map(note => note.trim()) : [];
+                    const referrenceUuidInN = noteIn ? noteIn.name.split(',').map(note => note.trim()) : [];
+                    const referrenceUuidExN = noteEx ? noteEx.name.split(',').map(note => note.trim()) : [];
 
-					// Collect parameters to append
-					let params = [];
+                    let baseUrl = "";
 
-					// Handle group parameters
-					let groupParams = [];
-					if (groupArrayIn.length > 0) {
-						groupParams.push(groupArrayIn.map(group => encodeURIComponent(group)).join('%2C'));
-					}
-					if (groupArrayEx.length > 0) {
-						//groupParams.push("%5E" + groupArrayEx.map(group => encodeURIComponent(group)).join('%2C'));
-						groupParams.push(groupArrayEx.map(group => "%5E" + encodeURIComponent(group)).join('%2C'));
-					}
-					if (groupParams.length > 0) {
-						params.push("group=" + groupParams.join('%2C'));
-					}
+                    if (taskOrnote === "task") {
+                        baseUrl = "https://www.amplenote.com/notes/tasks?";
+                    } else if (taskOrnote === "cal") {
+                        baseUrl = "https://www.amplenote.com/notes/calendar?";
+                    } else {
+                        baseUrl = "https://www.amplenote.com/notes?";
+                    }
 
-					// Handle tag parameters
-					let tagParams = [];
-					if (tagsArrayIn.length > 0) {
-						tagParams.push(tagsArrayIn.map(tag => encodeURIComponent(tag)).join('%2C'));
-					}
-					if (tagsArrayEx.length > 0) {
-						tagParams.push(tagsArrayEx.map(tag => "%5E" + encodeURIComponent(tag)).join('%2C'));
-					}
-					if (tagParams.length > 0) {
-						params.push("tag=" + tagParams.join('%2C'));
-					}
+                    let params = [];
 
-					// Handle search text
-					if (searchTxt) {
-						params.push("query=" + encodeURIComponent(searchTxt));
-					}
+                    let groupParams = [];
+                    if (Array.isArray(groupArrayIn) && groupArrayIn.length > 0) {
+                        groupParams.push(groupArrayIn.map(group => encodeURIComponent(group)).join('%2C'));
+                    }
+                    if (Array.isArray(groupArrayEx) && groupArrayEx.length > 0) {
+                        groupParams.push(groupArrayEx.map(group => "%5E" + encodeURIComponent(group)).join('%2C'));
+                    }
+                    if (groupParams.length > 0) {
+                        params.push("group=" + groupParams.join('%2C'));
+                    }
 
-					// Join parameters with '&' and append to the base URL
-					baseUrl += params.join('&');
+                    let tagParams = [];
+                    if (Array.isArray(tagsArrayIn) && tagsArrayIn.length > 0) {
+                        tagParams.push(tagsArrayIn.map(tag => encodeURIComponent(tag)).join('%2C'));
+                    }
+                    if (Array.isArray(tagsArrayEx) && tagsArrayEx.length > 0) {
+                        tagParams.push(tagsArrayEx.map(tag => "%5E" + encodeURIComponent(tag)).join('%2C'));
+                    }
+                    if (tagParams.length > 0) {
+                        params.push("tag=" + tagParams.join('%2C'));
+                    }
 
-                    // Base Search
+                    let noteParams = [];
+                    if (Array.isArray(referrenceUuidIn) && referrenceUuidIn.length > 0) {
+                        noteParams.push(referrenceUuidIn.map(note => encodeURIComponent(note)).join('%2C'));
+                    }
+                    if (Array.isArray(referrenceUuidEx) && referrenceUuidEx.length > 0) {
+                        noteParams.push(referrenceUuidEx.map(note => "%5E" + encodeURIComponent(note)).join('%2C'));
+                    }
+                    if (noteParams.length > 0) {
+                        params.push("references=" + noteParams.join('%2C'));
+                    }
+
+                    if (searchTxt && searchTxt.length > 0) {
+                        params.push("query=" + encodeURIComponent(searchTxt));
+                    }
+
+                    baseUrl += params.join('&');
+
                     let baseSearch = "";
-                  
-					// Collect parameters to append
-					let paramz = [];
 
-					// Handle group parameters
-					let groupParamz = [];
-					if (groupArrayIn.length > 0) {
-						groupParamz.push(groupArrayIn.map(group => (group)).join(','));
-					}
-					if (groupArrayEx.length > 0) {
-						groupParamz.push(groupArrayEx.map(group => "^" + (group)).join(','));
-					}
-					if (groupParams.length > 0) {
-						paramz.push("group:" + groupParamz.join(','));
-					}
+                    let paramz = [];
 
-					// Handle tag parameters
-					let tagParamz = [];
-					if (tagsArrayIn.length > 0) {
-						tagParamz.push(tagsArrayIn.map(tag => (tag)).join(','));
-					}
-					if (tagsArrayEx.length > 0) {
-						tagParamz.push(tagsArrayEx.map(tag => "^" + (tag)).join(','));
-					}
-					if (tagParams.length > 0) {
-						paramz.push("in:" + tagParamz.join(','));
-					}
+                    let groupParamz = [];
+                    if (Array.isArray(groupArrayIn) && groupArrayIn.length > 0) {
+                        groupParamz.push(groupArrayIn.map(group => (group)).join(','));
+                    }
+                    if (Array.isArray(groupArrayEx) && groupArrayEx.length > 0) {
+                        groupParamz.push(groupArrayEx.map(group => "^" + (group)).join(','));
+                    }
+                    if (groupParamz.length > 0) {
+                        paramz.push("group:" + groupParamz.join(','));
+                    }
 
-					// Handle search text
-					if (searchTxt) {
-						paramz.push((searchTxt));
-					}
+                    let tagParamz = [];
+                    if (Array.isArray(tagsArrayIn) && tagsArrayIn.length > 0) {
+                        tagParamz.push(tagsArrayIn.map(tag => (tag)).join(','));
+                    }
+                    if (Array.isArray(tagsArrayEx) && tagsArrayEx.length > 0) {
+                        tagParamz.push(tagsArrayEx.map(tag => "^" + (tag)).join(','));
+                    }
+                    if (tagParamz.length > 0) {
+                        paramz.push("in:" + tagParamz.join(','));
+                    }
 
-					// Join parameters with '&' and append to the base URL
-					baseSearch += paramz.join(' ');
-					
-					const searchFin = `[${baseSearch}](${baseUrl})`;
-					const urlFin = `[${baseUrl}](${baseUrl})`;
+                    let noteParamz = [];
+                    if (Array.isArray(referrenceUuidInN) && referrenceUuidInN.length > 0) {
+                        noteParamz.push(referrenceUuidInN.map(tag => (tag)).join(' '));
+                    }
+                    if (Array.isArray(referrenceUuidExN) && referrenceUuidExN.length > 0) {
+                        noteParamz.push(referrenceUuidExN.map(tag => "^" + (tag)).join(' '));
+                    }
+                    if (noteParamz.length > 0) {
+                        paramz.push(" " + noteParamz.join(' '));
+                    }
 
-                    // Generate the summary of input selections
-					// groupIn, groupEx, tagIn, tagEx, searchTxt, taskOrnote, actionResult
+                    if (searchTxt && searchTxt.length > 0) {
+                        paramz.push((searchTxt));
+                    }
+
+                    baseSearch += paramz.join(' ');
+
+                    const searchFin = `[${baseSearch}](${baseUrl})`;
+                    const urlFin = `[${baseUrl}](${baseUrl})`;
+
+                    const now = new Date();
+
+                    // Get date in YYYY-MM-DD format
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const currentDate = `${year}-${month}-${day}`;
+                    
+                    // Get time in HH:MM:SS format
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                    const currentTime = `${hours}:${minutes}:${seconds}`;
+
                     const inputSummary = `
 - Results:
-  - Search Option: ${searchFin}
+  - Search Option: <${baseSearch}> . (Works only for Notes Search).
   - URL Option: ${urlFin}
 - Input Selections:
   - Groups Included: ${groupIn || "None"}
@@ -165,28 +166,20 @@
   - Tags Excluded: ${tagEx || "None"}
   - Search Text: ${searchTxt || "None"}
   - Search Tasks: ${taskOrnote ? "Yes" : "No"}
+  - Report Date & Time: ${currentDate || "None"} ${currentTime || "None"}
 `;
 
-                    // Base Search
                     let resultText = "";
-                  
-                    // Append the summary to the result text
+
                     resultText += `${inputSummary}`;
 
-                    // Open the URL based on the selected action
                     if (actionResult === "new_note") {
-                        // Assuming app.navigate is a function opens the URL
-						//return resultText;
                         let noteUUID = await app.createNote("URL-Search Report", ["url-search-reports"]);
                         await app.insertContent({ uuid: noteUUID }, resultText);
-						//setTimeout(() => {app.navigate(baseUrl);}, 2000);
-                        //app.navigate(baseUrl);
                     } else if (actionResult === "open") {
-                        // Assuming app.navigate is a function opens the URL
                         app.navigate(baseUrl);
                     } else {
-                        //return resultText;
-						await app.context.replaceSelection(resultText);
+                        await app.context.replaceSelection(resultText);
                     }
 
                     app.alert("URL and Search Query Executed based on your selection!");
