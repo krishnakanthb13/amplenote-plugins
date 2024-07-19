@@ -42,7 +42,12 @@
                                 label: "Enter keyword",
                                 type: "string",
                                 placeholder: "Partial / Full Keyword"
-                            },							
+                            },
+							// Search in Tasks
+                            {
+                                label: "Search in Tasks",
+                                type: "checkbox"
+                            },
                         ]
                     });
 
@@ -61,13 +66,15 @@
                         return;
                     }
 
-                    // Split tags into an array
-                    const tagsArrayIn = tagIn ? tagIn.split(',').map(tagIn => tagIn.trim()) : [];
-                    const tagsArrayEx = tagEx ? tagEx.split(',').map(tagEx => tagEx.trim()) : [];
-                    const groupArrayIn = groupIn ? groupIn.split(',').map(gpIn => gpIn.trim()) : [];
-                    const groupArrayEx = groupEx ? groupEx.split(',').map(gpEx => gpEx.trim()) : [];
-                    const queryTxt = searchTxt;
-                    let notes = [];
+                    // Split tags and groups into arrays
+                    const tagsArrayIn = tagIn ? tagIn.split(',').map(tag => tag.trim()) : [];
+                    const tagsArrayEx = tagEx ? tagEx.split(',').map(tag => tag.trim()) : [];
+                    const groupArrayIn = groupIn ? groupIn.split(',').map(gp => gp.trim()) : [];
+                    const groupArrayEx = groupEx ? groupEx.split(',').map(gp => gp.trim()) : [];
+                    
+                    // Base URL
+                    let baseUrl = "https://www.amplenote.com/notes?";
+                    let baseUrltask = "https://www.amplenote.com/notes/tasks?";
 
 
                     app.alert("URL and Search Query Pasted and Opened / Opened directly!");
