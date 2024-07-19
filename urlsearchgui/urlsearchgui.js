@@ -75,35 +75,51 @@
                     // Base URL
                     let baseUrl = taskOrnote ? "https://www.amplenote.com/notes/tasks?" : "https://www.amplenote.com/notes?";
 
-                    // Collect parameters to append
-                    let params = [];
+					// Collect parameters to append
+					let params = [];
 
-                    if (groupArrayIn.length > 0) {
-                        params.push("group=" + groupArrayIn.map(group => encodeURIComponent(group)).join('%2C'));
-                    }
-                    if (groupArrayEx.length > 0) {
-                        params.push("group=%5E" + groupArrayEx.map(group => encodeURIComponent(group)).join('%2C'));
-                    }
-                    if (tagsArrayIn.length > 0) {
-                        params.push("tag=" + tagsArrayIn.map(tag => encodeURIComponent(tag)).join('%2C'));
-                    }
-                    if (tagsArrayEx.length > 0) {
-                        params.push("tag=%5E" + tagsArrayEx.map(tag => encodeURIComponent(tag)).join('%2C'));
-                    }
-                    if (searchTxt) {
-                        params.push("query=" + encodeURIComponent(searchTxt.replace(/ /g, '%20')));
-                    }
+					// Handle group parameters
+					let groupParams = [];
+					if (groupArrayIn.length > 0) {
+						groupParams.push(groupArrayIn.map(group => encodeURIComponent(group)).join('%2C'));
+					}
+					if (groupArrayEx.length > 0) {
+						groupParams.push("%5E" + groupArrayEx.map(group => encodeURIComponent(group)).join('%2C'));
+					}
+					if (groupParams.length > 0) {
+						params.push("group=" + groupParams.join('%2C'));
+					}
 
-                    // Join parameters with '&' and append to the base URL
-                    baseUrl += params.join('&');
+					// Handle tag parameters
+					let tagParams = [];
+					if (tagsArrayIn.length > 0) {
+						tagParams.push(tagsArrayIn.map(tag => encodeURIComponent(tag)).join('%2C'));
+					}
+					if (tagsArrayEx.length > 0) {
+						tagParams.push("%5E" + tagsArrayEx.map(tag => encodeURIComponent(tag)).join('%2C'));
+					}
+					if (tagParams.length > 0) {
+						params.push("tag=" + tagParams.join('%2C'));
+					}
+
+					// Handle search text
+					if (searchTxt) {
+						params.push("query=" + encodeURIComponent(searchTxt));
+					}
+
+					// Join parameters with '&' and append to the base URL
+					baseUrl += params.join('&');
 
                     // Open the URL based on the selected action
                     if (actionResult === "save") {
-                        // Assuming app.saveAndOpen is a function to save and open the URL
+                        // Assuming app.navigate is a function opens the URL
 						return baseUrl;
-                        app.navigate(baseUrl;);
+						setTimeout(() => {
+							app.navigate(baseUrl);
+						}, 2000);
+                        //app.navigate(baseUrl);
                     } else if (actionResult === "open") {
-                        // Assuming app.open is a function to open the URL directly
+                        // Assuming app.navigate is a function opens the URL
                         app.navigate(baseUrl);
                     } else {
                         return baseUrl;
