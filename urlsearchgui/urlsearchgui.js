@@ -58,7 +58,7 @@
                     }
 
                     // Destructuring user inputs
-                    const [groupIn, groupEx, tagIn, tagEx, searchTxt, actionResult] = result;
+                    const [groupIn, groupEx, tagIn, tagEx, searchTxt, taskOrnote, actionResult] = result;
 
                     // Ensure at least one of the required variables is selected
                     if (!groupIn && !groupEx && !tagIn && !tagEx && !searchTxt) {
