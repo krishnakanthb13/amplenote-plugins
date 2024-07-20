@@ -12,17 +12,17 @@
                     // Prompts the user to enter search filter criteria and provides action buttons and input fields
                     const result = await app.prompt("Enter your Search Filter criteria. >> Hit: Group Details: (FOLDERS):archived,deleted,vault,plugin, (NO-TAG):untagged, (SHARED):created,public,shared,shareReceived,notCreated,shareSent, (CREATION-DATE):thisWeek,today, (NOTES-CONTAIN-TASKS):taskLists, (LOW-LEVEL-QUERIES):saving,stale,indexing,", {
                         actions: [
-                            { icon: "content_paste_go", label: "Save to New Note", value: "new_note" },
-                            { icon: "open_in_new", label: "Directly Open Url", value: "open" },
+                            { icon: "saved_search", label: "Save to New Note", value: "new_note" },
+                            { icon: "open_in_new", label: "Open URL Directly", value: "open" },
                         ],
                         inputs: [
                             { label: "Enter Groups to Include (Only for Notes)", type: "string", placeholder: "CopyPaste the Groups from above" },
                             { label: "Enter Groups to Exclude (Only for Notes)", type: "string", placeholder: "CopyPaste the Groups from above" },
                             { label: "Select Tags to Include (Only for Notes, Tasks)", type: "tags", limit: 10, placeholder: "Enter tag/'s' (Max 3)" },
                             { label: "Select Tags to Exclude (Only for Notes, Tasks)", type: "tags", limit: 10, placeholder: "Enter tag/'s' (Max 3)" },
-                            { label: "Enter keyword", type: "string", placeholder: "Partial / Full Keyword" },
                             { label: "Select a Note to Include (Only for Calendar, Tasks)", type: "note", placeholder: "Select a Note", options: noteHandles },
                             { label: "Select a Note to Exclude (Only for Calendar, Tasks)", type: "note", placeholder: "Select a Note", options: noteHandlesE },
+                            { label: "Enter keyword", type: "string", placeholder: "Partial / Full Keyword" },
                             { label: "Search in", type: "select", options: [{ label: "Notes (Works w/ Tags, Groups)", value: "" }, { label: "Tasks (Works w/ Notes, Tags)", value: "tasks" }, { label: "Calendar (Works w/ Notes)", value: "calendar" }] }
                         ]
                     });
@@ -35,7 +35,7 @@
 
 
                     // Destructuring the result to get individual inputs
-                    const [groupIn, groupEx, tagIn, tagEx, searchTxt, noteIn, noteEx, taskOrnote, actionResult] = result;
+                    const [groupIn, groupEx, tagIn, tagEx, noteIn, noteEx, searchTxt, taskOrnote, actionResult] = result;
 
                     // Checking if at least one optional item is selected, else show an alert
                     if (!groupIn && !groupEx && !tagIn && !tagEx && !searchTxt && !noteIn && !noteEx) {
