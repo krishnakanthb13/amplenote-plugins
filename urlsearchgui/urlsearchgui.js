@@ -18,12 +18,12 @@
                         inputs: [
                             { label: "Enter Groups to Include (Only for Notes)", type: "string", placeholder: "CopyPaste the Groups from above" },
                             { label: "Enter Groups to Exclude (Only for Notes)", type: "string", placeholder: "CopyPaste the Groups from above" },
-                            { label: "Select Tags to Include (Only for Notes, Tasks)", type: "tags", limit: 3, placeholder: "Enter tag/'s' (Max 3)" },
-                            { label: "Select Tags to Exclude (Only for Notes, Tasks)", type: "tags", limit: 3, placeholder: "Enter tag/'s' (Max 3)" },
+                            { label: "Select Tags to Include (Only for Notes, Tasks)", type: "tags", limit: 10, placeholder: "Enter tag/'s' (Max 3)" },
+                            { label: "Select Tags to Exclude (Only for Notes, Tasks)", type: "tags", limit: 10, placeholder: "Enter tag/'s' (Max 3)" },
                             { label: "Enter keyword", type: "string", placeholder: "Partial / Full Keyword" },
-                            { label: "Search in", type: "select", options: [{ label: "Notes (Only Tags, Groups)", value: "" }, { label: "Tasks (Only Notes, Tags)", value: "task" }, { label: "Calendar (Only Notes)", value: "cal" }] },
                             { label: "Select a Note to Include (Only for Calendar, Tasks)", type: "note", placeholder: "Select a Note", options: noteHandles },
-                            { label: "Select a Note to Exclude (Only for Calendar, Tasks)", type: "note", placeholder: "Select a Note", options: noteHandlesE }
+                            { label: "Select a Note to Exclude (Only for Calendar, Tasks)", type: "note", placeholder: "Select a Note", options: noteHandlesE },
+                            { label: "Search in", type: "select", options: [{ label: "Notes (Works w/ Tags, Groups)", value: "" }, { label: "Tasks (Works w/ Notes, Tags)", value: "tasks" }, { label: "Calendar (Works w/ Notes)", value: "calendar" }] }
                         ]
                     });
 
@@ -35,7 +35,7 @@
 
 
                     // Destructuring the result to get individual inputs
-                    const [groupIn, groupEx, tagIn, tagEx, searchTxt, taskOrnote, noteIn, noteEx, actionResult] = result;
+                    const [groupIn, groupEx, tagIn, tagEx, searchTxt, noteIn, noteEx, taskOrnote, actionResult] = result;
 
                     // Checking if at least one optional item is selected, else show an alert
                     if (!groupIn && !groupEx && !tagIn && !tagEx && !searchTxt && !noteIn && !noteEx) {
@@ -57,9 +57,9 @@
 
                     // Setting the base URL based on the type of search (notes, tasks, or calendar)
                     let baseUrl = "";
-                    if (taskOrnote === "task") {
+                    if (taskOrnote === "tasks") {
                         baseUrl = "https://www.amplenote.com/notes/tasks?";
-                    } else if (taskOrnote === "cal") {
+                    } else if (taskOrnote === "calendar") {
                         baseUrl = "https://www.amplenote.com/notes/calendar?";
                     } else {
                         baseUrl = "https://www.amplenote.com/notes?";
@@ -184,7 +184,7 @@
   - Tags Included: ${tagIn || "None"}
   - Tags Excluded: ${tagEx || "None"}
   - Search Text: ${searchTxt || "None"}
-  - Search Tasks: ${taskOrnote ? "Yes" : "No"}
+  - Search Tasks: ${taskOrnote || "Notes"}
   - Report Date & Time: ${currentDate || "None"} ${currentTime || "None"}
 `;
 
