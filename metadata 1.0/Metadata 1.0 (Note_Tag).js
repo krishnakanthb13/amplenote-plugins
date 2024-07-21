@@ -7,7 +7,7 @@
                     // Prompting the user to enter filter criteria
                     const result = await app.prompt("Enter your filter criteria (Anyone or Both [Name_Tag]!)", {
                         inputs: [
-                            // Tag selection input
+                            // Tag selection input 
                             {
                                 label: "Select Tags to filter (Max 10)",
                                 type: "tags",
