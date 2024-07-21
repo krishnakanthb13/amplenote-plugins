@@ -134,7 +134,11 @@
 
                     // Split tags into an array
                     const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
+
                     let notes = [];
+					let notesEmptyNames = new Set();
+					let notesGroups = new Set();
+					let notesGroupsname = insertFormat;
 					
 					// Main Fetch happening based on insertFormat
                     if (insertFormat === "both_table" || insertFormat === "names_only" || insertFormat === "tags_only" || insertFormat === "empty_names_only" || insertFormat === "empty_tags_only" || insertFormat === "published_only" || insertFormat === "raw_data") {
@@ -181,8 +185,6 @@
 
                     } else if (insertFormat === "empty_content_only") {
 
-						let notesEmptyNames = new Set();
-						
 						// Filter notes based on empty notes + tags					
 						let notesE = tagsArray.length > 0 
 							? (await Promise.all(tagsArray.map(tag => app.filterNotes({ tag }))))
@@ -207,9 +209,6 @@
 						
 					} else if (insertFormat === "archived" || insertFormat === "deleted" || insertFormat === "vault" || insertFormat === "plugin" || insertFormat === "untagged" || insertFormat === "created" || insertFormat === "public" || insertFormat === "shared" || insertFormat === "shareReceived" || insertFormat === "notCreated" || insertFormat === "shareSent" || insertFormat === "thisWeek" || insertFormat === "today" || insertFormat === "saving" || insertFormat === "stale" || insertFormat === "indexing" || insertFormat === "taskLists") {
 
-						const notesGroups = new Set();
-						const notesGroupsname = insertFormat;
-						
 						// Filter notes based on empty notes + tags					
 						let notesE = tagsArray.length > 0 
 							? (await Promise.all(tagsArray.map(tag => app.filterNotes({ tag }))))
@@ -234,7 +233,10 @@
 						
 					}
 					
+					console.log(notes);
+					console.log(notesEmptyNames);
 					console.log(notesGroups);
+					console.log(notesGroupsname);
 
                     // Fetch tags for each note and generate results
                     const self = this;
