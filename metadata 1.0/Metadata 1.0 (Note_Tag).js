@@ -63,12 +63,46 @@
                                 type: "select",
                                 options: [
                                     { label: "Both (Table format)", value: "both_table" },
-                                    { label: "Only Note Names", value: "names_only" },
-                                    { label: "Only Tags", value: "tags_only" },
-                                    { label: "Only Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" },
-                                    { label: "Only Untitled Notes (Table format)", value: "empty_names_only" },
-                                    { label: "Only Untagged Notes (Table format)", value: "empty_tags_only" },
-                                    { label: "Only Published (Table format)", value: "published_only" },
+                                    { label: "Note Names", value: "names_only" },
+                                    { label: "Note Tags", value: "tags_only" },
+                                    { label: "Untitled Notes (Table format)", value: "empty_names_only" },
+                                    { label: "Untagged Notes (Table format)", value: "empty_tags_only" },
+                                    { label: "Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" },
+                                    { label: "Published (Table format)", value: "published_only" },
+									//{ label: 'Grouped-folders - Archived', value: 'archived' },
+									//{ label: 'Grouped-folders - Vault Notes', value: 'vault' },
+									//{ label: 'Grouped-folders - Deleted Notes', value: 'deleted' },
+									//{ label: 'Grouped-folders - Active plugin notes', value: 'plugin' },
+									//{ label: 'Notes-contain-tasks - Task Lists', value: 'taskLists' },
+									//{ label: 'Notes-untagged - Un-tagged', value: 'untagged' },
+									//{ label: 'Shared-notes - Created by me', value: 'created' },
+									//{ label: 'Shared-notes - Shared publicly', value: 'public' },
+									//{ label: 'Shared-notes - Shared notes', value: 'shared' },
+									//{ label: 'Shared-notes - Notes shared with me ', value: 'shareReceived' },
+									//{ label: 'Shared-notes - Notes not created by me', value: 'notCreated' },
+									//{ label: 'Shared-notes - Notes I shared with others', value: 'shareSent' },
+									//{ label: 'Creation-date - This week', value: 'thisWeek' },
+									//{ label: 'Creation-date - Today', value: 'today' },
+									//{ label: 'Low-level-queries - Notes Saving', value: 'saving' },
+									//{ label: 'Low-level-queries - Notes Downloading', value: 'stale' },
+									//{ label: 'Low-level-queries - Notes Indexing', value: 'indexing' },
+									{ label: "Archived - Grouped-folders", value: "archived" },
+									{ label: "Vault Notes - Grouped-folders", value: "vault" },
+									{ label: "Deleted Notes - Grouped-folders", value: "deleted" },
+									{ label: "Active plugin notes - Grouped-folders", value: "plugin" },
+									{ label: "Task Lists - Notes-contain-tasks", value: "taskLists" },
+									{ label: "Un-tagged - Notes-untagged", value: "untagged" },
+									{ label: "Created by me - Shared-notes", value: "created" },
+									{ label: "Shared publicly - Shared-notes", value: "public" },
+									{ label: "Shared notes - Shared-notes", value: "shared" },
+									{ label: "Notes shared with me  - Shared-notes", value: "shareReceived" },
+									{ label: "Notes not created by me - Shared-notes", value: "notCreated" },
+									{ label: "Notes I shared with others - Shared-notes", value: "shareSent" },
+									{ label: "This week - Creation-date", value: "thisWeek" },
+									{ label: "Today - Creation-date", value: "today" },
+									{ label: "Notes Saving - Low-level-queries", value: "saving" },
+									{ label: "Notes Downloading - Low-level-queries", value: "stale" },
+									{ label: "Notes Indexing - Low-level-queries", value: "indexing" },
                                     { label: "Raw data", value: "raw_data" }
                                 ]
                             }
@@ -101,73 +135,106 @@
                     // Split tags into an array
                     const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
                     let notes = [];
-
-                    // Filter notes based on tags
-                    if (tagsArray.length > 0) {
-                        for (let tag of tagsArray) {
-                            let taggedNotes = await app.filterNotes({ tag });
-                            notes = notes.concat(taggedNotes);
-                        }
-                    } else {
-                        notes = await app.filterNotes({});
-                    }
-
-                    // Remove duplicate notes
-                    notes = notes.filter((note, index, self) => index === self.findIndex((n) => n.uuid === note.uuid));
-
-					// Assign default name to notes with null or empty name
-					notes = notes.map(note => {
-						if (!note.name) {
-							note.name = "Untitled Note"; // Assign a default name for empty notes
-						}
-						return note;
-					});
-
-                    // Sort the final list of results based on the selected tag sorting option
-                    if (sortTagOption === "asc") {
-                        notes.sort((a, b) => a.tags.join(", ").localeCompare(b.tags.join(", ")));
-                    } else if (sortTagOption === "desc") {
-                        notes.sort((a, b) => b.tags.join(", ").localeCompare(a.tags.join(", ")));
-                    }
-
-                    // Further filter notes by name if a name filter is provided
-                    if (nameFilter) {
-                        notes = notes.filter(note => note.name.includes(nameFilter));
-                    }
-
-                    // Sort notes by name based on the user's selection
-                    if (sortOption === "asc") {
-                        notes.sort((a, b) => a.name.localeCompare(b.name));
-                    } else if (sortOption === "desc") {
-                        notes.sort((a, b) => b.name.localeCompare(a.name));
-                    }
-
-
-                    let notesEmptyNames = new Set();
 					
-					// Filter notes based on empty notes + tags					
-					let notesE = tagsArray.length > 0 
-						? (await Promise.all(tagsArray.map(tag => app.filterNotes({ tag }))))
-							.flat()
-						: await app.filterNotes({ group: "^vault" });
+					// Main Fetch happening based on insertFormat
+                    if (insertFormat === "both_table" || insertFormat === "names_only" || insertFormat === "tags_only" || insertFormat === "empty_names_only" || insertFormat === "empty_tags_only" || insertFormat === "published_only" || insertFormat === "raw_data") {
 
-					for (const noteHandle of notesE) {
-						let noteContent;
-						try {
-							noteContent = await app.getNoteContent(noteHandle);
-							if (noteContent.includes("# Hidden tasks")) continue;
-							noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
-							if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
-								notesEmptyNames.add(`[${noteHandle.name || "[Untitled Note]"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
+						// Filter notes based on tags
+						if (tagsArray.length > 0) {
+							for (let tag of tagsArray) {
+								let taggedNotes = await app.filterNotes({ tag });
+								notes = notes.concat(taggedNotes);
 							}
-						} catch (err) {
-							if (err instanceof TypeError) {
-								continue;
+						} else {
+							notes = await app.filterNotes({});
+						}
+
+						// Remove duplicate notes
+						notes = notes.filter((note, index, self) => index === self.findIndex((n) => n.uuid === note.uuid));
+
+						// Assign default name to notes with null or empty name
+						notes = notes.map(note => {
+							if (!note.name) {
+								note.name = "Untitled Note"; // Assign a default name for empty notes
+							}
+							return note;
+						});
+
+						// Sort the final list of results based on the selected tag sorting option
+						if (sortTagOption === "asc") {
+							notes.sort((a, b) => a.tags.join(", ").localeCompare(b.tags.join(", ")));
+						} else if (sortTagOption === "desc") {
+							notes.sort((a, b) => b.tags.join(", ").localeCompare(a.tags.join(", ")));
+						}
+
+						// Further filter notes by name if a name filter is provided
+						if (nameFilter) {
+							notes = notes.filter(note => note.name.includes(nameFilter));
+						}
+
+						// Sort notes by name based on the user's selection
+						if (sortOption === "asc") {
+							notes.sort((a, b) => a.name.localeCompare(b.name));
+						} else if (sortOption === "desc") {
+							notes.sort((a, b) => b.name.localeCompare(a.name));
+						}
+
+                    } else if (insertFormat === "empty_content_only") {
+
+						let notesEmptyNames = new Set();
+						
+						// Filter notes based on empty notes + tags					
+						let notesE = tagsArray.length > 0 
+							? (await Promise.all(tagsArray.map(tag => app.filterNotes({ tag }))))
+								.flat()
+							: await app.filterNotes({ group: "^vault" });
+
+						for (const noteHandle of notesE) {
+							let noteContent;
+							try {
+								noteContent = await app.getNoteContent(noteHandle);
+								if (noteContent.includes("# Hidden tasks")) continue;
+								noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
+								if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
+									notesEmptyNames.add(`[${noteHandle.name || "[Untitled Note]"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
+								}
+							} catch (err) {
+								if (err instanceof TypeError) {
+									continue;
+								}
 							}
 						}
-					}
+						
+					} else if (insertFormat === "archived" || insertFormat === "deleted" || insertFormat === "vault" || insertFormat === "plugin" || insertFormat === "untagged" || insertFormat === "created" || insertFormat === "public" || insertFormat === "shared" || insertFormat === "shareReceived" || insertFormat === "notCreated" || insertFormat === "shareSent" || insertFormat === "thisWeek" || insertFormat === "today" || insertFormat === "saving" || insertFormat === "stale" || insertFormat === "indexing" || insertFormat === "taskLists") {
 
-                    //let modifiedNotesEmptyNames = notesEmptyNames[0];
+						const notesGroups = new Set();
+						const notesGroupsname = insertFormat;
+						
+						// Filter notes based on empty notes + tags					
+						let notesE = tagsArray.length > 0 
+							? (await Promise.all(tagsArray.map(tag => app.filterNotes({ tag }))))
+								.flat()
+							: await app.filterNotes({ group: `"${notesGroupsname}"` });
+
+						for (const noteHandle of notesE) {
+							let noteContent;
+							try {
+								noteContent = await app.getNoteContent(noteHandle);
+								if (noteContent.includes("# Hidden tasks")) continue;
+								noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
+								if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
+									notesGroups.add(`[${noteHandle.name || "[Untitled Note]"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
+								}
+							} catch (err) {
+								if (err instanceof TypeError) {
+									continue;
+								}
+							}
+						}
+						
+					}
+					
+					console.log(notesGroups);
 
                     // Fetch tags for each note and generate results
                     const self = this;
@@ -215,6 +282,8 @@
 							}
 						} else if (insertFormat === "empty_content_only") {
                             results = new Set(notesEmptyNames);
+						} else {
+                            results = new Set(notesGroups);
 						}
                     }
 
