@@ -63,12 +63,13 @@
                                 type: "select",
                                 options: [
                                     { label: "Both (Table format)", value: "both_table" },
-                                    { label: "Raw data", value: "raw_data" },
                                     { label: "Only Note Names", value: "names_only" },
                                     { label: "Only Tags", value: "tags_only" },
+                                    { label: "Only Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" },
+                                    { label: "Only Untitled Notes (Table format)", value: "empty_names_only" },
+                                    { label: "Only Untagged Notes (Table format)", value: "empty_tags_only" },
                                     { label: "Only Published (Table format)", value: "published_only" },
-                                    { label: "Only Empty Named Notes (Table format)", value: "empty_names_only" },
-                                    { label: "Only Empty Tagged Notes (Table format)", value: "empty_tags_only" }
+                                    { label: "Raw data", value: "raw_data" }
                                 ]
                             }
                         ]
@@ -141,6 +142,33 @@
                         notes.sort((a, b) => b.name.localeCompare(a.name));
                     }
 
+
+                    let notesEmptyNames = new Set();
+					
+					// Filter notes based on empty notes + tags					
+					let notesE = tagsArray.length > 0 
+						? (await Promise.all(tagsArray.map(tag => app.filterNotes({ tag }))))
+							.flat()
+						: await app.filterNotes({ group: "^vault" });
+
+					for (const noteHandle of notesE) {
+						let noteContent;
+						try {
+							noteContent = await app.getNoteContent(noteHandle);
+							if (noteContent.includes("# Hidden tasks")) continue;
+							noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
+							if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
+								notesEmptyNames.add(`[${noteHandle.name || "[Untitled Note]"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
+							}
+						} catch (err) {
+							if (err instanceof TypeError) {
+								continue;
+							}
+						}
+					}
+
+                    //let modifiedNotesEmptyNames = notesEmptyNames[0];
+
                     // Fetch tags for each note and generate results
                     const self = this;
                     let results = new Set();
@@ -185,6 +213,8 @@
 							if (!tagString) {
 							results.add(`| ${noteLink} | ${tagString} |`);
 							}
+						} else if (insertFormat === "empty_content_only") {
+                            results = new Set(notesEmptyNames);
 						}
                     }
 
