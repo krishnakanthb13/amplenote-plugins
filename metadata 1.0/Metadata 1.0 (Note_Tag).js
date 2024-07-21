@@ -9,10 +9,10 @@
                         inputs: [
                             // Tag selection input
                             {
-                                label: "Select Tags to filter (Max 3)",
+                                label: "Select Tags to filter (Max 10)",
                                 type: "tags",
-                                limit: 3,
-                                placeholder: "Enter tag/'s' (Max 3)"
+                                limit: 10,
+                                placeholder: "Enter tag/'s' (Max 10)"
                             },
                             // Name filter input
                             {
@@ -63,10 +63,12 @@
                                 type: "select",
                                 options: [
                                     { label: "Both (Table format)", value: "both_table" },
-                                    { label: "Names only", value: "names_only" },
-                                    { label: "Tags only", value: "tags_only" },
-                                    { label: "Published only (Table format)", value: "published_only" },
-                                    { label: "Raw data", value: "raw_data" }
+                                    { label: "Raw data", value: "raw_data" },
+                                    { label: "Only Note Names", value: "names_only" },
+                                    { label: "Only Tags", value: "tags_only" },
+                                    { label: "Only Published (Table format)", value: "published_only" },
+                                    { label: "Only Empty Named Notes (Table format)", value: "empty_names_only" },
+                                    { label: "Only Empty Tagged Notes (Table format)", value: "empty_tags_only" }
                                 ]
                             }
                         ]
@@ -92,6 +94,8 @@
                         app.alert("Note: Both insertOption and insertFormat (Mandatory Fields) must be selected");
                         return;
                     }
+					
+					app.alert("Working on it... This may take a few minutes for large notebooks. The app might seem unresponsive but we're working on it.");
 
                     // Split tags into an array
                     const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
@@ -109,6 +113,14 @@
 
                     // Remove duplicate notes
                     notes = notes.filter((note, index, self) => index === self.findIndex((n) => n.uuid === note.uuid));
+
+					// Assign default name to notes with null or empty name
+					notes = notes.map(note => {
+						if (!note.name) {
+							note.name = "Untitled Note"; // Assign a default name for empty notes
+						}
+						return note;
+					});
 
                     // Sort the final list of results based on the selected tag sorting option
                     if (sortTagOption === "asc") {
@@ -163,7 +175,17 @@
                             //results.add(`Note Name: ${note.name}`);
                             //results.add(`UUID: ${note.uuid}`);
                             //results.add(`Tags: ${tagString}`);
-                        }
+                        } else if (insertFormat === "empty_names_only") {
+							// Filter and include notes with the name "Default Note Name (Empty)"
+							if (note.name === "Untitled Note") {
+							results.add(`| ${noteLink} | ${tagString} |`);
+							}
+						} else if (insertFormat === "empty_tags_only") {
+							// If the tags are empty or null, add the note to results
+							if (!tagString) {
+							results.add(`| ${noteLink} | ${tagString} |`);
+							}
+						}
                     }
 
                     results = Array.from(results);
@@ -171,7 +193,7 @@
                     // Generate the final text, CSV, and TXT content
                     let resultText;
                     let resultCSV;
-                    if (insertFormat === "both_table") {
+                    if (insertFormat === "both_table" || insertFormat === "empty_names_only" || insertFormat === "empty_tags_only") {
                         resultText = "| Note Name | Tags |\n|---|---|\n" + results.join("\n");
                         resultCSV = "Note Name,Tags\n" + results.map(row => {
                             let parts = row.split('|').map(s => s.trim());
