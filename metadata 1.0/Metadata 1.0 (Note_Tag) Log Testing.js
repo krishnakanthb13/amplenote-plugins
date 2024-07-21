@@ -77,7 +77,7 @@
 
 					// Assert the result is an array
 					// expect(result).toBeInstanceOf(Array);
-					// console.log("Prompt result:", result);
+					console.log("Prompt result:", result);
 
 					// If the result is falsy, the user has canceled the operation
 					if (!result) {
@@ -93,15 +93,15 @@
 						app.alert("Note: At least one of Optional Items (tagNames, nameFilter, sortOption, sortTagOption, or sortTags) must be selected");
 						return;
 					}
-					// console.log("Destructured inputs:", { 					
-						// tagNames,
-						// nameFilter,
-						// sortOption,
-						// sortTagOption,
-						// sortTags,
-						// insertOption,
-						// insertFormat
-					// });
+					console.log("Destructured inputs:", { 					
+						tagNames,
+						nameFilter,
+						sortOption,
+						sortTagOption,
+						sortTags,
+						insertOption,
+						insertFormat
+					});
 
 					// Ensure both insertOption and insertFormat are selected
 					if (!insertOption || !insertFormat) {
@@ -126,7 +126,7 @@
 					} else {
 						notes = await app.filterNotes({});
 					}
-					// console.log("Filtered notes:", notes);
+					console.log("Filtered notes:", notes);
 
 					// Remove duplicate notes
 					notes = notes.filter((note, index, self) => index === self.findIndex((n) => n.uuid === note.uuid));
@@ -138,7 +138,7 @@
 						}
 						return note;
 					});
-					// console.log("Notes after removing duplicates:", notes);
+					console.log("Notes after removing duplicates:", notes);
 
 					// Sort the final list of results based on the selected tag sorting option
 					if (sortTagOption === "asc") {
@@ -160,7 +160,7 @@
 						notes.sort((a, b) => b.name.localeCompare(a.name));
 					}
 
-					// console.log("Sorted notes:", notes);
+					console.log("Sorted notes:", notes);
 					let notesEmptyNames = new Set();
 
 					// Filter notes based on empty notes + tags					
@@ -189,9 +189,9 @@
 						}
 					}
 
-					// console.log("Sorted notes:", notes);
-					// console.log("Sorted notesE:", notesE);
-					// console.log("Empty Notes Names", notesEmptyNames);
+					console.log("Sorted notes:", notes);
+					console.log("Sorted notesE:", notesE);
+					console.log("Empty Notes Names", notesEmptyNames);
 
 					//let modifiedNotesEmptyNames = notesEmptyNames[0];
 
@@ -250,9 +250,9 @@
 
 					// Assert results is an array
 					//expect(results).toBeInstanceOf(Array);
-					// console.log("Generated results:", results);
+					console.log("Generated results:", results);
 					results = Array.from(results);
-					// console.log("Generated results Array:", results);
+					console.log("Generated results Array:", results);
 
 					// Generate the final text, CSV, and TXT content
 					let resultText;
@@ -283,10 +283,10 @@
 
 					// Assert resultText and resultCSV are strings
 					//expect(typeof resultText).toBe('string');
-					// console.log("Result text content:", resultText);
+					console.log("Result text content:", resultText);
 
 					//expect(typeof resultCSV).toBe('string');
-					// console.log("Result CSV content:", resultCSV);
+					console.log("Result CSV content:", resultCSV);
 
 					// Generate the filename based on the current date and time
 					const now = new Date();
@@ -313,18 +313,18 @@
 
 					// Assert inputSummary is a string
 					//expect(typeof inputSummary).toBe('string');
-					// console.log("Input summary:", inputSummary);
+					console.log("Input summary:", inputSummary);
 
 					// Perform actions based on the insert option
 					if (insertOption === "current_note") {
 						await app.context.replaceSelection(resultText);
-						// console.log("Inserted text into current note.");
+						console.log("Inserted text into current note.");
 					} else if (insertOption === "new_note") {
 						let noteUUID = await app.createNote("Metadata 1.0 Report", ["metadata-reports"]);
 						await app.insertContent({
 							uuid: noteUUID
 						}, resultText);
-						// console.log("Inserted text into new note with UUID:", noteUUID);
+						console.log("Inserted text into new note with UUID:", noteUUID);
 					} else if (insertOption === "download_md") {
 						let blob = new Blob([resultText], {
 							type: "text/markdown;charset=utf-8"
@@ -335,7 +335,7 @@
 						document.body.appendChild(link);
 						link.click();
 						document.body.removeChild(link);
-						// console.log("Downloaded Markdown file:", `${filename}.md`);
+						console.log("Downloaded Markdown file:", `${filename}.md`);
 					} else if (insertOption === "download_csv") {
 						let blob = new Blob([resultCSV], {
 							type: "text/csv;charset=utf-8"
@@ -346,7 +346,7 @@
 						document.body.appendChild(link);
 						link.click();
 						document.body.removeChild(link);
-						// console.log("Downloaded CSV file:", `${filename}.csv`);
+						console.log("Downloaded CSV file:", `${filename}.csv`);
 					} else if (insertOption === "download_txt") {
 						let blob = new Blob([resultText], {
 							type: "text/plain;charset=utf-8"
@@ -357,7 +357,7 @@
 						document.body.appendChild(link);
 						link.click();
 						document.body.removeChild(link);
-						// console.log("Downloaded TXT file:", `${filename}.txt`);
+						console.log("Downloaded TXT file:", `${filename}.txt`);
 					}
 
 					app.alert("Results Generated and Pasted/Downloaded Successfully!");
@@ -372,14 +372,14 @@
 			//expect(noteHandle).toBeDefined();
 			//expect(noteHandle).toHaveProperty('name');
 			//expect(noteHandle).toHaveProperty('uuid');
-			// console.log("Creating Markdown link for note:", noteHandle);
+			console.log("Creating Markdown link for note:", noteHandle);
 			return `[${noteHandle.name}](https://www.amplenote.com/notes/${noteHandle.uuid})`;
 		}
 	};
 
 	// Assert that Meta_1 is an object
 	//expect(typeof Meta_1).toBe('object');
-	// console.log("Meta_1 object definition:", Meta_1);
+	console.log("Meta_1 object definition:", Meta_1);
 
 	var plugin_default = Meta_1;
 	return Meta_1;
