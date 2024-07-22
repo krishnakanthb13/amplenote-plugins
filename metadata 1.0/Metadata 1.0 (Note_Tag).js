@@ -287,7 +287,8 @@
                         return note;
                     });
                     // console.log("Notes after removing duplicates:", notes);
-                    // Sort the final list of results based on the selected tag sorting option
+					
+                     // Sort the final list of results based on the selected tag sorting option
                     if (sortTagOption === "asc") {
                         notes.sort((a, b) => a.tags.join(", ").localeCompare(b.tags.join(", ")));
                     }
@@ -306,45 +307,48 @@
                         notes.sort((a, b) => b.name.localeCompare(a.name));
                     }
                     // console.log("Sorted notes:", notes);
-                    let notesEmptyNames = new Set();
+                    
+					// let notesEmptyNames = new Set();
                     // Filter notes based on empty notes + tags					
-                    let notesE = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
-                        tag
-                    })))).flat() : await app.filterNotes({
-                        group: "^vault"
-                    });
-                    for (const noteHandle of notesE) {
-                        let noteContent;
-                        try {
-                            noteContent = await app.getNoteContent(noteHandle);
-                            if (noteContent.includes("# Hidden tasks")) continue;
-                            noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
-                            if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
-                                notesEmptyNames.add(`[${noteHandle.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
-                            }
-                        }
-                        catch (err) {
-                            if (err instanceof TypeError) {
-                                continue;
-                            }
-                        }
-                    }
-                    // Filter notes based on Groups + tags
-                    let notesGroupNames = new Set();
-                    let notesGroup = insertFormat;
+                    // let notesE = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
+                        // tag
+                    // })))).flat() : await app.filterNotes({
+                        // group: "^vault"
+                    // });
+                    // for (const noteHandle of notesE) {
+                        // let noteContent;
+                        // try {
+                            // noteContent = await app.getNoteContent(noteHandle);
+                            // if (noteContent.includes("# Hidden tasks")) continue;
+                            // noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
+                            // if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
+                                // notesEmptyNames.add(`[${noteHandle.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
+                            // }
+                        // }
+                        // catch (err) {
+                            // if (err instanceof TypeError) {
+                                // continue;
+                            // }
+                        // }
+                    // }
+                    
+					// Filter notes based on Groups + tags
+                    // let notesGroupNames = new Set();
+                    // let notesGroup = insertFormat;
                     // Filter notes based on empty notes + tags
-                    let notesG = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
-                        tag
-                    })))).flat() : await app.filterNotes({
-                        group: notesGroup
-                    });
-                    for (const noteHandleG of notesG) {
-                        notesGroupNames.add(`[${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
-                    }
-                    // console.log("Sorted notes:", notes);
+                    // let notesG = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
+                        // tag
+                    // })))).flat() : await app.filterNotes({
+                        // group: notesGroup
+                    // });
+                    // for (const noteHandleG of notesG) {
+                        // notesGroupNames.add(`[${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
+                    // }
+                    
+					// console.log("Sorted notes:", notes);
                     // console.log("Sorted notesE:", notesE);
-                    console.log("Sorted notesG:", notesG);
-                    console.log("Sorted notesGroupNames:", notesGroupNames);
+                    // console.log("Sorted notesG:", notesG);
+                    // console.log("Sorted notesGroupNames:", notesGroupNames);
                     // console.log("Empty Notes Names", notesEmptyNames);
                     //let modifiedNotesEmptyNames = notesEmptyNames[0];
                     // Fetch tags for each note and generate results
@@ -397,9 +401,50 @@
                             }
                         }
                         else if (insertFormat === "empty_content_only") {
+							
+							// Filter notes based on empty notes + tags	
+							let notesEmptyNames = new Set();
+							let notesE = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
+								tag
+							})))).flat() : await app.filterNotes({
+								group: "^vault"
+							});
+							//notesE.sort((a, b) => a.localeCompare(b));
+							for (const noteHandle of notesE) {
+								let noteContent;
+								try {
+									noteContent = await app.getNoteContent(noteHandle);
+									if (noteContent.includes("# Hidden tasks")) continue;
+									noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
+									if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
+										notesEmptyNames.add(`[${noteHandle.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
+									}
+								}
+								catch (err) {
+									if (err instanceof TypeError) {
+										continue;
+									}
+								}
+							}
+							
                             results = new Set(notesEmptyNames);
                         }
                         else {
+							
+							// Filter notes based on Groups + tags
+							let notesGroupNames = new Set();
+							let notesGroup = insertFormat;
+							// Filter notes based on empty notes + tags
+							let notesG = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
+								tag
+							})))).flat() : await app.filterNotes({
+								group: notesGroup
+							});
+							notesG.sort((a, b) => a.name.localeCompare(b.name));
+							for (const noteHandleG of notesG) {
+								notesGroupNames.add(`[${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
+							}
+							
                             results = new Set(notesGroupNames);
                         }
                     }
@@ -527,7 +572,7 @@
             //expect(noteHandle).toHaveProperty('uuid');
             // console.log("Creating Markdown link for note:", noteHandle);
             return `[${noteHandle.name}](https://www.amplenote.com/notes/${noteHandle.uuid})`;
-        }
+        },
     };
     // Assert that Meta_1 is an object
     //expect(typeof Meta_1).toBe('object');
