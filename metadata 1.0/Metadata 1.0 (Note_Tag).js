@@ -296,9 +296,18 @@
                         notes.sort((a, b) => b.tags.join(", ").localeCompare(a.tags.join(", ")));
                     }
                     // Further filter notes by name if a name filter is provided
-                    if (nameFilter) {
-                        notes = notes.filter(note => note.name.includes(nameFilter));
-                    }
+                    // if (nameFilter) {
+                        // notes = notes.filter(note => note.name.includes(nameFilter));
+                    // }
+					if (nameFilter) {
+						// Convert the filter term to lowercase
+						const lowerCaseFilter = nameFilter.toLowerCase();
+
+						// Filter notes with case-insensitive comparison
+						notes = notes.filter(note => 
+							note.name && note.name.toLowerCase().includes(lowerCaseFilter)
+						);
+					}
                     // Sort notes by name based on the user's selection
                     if (sortOption === "asc") {
                         notes.sort((a, b) => a.name.localeCompare(b.name));
@@ -410,6 +419,7 @@
 								group: "^vault"
 							});
 							//notesE.sort((a, b) => a.name.localeCompare(b.name));
+							if (nameFilter) {const lowerCaseFilter = nameFilter.toLowerCase(); notesE = notesE.filter(note => note.name && note.name.toLowerCase().includes(lowerCaseFilter) ); }
 							notesE.sort((a, b) => {
 								const nameA = a.name || ""; // Use an empty string if a.name is null or undefined
 								const nameB = b.name || ""; // Use an empty string if b.name is null or undefined
@@ -423,7 +433,7 @@
 									if (noteContent.includes("# Hidden tasks")) continue;
 									noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
 									if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
-										notesEmptyNames.add(`[${noteHandle.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
+										notesEmptyNames.add(`- [${noteHandle.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
 									}
 								}
 								catch (err) {
@@ -447,6 +457,7 @@
 								group: notesGroup
 							});
 							//notesG.sort((a, b) => a.name.localeCompare(b.name));
+							if (nameFilter) {const lowerCaseFilter = nameFilter.toLowerCase(); notesG = notesG.filter(note => note.name && note.name.toLowerCase().includes(lowerCaseFilter) ); }
 							notesG.sort((a, b) => {
 								const nameA = a.name || ""; // Use an empty string if a.name is null or undefined
 								const nameB = b.name || ""; // Use an empty string if b.name is null or undefined
@@ -454,7 +465,7 @@
 								return nameA.localeCompare(nameB);
 							});
 							for (const noteHandleG of notesG) {
-								notesGroupNames.add(`[${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
+								notesGroupNames.add(`- [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
 							}
 							
                             results = new Set(notesGroupNames);
