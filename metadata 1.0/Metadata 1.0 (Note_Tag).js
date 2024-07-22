@@ -69,6 +69,23 @@
                                     { label: "Untagged Notes (Table format)", value: "empty_tags_only" },
                                     { label: "Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" },
                                     { label: "Published Notes (Table format)", value: "published_only" },
+									{ label: "Archived - Grouped-folders", value: "archived" },
+									{ label: "Vault Notes - Grouped-folders", value: "vault" },
+									{ label: "Deleted Notes - Grouped-folders", value: "deleted" },
+									{ label: "Active plugin notes - Grouped-folders", value: "plugin" },
+									{ label: "Task Lists - Notes-contain-tasks", value: "taskLists" },
+									{ label: "Un-tagged - Notes-untagged", value: "untagged" },
+									{ label: "Created by me - Shared-notes", value: "created" },
+									{ label: "Shared publicly - Shared-notes", value: "public" },
+									{ label: "Shared notes - Shared-notes", value: "shared" },
+									{ label: "Notes shared with me  - Shared-notes", value: "shareReceived" },
+									{ label: "Notes not created by me - Shared-notes", value: "notCreated" },
+									{ label: "Notes I shared with others - Shared-notes", value: "shareSent" },
+									{ label: "This week - Creation-date", value: "thisWeek" },
+									{ label: "Today - Creation-date", value: "today" },
+									{ label: "Notes Saving - Low-level-queries", value: "saving" },
+									{ label: "Notes Downloading - Low-level-queries", value: "stale" },
+									{ label: "Notes Indexing - Low-level-queries", value: "indexing" },
                                     { label: "Raw data", value: "raw_data" }
                                 ]
                             }
@@ -161,6 +178,7 @@
 					}
 
 					// console.log("Sorted notes:", notes);
+
 					let notesEmptyNames = new Set();
 
 					// Filter notes based on empty notes + tags					
@@ -189,8 +207,28 @@
 						}
 					}
 
+					// Filter notes based on Groups + tags
+					let notesGroupNames = new Set();
+					let notesGroup = insertFormat;
+
+					// Filter notes based on empty notes + tags
+					let notesG = tagsArray.length > 0 ?
+						(await Promise.all(tagsArray.map(tag => app.filterNotes({
+							tag
+						}))))
+						.flat() :
+						await app.filterNotes({
+							group: notesGroup
+						});
+
+					for (const noteHandleG of notesG) {
+					notesGroupNames.add(`[${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
+					}
+
 					// console.log("Sorted notes:", notes);
 					// console.log("Sorted notesE:", notesE);
+					console.log("Sorted notesG:", notesG);
+					console.log("Sorted notesGroupNames:", notesGroupNames);
 					// console.log("Empty Notes Names", notesEmptyNames);
 
 					//let modifiedNotesEmptyNames = notesEmptyNames[0];
@@ -243,6 +281,8 @@
 							}
 						} else if (insertFormat === "empty_content_only") {
 							results = new Set(notesEmptyNames);
+						} else {
+							results = new Set(notesGroupNames);
 						}
 					}
 
@@ -250,7 +290,7 @@
 
 					// Assert results is an array
 					//expect(results).toBeInstanceOf(Array);
-					// console.log("Generated results:", results);
+					console.log("Generated results:", results);
 					results = Array.from(results);
 					// console.log("Generated results Array:", results);
 
