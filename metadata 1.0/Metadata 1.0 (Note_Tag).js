@@ -317,49 +317,6 @@
                     }
                     // console.log("Sorted notes:", notes);
                     
-					// let notesEmptyNames = new Set();
-                    // Filter notes based on empty notes + tags					
-                    // let notesE = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
-                        // tag
-                    // })))).flat() : await app.filterNotes({
-                        // group: "^vault"
-                    // });
-                    // for (const noteHandle of notesE) {
-                        // let noteContent;
-                        // try {
-                            // noteContent = await app.getNoteContent(noteHandle);
-                            // if (noteContent.includes("# Hidden tasks")) continue;
-                            // noteContent = noteContent.slice(0, noteContent.indexOf('# Completed tasks<!-- {"omit":true} -->'));
-                            // if (noteContent.trim() === "" || !noteContent.match(/[^\s\\]/mg)) {
-                                // notesEmptyNames.add(`[${noteHandle.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandle.uuid})`);
-                            // }
-                        // }
-                        // catch (err) {
-                            // if (err instanceof TypeError) {
-                                // continue;
-                            // }
-                        // }
-                    // }
-                    
-					// Filter notes based on Groups + tags
-                    // let notesGroupNames = new Set();
-                    // let notesGroup = insertFormat;
-                    // Filter notes based on empty notes + tags
-                    // let notesG = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
-                        // tag
-                    // })))).flat() : await app.filterNotes({
-                        // group: notesGroup
-                    // });
-                    // for (const noteHandleG of notesG) {
-                        // notesGroupNames.add(`[${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
-                    // }
-                    
-					// console.log("Sorted notes:", notes);
-                    // console.log("Sorted notesE:", notesE);
-                    // console.log("Sorted notesG:", notesG);
-                    // console.log("Sorted notesGroupNames:", notesGroupNames);
-                    // console.log("Empty Notes Names", notesEmptyNames);
-                    //let modifiedNotesEmptyNames = notesEmptyNames[0];
                     // Fetch tags for each note and generate results
                     const self = this;
                     let results = new Set();
@@ -471,8 +428,14 @@
                             results = new Set(notesGroupNames);
                         }
                     }
+					// console.log("Sorted notes:", notes);
+                    // console.log("Sorted notesE:", notesE);
+                    // console.log("Sorted notesG:", notesG);
+                    // console.log("Sorted notesGroupNames:", notesGroupNames);
+                    // console.log("Empty Notes Names", notesEmptyNames);
+					
                     // Assert results is an array
-                    //expect(results).toBeInstanceOf(Array);
+                    // expect(results).toBeInstanceOf(Array);
                     // console.log("Generated results:", results);
                     results = Array.from(results);
                     // console.log("Generated results Array:", results);
