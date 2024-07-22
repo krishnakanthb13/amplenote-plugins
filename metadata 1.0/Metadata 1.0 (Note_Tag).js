@@ -409,7 +409,13 @@
 							})))).flat() : await app.filterNotes({
 								group: "^vault"
 							});
-							//notesE.sort((a, b) => a.localeCompare(b));
+							//notesE.sort((a, b) => a.name.localeCompare(b.name));
+							notesE.sort((a, b) => {
+								const nameA = a.name || ""; // Use an empty string if a.name is null or undefined
+								const nameB = b.name || ""; // Use an empty string if b.name is null or undefined
+
+								return nameA.localeCompare(nameB);
+							});
 							for (const noteHandle of notesE) {
 								let noteContent;
 								try {
@@ -440,7 +446,13 @@
 							})))).flat() : await app.filterNotes({
 								group: notesGroup
 							});
-							notesG.sort((a, b) => a.name.localeCompare(b.name));
+							//notesG.sort((a, b) => a.name.localeCompare(b.name));
+							notesG.sort((a, b) => {
+								const nameA = a.name || ""; // Use an empty string if a.name is null or undefined
+								const nameB = b.name || ""; // Use an empty string if b.name is null or undefined
+
+								return nameA.localeCompare(nameB);
+							});
 							for (const noteHandleG of notesG) {
 								notesGroupNames.add(`[${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
 							}
@@ -450,7 +462,7 @@
                     }
                     // Assert results is an array
                     //expect(results).toBeInstanceOf(Array);
-                    console.log("Generated results:", results);
+                    // console.log("Generated results:", results);
                     results = Array.from(results);
                     // console.log("Generated results Array:", results);
                     // Generate the final text, CSV, and TXT content
