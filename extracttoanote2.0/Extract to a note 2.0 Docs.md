@@ -1,7 +1,7 @@
 ﻿---
 title: Extract to a note 2.0 Docs
 uuid: 1701987e-48c4-11ef-949a-6ef34fa959ce
-version: 183
+version: 204
 created: '2024-07-23T12:50:52+05:30'
 tags:
   - '-9-permanent'
@@ -170,6 +170,8 @@ This Plugin function is a comprehensive tool for transferring selected content f
 
 - July 23rd, 2024: After reaching out to Support and Lucian, was able to get the workaround to get the requirement achieved. After a couple of tries and changes, was able to get the complete code working as expected.
 
+- July 28th, 2024: Adding readability by giving source replace-text constructions and destination insert-text constructions.
+
 ---
 
 ### <mark style="color:#FFFFFF;">**Implemented & Upcoming:**<!-- {"cycleColor":"55"} --></mark>
@@ -185,6 +187,8 @@ This Plugin function is a comprehensive tool for transferring selected content f
 - ~~prompting~~
 
 - ~~quickly add or replace~~ 
+
+- ~~minor tweaks on source replacetext constructions and destination inserttext constructions.~~
 
 <mark style="color:#FFFFFF;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"55"} --></mark>
 

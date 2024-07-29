@@ -22,11 +22,25 @@
         // Prepare the formatted text to be pasted in the new note
         const hLine = `---`;
         const fDate = new Date();
-        const textFinal = `${hLine}\n${fDate}\n${textWithFormatting}\n${hLine}`;
+        const textFinal = `${hLine}\n Below Data was Extracted here on - *${fDate}*\n${textWithFormatting}\n${hLine}\n`;
         // console.log("To be Pasted Content:", textFinal);
 
         // Create a placeholder link to the destination note
+        const options = {
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+          timeZoneName: 'short'
+        };
+        const formattedDate = fDate.toLocaleString('en-US', options).replace(/,\s\w{3}$/,"");
+        //console.log(formattedDate);
         const destNoteloc = `[${noteName.name}](https://www.amplenote.com/notes/${noteName.uuid})`;
+        const destNotelocF = `TO: ${destNoteloc} and Data was Extracted on *${formattedDate}*.`;
         // console.log("Placeholder Link to Destination Note:", destNoteloc);
 
         // Insert the formatted text into the selected note
@@ -35,7 +49,7 @@
         }, textFinal);
 
         // Replace the selected content with the link to the destination note
-        await app.context.replaceSelection(destNoteloc);
+        await app.context.replaceSelection(destNotelocF);
 
         // Return null to indicate completion
         return null;
