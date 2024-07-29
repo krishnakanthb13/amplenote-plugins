@@ -255,6 +255,43 @@
             return timeStamp;
 
         },
+		
+        "Roman": async function(app) {
+            // Provided romanize function
+            function romanize(num) {
+                if (!+num) return false;
+                var digits = String(+num).split("")
+                    , key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"
+                       , "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"
+                       , "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
+                    , roman = ""
+                    , i = 3;
+                while (i--) {
+                    roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+                }
+                return Array(+digits.join("") + 1).join("M") + roman;
+            }
+            // Function to convert date to Roman numerals
+            function convertDateToRoman(date) {
+                const day = romanize(date.getDate());
+                const month = romanize(date.getMonth() + 1); // getMonth() is zero-based
+                const year = romanize(date.getFullYear());
+                return `${day}/${month}/${year}`;
+            }
+            // Function to convert time to Roman numerals
+            function formatTimeToRoman(date) {
+                const hours = romanize(date.getHours());
+                const minutes = romanize(date.getMinutes());
+                const seconds = romanize(date.getSeconds());
+                return `${hours}:${minutes}:${seconds}`;
+            }
+            const date = new Date();
+            const romanDate = convertDateToRoman(date);
+            const time = formatTimeToRoman(date);
+            const dateTime = `${romanDate}, ${time}`;
+            return dateTime;
+        },
+		
         "Analog": async function(app) {
 
             // -------------------- Utility Function: Count Characters --------------------
