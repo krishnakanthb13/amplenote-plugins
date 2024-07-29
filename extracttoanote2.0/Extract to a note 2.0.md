@@ -1,7 +1,7 @@
 ﻿---
 title: Extract to a note 2.0
 uuid: ee62e45c-4811-11ef-bd43-6ef34fa959ce
-version: 235
+version: 281
 created: '2024-07-22T15:35:34+05:30'
 tags:
   - '-9-permanent'
@@ -41,8 +41,21 @@ tags:
         // Prepare the formatted text to be pasted in the new note
         const hLine = `---`;
         const fDate = new Date();
-        const textFinal = `${hLine}\n Below Data was Extracted here on - *${fDate}*\n${textWithFormatting}\n${hLine}\n`;
-        // console.log("To be Pasted Content:", textFinal);
+        const textFinal = `
+${hLine}
+> Below Data was Extracted here on - *${fDate}*
+
+${textWithFormatting}
+
+${hLine}
+
+`;
+
+       //- Below Data was Extracted here on - *${fDate}*
+       //    Below Data was Extracted here on - *${fDate}*
+       //> Below Data was Extracted here on - *${fDate}*
+
+      // console.log("To be Pasted Content:", textFinal);
 
         // Create a placeholder link to the destination note
         const options = {

@@ -1,7 +1,7 @@
 ﻿---
 title: Extract to a note 2.0 Docs
 uuid: 1701987e-48c4-11ef-949a-6ef34fa959ce
-version: 204
+version: 221
 created: '2024-07-23T12:50:52+05:30'
 tags:
   - '-9-permanent'
@@ -10,7 +10,7 @@ tags:
 
 # <mark style="color:#FFFFFF;">**Welcome Note:**<!-- {"cycleColor":"55"} --></mark>
 
-This Plugin function is designed to facilitate the process of transferring selected content from one note to another within Amplenote. It keeps and maintains the format with respect to the selected content, inserts it into the destination note, and replaces the original selection with a link to the note where the data is transferred to!.
+This Plugin function is designed to facilitate the process of transferring selected content from one note to another within Amplenote. It keeps and maintains the format with respect to the selected content, inserts it into the destination note, and replaces the original selection with a link to the note where the data is transferred to!..
 
 \
 
@@ -172,6 +172,8 @@ This Plugin function is a comprehensive tool for transferring selected content f
 
 - July 28th, 2024: Adding readability by giving source replace-text constructions and destination insert-text constructions.
 
+- July 29th, 2024: Minor Formatting Tweaks, which support both single line extraction and also bullets extractions (without and with markdown formatting!)
+
 ---
 
 ### <mark style="color:#FFFFFF;">**Implemented & Upcoming:**<!-- {"cycleColor":"55"} --></mark>
@@ -189,6 +191,8 @@ This Plugin function is a comprehensive tool for transferring selected content f
 - ~~quickly add or replace~~ 
 
 - ~~minor tweaks on source replacetext constructions and destination inserttext constructions.~~
+
+- ~~Minor Formatting Tweaks~~
 
 <mark style="color:#FFFFFF;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"55"} --></mark>
 

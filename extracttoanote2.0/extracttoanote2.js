@@ -22,8 +22,21 @@
         // Prepare the formatted text to be pasted in the new note
         const hLine = `---`;
         const fDate = new Date();
-        const textFinal = `${hLine}\n Below Data was Extracted here on - *${fDate}*\n${textWithFormatting}\n${hLine}\n`;
-        // console.log("To be Pasted Content:", textFinal);
+        const textFinal = `
+${hLine}
+> Below Data was Extracted here on - *${fDate}*
+
+${textWithFormatting}
+
+${hLine}
+
+`;
+
+       //- Below Data was Extracted here on - *${fDate}*
+       //    Below Data was Extracted here on - *${fDate}*
+       //> Below Data was Extracted here on - *${fDate}*
+
+      // console.log("To be Pasted Content:", textFinal);
 
         // Create a placeholder link to the destination note
         const options = {
