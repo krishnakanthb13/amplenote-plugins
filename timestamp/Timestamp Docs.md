@@ -1,10 +1,10 @@
 ﻿---
 title: Timestamp Docs
 uuid: dab3062a-3ead-11ef-a563-26e37c279344
-version: 49
+version: 57
 created: '2024-07-10T16:46:51+05:30'
 tags:
-  - '-location/amplenote/mine'
+  - '-loc/amp/mine'
   - '-9-permanent'
 ---
 
@@ -33,6 +33,12 @@ You can modify them based on your needs using the info given in the documentatio
 ### <mark>Timestamp: Digital</mark> 
 
 ![](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif)
+
+---
+
+### <mark>Timestamp: Roman</mark> 
+
+![](https://images.amplenote.com/dab3062a-3ead-11ef-a563-26e37c279344/48fd3b8d-1553-40b0-8f29-b8db0f8d9c3e.gif)
 
 ---
 
@@ -73,6 +79,8 @@ You can modify them based on your needs using the info given in the documentatio
         1. [Timestamp: Plugin Settings](#Timestamp:_Plugin_Settings) 
 
         1. [Timestamp: Digital ](#Timestamp:_Digital_) 
+
+        1. [Timestamp: Roman ](#Timestamp:_Roman_) 
 
         1. [Timestamp: Analog](#Timestamp:_Analog) 
 

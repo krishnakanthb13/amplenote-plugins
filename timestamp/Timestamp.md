@@ -1,10 +1,10 @@
 ﻿---
 title: Timestamp
 uuid: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce
-version: 1614
+version: 1655
 created: '2024-07-08T14:42:30+05:30'
 tags:
-  - '-location/amplenote/mine'
+  - '-loc/amp/mine'
   - '-9-permanent'
 ---
 
@@ -70,6 +70,12 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
 ---
 
+### <mark>Timestamp: Roman</mark>
+
+### ![](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif)
+
+---
+
 ### <mark>Timestamp: Analog</mark>
 
 ![6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif|744](https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif)
@@ -118,6 +124,20 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     1. [Best Formats][^4]   <mark style="color:#CE60D7;">\[Feel free to build your own combinations\].<!-- {"cycleColor":"31"} --></mark>
 
+### <mark>Timestamp: Roman.</mark>
+
+1. <mark style="color:#E5569E;">For Whom: \[Straight forward, just enters the Timestamp in Roman Numerals Format. If you need it!\]<!-- {"cycleColor":"32"} --></mark><!-- {"indent":1} -->
+
+    1. <mark style="color:#9AD62A;">(Use cases may be, creating a Unique number to search for, instead of words!)<!-- {"cycleColor":"26"} --></mark><!-- {"indent":2} -->
+
+    1. <mark style="color:#F8D616;">How To: This is a single step.<!-- {"cycleColor":"25"} --></mark> 
+
+        1. <mark style="color:#F8D616;">By using Curly brackets / braces. `{` navigate using arrow keys or start typing `timpstamp / roman.`<!-- {"cycleColor":"25"} --></mark>
+
+        1. <mark style="color:#F8D616;">Once its highlighted, hit Enter / Return.<!-- {"cycleColor":"25"} --></mark> 
+
+        1. <mark style="color:#F8D616;">This will insert the Date + Time in Roman Numerals, simple and straight forward.<!-- {"cycleColor":"25"} --></mark>
+
 ### <mark>Timestamp: Analog.</mark>
 
 1. <mark style="color:#E5569E;">For Whom: \[This version is for them who are used to check the ticking hands to tell them the time.\]<!-- {"cycleColor":"32"} --></mark><!-- {"indent":1} -->
@@ -158,7 +178,7 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     1. <mark style="color:#9AD62A;">(Use cases may be, creating a Unique number to search for, instead of words!)<!-- {"cycleColor":"26"} --></mark><!-- {"indent":2} -->
 
-    1. <mark style="color:#F8D616;">How To: How To: This is a single step.<!-- {"cycleColor":"25"} --></mark> 
+    1. <mark style="color:#F8D616;">How To: This is a single step.<!-- {"cycleColor":"25"} --></mark> 
 
         1. <mark style="color:#F8D616;">By using Curly brackets / braces. `{` navigate using arrow keys or start typing `timpstamp / unix.`<!-- {"cycleColor":"25"} --></mark>
 
@@ -455,6 +475,43 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
             return timeStamp;
 
         },
+		
+        "Roman": async function(app) {
+            // Provided romanize function
+            function romanize(num) {
+                if (!+num) return false;
+                var digits = String(+num).split("")
+                    , key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"
+                       , "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"
+                       , "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
+                    , roman = ""
+                    , i = 3;
+                while (i--) {
+                    roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+                }
+                return Array(+digits.join("") + 1).join("M") + roman;
+            }
+            // Function to convert date to Roman numerals
+            function convertDateToRoman(date) {
+                const day = romanize(date.getDate());
+                const month = romanize(date.getMonth() + 1); // getMonth() is zero-based
+                const year = romanize(date.getFullYear());
+                return `${day}/${month}/${year}`;
+            }
+            // Function to convert time to Roman numerals
+            function formatTimeToRoman(date) {
+                const hours = romanize(date.getHours());
+                const minutes = romanize(date.getMinutes());
+                const seconds = romanize(date.getSeconds());
+                return `${hours}:${minutes}:${seconds}`;
+            }
+            const date = new Date();
+            const romanDate = convertDateToRoman(date);
+            const time = formatTimeToRoman(date);
+            const dateTime = `${romanDate}, ${time}`;
+            return dateTime;
+        },
+		
         "Analog": async function(app) {
 
             // -------------------- Utility Function: Count Characters --------------------
@@ -854,6 +911,8 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
 - July 18th, 2024 (20:53:58) - Added and Tested Unix to Timestamp!
 
+- July 29th, 2024 (14:28:34) - Added and Testing Roman Numerals Timestamp!
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -892,6 +951,8 @@ This is my First creation and rolling out to a wide audience. I hope its useful 
 
     - ~~Roll-out \[Approval Pending! + Next Steps!\]~~
 
+    - ~~Roman Numerals Timestamp~~
+
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 
 - Let me think 😜.
@@ -920,6 +981,8 @@ Time Invested For this Plugin: 6h 45m + 5h 18m + 6 12m = Totaling up to 18h 16m.
 
         1. [Timestamp: Digital ](#Timestamp:_Digital_) 
 
+        1. [Timestamp: Roman](#Timestamp:_Roman) 
+
         1. [Timestamp: Analog](#Timestamp:_Analog) 
 
         1. [Timestamp: Text ](#Timestamp:_Text_) 
@@ -931,6 +994,8 @@ Time Invested For this Plugin: 6h 45m + 5h 18m + 6 12m = Totaling up to 18h 16m.
     1. [Documentation:](#Documentation:) 
 
         1. [Timestamp: Digital.](#Timestamp:_Digital.) 
+
+        1. [Timestamp: Roman.](#Timestamp:_Roman.) 
 
         1. [Timestamp: Analog.](#Timestamp:_Analog.) 
 
