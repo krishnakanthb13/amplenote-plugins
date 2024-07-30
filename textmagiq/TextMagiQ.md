@@ -1,11 +1,11 @@
 ﻿---
 title: TextMagiQ
 uuid: afed7270-44f9-11ef-bdf6-26e37c279344
-version: 180
+version: 197
 created: '2024-07-18T17:04:26+05:30'
 tags:
   - '-9-permanent'
-  - '-location/amplenote/mine'
+  - '-loc/amp/mine'
 ---
 
 # <mark style="color:#9AD62A;">Welcome Note:<!-- {"cycleColor":"26"} --></mark>
@@ -244,7 +244,7 @@ This Plugin, allows you to apply various transformations to a given text. It sup
             case 'small_caps':
                 // Convert to small caps (custom function)
                 return convertToSmallCaps(text);
-            case 'superscript':
+            case 'superscript2':
                 // Convert to superscript (custom function)
                 return convertToSuperscript(text);
             case 'wide_text':
@@ -286,6 +286,18 @@ This Plugin, allows you to apply various transformations to a given text. It sup
             case 'underline':
                 // Underline the text
                 return `<u>${text}</u>`;
+            case 'blockquote':
+                // blockquote the text
+                return `> ${text}`;
+            case 'code':
+                // code block the text
+                return `\`${text}\``;
+            case 'subscript':
+                // Subscript the text
+                return `~${text}~`;
+            case 'superscript':
+                // Superscript the text
+                return `^${text}^`;
             case 'fraktur':
                 // Convert to Fraktur script (custom function)
                 return convertToFraktur(text);
@@ -844,6 +856,7 @@ function convertToSuperscript(text) {
 var TextMagiQ = {
     replaceText: {
         "Fontastic": async function(app, text) {
+          const textWithFormatting = app.context.selectionContent;
             try {
                 // Simulate user input for transformation type
                 const result = await app.prompt("Select text transformation", {
@@ -863,7 +876,7 @@ var TextMagiQ = {
                               
                                 { label: "Special: RanDom cAsE", value: "random_case" },
                                 { label: "Special: Small Caps (Immutable)", value: "small_caps" },
-                                { label: "Special: Superscript (Immutable)", value: "superscript" },
+                                { label: "Special: Superscript (Immutable)", value: "superscript2" },
                                 { label: "Special: Wide Text (Immutable)", value: "wide_text" },
                               
                                 { label: "Flip: Reverse Text", value: "reverse_text" },
@@ -877,10 +890,14 @@ var TextMagiQ = {
                                 { label: "Visual: Mirror Text", value: "mirror_text" },
                                 { label: "Visual: Zalgo Text", value: "zalgo_text" },
                               
-                                //{ label: "Bold (Not Working!)", value: "bold" },
-                                //{ label: "Italic (Not Working!)", value: "italic" },
-                                //{ label: "Strikethrough (Not Working!)", value: "strikethrough" },
-                                //{ label: "Underline (Not Working!)", value: "underline" },
+                                { label: "General: Bold", value: "bold" },
+                                { label: "General: Italic", value: "italic" },
+                                { label: "General: Strikethrough", value: "strikethrough" },
+                                //{ label: "General: Underline", value: "underline" },
+                                { label: "General: Block Quote", value: "blockquote" },
+                                { label: "General: Literate Text", value: "code" },
+                                //{ label: "General: Subscript", value: "subscript" },
+                                //{ label: "General: Superscript", value: "superscript" },
                               
                                 //{ label: "Unicode: Fraktur", value: "fraktur" },
                                 //{ label: "Unicode: Fraktur (Bold) (Working Weird!)", value: "fraktur_bold" },
@@ -895,12 +912,28 @@ var TextMagiQ = {
                 });
 
                 const textTransform = result; // Replace with actual user input or logic
-
-                const transformedText = transformText(text, textTransform);
-
+                console.log("User Selection:", textTransform);
+                console.log("MD Text:", textWithFormatting);
+                console.log("Selected Text:", text);
+                //const text = text;
+                //const transformedText = transformText(text, textTransform);
+                //const transformedText = transformText(textWithFormatting, textTransform);
                 //alert("Transformed text:" + transformedText);
 
-                return transformedText; // Return transformed text
+                if (textTransform === "bold" || textTransform === "italic" || textTransform === "strikethrough" || textTransform === "underline" || textTransform === "blockquote" || textTransform === "code" || textTransform === "subscript" || textTransform === "superscript") 
+                {
+					const transformedText = transformText(textWithFormatting, textTransform);
+                    console.log("Result:", transformedText);
+                    await app.context.replaceSelection(transformedText);
+                    //return transformedText; // Return transformed text
+                }
+				else 
+                {
+					const transformedText = transformText(text, textTransform);
+                    console.log("Result:", transformedText);
+                    return transformedText; // Return transformed text
+                }
+                //return transformedText; // Return transformed text
 
             } catch (error) {
                 alert(String(error));
@@ -927,6 +960,8 @@ return TextMagiQ;
 - July 17th, 2024 - Completed the basic framework of the code. Without Testing.
 
 - July 18th, 2024 - Completed the Testing and found multiple Emoji Like Unicode's were not supported here! Not sure if the platform does not support or something is wrong with my code. Well for now having the raw code base still intact and commenting the code which bring user's visibility!
+
+- July 30th, 2024 - Added Additional Options - Bold, Italic, Strikethrough, Block Quote, Literate Text (using app.context.selectionContent amplenote feature!)
 
 ---
 
@@ -977,6 +1012,10 @@ return TextMagiQ;
     - <mark style="color:#FFFFFF;">~~Binary Code Translator < Done !!~~<!-- {"cycleColor":"55"} --></mark>
 
     - <mark style="color:#FFFFFF;">~~Unicode Text Converter  < Unsupported / In Dev !!~~<!-- {"cycleColor":"55"} --></mark>
+
+- General
+
+    - ~~Bold, Italic, Strikethrough, Block Quote, Literate Text~~
 
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 

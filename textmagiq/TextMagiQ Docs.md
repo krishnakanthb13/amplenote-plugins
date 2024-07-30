@@ -1,11 +1,11 @@
 ﻿---
 title: TextMagiQ Docs
 uuid: b5a5e892-44e9-11ef-bdf6-26e37c279344
-version: 149
+version: 154
 created: '2024-07-18T15:10:04+05:30'
 tags:
   - '-9-permanent'
-  - '-location/amplenote/mine'
+  - '-loc/amp/mine'
 ---
 
 # <mark style="color:#F8914D;">Text Transformation Utility<!-- {"cycleColor":"24"} --></mark>
@@ -168,7 +168,7 @@ The Plugin provides a versatile tool for text transformation, supporting a wide 
 
 - **Description**: Adds Zalgo text effects, creating a glitchy appearance. Want to produce funky and glitchy text? \`This Zalgo text will do just that. Type out what you would normally want to and then see it get turned into the Zalgo font.
 
-### <mark style="color:#9AD62A;">20. `bold `<!-- {"cycleColor":"26"} --></mark><mark style="background-color:undefined;">**<< In Dev !!**<!-- {"backgroundCycleColor":"60"} --></mark>
+### <mark style="color:#9AD62A;">20. `bold`<!-- {"cycleColor":"26"} --></mark>
 
 - **Input**: "hello"
 
@@ -176,7 +176,7 @@ The Plugin provides a versatile tool for text transformation, supporting a wide 
 
 - **Description**: Applies Markdown bold formatting to the text.
 
-### <mark style="color:#9AD62A;">21. `italic `<!-- {"cycleColor":"26"} --></mark><mark style="background-color:undefined;">**<< In Dev !!**<!-- {"backgroundCycleColor":"60"} --></mark>
+### <mark style="color:#9AD62A;">21. `italic`<!-- {"cycleColor":"26"} --></mark>
 
 - **Input**: "hello"
 
@@ -184,7 +184,7 @@ The Plugin provides a versatile tool for text transformation, supporting a wide 
 
 - **Description**: Applies Markdown italic formatting to the text.
 
-### <mark style="color:#9AD62A;">22. `strikethrough `<!-- {"cycleColor":"26"} --></mark><mark style="background-color:undefined;">**<< In Dev !!**<!-- {"backgroundCycleColor":"60"} --></mark>
+### <mark style="color:#9AD62A;">22. `strikethrough`<!-- {"cycleColor":"26"} --></mark>
 
 - **Input**: "hello"
 

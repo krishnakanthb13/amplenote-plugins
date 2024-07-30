@@ -1,16 +1,20 @@
 ﻿---
 title: TextMagiQ Code Docs
 uuid: 454afe70-44e9-11ef-bdf6-26e37c279344
-version: 36
+version: 39
 created: '2024-07-18T15:06:55+05:30'
 tags:
   - '-9-permanent'
-  - '-location/amplenote/mine'
+  - '-loc/amp/mine'
 ---
 
 ## <mark style="color:#F8914D;">High Level Code Info:<!-- {"cycleColor":"24"} --></mark>
 
-This JavaScript code defines a comprehensive text transformation utility function called `transformText` that can apply various transformations to a given text. The function supports a wide range of transformations, including case conversion, special character mapping, and formatting. Here’s a high-level explanation of the main components:
+This JavaScript code defines a comprehensive text transformation utility function called `transformText` that can apply various transformations to a given text. The function supports a wide range of transformations, including case conversion, special character mapping, and formatting.
+
+\
+
+Here’s a high-level explanation of the main components:
 
 1. <mark style="color:#F8D616;">**Text Transformation Function**:<!-- {"cycleColor":"25"} --></mark>
 
@@ -58,7 +62,7 @@ This JavaScript code defines a comprehensive text transformation utility functio
 
 1. <mark style="color:#F8D616;">**Formatting**:<!-- {"cycleColor":"25"} --></mark>
 
-    1. **`bold`, `italic`, `strikethrough`, `underline`**: Apply Markdown or HTML formatting to the text to make it bold, italicized, strikethrough, or underlined. <mark style="background-color:undefined;">**<< In Dev !!**<!-- {"backgroundCycleColor":"60"} --></mark>
+    1. **`bold`, `italic`, `strikethrough`, `underline`**: Apply Markdown or HTML formatting to the text to make it bold, italicized, strikethrough, or underlined.
 
 1. <mark style="color:#F8D616;">**Special Script Conversions**:<!-- {"cycleColor":"25"} --></mark>
 
