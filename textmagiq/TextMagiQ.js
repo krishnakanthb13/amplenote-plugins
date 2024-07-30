@@ -697,9 +697,9 @@ var TextMagiQ = {
                 });
 
                 const textTransform = result; // Replace with actual user input or logic
-                console.log("User Selection:", textTransform);
-                console.log("MD Text:", textWithFormatting);
-                console.log("Selected Text:", text);
+                //console.log("User Selection:", textTransform);
+                //console.log("MD Text:", textWithFormatting);
+                //console.log("Selected Text:", text);
                 //const text = text;
                 //const transformedText = transformText(text, textTransform);
                 //const transformedText = transformText(textWithFormatting, textTransform);
@@ -708,7 +708,7 @@ var TextMagiQ = {
                 if (textTransform === "bold" || textTransform === "italic" || textTransform === "strikethrough" || textTransform === "underline" || textTransform === "blockquote" || textTransform === "code" || textTransform === "subscript" || textTransform === "superscript") 
                 {
 					const transformedText = transformText(textWithFormatting, textTransform);
-                    console.log("Result:", transformedText);
+                    //console.log("Result:", transformedText);
                     await app.context.replaceSelection(transformedText);
                     //return transformedText; // Return transformed text
                 }
