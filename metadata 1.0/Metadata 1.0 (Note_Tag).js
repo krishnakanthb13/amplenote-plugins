@@ -310,9 +310,9 @@
                         resultCSV = results.map(item => `"${item.replace(/"/g, '""')}"`).join("\n");
                     }
                     // Assert resultText and resultCSV are strings
-                    //expect(typeof resultText).toBe('string');
+                    // expect(typeof resultText).toBe('string');
                     // console.log("Result text content:", resultText);
-                    //expect(typeof resultCSV).toBe('string');
+                    // expect(typeof resultCSV).toBe('string');
                     // console.log("Result CSV content:", resultCSV);
                     // Generate the filename based on the current date and time
                     const now = new Date();
@@ -335,7 +335,7 @@
                     resultText += `\n\n${inputSummary}`;
                     resultCSV += `\n\n${inputSummary.replace(/[\n]/g, "")}`;
                     // Assert inputSummary is a string
-                    //expect(typeof inputSummary).toBe('string');
+                    // expect(typeof inputSummary).toBe('string');
                     // console.log("Input summary:", inputSummary);
                     // Perform actions based on the insert option
                     if (insertOption === "current_note") {
@@ -396,15 +396,15 @@
         },
         // Function to create Markdown link from note handle
         _createMDLinkFromNoteHandle(noteHandle) {
-            //expect(noteHandle).toBeDefined();
-            //expect(noteHandle).toHaveProperty('name');
-            //expect(noteHandle).toHaveProperty('uuid');
+            // expect(noteHandle).toBeDefined();
+            // expect(noteHandle).toHaveProperty('name');
+            // expect(noteHandle).toHaveProperty('uuid');
             // console.log("Creating Markdown link for note:", noteHandle);
             return `[${noteHandle.name}](https://www.amplenote.com/notes/${noteHandle.uuid})`;
         },
     };
     // Assert that Meta_1 is an object
-    //expect(typeof Meta_1).toBe('object');
+    // expect(typeof Meta_1).toBe('object');
     // console.log("Meta_1 object definition:", Meta_1);
     var plugin_default = Meta_1;
     return Meta_1;
