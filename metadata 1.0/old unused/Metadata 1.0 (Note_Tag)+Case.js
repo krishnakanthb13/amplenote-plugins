@@ -1,32 +1,3 @@
-﻿---
-title: Metadata 1.0 (Note_Tag)+Case
-uuid: 6d4e4c56-3f80-11ef-bb5f-26e37c279344
-version: 847
-created: '2024-07-11T17:53:49+05:30'
-tags:
-  - '-loc/amp/testing'
-  - '-1-working'
----
-
-| | |
-|-|-|
-|name|Meta_1+Case|
-|icon|account_tree|
-\
-
-- ~~Added Case Convert, and it works perfectly fine!~~
-
-    - ~~Updated the latest version here - July 31st, 2024 (13:46:49)~~ \[13:47:02\] - July 31st, 2024
-
-        - ~~Testing~~ \[13:48:55\] - July 31st, 2024
-
-\
-
-{Meta_1+Case: Name_Tag}
-
-\
-
-```
 (() => {
     var Meta_1 = {
         insertText: {
@@ -476,6 +447,3 @@ tags:
     var plugin_default = Meta_1;
     return Meta_1;
 })()
-```
-
----
