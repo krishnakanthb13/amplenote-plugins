@@ -59,7 +59,7 @@
                                     { label: "Vault Notes - Grouped-folders", value: "vault" },
                                     { label: "Deleted Notes - Grouped-folders", value: "deleted" },
                                     { label: "Active plugin notes - Grouped-folders", value: "plugin" },
-                                    { label: "Task Lists - Notes-contain-tasks", value: "taskLists" },
+                                    { label: "Task Lists - Notes-having-tasks", value: "taskLists" },
                                     { label: "Un-tagged - Notes-untagged", value: "untagged" },
                                     { label: "Created by me - Shared-notes", value: "created" },
                                     { label: "Shared publicly - Shared-notes", value: "public" },
@@ -67,8 +67,8 @@
                                     { label: "Notes shared with me  - Shared-notes", value: "shareReceived" },
                                     { label: "Notes not created by me - Shared-notes", value: "notCreated" },
                                     { label: "Notes I shared with others - Shared-notes", value: "shareSent" },
-                                    { label: "This week - Creation-date", value: "thisWeek" },
-                                    { label: "Today - Creation-date", value: "today" },
+                                    { label: "This week - Created-date", value: "thisWeek" },
+                                    { label: "Today - Created-date", value: "today" },
                                     { label: "Notes Saving - Low-level-queries", value: "saving" },
                                     { label: "Notes Downloading - Low-level-queries", value: "stale" },
                                     { label: "Notes Indexing - Low-level-queries", value: "indexing" },
@@ -289,7 +289,7 @@
                             let parts = row.split('|').map(s => s.trim());
                             let name = parts[1];
                             let tags = parts[2];
-                            return `"${name.replace(/"/g, '""')}","${tags.replace(/"/g, '""')}"`;
+                            return `"${name.replace(/"/g, '""')}","${tags.replace(/"/g, '""')}`;
                         }).join("\n");
                     }
                     else if (insertFormat === "published_only") {
@@ -318,7 +318,7 @@
                     const now = new Date();
                     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
                     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-                    const filename = `Metadata1_${YYMMDD}_${HHMMSS}`;
+                    const filename = `Metadata_1.0_Report_${YYMMDD}_${HHMMSS}`;
                     // Generate the summary of input selections
                     const inputSummary = `
 ### Input Selections:
@@ -343,7 +343,7 @@
                         // console.log("Inserted text into current note.");
                     }
                     else if (insertOption === "new_note") {
-                        let noteUUID = await app.createNote("Metadata 1.0 Report", ["metadata-reports"]);
+                        let noteUUID = await app.createNote(`${filename}`, ["metadata-reports"]);
                         await app.insertContent({
                             uuid: noteUUID
                         }, resultText);
