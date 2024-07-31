@@ -1,7 +1,7 @@
 ﻿---
 title: Metadata 1.0 (Note_Tag)+New
 uuid: c7b6cc6a-46fe-11ef-aabb-26e37c279344
-version: 290
+version: 439
 created: '2024-07-21T06:45:56+05:30'
 tags:
   - '-1-working'
@@ -12,7 +12,7 @@ tags:
 |-|-|
 |name|Meta_1+New|
 |icon|account_tree|
-\
+{Meta_1+New: Name_Tag}
 
 - Amplenote Meta data Upgraded Version!  - <!-- {"indent":1} -->
 
@@ -44,23 +44,83 @@ tags:
 
                 - ~~Add indentation~~  July 22nd, 2024 (20:07:47)
 
+                - July 22nd, 2024: Added Group Functions, after some tweaks, was able to make it work fine. Move resource intensive to work only when that option is selected. Added sorting, name and tag filtering to the Group Based execution. Added some default formatting for better viewing experience and readability for text and csv separately.
+
             - Full Testing
 
-                - Group Options Not working
+> { label: "Both (Table format)", value: "both_table" }, // Tested - OK!
+>
+> { label: "Note Names", value: "names_only" }, // Tested - OK!
+>
+> { label: "Note Tags", value: "tags_only" }, // Tested - OK!
+>
+> { label: "Untitled Notes (Table format)", value: "empty_names_only" }, // Tested - OK!
+>
+> { label: "Untagged Notes (Table format)", value: "empty_tags_only" }, // Tested - OK! // Untagged - Slow and More Resource Intensive (Checks for each UUID for Public URL)
+>
+> { label: "Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" }, // Tested - OK! - Best works when tag or name or filtering options are given!
+>
+> { label: "Published Notes (Table format)", value: "published_only" }, // Tested - OK! // Published - Slow and More Resource Intensive (Checks for each UUID for Public URL)
+>
+> { label: "Archived - Grouped-folders", value: "archived" }, // Tested - OK!
+>
+> { label: "Vault Notes - Grouped-folders", value: "vault" }, // Tested - OK!
+>
+> { label: "Deleted Notes - Grouped-folders", value: "deleted" }, // Tested - OK!
+>
+> { label: "Active plugin notes - Grouped-folders", value: "plugin" }, // Tested - OK!
+>
+> { label: "Task Lists - Notes-having-tasks", value: "taskLists" }, // Tested - OK!
+>
+> { label: "Un-tagged - Notes-untagged", value: "untagged" }, // Tested - OK!  // Untagged - Fast and Less Resource Intensive (Checks for internal tagging / boolean)
+>
+> { label: "Created by me - Shared-notes", value: "created" }, // Tested - OK!
+>
+> { label: "Shared publicly - Shared-notes", value: "public" }, // Published - Fast and Less Resource Intensive (Checks for internal tagging / boolean)
+>
+> { label: "Shared notes - Shared-notes", value: "shared" }, // Tested - OK!
+>
+> { label: "Notes shared with me  - Shared-notes", value: "shareReceived" }, // Tested - OK!
+>
+> { label: "Notes not created by me - Shared-notes", value: "notCreated" }, // Tested - OK!
+>
+> { label: "Notes I shared with others - Shared-notes", value: "shareSent" }, // Tested - OK!
+>
+> { label: "This week - Created-date", value: "thisWeek" }, // Tested - OK! // Bring in few notes from earlier dates as well! modified date or Created date ??? - s. Task
+>
+> { label: "Today - Created-date", value: "today" }, // Tested - OK! // Bring in few notes from earlier dates as well! modified date or Created date ??? - s. Task
+>
+> { label: "Notes Saving - Low-level-queries", value: "saving" }, // Tested - OK!
+>
+> { label: "Notes Downloading - Low-level-queries", value: "stale" }, // Tested - OK!
+>
+> { label: "Notes Indexing - Low-level-queries", value: "indexing" }, // Tested - OK!
+>
+> { label: "Raw data", value: "raw_data" } // Tested - OK!
 
-                    - Deleted!
+- ~~Added sort for tags only option~~<!-- {"indent":4} -->
 
-                        - Find out the options that are not working and disable them for now!
+    - ~~Added date time stamp to the newly created note~~<!-- {"indent":4} -->
 
-            - Documentation
+        - ~~Group Options Not working~~<!-- {"indent":4} -->
 
-            - New Gifs (Only for updated ones)
+            - ~~Deleted! // Tested - OK! - its working fine when tested on~~ July 31st, 2024 (12:22:26)<!-- {"indent":5} -->
 
-            - Publish
+                - ~~Find out the options that are not working and disable them for now!~~<!-- {"indent":6} -->
 
-            - Merge latest updates from .js to check testing.js and log testing.js using Meld
+            - ~~Cleaning up the code!~~ July 31st, 2024 (13:04:01)
 
-            - Then Email!
+            - ~~Documentation~~  - \[13:20:46\]
+
+                - [~~https://chatgpt.com/c/e7d360d8-3a11-4f5a-820d-6ee6be1d9a9f~~](https://chatgpt.com/c/e7d360d8-3a11-4f5a-820d-6ee6be1d9a9f) ~~tried to get a new version of the documentation, but just added few modifications to the existing docs~~ \[13:22:40\]  [Metadata 1.0 Docs](https://www.amplenote.com/notes/c46c5e60-4066-11ef-832f-26e37c279344) 
+
+            - ~~New Gifs (Only for updated ones)  just updated the changed part, rest kept it the same. Pasted as images.~~ \[13:21:17\]
+
+            - ~~Publish~~ \[13:21:26\]
+
+            - ~~Merge latest updates from .js to check testing.js and log testing.js using Meld. I have all the thing is one file, that enough!~~ \[13:23:20\]
+
+            - ~~Then Email! - handled in~~    \[13:23:58\] [July 31st, 2024](https://www.amplenote.com/notes/5ead472e-4e85-11ef-aa09-6ef34fa959ce) 
 
 \
 
@@ -126,7 +186,7 @@ tags:
                                     { label: "Vault Notes - Grouped-folders", value: "vault" },
                                     { label: "Deleted Notes - Grouped-folders", value: "deleted" },
                                     { label: "Active plugin notes - Grouped-folders", value: "plugin" },
-                                    { label: "Task Lists - Notes-contain-tasks", value: "taskLists" },
+                                    { label: "Task Lists - Notes-having-tasks", value: "taskLists" },
                                     { label: "Un-tagged - Notes-untagged", value: "untagged" },
                                     { label: "Created by me - Shared-notes", value: "created" },
                                     { label: "Shared publicly - Shared-notes", value: "public" },
@@ -134,8 +194,8 @@ tags:
                                     { label: "Notes shared with me  - Shared-notes", value: "shareReceived" },
                                     { label: "Notes not created by me - Shared-notes", value: "notCreated" },
                                     { label: "Notes I shared with others - Shared-notes", value: "shareSent" },
-                                    { label: "This week - Creation-date", value: "thisWeek" },
-                                    { label: "Today - Creation-date", value: "today" },
+                                    { label: "This week - Created-date", value: "thisWeek" },
+                                    { label: "Today - Created-date", value: "today" },
                                     { label: "Notes Saving - Low-level-queries", value: "saving" },
                                     { label: "Notes Downloading - Low-level-queries", value: "stale" },
                                     { label: "Notes Indexing - Low-level-queries", value: "indexing" },
@@ -160,15 +220,7 @@ tags:
                         app.alert("Note: At least one of Optional Items (tagNames, nameFilter, sortOption, sortTagOption, or sortTags) must be selected");
                         return;
                     }
-                    // console.log("Destructured inputs:", { 					
-                    // tagNames,
-                    // nameFilter,
-                    // sortOption,
-                    // sortTagOption,
-                    // sortTags,
-                    // insertOption,
-                    // insertFormat
-                    // });
+                    // console.log("Destructured inputs:", {tagNames, nameFilter, sortOption, sortTagOption, sortTags, insertOption, insertFormat });
                     // Ensure both insertOption and insertFormat are selected
                     if (!insertOption || !insertFormat) {
                         app.alert("Note: Both insertOption and insertFormat (Mandatory Fields) must be selected");
@@ -251,6 +303,8 @@ tags:
                         }
                         else if (insertFormat === "tags_only") {
                             tags.forEach(tag => results.add(tag));
+							results = new Set([...results].filter(tag => tag != null).sort((a, b) => a.localeCompare(b)));
+							// tags.filter(tag => tag != null).sort((a, b) => a.localeCompare(b)).forEach(tag => results.add(tag));
                         }
                         else if (insertFormat === "published_only") {
                             const publicURL = await app.getNotePublicURL({
@@ -362,7 +416,7 @@ tags:
                             let parts = row.split('|').map(s => s.trim());
                             let name = parts[1];
                             let tags = parts[2];
-                            return `"${name.replace(/"/g, '""')}", "${tags.replace(/"/g, '""')}"`;
+                            return `"${name.replace(/"/g, '""')}","${tags.replace(/"/g, '""')}`;
                         }).join("\n");
                     }
                     else if (insertFormat === "published_only") {
@@ -391,7 +445,7 @@ tags:
                     const now = new Date();
                     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
                     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-                    const filename = `Metadata1_${YYMMDD}_${HHMMSS}`;
+                    const filename = `Metadata_1.0_Report_${YYMMDD}_${HHMMSS}`;
                     // Generate the summary of input selections
                     const inputSummary = `
 ### Input Selections:
@@ -416,7 +470,7 @@ tags:
                         // console.log("Inserted text into current note.");
                     }
                     else if (insertOption === "new_note") {
-                        let noteUUID = await app.createNote("Metadata 1.0 Report", ["metadata-reports"]);
+                        let noteUUID = await app.createNote(`${filename}`, ["metadata-reports"]);
                         await app.insertContent({
                             uuid: noteUUID
                         }, resultText);
@@ -445,6 +499,7 @@ tags:
                         link.click();
                         document.body.removeChild(link);
                         // console.log("Downloaded CSV file:", `${filename}.csv`);
+                        // console.log("Downloaded CSV file:", `${resultCSV}`);
                     }
                     else if (insertOption === "download_txt") {
                         let blob = new Blob([resultText], {
@@ -457,6 +512,7 @@ tags:
                         link.click();
                         document.body.removeChild(link);
                         // console.log("Downloaded TXT file:", `${filename}.txt`);
+                        // console.log("Downloaded CSV file:", `${resultText}`);
                     }
                     app.alert("Results Generated and Pasted/Downloaded Successfully!");
                 }
@@ -483,3 +539,5 @@ tags:
 ```
 
 ---
+
+\

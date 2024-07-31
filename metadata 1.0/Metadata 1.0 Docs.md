@@ -1,10 +1,10 @@
 ﻿---
 title: Metadata 1.0 Docs
 uuid: c46c5e60-4066-11ef-832f-26e37c279344
-version: 199
+version: 227
 created: '2024-07-12T21:22:39+05:30'
 tags:
-  - '-location/amplenote/mine'
+  - '-loc/amp/mine'
   - '-9-permanent'
 ---
 
@@ -15,14 +15,6 @@ tags:
 - You have extensive methods to filter that data that you are looking for.
 
 - You have multiple ways to place your requested data in.
-
----
-
-## <mark style="color:#F8D616;">⚠ Warning:<!-- {"cycleColor":"25"} --></mark>
-
-- <mark style="color:#F5614C;">If any of your Notes does not have a name, the this will throw an Error - `TypeError: Cannot read properties of null (reading 'localeCompare')`<!-- {"cycleColor":"23"} --></mark>
-
-    - Identified on July 15th, 2024 (23:26:22). Needs further analysis how to handle this or ignore these records! For a future day indeed!
 
 ---
 
@@ -58,7 +50,7 @@ tags:
 
 ![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif)
 
-![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/a6ddfbec-3ef5-4af5-9f65-ee67cc394d1f.png) [^2]
+![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/e12d34a5-bf5d-4a55-966c-3c5af653828a.png) [^2]![](https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7d1c3943-2a47-4712-8404-766a9b6b9178.png) [^3]
 
 - <mark style="color:#F8914D;">Published only (Table format)<!-- {"cycleColor":"24"} --></mark> - <mark style="color:#F8D616;">Added the option of selecting the list of Published Notes. Having both the local UUID and the Public URL side by side. (Good for Reviewing purposes!).<!-- {"cycleColor":"25"} --></mark><!-- {"indent":1} -->
 
@@ -127,6 +119,8 @@ tags:
 - **Formatting Results**:
 
     - Formats results based on user-selected format options (`both_table`, `names_only`, `tags_only`, `published_only`, `raw_data`).
+
+        - [All the Available Options!][^4] as on July 31st, 2024
 
     - Adds the formatted results to a set to ensure uniqueness.
 
@@ -210,42 +204,6 @@ The code provides a comprehensive solution for filtering, sorting, and exporting
 
 ---
 
-1. [Readme:](#Readme:) 
-
-    1. [⚠ Warning:](#__Warning:) 
-
-    1. [Demo: ](#Demo:_) 
-
-        1. [General - Calling the Plugin - Metadata 1.0](#General_-_Calling_the_Plugin_-_Metadata_1.0) 
-
-        1. [Tag Selection](#Tag_Selection) 
-
-        1. [Typing in Note Name](#Typing_in_Note_Name) 
-
-        1. [Sort by Note Name;  Tags; Tags (Within a Note)](#Sort_by_Note_Name;__Tags;_Tags_(Within_a_Note)) 
-
-        1. [Insert / Export Options; Select format \[Mandatory\]](#Insert_/_Export_Options;_Select_format__Mandatory_) 
-
-    1. [Detailed breakdown:](#Detailed_breakdown:) 
-
-        1. [High-Level Functionality](#High-Level_Functionality) 
-
-        1. [Detailed Breakdown](#Detailed_Breakdown) 
-
-        1. [Prompting User for Input](#Prompting_User_for_Input) 
-
-        1. [Filtering and Sorting Notes](#Filtering_and_Sorting_Notes) 
-
-        1. [Generating and Exporting Results](#Generating_and_Exporting_Results) 
-
-        1. [Sorting Options](#Sorting_Options) 
-
-        1. [Example Workflow](#Example_Workflow) 
-
-        1. [Conclusion](#Conclusion) 
-
----
-
 [^1]: " Meta_1
     X
     Enter your filter criteria (Anyone or Both \[Name_Tag\]!)
@@ -263,12 +221,85 @@ The code provides a comprehensive solution for filtering, sorting, and exporting
     SUBMIT
     Cancel
 
-[^2]: Select format (Mandatory)
-    Both (Table format)
-    Names only
-    Tags only
-    te
-    Published only (Table format)
-    DE
-    Raw data
+[^2]: Both (Table format)
+    Note Names
+    Note Tags
+    Untitled Notes (Table format)
+    Untagged Notes (Table format)
+    Undocumented Notes (w/Hidden-task/s)
+    Published Notes (Table format)
+    Archived - Grouped-folders
+    Vault Notes - Grouped-folders
+    Deleted Notes - Grouped-folders
+    Active plugin notes - Grouped-folders
+    Task Lists - Notes-having-tasks
+
+[^3]: Un-tagged - Notes-untagged
+    Created by me - Shared-notes
+    Shared publicly - Shared-notes
+    Shared notes - Shared-notes
+    Notes shared with me - Shared-notes
+    Notes not created by me - Shared-notes
+    Notes I shared with others - Shared-notes
+    This week - Created-date
+    Today - Created-date
+    Notes Saving - Low-level-queries
+    Notes Downloading - Low-level-queries
+    Notes Indexing - Low-level-queries
+
+[^4]: [All the Available Options!]()
+
+    \
+
+    - <mark style="color:#F8914D;">**Options**:<!-- {"cycleColor":"24"} --></mark>
+
+        - <mark style="color:#65D2AA;">Both (Table format)<!-- {"cycleColor":"38"} --></mark>
+
+        - <mark style="color:#65D2AA;">Note Names<!-- {"cycleColor":"38"} --></mark>
+
+        - <mark style="color:#65D2AA;">Note Tags<!-- {"cycleColor":"38"} --></mark>
+
+        - <mark style="color:#65D2AA;">Untitled Notes (Table format)<!-- {"cycleColor":"38"} --></mark>
+
+        - <mark style="color:#65D2AA;">Untagged Notes (Table format)<!-- {"cycleColor":"38"} --></mark>
+
+        - <mark style="color:#65D2AA;">Undocumented Notes (w/Hidden-task/s)<!-- {"cycleColor":"38"} --></mark>
+
+        - <mark style="color:#65D2AA;">Published Notes (Table format)<!-- {"cycleColor":"38"} --></mark>
+
+        - <mark style="color:#F3DE6C;">Archived - Grouped-folders<!-- {"cycleColor":"36"} --></mark>
+
+        - <mark style="color:#F3DE6C;">Vault Notes - Grouped-folders<!-- {"cycleColor":"36"} --></mark>
+
+        - <mark style="color:#F3DE6C;">Deleted Notes - Grouped-folders<!-- {"cycleColor":"36"} --></mark>
+
+        - <mark style="color:#F3DE6C;">Active plugin notes - Grouped-folders<!-- {"cycleColor":"36"} --></mark>
+
+        - <mark style="color:#BBE077;">Task Lists - Notes-having-tasks<!-- {"cycleColor":"37"} --></mark>
+
+        - <mark style="color:#BBE077;">Un-tagged - Notes-untagged<!-- {"cycleColor":"37"} --></mark>
+
+        - <mark style="color:#87D7E4;">Created by me - Shared-notes<!-- {"cycleColor":"39"} --></mark>
+
+        - <mark style="color:#87D7E4;">Shared publicly - Shared-notes<!-- {"cycleColor":"39"} --></mark>
+
+        - <mark style="color:#87D7E4;">Shared notes - Shared-notes<!-- {"cycleColor":"39"} --></mark>
+
+        - <mark style="color:#87D7E4;">Notes shared with me - Shared-notes<!-- {"cycleColor":"39"} --></mark>
+
+        - <mark style="color:#87D7E4;">Notes not created by me - Shared-notes<!-- {"cycleColor":"39"} --></mark>
+
+        - <mark style="color:#87D7E4;">Notes I shared with others - Shared-notes<!-- {"cycleColor":"39"} --></mark>
+
+        - <mark style="color:#DA99E0;">This week - Created-date<!-- {"cycleColor":"42"} --></mark>
+
+        - <mark style="color:#DA99E0;">Today - Created-date<!-- {"cycleColor":"42"} --></mark>
+
+        - <mark style="color:#E893BD;">Notes Saving - Low-level-queries<!-- {"cycleColor":"43"} --></mark>
+
+        - <mark style="color:#E893BD;">Notes Downloading - Low-level-queries<!-- {"cycleColor":"43"} --></mark>
+
+        - <mark style="color:#E893BD;">Notes Indexing - Low-level-queries<!-- {"cycleColor":"43"} --></mark>
+
+        - <mark style="color:#65D2AA;">Raw data<!-- {"cycleColor":"38"} --></mark>
 
