@@ -7,230 +7,77 @@
                     // Prompting the user to enter filter criteria
                     const result = await app.prompt("Enter your filter criteria (Anyone or Both [Name_Tag]!)", {
                         inputs: [
-                            // Tag selection input 
+                            // Tag selection input
                             {
-                                label: "Select Tags to filter (Max 10)"
-                                , type: "tags"
-                                , limit: 10
-                                , placeholder: "Enter tag/'s' (Max 10)"
+                                label: "Select Tags to filter (Max 10)", type: "tags", limit: 10, placeholder: "Enter tag/'s' (Max 10)"
                             },
                             // Name filter input
                             {
-                                label: "Type Partial or Full name of the Note"
-                                , type: "string"
-                                , placeholder: "Enter Partial or Full name"
+                                label: "Type Partial or Full name of the Note", type: "string", placeholder: "Enter Partial or Full name"
                             },
                             // Sort by note name option
                             {
-                                label: "Sort by Note Name"
-                                , type: "select"
-                                , options: [
-                                    {
-                                        label: "None (Default)"
-                                        , value: ""
-                                    }
-
-                                    , {
-                                        label: "Ascending (ASC)"
-                                        , value: "asc"
-                                    }
-
-                                    , {
-                                        label: "Descending (DESC)"
-                                        , value: "desc"
-                                    }
+                                label: "Sort by Note Name", type: "select", options: [
+                                    { label: "None (Default)", value: "" },
+                                    { label: "Ascending (ASC)", value: "asc" },
+                                    { label: "Descending (DESC)", value: "desc" }
                                 ]
                             },
                             // Sort by tags option
                             {
-                                label: "Sort by Tags"
-                                , type: "select"
-                                , options: [
-                                    {
-                                        label: "None (Default)"
-                                        , value: ""
-                                    }
-
-                                    , {
-                                        label: "Ascending (ASC)"
-                                        , value: "asc"
-                                    }
-
-                                    , {
-                                        label: "Descending (DESC)"
-                                        , value: "desc"
-                                    }
+                                label: "Sort by Tags", type: "select", options: [
+                                    { label: "None (Default)", value: "" },
+                                    { label: "Ascending (ASC)", value: "asc" },
+                                    { label: "Descending (DESC)", value: "desc" }
                                 ]
                             },
                             // Alphabetically sort tags within a note
                             {
-                                label: "Sort tags alphabetically (within a Note!)"
-                                , type: "checkbox"
+                                label: "Sort tags alphabetically (within a Note!)", type: "checkbox"
                             },
                             // Insert / Export options
                             {
-                                label: "Insert / Export options (Mandatory)"
-                                , type: "select"
-                                , options: [
-                                    {
-                                        label: "Insert into current note"
-                                        , value: "current_note"
-                                    }
-
-                                    , {
-                                        label: "Insert into new note"
-                                        , value: "new_note"
-                                    }
-
-                                    , {
-                                        label: "Download as markdown"
-                                        , value: "download_md"
-                                    }
-
-                                    , {
-                                        label: "Download as CSV"
-                                        , value: "download_csv"
-                                    }
-
-                                    , {
-                                        label: "Download as TXT"
-                                        , value: "download_txt"
-                                    }
+                                label: "Insert / Export options (Mandatory)", type: "select", options: [
+                                    { label: "Insert into current note", value: "current_note" },
+                                    { label: "Insert into new note", value: "new_note" },
+                                    { label: "Download as markdown", value: "download_md" },
+                                    { label: "Download as CSV", value: "download_csv" },
+                                    { label: "Download as TXT", value: "download_txt" }
                                 ]
                             },
                             // Format selection option
                             {
-                                label: "Select format (Mandatory)"
-                                , type: "select"
-                                , options: [
-                                    {
-                                        label: "Both (Table format)"
-                                        , value: "both_table"
-                                    }
-
-                                    , {
-                                        label: "Note Names"
-                                        , value: "names_only"
-                                    }
-
-                                    , {
-                                        label: "Note Tags"
-                                        , value: "tags_only"
-                                    }
-
-                                    , {
-                                        label: "Untitled Notes (Table format)"
-                                        , value: "empty_names_only"
-                                    }
-
-                                    , {
-                                        label: "Untagged Notes (Table format)"
-                                        , value: "empty_tags_only"
-                                    }
-
-                                    , {
-                                        label: "Undocumented Notes (w/Hidden-task/s)"
-                                        , value: "empty_content_only"
-                                    }
-
-                                    , {
-                                        label: "Published Notes (Table format)"
-                                        , value: "published_only"
-                                    }
-
-                                    , {
-                                        label: "Archived - Grouped-folders"
-                                        , value: "archived"
-                                    }
-
-                                    , {
-                                        label: "Vault Notes - Grouped-folders"
-                                        , value: "vault"
-                                    }
-
-                                    , {
-                                        label: "Deleted Notes - Grouped-folders"
-                                        , value: "deleted"
-                                    }
-
-                                    , {
-                                        label: "Active plugin notes - Grouped-folders"
-                                        , value: "plugin"
-                                    }
-
-                                    , {
-                                        label: "Task Lists - Notes-contain-tasks"
-                                        , value: "taskLists"
-                                    }
-
-                                    , {
-                                        label: "Un-tagged - Notes-untagged"
-                                        , value: "untagged"
-                                    }
-
-                                    , {
-                                        label: "Created by me - Shared-notes"
-                                        , value: "created"
-                                    }
-
-                                    , {
-                                        label: "Shared publicly - Shared-notes"
-                                        , value: "public"
-                                    }
-
-                                    , {
-                                        label: "Shared notes - Shared-notes"
-                                        , value: "shared"
-                                    }
-
-                                    , {
-                                        label: "Notes shared with me  - Shared-notes"
-                                        , value: "shareReceived"
-                                    }
-
-                                    , {
-                                        label: "Notes not created by me - Shared-notes"
-                                        , value: "notCreated"
-                                    }
-
-                                    , {
-                                        label: "Notes I shared with others - Shared-notes"
-                                        , value: "shareSent"
-                                    }
-
-                                    , {
-                                        label: "This week - Creation-date"
-                                        , value: "thisWeek"
-                                    }
-
-                                    , {
-                                        label: "Today - Creation-date"
-                                        , value: "today"
-                                    }
-
-                                    , {
-                                        label: "Notes Saving - Low-level-queries"
-                                        , value: "saving"
-                                    }
-
-                                    , {
-                                        label: "Notes Downloading - Low-level-queries"
-                                        , value: "stale"
-                                    }
-
-                                    , {
-                                        label: "Notes Indexing - Low-level-queries"
-                                        , value: "indexing"
-                                    }
-
-                                    , {
-                                        label: "Raw data"
-                                        , value: "raw_data"
-                                    }
+                                label: "Select format (Mandatory)", type: "select", options: [
+                                    { label: "Both (Table format)", value: "both_table" },
+                                    { label: "Note Names", value: "names_only" },
+                                    { label: "Note Tags", value: "tags_only" },
+                                    { label: "Untitled Notes (Table format)", value: "empty_names_only" },
+                                    { label: "Untagged Notes (Table format)", value: "empty_tags_only" },
+                                    { label: "Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" },
+                                    { label: "Published Notes (Table format)", value: "published_only" },
+                                    { label: "Archived - Grouped-folders", value: "archived" },
+                                    { label: "Vault Notes - Grouped-folders", value: "vault" },
+                                    { label: "Deleted Notes - Grouped-folders", value: "deleted" },
+                                    { label: "Active plugin notes - Grouped-folders", value: "plugin" },
+                                    { label: "Task Lists - Notes-having-tasks", value: "taskLists" },
+                                    { label: "Un-tagged - Notes-untagged", value: "untagged" },
+                                    { label: "Created by me - Shared-notes", value: "created" },
+                                    { label: "Shared publicly - Shared-notes", value: "public" },
+                                    { label: "Shared notes - Shared-notes", value: "shared" },
+                                    { label: "Notes shared with me  - Shared-notes", value: "shareReceived" },
+                                    { label: "Notes not created by me - Shared-notes", value: "notCreated" },
+                                    { label: "Notes I shared with others - Shared-notes", value: "shareSent" },
+                                    { label: "This week - Created-date", value: "thisWeek" },
+                                    { label: "Today - Created-date", value: "today" },
+                                    { label: "Notes Saving - Low-level-queries", value: "saving" },
+                                    { label: "Notes Downloading - Low-level-queries", value: "stale" },
+                                    { label: "Notes Indexing - Low-level-queries", value: "indexing" },
+                                    { label: "Raw data", value: "raw_data" }
                                 ]
                             }
                         ]
                     });
+
                     // Assert the result is an array
                     // expect(result).toBeInstanceOf(Array);
                     // console.log("Prompt result:", result);
@@ -246,15 +93,7 @@
                         app.alert("Note: At least one of Optional Items (tagNames, nameFilter, sortOption, sortTagOption, or sortTags) must be selected");
                         return;
                     }
-                    // console.log("Destructured inputs:", { 					
-                    // tagNames,
-                    // nameFilter,
-                    // sortOption,
-                    // sortTagOption,
-                    // sortTags,
-                    // insertOption,
-                    // insertFormat
-                    // });
+                    // console.log("Destructured inputs:", {tagNames, nameFilter, sortOption, sortTagOption, sortTags, insertOption, insertFormat });
                     // Ensure both insertOption and insertFormat are selected
                     if (!insertOption || !insertFormat) {
                         app.alert("Note: Both insertOption and insertFormat (Mandatory Fields) must be selected");
@@ -337,6 +176,8 @@
                         }
                         else if (insertFormat === "tags_only") {
                             tags.forEach(tag => results.add(tag));
+							results = new Set([...results].filter(tag => tag != null).sort((a, b) => a.localeCompare(b)));
+							// tags.filter(tag => tag != null).sort((a, b) => a.localeCompare(b)).forEach(tag => results.add(tag));
                         }
                         else if (insertFormat === "published_only") {
                             const publicURL = await app.getNotePublicURL({
@@ -448,7 +289,7 @@
                             let parts = row.split('|').map(s => s.trim());
                             let name = parts[1];
                             let tags = parts[2];
-                            return `"${name.replace(/"/g, '""')}", "${tags.replace(/"/g, '""')}"`;
+                            return `"${name.replace(/"/g, '""')}","${tags.replace(/"/g, '""')}`;
                         }).join("\n");
                     }
                     else if (insertFormat === "published_only") {
@@ -477,7 +318,7 @@
                     const now = new Date();
                     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
                     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-                    const filename = `Metadata1_${YYMMDD}_${HHMMSS}`;
+                    const filename = `Metadata_1.0_Report_${YYMMDD}_${HHMMSS}`;
                     // Generate the summary of input selections
                     const inputSummary = `
 ### Input Selections:
@@ -502,7 +343,7 @@
                         // console.log("Inserted text into current note.");
                     }
                     else if (insertOption === "new_note") {
-                        let noteUUID = await app.createNote("Metadata 1.0 Report", ["metadata-reports"]);
+                        let noteUUID = await app.createNote(`${filename}`, ["metadata-reports"]);
                         await app.insertContent({
                             uuid: noteUUID
                         }, resultText);
@@ -531,6 +372,7 @@
                         link.click();
                         document.body.removeChild(link);
                         // console.log("Downloaded CSV file:", `${filename}.csv`);
+                        // console.log("Downloaded CSV file:", `${resultCSV}`);
                     }
                     else if (insertOption === "download_txt") {
                         let blob = new Blob([resultText], {
@@ -543,6 +385,7 @@
                         link.click();
                         document.body.removeChild(link);
                         // console.log("Downloaded TXT file:", `${filename}.txt`);
+                        // console.log("Downloaded CSV file:", `${resultText}`);
                     }
                     app.alert("Results Generated and Pasted/Downloaded Successfully!");
                 }
