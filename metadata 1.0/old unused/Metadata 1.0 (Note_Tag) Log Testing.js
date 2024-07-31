@@ -371,7 +371,7 @@
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
-                        console.log("Downloaded CSV file:", `${filename}.csv`);
+                        console.log("Downloaded CSV filename:", `${filename}.csv`);
                         console.log("Downloaded CSV file:", `${resultCSV}`);
                     }
                     else if (insertOption === "download_txt") {
@@ -384,8 +384,8 @@
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
-                        console.log("Downloaded TXT file:", `${filename}.txt`);
-                        console.log("Downloaded CSV file:", `${resultText}`);
+                        console.log("Downloaded TXT filename:", `${filename}.txt`);
+                        console.log("Downloaded TXT file:", `${resultText}`);
                     }
                     app.alert("Results Generated and Pasted/Downloaded Successfully!");
                 }
