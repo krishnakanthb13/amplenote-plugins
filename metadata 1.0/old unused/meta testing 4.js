@@ -176,6 +176,8 @@
                         }
                         else if (insertFormat === "tags_only") {
                             tags.forEach(tag => results.add(tag));
+							results = new Set([...results].filter(tag => tag != null).sort((a, b) => a.localeCompare(b)));
+							// tags.filter(tag => tag != null).sort((a, b) => a.localeCompare(b)).forEach(tag => results.add(tag));
                         }
                         else if (insertFormat === "published_only") {
                             const publicURL = await app.getNotePublicURL({
@@ -287,7 +289,7 @@
                             let parts = row.split('|').map(s => s.trim());
                             let name = parts[1];
                             let tags = parts[2];
-                            return `"${name.replace(/"/g, '""')}", "${tags.replace(/"/g, '""')}"`;
+                            return `"${name.replace(/"/g, '""')}","${tags.replace(/"/g, '""')}"`;
                         }).join("\n");
                     }
                     else if (insertFormat === "published_only") {
@@ -370,6 +372,7 @@
                         link.click();
                         document.body.removeChild(link);
                         // console.log("Downloaded CSV file:", `${filename}.csv`);
+                        // console.log("Downloaded CSV file:", `${resultCSV}`);
                     }
                     else if (insertOption === "download_txt") {
                         let blob = new Blob([resultText], {
@@ -382,6 +385,7 @@
                         link.click();
                         document.body.removeChild(link);
                         // console.log("Downloaded TXT file:", `${filename}.txt`);
+                        // console.log("Downloaded CSV file:", `${resultText}`);
                     }
                     app.alert("Results Generated and Pasted/Downloaded Successfully!");
                 }
