@@ -2,11 +2,11 @@
   // Define an asynchronous function 'noteOption' that takes 'app' and 'noteUUID' as parameters
   async insertText(app, noteUUID) {
     // Log the start of the function
-    console.log("Starting insertText function");
+    // console.log("Starting insertText function");
   
     // Find the note using the UUID
     const note = await app.findNote({uuid: app.context.noteUUID});
-    console.log("Note found:", note);
+    // console.log("Note found:", note);
   
     // ------- Display a prompt to customize the note -------
     const result = await app.prompt("Customize your note", {
@@ -76,36 +76,36 @@
     });
   
     // Log the result of the prompt
-    console.log("Prompt result:", result);
+    // console.log("Prompt result:", result);
   
     // ------- Check if the user has cancelled the operation -------
     if (!result) {
-      console.log("User cancelled the operation");
+      // console.log("User cancelled the operation");
       app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
       return;
     }
   
     // ------- Destructure user inputs -------
     const [multiTag, singleTag, emoji, position] = result;
-    console.log("User inputs - multiTag:", multiTag, ", singleTag:", singleTag, ", emoji:", emoji, ", position:", position);
+    // console.log("User inputs - multiTag:", multiTag, ", singleTag:", singleTag, ", emoji:", emoji, ", position:", position);
   
     // ------- Handle Note Name Modifications -------
     if (emoji) {
       //const noteHandle = await app.findNote({ uuid: noteUUID }); // Find the note using UUID
-      console.log("Note handle found:", note);
+      // console.log("Note handle found:", note);
   
       let updatedName = note.name;
   
       if (position === "prefix") {
         updatedName = `${emoji} ${note.name}`; // Add emoji as prefix
-        console.log("Updated name with prefix:", updatedName);
+        // console.log("Updated name with prefix:", updatedName);
       } else if (position === "suffix") {
         updatedName = `${note.name} ${emoji}`; // Add emoji as suffix
-        console.log("Updated name with suffix:", updatedName);
+        // console.log("Updated name with suffix:", updatedName);
       }
   
       await app.setNoteName(note, updatedName); // Update the note name
-      console.log("Note name updated to:", updatedName);
+      // console.log("Note name updated to:", updatedName);
     }
   
     // ------- Add tags to the note if provided -------
@@ -114,13 +114,13 @@
       const tagsArray = multiTag.split(',').map(tag => tag.trim()); // Trim spaces around each tag
       
       // Log the separated tags
-      console.log("Multiple tags to be added:", tagsArray);
+      // console.log("Multiple tags to be added:", tagsArray);
       
       // Add each tag to the note separately
       for (const tag of tagsArray) {
         if (tag) { // Ensure the tag is not empty
           await app.addNoteTag({ uuid: app.context.noteUUID }, tag);
-          console.log("Added tag:", tag);
+          // console.log("Added tag:", tag);
         }
       }
       
@@ -130,7 +130,7 @@
     // ------- Add single tag preferably new to the note if provided -------
     if (singleTag) {
       await app.addNoteTag({ uuid: app.context.noteUUID }, singleTag);
-      console.log("Single tag added:", singleTag);
+      // console.log("Single tag added:", singleTag);
       //return null;
     }
     return null; // Return an empty string after adding tags
