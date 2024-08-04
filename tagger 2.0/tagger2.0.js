@@ -71,6 +71,15 @@
             { label: "Prefix", value: "" }, // Set an empty value for Prefix
             { label: "Suffix", value: "suffix" }
           ] 
+        },
+        { 
+          label: "Predefined Options (Advanced - Check+Modify Code Based on your Specific Requirments)", 
+          type: "select", 
+          options: [
+            { label: "Predefined Sample 1: Completed", value: "1" }, 
+            { label: "Predefined Sample 2: Ideas", value: "2" }, 
+            { label: "Predefined Sample 3: Travel Goals", value: "3" } // More Options can be added as per your Requirements!
+          ] 
         }
       ] 
     });
@@ -86,9 +95,9 @@
     }
   
     // ------- Destructure user inputs -------
-    const [multiTag, singleTag, emoji, position] = result;
-    // console.log("User inputs - multiTag:", multiTag, ", singleTag:", singleTag, ", emoji:", emoji, ", position:", position);
-  
+    const [multiTag, singleTag, emoji, position, predefined] = result;
+    // console.log("User inputs - multiTag:", multiTag, ", singleTag:", singleTag, ", emoji:", emoji, ", position:", position, ", predefined:", predefined);
+
     // ------- Handle Note Name Modifications -------
     if (emoji) {
       //const noteHandle = await app.findNote({ uuid: noteUUID }); // Find the note using UUID
@@ -133,6 +142,57 @@
       // console.log("Single tag added:", singleTag);
       //return null;
     }
+
+    // ------- Handle Predefined Modifications -------
+    if (!singleTag && !multiTag && !emoji && !position) {
+      // const noteHandle = await app.findNote({ uuid: noteUUID }); // Find the note using UUID
+      // console.log("Note handle found:", note);
+
+      // Define variables outside of the conditional blocks
+      let prefixz;
+      let suffixz;
+      let multiTagsz;
+      let updatedNamez = note.name;
+      // console.log("updatedNamez:", updatedNamez);
+  
+      if (predefined === "1") {
+        prefixz = "✅";
+        suffixz = "📝";
+        multiTagsz = "completed, reviewed";
+      }
+      else if (predefined === "2") {
+        prefixz = "💡";
+        multiTagsz = "ideabox, ideas, thinking";
+      }
+      else if (predefined === "3") {
+        prefixz = "🎯";
+        suffixz = "✈️";
+        multiTagsz = "travel, goals";
+      } 
+      // More Options can be added as per your Requirements!
+      // Example usage of the variables
+      // console.log("Prefix:", prefixz);
+      // console.log("Suffix:", suffixz);
+      // console.log("Multi Tags:", multiTagsz);
+
+      updatedNamez = `${prefixz}${note.name}${suffixz}`; // Add emoji as prefix or suffix
+      await app.setNoteName(note, updatedNamez); // Update the note name
+      // console.log("Note name updated to:", updatedNamez);
+      
+      // Split the multiTag string by commas into an array of tags
+      const tagsArrayz = multiTagsz.split(',').map(tagz => tagz.trim()); // Trim spaces around each tag
+      // console.log("Multiple tags to be added:", tagsArrayz);
+      
+      // Add each tag to the note separately
+      for (const tagz of tagsArrayz) {
+        if (tagz) { // Ensure the tag is not empty
+          await app.addNoteTag({ uuid: app.context.noteUUID }, tagz);
+          // console.log("Added tag:", tagz);
+        }
+      }
+      
+    }
+
     return null; // Return an empty string after adding tags
   }
 }
