@@ -68,7 +68,7 @@
           label: "Select position", 
           type: "select", 
           options: [
-            { label: "Prefix", value: "prefix" },
+            { label: "Prefix", value: "" }, // Set an empty value for Prefix
             { label: "Suffix", value: "suffix" }
           ] 
         }
@@ -96,11 +96,11 @@
   
       let updatedName = note.name;
   
-      if (position === "prefix") {
-        updatedName = `${emoji} ${note.name}`; // Add emoji as prefix
-        // console.log("Updated name with prefix:", updatedName);
-      } else if (position === "suffix") {
+      if (position === "suffix") {
         updatedName = `${note.name} ${emoji}`; // Add emoji as suffix
+        // console.log("Updated name with prefix:", updatedName);
+      } else { // old version - //} else if (position === "suffix") {
+        updatedName = `${emoji} ${note.name}`; // Add emoji as prefix
         // console.log("Updated name with suffix:", updatedName);
       }
   
