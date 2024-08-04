@@ -110,11 +110,24 @@
   
     // ------- Add tags to the note if provided -------
     if (multiTag) {
-      await app.addNoteTag({ uuid: app.context.noteUUID }, multiTag);
-      console.log("Multiple tags added:", multiTag);
-      return "";
+      // Split the multiTag string by commas into an array of tags
+      const tagsArray = multiTag.split(',').map(tag => tag.trim()); // Trim spaces around each tag
+      
+      // Log the separated tags
+      console.log("Multiple tags to be added:", tagsArray);
+      
+      // Add each tag to the note separately
+      for (const tag of tagsArray) {
+        if (tag) { // Ensure the tag is not empty
+          await app.addNoteTag({ uuid: app.context.noteUUID }, tag);
+          console.log("Added tag:", tag);
+        }
+      }
+      
+      return ""; // Return an empty string after adding tags
     }
-  
+
+    // ------- Add single tag preferably new to the note if provided -------
     if (singleTag) {
       await app.addNoteTag({ uuid: app.context.noteUUID }, singleTag);
       console.log("Single tag added:", singleTag);
