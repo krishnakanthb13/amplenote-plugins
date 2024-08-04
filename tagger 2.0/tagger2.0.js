@@ -68,7 +68,7 @@
           label: "Select position", 
           type: "select", 
           options: [
-            { label: "Prefix", value: "prefix", default: true },
+            { label: "Prefix", value: "prefix" },
             { label: "Suffix", value: "suffix" }
           ] 
         }
@@ -90,21 +90,21 @@
     console.log("User inputs - multiTag:", multiTag, ", singleTag:", singleTag, ", emoji:", emoji, ", position:", position);
   
     // ------- Handle Note Name Modifications -------
-    if (emoji && position) {
-      const noteHandle = await app.findNote({ uuid: noteUUID }); // Find the note using UUID
-      console.log("Note handle found:", noteHandle);
+    if (emoji) {
+      //const noteHandle = await app.findNote({ uuid: noteUUID }); // Find the note using UUID
+      console.log("Note handle found:", note);
   
-      let updatedName = noteHandle.name;
+      let updatedName = note.name;
   
       if (position === "prefix") {
-        updatedName = `${emoji} ${noteHandle.name}`; // Add emoji as prefix
+        updatedName = `${emoji} ${note.name}`; // Add emoji as prefix
         console.log("Updated name with prefix:", updatedName);
       } else if (position === "suffix") {
-        updatedName = `${noteHandle.name} ${emoji}`; // Add emoji as suffix
+        updatedName = `${note.name} ${emoji}`; // Add emoji as suffix
         console.log("Updated name with suffix:", updatedName);
       }
   
-      await app.setNoteName(noteHandle, updatedName); // Update the note name
+      await app.setNoteName(note, updatedName); // Update the note name
       console.log("Note name updated to:", updatedName);
     }
   
@@ -124,14 +124,15 @@
         }
       }
       
-      return ""; // Return an empty string after adding tags
+      //return null; // Return an empty string after adding tags
     }
 
     // ------- Add single tag preferably new to the note if provided -------
     if (singleTag) {
       await app.addNoteTag({ uuid: app.context.noteUUID }, singleTag);
       console.log("Single tag added:", singleTag);
-      return "";
+      //return null;
     }
+    return null; // Return an empty string after adding tags
   }
 }
