@@ -15,14 +15,19 @@
                   ]
               },
               {
-                  label: "Select the tags (Max 10) to add to the Note!",
+                  label: "Select tags outside the Review Process!",
                   type: "tags",
                   limit: 10
               },
               {
-                  label: "Type a Tag to apply (Not Existing* / Existing) - (* - Preferred)",
+                  label: "Free Type a Tag to apply",
                   placeholder: "Your tag here",
                   type: "string",
+              },
+              {
+                  label: "Add your comments for this Review!",
+                  placeholder: "To remind yourself why you made this move!",
+                  type: "text",
               }
           ]
       });
@@ -51,7 +56,7 @@
   
       // ------- Destructuring user inputs -------
       // Destructures and logs user input selections.
-      const [decisionTagName, multiTag, singleTag] = result;
+      const [decisionTagName, multiTag, singleTag, noteComment] = result;
       // console.log("decisionTagName:", decisionTagName);
       // console.log("multiTag:", multiTag);
       // console.log("singleTag:", singleTag);
@@ -151,8 +156,8 @@
       // console.log("fTagsArray:", fTagsArray);
       
       const textFinal = `
-  > Audit - Review Notes: On <mark data-text-color="25" style="color: #F8D616;">**${formattedDate}**</mark>, The Note Titled: **${noteName}** underwent a review decision process. The tag: <mark data-text-color="25" style="color: #F8D616;">[**${fTagsArray}**]</mark> was/were added.
-  `;
+> Audit - Review Notes: On <mark data-text-color="25" style="color: #F8D616;">**${formattedDate}**</mark>, The Note Titled: **${noteName}** underwent a review decision process. The tag: <mark data-text-color="25" style="color: #F8D616;">[**${fTagsArray}**]</mark> was/were added. With comments: *${noteComment}*
+`;
       // console.log("textFinal:", textFinal);
       
       // ------- Insert the formatted text into the selected note -------
