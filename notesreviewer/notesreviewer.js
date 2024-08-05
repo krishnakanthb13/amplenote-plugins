@@ -77,16 +77,139 @@
 
     // Output the final Markdown table
     console.log(markdownTable);
+
+    // Generate the filename based on the current date and time
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `Notes_Reviewer_${YYMMDD}_${HHMMSS}`;
+    const hLine = `---`;
+    const fDate = new Date();
+    const resultText = `
+${hLine}
+> **Review Analysis** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**</mark>.
+
+1. To keep things short, this is the First step of the Review Process, Analysis!
+2. Below you can find the Pivoted data for all your note (Excluding the Notes tagged under standard review tags, to avoid overlapping).
+3. Columns with the Years and Rows with the Months, and Intersection is the Count of Notes that has been Created or Modified (Based on your Selection).
+
+${markdownTable}
+- **Step 2:** To Call the Report, just keep the mouse pointer at the end of the below line and you should be able to see a \`Intellisense pop-dropdown\`, and then hit enter! 
+
+${hLine}
+
+{Notes_Reviewer: Report
+ 
+`;
+    // Create a new note - to hold the Analysis report and also the To be Reviewed Notes!!!
+    let noteUUID = await app.createNote(`${filename}`, ["-notes-reviewer/0-reports"]);
+    await app.insertContent({ uuid: noteUUID }, resultText);
   }
   },
     dailyJotOption: { 
     "Analysis!": async function (app, noteHandle) {
-        // const dailyJotOptionz = generateNotesAnalysis(app, noteHandle);
-  }
-  },
-    appOption: { 
-    "Analysis!": async function (app, noteHandle) {
-        // const appOptionz = generateNotesAnalysis(app, noteHandle);
+    // Prompt the user for how they want to proceed with the analysis
+    const result = await app.prompt("Step 1 - Review: Analysis. >> Get a glimpse of your whole bunch of notes", {
+        inputs: [
+            {
+                label: "How do you want to proceed with building the Analysis By?",
+                type: "radio",
+                options: [
+                    { label: "Note Created Date", value: "created" },
+                    { label: "Note Last Modified Date", value: "updated" }
+                ]
+            }
+        ]
+    });
+    console.log("result:", result);
+
+    // If the result is falsy, the user has canceled the operation
+    if (!result) {
+        app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+        return;
+    }
+
+    // Initialize variables
+    let notes = [];
+    const dateField = result;
+    notes = await app.filterNotes({ tag: "^-notes-reviewer" });
+    console.log("noteHandles:", notes);
+
+    // Month names array for better readability
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    // Function to create a pivot table
+    const pivot = (notes, dateField) => {
+        const matrix = {};
+
+        notes.forEach(note => {
+            const date = new Date(note[dateField]);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1; // months are 0-based in JavaScript
+
+            if (!matrix[month]) {
+                matrix[month] = {};
+            }
+            if (!matrix[month][year]) {
+                matrix[month][year] = 0;
+            }
+            matrix[month][year]++;
+        });
+
+        return matrix;
+    };
+
+    // Function to generate a Markdown table from the pivot table
+    const generateMarkdownTable = (pivotTable) => {
+        const allYears = new Set();
+        Object.values(pivotTable).forEach(years => Object.keys(years).forEach(year => allYears.add(year)));
+        const sortedYears = Array.from(allYears).sort();
+
+        let markdownTable = '| Month | ' + sortedYears.join(' | ') + ' |\n';
+        markdownTable += '|-------|' + sortedYears.map(() => '---').join('|') + '|\n';
+
+        for (let month = 1; month <= 12; month++) {
+            markdownTable += '| ' + monthNames[month - 1] + ' | ';
+            const row = sortedYears.map(year => (pivotTable[month] && pivotTable[month][year]) ? pivotTable[month][year] : 0);
+            markdownTable += row.join(' | ') + ' |\n';
+        }
+
+        return markdownTable;
+    };
+
+    // Create the pivot table and generate the Markdown table
+    const pivotTable = pivot(notes, dateField);
+    const markdownTable = generateMarkdownTable(pivotTable);
+
+    // Output the final Markdown table
+    console.log(markdownTable);
+
+    // Generate the filename based on the current date and time
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `Notes_Reviewer_${YYMMDD}_${HHMMSS}`;
+    const hLine = `---`;
+    const fDate = new Date();
+    const resultText = `
+${hLine}
+> **Review Analysis** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**</mark>.
+
+1. To keep things short, this is the First step of the Review Process, Analysis!
+2. Below you can find the Pivoted data for all your note (Excluding the Notes tagged under standard review tags, to avoid overlapping).
+3. Columns with the Years and Rows with the Months, and Intersection is the Count of Notes that has been Created or Modified (Based on your Selection).
+
+${markdownTable}
+- **Step 2:** To Call the Report, just keep the mouse pointer at the end of the below line and you should be able to see a \`Intellisense pop-dropdown\`, and then hit enter! 
+
+${hLine}
+
+{Notes_Reviewer: Report
+ 
+`;
+    // Create a new note - to hold the Analysis report and also the To be Reviewed Notes!!!
+    let noteUUID = await app.createNote(`${filename}`, ["-notes-reviewer/0-reports"]);
+    await app.insertContent({ uuid: noteUUID }, resultText);
   }
   },
     linkOption: {
