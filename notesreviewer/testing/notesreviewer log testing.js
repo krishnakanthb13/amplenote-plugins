@@ -36,25 +36,25 @@
       
       // ------- Log user selections for debugging -------
       // Logs user input selections for debugging purposes.
-      // console.log("Users Selection:", result);
+      console.log("Users Selection:", result);
   
       // ------- The String UUID of the note the plugin action was invoked from -------
       // Retrieves and logs the UUID of the current note.
       const reportNoteUUID = app.context.noteUUID;
-      // console.log("app.context.noteUUID:", app.context.noteUUID);
-      // console.log("reportNoteUUID:", reportNoteUUID);
+      console.log("app.context.noteUUID:", app.context.noteUUID);
+      console.log("reportNoteUUID:", reportNoteUUID);
       
       // ------- Predefined review tags -------
       // Defines and logs a set of predefined review tags.
       const reviewTagz = '-notes-reviewer,-notes-reviewer/0-reports,-notes-reviewer/1-inbox,-notes-reviewer/2-discard,-notes-reviewer/2-keep,-notes-reviewer/2-review,-notes-reviewer/3-moved';
-      // console.log("reviewTagz:", reviewTagz);
+      console.log("reviewTagz:", reviewTagz);
   
       // ------- Destructuring user inputs -------
       // Destructures and logs user input selections.
       const [decisionTagName, multiTag, singleTag] = result;
-      // console.log("decisionTagName:", decisionTagName);
-      // console.log("multiTag:", multiTag);
-      // console.log("singleTag:", singleTag);
+      console.log("decisionTagName:", decisionTagName);
+      console.log("multiTag:", multiTag);
+      console.log("singleTag:", singleTag);
   
       // ------- Check if the user cancelled the operation -------
       // Checks if decision tag is selected along with multiple or single tags and alerts the user.
@@ -66,7 +66,7 @@
       // ------- Get the link from the Link -------
       // Retrieves and logs the UUID from the link.
       let decideUUID = (link.href || "");
-      // console.log("decideUUID:", decideUUID);
+      console.log("decideUUID:", decideUUID);
   
       // ------- Create a regular expression to match UUID patterns -------
       // Regular expression to match UUID patterns.
@@ -75,15 +75,15 @@
       // ------- Extract the UUID using match -------
       // Extracts and logs the UUID from the link.
       const extractedUUID = link.href && link.href.match(uuidRegex);
-      // console.log("extractedUUID:", extractedUUID);
+      console.log("extractedUUID:", extractedUUID);
   
       // ------- Check if the extraction was successful and use the first match -------
       // Uses the extracted UUID if found, otherwise logs a message.
       if (extractedUUID) {
           decideUUID = extractedUUID[0];
-          // console.log("decideUUID:", decideUUID);
+          console.log("decideUUID:", decideUUID);
       } else {
-          // console.log("No UUID found in the URL.");
+          console.log("No UUID found in the URL.");
       }
   
       let fTags = new Set();
@@ -138,22 +138,22 @@
           minute: '2-digit',
           second: '2-digit'
       });
-      // console.log("fDate:", fDate);
-      // console.log("formattedDate:", formattedDate);
+      console.log("fDate:", fDate);
+      console.log("formattedDate:", formattedDate);
   
       const noteHandle = await app.findNote({ uuid: decideUUID });
       const noteDescription = noteHandle.name;
       const noteName = `[${noteDescription}](https://www.amplenote.com/notes/${decideUUID})`;
-      // console.log("noteName:", noteName);
-      // console.log("fTags:", fTags);
+      console.log("noteName:", noteName);
+      console.log("fTags:", fTags);
       
       const fTagsArray = Array.from(fTags);
-      // console.log("fTagsArray:", fTagsArray);
+      console.log("fTagsArray:", fTagsArray);
       
       const textFinal = `
   > Audit - Review Notes: On <mark data-text-color="25" style="color: #F8D616;">**${formattedDate}**</mark>, The Note Titled: **${noteName}** underwent a review decision process. The tag: <mark data-text-color="25" style="color: #F8D616;">[**${fTagsArray}**]</mark> was/were added.
   `;
-      // console.log("textFinal:", textFinal);
+      console.log("textFinal:", textFinal);
       
       // ------- Insert the formatted text into the selected note -------
       // Inserts the formatted audit text into the report note.
