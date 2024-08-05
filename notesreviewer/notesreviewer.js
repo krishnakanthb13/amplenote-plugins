@@ -1,9 +1,99 @@
 {
 
-  async linkOption(app, link) {
+    noteOption: { 
+    "Analysis!": async function (app, noteHandle) {
+    // Prompt the user for how they want to proceed with the analysis
+    const result = await app.prompt("Step 1 - Review: Analysis. >> Get a glimpse of your whole bunch of notes", {
+        inputs: [
+            {
+                label: "How do you want to proceed with building the Analysis By?",
+                type: "radio",
+                options: [
+                    { label: "Note Created Date", value: "created" },
+                    { label: "Note Last Modified Date", value: "updated" }
+                ]
+            }
+        ]
+    });
+    console.log("result:", result);
+
+    // If the result is falsy, the user has canceled the operation
+    if (!result) {
+        app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+        return;
+    }
+
+    // Initialize variables
+    let notes = [];
+    const dateField = result;
+    notes = await app.filterNotes({ tag: "^-notes-reviewer" });
+    console.log("noteHandles:", notes);
+
+    // Month names array for better readability
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    // Function to create a pivot table
+    const pivot = (notes, dateField) => {
+        const matrix = {};
+
+        notes.forEach(note => {
+            const date = new Date(note[dateField]);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1; // months are 0-based in JavaScript
+
+            if (!matrix[month]) {
+                matrix[month] = {};
+            }
+            if (!matrix[month][year]) {
+                matrix[month][year] = 0;
+            }
+            matrix[month][year]++;
+        });
+
+        return matrix;
+    };
+
+    // Function to generate a Markdown table from the pivot table
+    const generateMarkdownTable = (pivotTable) => {
+        const allYears = new Set();
+        Object.values(pivotTable).forEach(years => Object.keys(years).forEach(year => allYears.add(year)));
+        const sortedYears = Array.from(allYears).sort();
+
+        let markdownTable = '| Month | ' + sortedYears.join(' | ') + ' |\n';
+        markdownTable += '|-------|' + sortedYears.map(() => '---').join('|') + '|\n';
+
+        for (let month = 1; month <= 12; month++) {
+            markdownTable += '| ' + monthNames[month - 1] + ' | ';
+            const row = sortedYears.map(year => (pivotTable[month] && pivotTable[month][year]) ? pivotTable[month][year] : 0);
+            markdownTable += row.join(' | ') + ' |\n';
+        }
+
+        return markdownTable;
+    };
+
+    // Create the pivot table and generate the Markdown table
+    const pivotTable = pivot(notes, dateField);
+    const markdownTable = generateMarkdownTable(pivotTable);
+
+    // Output the final Markdown table
+    console.log(markdownTable);
+  }
+  },
+    dailyJotOption: { 
+    "Analysis!": async function (app, noteHandle) {
+        // const dailyJotOptionz = generateNotesAnalysis(app, noteHandle);
+  }
+  },
+    appOption: { 
+    "Analysis!": async function (app, noteHandle) {
+        // const appOptionz = generateNotesAnalysis(app, noteHandle);
+  }
+  },
+    linkOption: {
+      "Decide!": async function (app, link) {
       // ------- Prompting the user to enter filter criteria -------
       // Displays a prompt to the user to select review decision, tags, and enter a custom tag.
-      const result = await app.prompt("Enter your filter criteria (Anyone or Both [Name_Tag]!)", {
+      const result = await app.prompt("Step 3 - Review: Decide. >> Proceed with making the right Move!", {
           inputs: [
               {
                   label: "Select The Review Decision!",
@@ -15,12 +105,12 @@
                   ]
               },
               {
-                  label: "Select tags outside the Review Process!",
+                  label: "Select Tags outside the Standardized Review Tags!",
                   type: "tags",
                   limit: 10
               },
               {
-                  label: "Free Type a Tag to apply",
+                  label: "Free to Type a Tag to apply",
                   placeholder: "Your tag here",
                   type: "string",
               },
@@ -166,5 +256,5 @@
           uuid: reportNoteUUID
       }, textFinal);
   }
-
+ }  
 }
