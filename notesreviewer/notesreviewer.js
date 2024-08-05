@@ -156,7 +156,7 @@
       // console.log("fTagsArray:", fTagsArray);
       
       const textFinal = `
-> Audit - Review Notes: On <mark data-text-color="25" style="color: #F8D616;">**${formattedDate}**</mark>, The Note Titled: **${noteName}** underwent a review decision process. The tag: <mark data-text-color="25" style="color: #F8D616;">[**${fTagsArray}**]</mark> was/were added. With comments: *${noteComment}*
+> Audit - Review Notes: On <mark data-text-color="25" style="color: #F8D616;">**${formattedDate}**</mark>, The Note Titled: **${noteName}** underwent a review decision process. The tag: <mark data-text-color="25" style="color: #F8D616;">[**${fTagsArray}**]</mark> was/were added. With comments: <mark data-text-color="25" style="color: #F8D616;">[**${noteComment}**]</mark>.
 `;
       // console.log("textFinal:", textFinal);
       
