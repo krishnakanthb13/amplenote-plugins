@@ -39,12 +39,12 @@
 	// var groupsExclude = "^deleted,^plugin"
 	
 	// First, filter by tag
-	let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer" });
-	// console.log(notesByTag);
+	let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer,^place-holders,^-9-permanent,^-action-items" });
+	console.log(notesByTag);
 
 	// Then, filter by groups
 	let notesByGroup = await app.filterNotes({ group: "^deleted,^plugin" });
-	// console.log(notesByGroup);
+	console.log(notesByGroup);
 
 	// Create a Set of note IDs from the group filtered results for quick lookup
 	let notesByGroupSet = new Set(notesByGroup.map(note => note.uuid));
@@ -53,10 +53,10 @@
 	let filteredNotes = notesByTag.filter(note => notesByGroupSet.has(note.uuid));
 
 	// `filteredNotes` now contains the notes that match both the tag and the groups
-	// console.log(filteredNotes);
+	console.log(filteredNotes);
 
 	notes = filteredNotes;
-    // console.log("noteHandles:", notes);
+    console.log("noteHandles:", notes);
 
     // Month names array for better readability
     // const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -194,12 +194,12 @@ ${hLine}
 	// var groupsExclude = "^deleted,^plugin"
 	
 	// First, filter by tag
-	let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer" });
-	// console.log(notesByTag);
+	let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer,^place-holders,^-9-permanent,^-action-items" });
+	console.log(notesByTag);
 
 	// Then, filter by groups
 	let notesByGroup = await app.filterNotes({ group: "^deleted,^plugin" });
-	// console.log(notesByGroup);
+	console.log(notesByGroup);
 
 	// Create a Set of note IDs from the group filtered results for quick lookup
 	let notesByGroupSet = new Set(notesByGroup.map(note => note.uuid));
@@ -208,10 +208,10 @@ ${hLine}
 	let filteredNotes = notesByTag.filter(note => notesByGroupSet.has(note.uuid));
 
 	// `filteredNotes` now contains the notes that match both the tag and the groups
-	// console.log(filteredNotes);
+	console.log(filteredNotes);
 
 	notes = filteredNotes;
-    // console.log("noteHandles:", notes);
+    console.log("noteHandles:", notes);
 
     // Month names array for better readability
     // const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -352,7 +352,7 @@ ${hLine}
 
 		// const [monthyearNumber, getLucky, numberOfNotes, sortUntagged, overrideModified] = result;
 		const [getLucky, numberOfNotes, sortUntagged, monthyearNumber, overrideModified] = result;
-		// console.log("result:", result);
+		console.log("result:", result);
 		
 		// Handling Manually (numberOfNotes can be left blank!)
 		let numberOfNotesz = (numberOfNotes || "5");
@@ -380,12 +380,12 @@ ${hLine}
 		// console.log("All filtered notes:", notes);
 
 		// First, filter by tag
-		let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer" });
-		// console.log(notesByTag);
+		let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer,^place-holders,^-9-permanent,^-action-items" });
+		console.log(notesByTag);
 
 		// Then, filter by groups
 		let notesByGroup = await app.filterNotes({ group: "^deleted,^plugin" });
-		// console.log(notesByGroup);
+		console.log(notesByGroup);
 
 		// Create a Set of note IDs from the group filtered results for quick lookup
 		let notesByGroupSet = new Set(notesByGroup.map(note => note.uuid));
@@ -394,10 +394,10 @@ ${hLine}
 		let filteredNotes = notesByTag.filter(note => notesByGroupSet.has(note.uuid));
 
 		// `filteredNotes` now contains the notes that match both the tag and the groups
-		// console.log(filteredNotes);
+		console.log(filteredNotes);
 
-		let notes = filteredNotes;
-		// console.log("noteHandles:", notes);
+		notes = filteredNotes;
+		console.log("noteHandles:", notes);
 
 		function shuffleArray(array) {
 			for (let i = array.length - 1; i > 0; i--) {
@@ -418,37 +418,37 @@ ${hLine}
 				const noteYear = dateField.getFullYear();
 				return noteMonth === inputMonth && noteYear === inputYear;
 			});
-			// console.log(`Notes filtered by month-year ${monthYearInput}:`, notes);
+			console.log(`Notes filtered by month-year ${monthYearInput}:`, notes);
 			// Default shuffle - Regardless the user selects getLucky
 			notes = shuffleArray(notes);
-			// console.log(`Shuffled Array:`, notes);
+			console.log(`Shuffled Array:`, notes);
 		}
 
 		// Inside your conditional block
 		if (getLucky === true) {
 			// Randomly shuffle the notes
 			notes = shuffleArray(notes);
-			// console.log("Notes after 'Get Lucky!' shuffle:", notes);
+			console.log("Notes after 'Get Lucky!' shuffle:", notes);
 		}
 
 		if (sortUntagged === true) {
 			// Sort notes by whether they are untagged
 			notes = notes.sort((a, b) => (a.tags.length === 0 ? -1 : 1));
-			// console.log("Notes after sorting by untagged:", notes);
+			console.log("Notes after sorting by untagged:", notes);
 		}
 
 		if (notesCountInput) {
 			// Limit the number of notes
 			const notesCount = parseInt(notesCountInput, 10);
 			notes = notes.slice(0, notesCount);
-			// console.log(`Notes after limiting to ${notesCount} notes:`, notes);
+			console.log(`Notes after limiting to ${notesCount} notes:`, notes);
 		}
 
-		// console.log("Final filtered Notes:", notes);
+		console.log("Final filtered Notes:", notes);
 		
-		// console.log("Type of notes:", typeof notes);
-		// console.log("Is notes an array?:", Array.isArray(notes));
-		// console.log("Content of notes:", notes);
+		console.log("Type of notes:", typeof notes);
+		console.log("Is notes an array?:", Array.isArray(notes));
+		console.log("Content of notes:", notes);
 		
 		// Ensure notes is an array
 		let notesz = Array.from(notes);
@@ -480,7 +480,7 @@ ${hLine}
 		// Combine header and rows into the final markdown table
 		const markdownTable = `${tableHeader}\n${noteRowsString}`;
 
-		// console.log(markdownTable);
+		console.log(markdownTable);
 
     // Generate the filename based on the current date and time
     const hLine = `---`;
@@ -512,8 +512,8 @@ ${markdownTable}
 
 ${hLine} 
 `;
-		// console.log("inputSummary:", inputSummary);
-		// console.log("resultText:", resultText);
+		console.log("inputSummary:", inputSummary);
+		console.log("resultText:", resultText);
 		await app.context.replaceSelection(resultText);
 		
 		}
@@ -641,14 +641,12 @@ ${hLine}
                   await app.removeNoteTag({ uuid: decideUUID }, tag);
               }
           }
-      const added = await app.addNoteTag({ uuid: decideUUID }, `${decisionTagName}`);
-      fTags.add(decisionTagName);
       }
   
       // ------- Add the selected decision tag to the note -------
       // Adds the selected decision tag to the note.
-      // const added = await app.addNoteTag({ uuid: decideUUID }, `${decisionTagName}`);
-      // fTags.add(decisionTagName);
+      const added = await app.addNoteTag({ uuid: decideUUID }, `${decisionTagName}`);
+      fTags.add(decisionTagName);
   
       // ------- Add multiple tags to the note if provided -------
       // Adds multiple tags to the note if provided.
