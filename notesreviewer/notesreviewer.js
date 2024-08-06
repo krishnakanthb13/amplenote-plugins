@@ -29,14 +29,6 @@
     // Initialize variables
     let notes = [];
     const dateField = result;
-	// notes = await app.filterNotes({ tag: "^-notes-reviewer,^deleted,^archived,^plugin" });
-	// let notesG = app.filterNotes({ tag: "^-notes-reviewer" }).flat() : await app.filterNotes({ group: "^deleted,^archived,^plugin" });
-    // console.log("noteHandles notesG:", notesG);
-	
-	// var tagExclude = String(app.settings["Tags you want to Exclude"]);
-	// var groupsExclude = String(app.settings["Groups you want to Exclude"]);
-	// var tagExclude = "^-notes-reviewer"
-	// var groupsExclude = "^deleted,^plugin"
 	
 	// First, filter by tag
 	let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer" });
@@ -51,7 +43,6 @@
 
 	// Find the intersection of the two sets
 	let filteredNotes = notesByTag.filter(note => notesByGroupSet.has(note.uuid));
-
 	// `filteredNotes` now contains the notes that match both the tag and the groups
 	// console.log(filteredNotes);
 
@@ -59,8 +50,6 @@
     // console.log("noteHandles:", notes);
 
     // Month names array for better readability
-    // const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    // const monthNames = ["January_1", "February_2", "March_3", "April_4", "May_5", "June_6", "July_7", "August_8", "September_9", "October_10", "November_11", "December_12"];
     const monthNames = ["Jan_1", "Feb_2", "Mar_3", "Apr_4", "May_5", "Jun_6", "Jul_7", "Aug_8", "Sep_9", "Oct_10", "Nov_11", "Dec_12"];
 
     // Function to create a pivot table
@@ -184,14 +173,6 @@ ${hLine}
     // Initialize variables
     let notes = [];
     const dateField = result;
-	// notes = await app.filterNotes({ tag: "^-notes-reviewer,^deleted,^archived,^plugin" });
-	// let notesG = app.filterNotes({ tag: "^-notes-reviewer" }).flat() : await app.filterNotes({ group: "^deleted,^archived,^plugin" });
-    // console.log("noteHandles notesG:", notesG);
-	
-	// var tagExclude = String(app.settings["Tags you want to Exclude"]);
-	// var groupsExclude = String(app.settings["Groups you want to Exclude"]);
-	// var tagExclude = "^-notes-reviewer"
-	// var groupsExclude = "^deleted,^plugin"
 	
 	// First, filter by tag
 	let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer" });
@@ -206,7 +187,6 @@ ${hLine}
 
 	// Find the intersection of the two sets
 	let filteredNotes = notesByTag.filter(note => notesByGroupSet.has(note.uuid));
-
 	// `filteredNotes` now contains the notes that match both the tag and the groups
 	// console.log(filteredNotes);
 
@@ -214,8 +194,6 @@ ${hLine}
     // console.log("noteHandles:", notes);
 
     // Month names array for better readability
-    // const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    // const monthNames = ["January_1", "February_2", "March_3", "April_4", "May_5", "June_6", "July_7", "August_8", "September_9", "October_10", "November_11", "December_12"];
     const monthNames = ["Jan_1", "Feb_2", "Mar_3", "Apr_4", "May_5", "Jun_6", "Jul_7", "Aug_8", "Sep_9", "Oct_10", "Nov_11", "Dec_12"];
 
     // Function to create a pivot table
