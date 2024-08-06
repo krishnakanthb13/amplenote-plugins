@@ -4,6 +4,7 @@
   
   noteOption: { 
     "Analyze!": async function (app, noteHandle) {
+
     // Prompt the user for how they want to proceed with the analysis
     const result = await app.prompt("Step 1 - Review: Analyze. >> Get a glimpse of your whole bunch of notes", {
         inputs: [
@@ -12,7 +13,7 @@
                 type: "radio",
                 options: [
                     { label: "Note Created Date", value: "created" },
-                    { label: "Note Last Modified Date", value: "updated" }
+                    { label: "Note Last Modified Date (Suggested)", value: "updated" }
                 ]
             }
         ]
@@ -91,14 +92,22 @@
     const fDate = new Date();
     const resultText = `
 ${hLine}
-> **Review: Analyze** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**</mark>.
-
-1. To keep things short, this is the First step of the Review Process, Analyze!
-2. Below you can find the Pivoted data for all your note (Excluding the Notes tagged under standard review tags, to avoid overlapping).
-3. Columns with the Years and Rows with the Months, and Intersection is the Count of Notes that has been Created or Modified (Based on your Selection).
+> **Review: Analyze** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**<!-- {"cycleColor":"25"} --></mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**<!-- {"cycleColor":"25"} --></mark>.
+- <mark data-text-color="25" style="color: #F8D616;">**Step 1:**<!-- {"cycleColor":"25"} --></mark> Try to see the Trends of your notes based on your Selected option. <mark style="color:#3CC07D;">Follow the steps below to get an idea on how to use the below Pivot Table!<!-- {"cycleColor":"27"} --></mark>
+	1. Below you can find the <mark style="color:#3CC07D;">Pivoted data for all your note<!-- {"cycleColor":"27"} --></mark> (Excluding the Notes tagged under standard review tags, to avoid overlapping).
+	2. Columns with the <mark style="color:#3CC07D;">Years and Rows with the Months, and Intersection is the Count of Notes<!-- {"cycleColor":"27"} --></mark> that has been Created or Modified (Based on your Selection).
+	3. To keep things short, lets keep it simple, <mark style="color:#3CC07D;">pick a year + month with highest number to start with the Analysis!<!-- {"cycleColor":"27"} --></mark>
+	4. If you do <mark style="color:#3CC07D;">not want it to be a specific timespan<!-- {"cycleColor":"27"} --></mark>, you can skip this and move on to the **Step 2** below.
 
 ${markdownTable}
-- **Step 2:** To Call the Report, just keep the mouse pointer at the end of the below line and you should be able to see a \`Intellisense pop-dropdown\`, and then hit enter! 
+- <mark data-text-color="25" style="color: #F8D616;">**Step 2:**<!-- {"cycleColor":"25"} --></mark> Now coming to the Reporting part, we generate a list of notes what need to be reviewed to Decide on. <mark style="color:#3CC07D;">Follow the steps below to get a List of notes with its details!<!-- {"cycleColor":"27"} --></mark>
+	1. To Call the Report, just keep the mouse pointer at the end of the below line and you should be able to see a <mark style="color:#3CC07D;">\`Intellisense\`<!-- {"cycleColor":"27"} --></mark> pop-dropdown, and then hit enter!
+	1. If you just need <mark style="color:#3CC07D;">random 5 records<!-- {"cycleColor":"27"} --></mark>, you can just click on \`I am feeling Lucky!\` and proceed.
+	1. If you are looking for <mark style="color:#3CC07D;">\`advanced filters and sorting\`<!-- {"cycleColor":"27"} --></mark>, explore the next few options
+		1. If you want <mark style="color:#3CC07D;">a specific number of notes lists<!-- {"cycleColor":"27"} --></mark>, enter the number \`(Between: 5 - 25) (If left blank, 5 would be considered!)\`
+		1. If you want <mark style="color:#3CC07D;">the Untagged notes on the top<!-- {"cycleColor":"27"} --></mark>, you can check the box for \`Sort by Untagged Notes.\`
+		1. If you want <mark style="color:#3CC07D;">to filter by a specific month + year combo<!-- {"cycleColor":"27"} --></mark>, using the above table as reference, you can \`punch in the numbers\` in the requested format!
+		1. If you are <mark style="color:#3CC07D;">looking for view based on created date instead of last modified or updated date<!-- {"cycleColor":"27"} --></mark> you can check the box for \`Override to Created Date. (By Default Last Modified is considered.)\`
 
 ${hLine}
 
@@ -123,6 +132,7 @@ ${hLine}
   
   dailyJotOption: { 
     async "Analyze!" (app, noteHandle) {
+
     // Prompt the user for how they want to proceed with the analysis
     const result = await app.prompt("Step 1 - Review: Analyze. >> Get a glimpse of your whole bunch of notes", {
         inputs: [
@@ -131,7 +141,7 @@ ${hLine}
                 type: "radio",
                 options: [
                     { label: "Note Created Date", value: "created" },
-                    { label: "Note Last Modified Date", value: "updated" }
+                    { label: "Note Last Modified Date (Suggested)", value: "updated" }
                 ]
             }
         ]
@@ -210,14 +220,22 @@ ${hLine}
     const fDate = new Date();
     const resultText = `
 ${hLine}
-> **Review: Analyze** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**</mark>.
-
-1. To keep things short, this is the First step of the Review Process, Analysis!
-2. Below you can find the Pivoted data for all your note (Excluding the Notes tagged under standard review tags, to avoid overlapping).
-3. Columns with the Years and Rows with the Months, and Intersection is the Count of Notes that has been Created or Modified (Based on your Selection).
+> **Review: Analyze** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**<!-- {"cycleColor":"25"} --></mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**<!-- {"cycleColor":"25"} --></mark>.
+- <mark data-text-color="25" style="color: #F8D616;">**Step 1:**<!-- {"cycleColor":"25"} --></mark> Try to see the Trends of your notes based on your Selected option. <mark style="color:#3CC07D;">Follow the steps below to get an idea on how to use the below Pivot Table!<!-- {"cycleColor":"27"} --></mark>
+	1. Below you can find the <mark style="color:#3CC07D;">Pivoted data for all your note<!-- {"cycleColor":"27"} --></mark> (Excluding the Notes tagged under standard review tags, to avoid overlapping).
+	2. Columns with the <mark style="color:#3CC07D;">Years and Rows with the Months, and Intersection is the Count of Notes<!-- {"cycleColor":"27"} --></mark> that has been Created or Modified (Based on your Selection).
+	3. To keep things short, lets keep it simple, <mark style="color:#3CC07D;">pick a year + month with highest number to start with the Analysis!<!-- {"cycleColor":"27"} --></mark>
+	4. If you do <mark style="color:#3CC07D;">not want it to be a specific timespan<!-- {"cycleColor":"27"} --></mark>, you can skip this and move on to the **Step 2** below.
 
 ${markdownTable}
-- **Step 2:** To Call the Report, just keep the mouse pointer at the end of the below line and you should be able to see a \`Intellisense pop-dropdown\`, and then hit enter! 
+- <mark data-text-color="25" style="color: #F8D616;">**Step 2:**<!-- {"cycleColor":"25"} --></mark> Now coming to the Reporting part, we generate a list of notes what need to be reviewed to Decide on. <mark style="color:#3CC07D;">Follow the steps below to get a List of notes with its details!<!-- {"cycleColor":"27"} --></mark>
+	1. To Call the Report, just keep the mouse pointer at the end of the below line and you should be able to see a <mark style="color:#3CC07D;">\`Intellisense\`<!-- {"cycleColor":"27"} --></mark> pop-dropdown, and then hit enter!
+	1. If you just need <mark style="color:#3CC07D;">random 5 records<!-- {"cycleColor":"27"} --></mark>, you can just click on \`I am feeling Lucky!\` and proceed.
+	1. If you are looking for <mark style="color:#3CC07D;">\`advanced filters and sorting\`<!-- {"cycleColor":"27"} --></mark>, explore the next few options
+		1. If you want <mark style="color:#3CC07D;">a specific number of notes lists<!-- {"cycleColor":"27"} --></mark>, enter the number \`(Between: 5 - 25) (If left blank, 5 would be considered!)\`
+		1. If you want <mark style="color:#3CC07D;">the Untagged notes on the top<!-- {"cycleColor":"27"} --></mark>, you can check the box for \`Sort by Untagged Notes.\`
+		1. If you want <mark style="color:#3CC07D;">to filter by a specific month + year combo<!-- {"cycleColor":"27"} --></mark>, using the above table as reference, you can \`punch in the numbers\` in the requested format!
+		1. If you are <mark style="color:#3CC07D;">looking for view based on created date instead of last modified or updated date<!-- {"cycleColor":"27"} --></mark> you can check the box for \`Override to Created Date. (By Default Last Modified is considered.)\`
 
 ${hLine}
 
@@ -247,7 +265,7 @@ ${hLine}
 		const result = await app.prompt("Step 2 - Review: Report. >> Select based on your Today's Availability!", {
 			inputs: [
 				{ 
-					label: "Get Lucky!", 
+					label: "I am feeling Lucky!", 
 					type: "checkbox" 
 				},
 				{
@@ -265,7 +283,7 @@ ${hLine}
 					type: "string",
 				},
 				{ 
-					label: "Override to Created Date. (By Default Last Modified is considered.)", 
+					label: "Override to Created Date. (Default: Last Modified / Updated)",
 					type: "checkbox" 
 				}
 			]
@@ -402,15 +420,15 @@ ${hLine}
 > - Sort by Created Date: ${overrideModified || "None"}.
 `;
     const resultText = `
-> **Review: Report** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected options:
+> **Review: Report** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**<!-- {"cycleColor":"25"} --></mark>, with Selected options:
 
 ${inputSummary}
 
-- **Step 3**: Review your notes. Follow the steps below to get a Audit log at the start of this page!
-	1. Next click on each link and review them, and then click on the \`Notes_Reviewer: Decide!\`.
-	2. Select the Review options Available. (Keep, Discard, Review).
-	3. If the need occurs to add Tags manually apart from the Notes Reviewer, you can also do that!
-	4. Finally add a few words to let yourself know about why you have made this Decision!
+- <mark data-text-color="25" style="color: #F8D616;">**Step 3:**<!-- {"cycleColor":"25"} --></mark> Review your notes. <mark style="color:#3CC07D;">Follow the steps below to get a Audit log at the start of this page!<!-- {"cycleColor":"27"} --></mark>
+	1. <mark style="color:#3CC07D;">Next click on each link and review them<!-- {"cycleColor":"27"} --></mark>, and then click on the \`Notes_Reviewer: Decide!\`.
+	2. Select the <mark style="color:#3CC07D;">Review options Available<!-- {"cycleColor":"27"} --></mark>. \`(Keep, Discard, Review).\`
+	3. If the need occurs to <mark style="color:#3CC07D;">add Tags manually apart from the Notes Reviewer<!-- {"cycleColor":"27"} --></mark>, you can also do that!
+	4. Finally add <mark style="color:#3CC07D;">a few words<!-- {"cycleColor":"27"} --></mark> to let your future self know about the reason for this Move!
 
 ${markdownTable}
 
@@ -601,7 +619,7 @@ ${hLine}
       // console.log("fTagsArray:", fTagsArray);
       
       const textFinal = `
-> Audit - Review Notes: On <mark data-text-color="25" style="color: #F8D616;">**${formattedDate}**</mark>, The Note Titled: **${noteName}** underwent a review decision process. The tag: <mark data-text-color="25" style="color: #F8D616;">[**${fTagsArray}**]</mark> was/were added. With comments: <mark data-text-color="25" style="color: #F8D616;">[**${noteComment}**]</mark>.
+> Review: Decide (Audit) - Notes: On <mark data-text-color="25" style="color: #F8D616;">**${formattedDate}**<!-- {"cycleColor":"25"} --></mark>, The Note Titled: **${noteName}** underwent a review decision process. The tag: <mark data-text-color="25" style="color: #F8D616;">[**${fTagsArray}**]<!-- {"cycleColor":"25"} --></mark> was/were added. With comments: <mark data-text-color="25" style="color: #F8D616;">[**${noteComment}**]<!-- {"cycleColor":"25"} --></mark>.
 `;
       // console.log("textFinal:", textFinal);
       
