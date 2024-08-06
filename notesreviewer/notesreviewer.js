@@ -5,7 +5,7 @@
   noteOption: { 
     "Analyze!": async function (app, noteHandle) {
     // Prompt the user for how they want to proceed with the analysis
-    const result = await app.prompt("Step 1 - Review: Analysis. >> Get a glimpse of your whole bunch of notes", {
+    const result = await app.prompt("Step 1 - Review: Analyze. >> Get a glimpse of your whole bunch of notes", {
         inputs: [
             {
                 label: "How do you want to proceed with building the Analysis By?",
@@ -28,11 +28,13 @@
     // Initialize variables
     let notes = [];
     const dateField = result;
-    notes = await app.filterNotes({ tag: "^-notes-reviewer" });
+    notes = await app.filterNotes({ tag: "^-notes-reviewer,^deleted,^archived,^plugin" });
     // console.log("noteHandles:", notes);
 
     // Month names array for better readability
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    // const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    // const monthNames = ["January_1", "February_2", "March_3", "April_4", "May_5", "June_6", "July_7", "August_8", "September_9", "October_10", "November_11", "December_12"];
+    const monthNames = ["Jan_1", "Feb_2", "Mar_3", "Apr_4", "May_5", "Jun_6", "Jul_7", "Aug_8", "Sep_9", "Oct_10", "Nov_11", "Dec_12"];
 
     // Function to create a pivot table
     const pivot = (notes, dateField) => {
@@ -89,9 +91,9 @@
     const fDate = new Date();
     const resultText = `
 ${hLine}
-> **Review Analysis** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**</mark>.
+> **Review: Analyze** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**</mark>.
 
-1. To keep things short, this is the First step of the Review Process, Analysis!
+1. To keep things short, this is the First step of the Review Process, Analyze!
 2. Below you can find the Pivoted data for all your note (Excluding the Notes tagged under standard review tags, to avoid overlapping).
 3. Columns with the Years and Rows with the Months, and Intersection is the Count of Notes that has been Created or Modified (Based on your Selection).
 
@@ -100,7 +102,7 @@ ${markdownTable}
 
 ${hLine}
 
-{Notes_Reviewer: Report
+{Notes_Reviewer: Report!
  
 `;
     // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
@@ -122,7 +124,7 @@ ${hLine}
   dailyJotOption: { 
     async "Analyze!" (app, noteHandle) {
     // Prompt the user for how they want to proceed with the analysis
-    const result = await app.prompt("Step 1 - Review: Analysis. >> Get a glimpse of your whole bunch of notes", {
+    const result = await app.prompt("Step 1 - Review: Analyze. >> Get a glimpse of your whole bunch of notes", {
         inputs: [
             {
                 label: "How do you want to proceed with building the Analysis By?",
@@ -145,11 +147,13 @@ ${hLine}
     // Initialize variables
     let notes = [];
     const dateField = result;
-    notes = await app.filterNotes({ tag: "^-notes-reviewer" });
+    notes = await app.filterNotes({ tag: "^-notes-reviewer,^deleted,^archived,^plugin" });
     // console.log("noteHandles:", notes);
 
     // Month names array for better readability
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    // const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    // const monthNames = ["January_1", "February_2", "March_3", "April_4", "May_5", "June_6", "July_7", "August_8", "September_9", "October_10", "November_11", "December_12"];
+    const monthNames = ["Jan_1", "Feb_2", "Mar_3", "Apr_4", "May_5", "Jun_6", "Jul_7", "Aug_8", "Sep_9", "Oct_10", "Nov_11", "Dec_12"];
 
     // Function to create a pivot table
     const pivot = (notes, dateField) => {
@@ -206,7 +210,7 @@ ${hLine}
     const fDate = new Date();
     const resultText = `
 ${hLine}
-> **Review Analysis** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**</mark>.
+> **Review: Analyze** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**</mark>.
 
 1. To keep things short, this is the First step of the Review Process, Analysis!
 2. Below you can find the Pivoted data for all your note (Excluding the Notes tagged under standard review tags, to avoid overlapping).
@@ -217,7 +221,7 @@ ${markdownTable}
 
 ${hLine}
 
-{Notes_Reviewer: Report
+{Notes_Reviewer: Report!
  
 `;
     // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
@@ -237,11 +241,190 @@ ${hLine}
   
   
   
-  insertText: {
-      "Report!": async function (app) {
-      }
-  },
+	insertText: {
+		"Report!": async function (app) {
+		// Prompt the user for how they want to proceed with the report
+		const result = await app.prompt("Step 2 - Review: Report. >> Select based on your Today's Availability!", {
+			inputs: [
+				{ 
+					label: "Get Lucky!", 
+					type: "checkbox" 
+				},
+				{
+					label: "How many Notes would you like to Review today? (Between: 5 - 25)",
+					placeholder: "Default: 5",
+					type: "string",
+				},
+				{ 
+					label: "Sort by Untagged Notes.", 
+					type: "checkbox" 
+				},
+				{
+					label: "Type the Month-Year that you want the Report for! (Skip if the Get Lucky! is Selected!)",
+					placeholder: "Eg: 1-2024",
+					type: "string",
+				},
+				{ 
+					label: "Override to Created Date. (By Default Last Modified is considered.)", 
+					type: "checkbox" 
+				}
+			]
+		});
+
+		// If the result is falsy, the user has canceled the operation
+		if (!result) {
+			app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+			return;
+		}
+		app.alert("Working on it... This may take a few minutes for large notebooks. The app might seem unresponsive but we're working on it.");
+
+		// const [monthyearNumber, getLucky, numberOfNotes, sortUntagged, overrideModified] = result;
+		const [getLucky, numberOfNotes, sortUntagged, monthyearNumber, overrideModified] = result;
+		console.log("result:", result);
+		
+		// Handling Manually (numberOfNotes can be left blank!)
+		let numberOfNotesz = (numberOfNotes || "5");
+
+		const monthYearPattern = /^(0?[1-9]|1[0-2])-(\d{4})$/;
+		const notesCountPattern = /^(0?[5-9]|1[0-9]|2[2-5])$/;
+
+		const monthYearInput = monthyearNumber;
+		const notesCountInput = numberOfNotesz;
+
+		// Validate the Month-Year input if "Get Lucky!" is not selected
+		if (!monthYearPattern.test(monthYearInput) && !getLucky) {
+			await app.alert("Invalid Month-Year format. Please enter in the format 'M-YYYY' or 'MM-YYYY'. OR Just select Get Lucky! Checkbox.");
+			return;
+		} 
+
+		// Validate the number of notes input - Handled Manually (Below is Just for limiting!)
+		if (!notesCountPattern.test(notesCountInput)) {
+			await app.alert("Invalid number of notes. Please enter a number between 5 and 25.");
+			return;
+		}
+
+		// Fetch notes based on filters
+		let notes = await app.filterNotes({ tag: "^-notes-reviewer,^deleted,^archived,^plugin" });
+		console.log("All filtered notes:", notes);
+
+		function shuffleArray(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]]; // Swap elements
+			}
+			return array;
+		}
+		
+		if (getLucky === false && (monthyearNumber)) {
+			// Extract the month and year from the input
+			const [inputMonth, inputYear] = monthYearInput.split('-').map(Number);
+
+			// Filter notes based on month-year combo
+			notes = notes.filter(note => {
+				const dateField = overrideModified ? new Date(note.updated) : new Date(note.created);
+				const noteMonth = dateField.getMonth() + 1; // getMonth() is zero-based
+				const noteYear = dateField.getFullYear();
+				return noteMonth === inputMonth && noteYear === inputYear;
+			});
+			console.log(`Notes filtered by month-year ${monthYearInput}:`, notes);
+			// Default shuffle - Regardless the user selects getLucky
+			notes = shuffleArray(notes);
+			console.log(`Shuffled Array:`, notes);
+		}
+
+		// Inside your conditional block
+		if (getLucky === true) {
+			// Randomly shuffle the notes
+			notes = shuffleArray(notes);
+			console.log("Notes after 'Get Lucky!' shuffle:", notes);
+		}
+
+		if (sortUntagged === true) {
+			// Sort notes by whether they are untagged
+			notes = notes.sort((a, b) => (a.tags.length === 0 ? -1 : 1));
+			console.log("Notes after sorting by untagged:", notes);
+		}
+
+		if (notesCountInput) {
+			// Limit the number of notes
+			const notesCount = parseInt(notesCountInput, 10);
+			notes = notes.slice(0, notesCount);
+			console.log(`Notes after limiting to ${notesCount} notes:`, notes);
+		}
+
+		console.log("Final filtered Notes:", notes);
+		
+		console.log("Type of notes:", typeof notes);
+		console.log("Is notes an array?:", Array.isArray(notes));
+		console.log("Content of notes:", notes);
+		
+		// Ensure notes is an array
+		let notesz = Array.from(notes);
+		
+		// Adding Inbox Tag for all the final resulted notes
+		for (const note of notesz) {
+			if (note.uuid) {
+				await app.addNoteTag({ uuid: note.uuid }, "-notes-reviewer/1-inbox");
+			}
+		}
+		
+		// Function to format date-time string
+		function formatDateTime(dateTimeStr) {
+		  const date = new Date(dateTimeStr);
+		  return date.toLocaleString(); // Or use another format like date.toISOString() for ISO format
+		}
+		
+		// Create the markdown table header
+		const tableHeader = "| Notes | Created_On | Updated_On | Tags |\n|---|---|---|---|";
+
+		// Create the note rows
+		const noteRows = notes.map(note => 
+		  `|[${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid})|${formatDateTime(note.created)}|${formatDateTime(note.updated)}|${note.tags}|`
+		);
+
+		// Join note rows with newlines
+		const noteRowsString = noteRows.join("\n");
+
+		// Combine header and rows into the final markdown table
+		const markdownTable = `${tableHeader}\n${noteRowsString}`;
+
+		console.log(markdownTable);
+
+    // Generate the filename based on the current date and time
+    const hLine = `---`;
+    const fDate = new Date();
+    const inputSummary = `
+> **Input Selections:**
+> - Get Lucky!: ${getLucky || "None"}.
+> - Number of Notes (Default:5): ${numberOfNotes || "None"}.
+> - Sort by Tags (Untagged first): ${sortUntagged || "None"}.
+> - Filter used on Month-Year: ${monthyearNumber || "None"}.
+> - Sort by Created Date: ${overrideModified || "None"}.
+`;
+    const resultText = `
+> **Review: Report** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**</mark>, with Selected options:
+
+${inputSummary}
+
+- **Step 3**: Review your notes. Follow the steps below to get a Audit log at the start of this page!
+	1. Next click on each link and review them, and then click on the \`Notes_Reviewer: Decide!\`.
+	2. Select the Review options Available. (Keep, Discard, Review).
+	3. If the need occurs to add Tags manually apart from the Notes Reviewer, you can also do that!
+	4. Finally add a few words to let yourself know about why you have made this Decision!
+
+${markdownTable}
+
+${hLine} 
+`;
+		console.log("inputSummary:", inputSummary);
+		console.log("resultText:", resultText);
+		await app.context.replaceSelection(resultText);
+		
+		}
+	},
     
+  
+  
   
   
   
