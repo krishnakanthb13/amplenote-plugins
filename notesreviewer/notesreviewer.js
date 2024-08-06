@@ -1,7 +1,9 @@
 {
 
-    noteOption: { 
-    "Analysis!": async function (app, noteHandle) {
+    
+  
+  noteOption: { 
+    "Analyze!": async function (app, noteHandle) {
     // Prompt the user for how they want to proceed with the analysis
     const result = await app.prompt("Step 1 - Review: Analysis. >> Get a glimpse of your whole bunch of notes", {
         inputs: [
@@ -15,19 +17,19 @@
             }
         ]
     });
-    console.log("result:", result);
+    // console.log("result:", result);
 
     // If the result is falsy, the user has canceled the operation
     if (!result) {
         app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
         return;
     }
-
+    app.alert("Working on it... This may take a few minutes for large notebooks. The app might seem unresponsive but we're working on it.");
     // Initialize variables
     let notes = [];
     const dateField = result;
     notes = await app.filterNotes({ tag: "^-notes-reviewer" });
-    console.log("noteHandles:", notes);
+    // console.log("noteHandles:", notes);
 
     // Month names array for better readability
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -76,7 +78,7 @@
     const markdownTable = generateMarkdownTable(pivotTable);
 
     // Output the final Markdown table
-    console.log(markdownTable);
+    // console.log(markdownTable);
 
     // Generate the filename based on the current date and time
     const now = new Date();
@@ -101,13 +103,24 @@ ${hLine}
 {Notes_Reviewer: Report
  
 `;
+    // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
+	const newNoteName = `Notes_Reviewer_${YYMMDD}_${HHMMSS}`;
+	const newTagName = ['-notes-reviewer/0-reports'];
+	// console.log(newNoteName);
+	// console.log(newTagName);
+
     // Create a new note - to hold the Analysis report and also the To be Reviewed Notes!!!
-    let noteUUID = await app.createNote(`${filename}`, ["-notes-reviewer/0-reports"]);
+    let noteUUID = await app.createNote(filename, newTagName);
     await app.insertContent({ uuid: noteUUID }, resultText);
+
   }
   },
-    dailyJotOption: { 
-    "Analysis!": async function (app, noteHandle) {
+    
+  
+  
+  
+  dailyJotOption: { 
+    async "Analyze!" (app, noteHandle) {
     // Prompt the user for how they want to proceed with the analysis
     const result = await app.prompt("Step 1 - Review: Analysis. >> Get a glimpse of your whole bunch of notes", {
         inputs: [
@@ -121,19 +134,19 @@ ${hLine}
             }
         ]
     });
-    console.log("result:", result);
+    // console.log("result:", result);
 
     // If the result is falsy, the user has canceled the operation
     if (!result) {
         app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
         return;
     }
-
+    app.alert("Working on it... This may take a few minutes for large notebooks. The app might seem unresponsive but we're working on it.");
     // Initialize variables
     let notes = [];
     const dateField = result;
     notes = await app.filterNotes({ tag: "^-notes-reviewer" });
-    console.log("noteHandles:", notes);
+    // console.log("noteHandles:", notes);
 
     // Month names array for better readability
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -182,7 +195,7 @@ ${hLine}
     const markdownTable = generateMarkdownTable(pivotTable);
 
     // Output the final Markdown table
-    console.log(markdownTable);
+    // console.log(markdownTable);
 
     // Generate the filename based on the current date and time
     const now = new Date();
@@ -207,12 +220,32 @@ ${hLine}
 {Notes_Reviewer: Report
  
 `;
+    // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
+	const newNoteName = `Notes_Reviewer_${YYMMDD}_${HHMMSS}`;
+	const newTagName = ['-notes-reviewer/0-reports'];
+	// console.log(newNoteName);
+	// console.log(newTagName);
+
     // Create a new note - to hold the Analysis report and also the To be Reviewed Notes!!!
-    let noteUUID = await app.createNote(`${filename}`, ["-notes-reviewer/0-reports"]);
+    let noteUUID = await app.createNote(filename, newTagName);
     await app.insertContent({ uuid: noteUUID }, resultText);
+      
   }
   },
-    linkOption: {
+    
+  
+  
+  
+  
+  insertText: {
+      "Report!": async function (app) {
+      }
+  },
+    
+  
+  
+  
+  linkOption: {
       "Decide!": async function (app, link) {
       // ------- Prompting the user to enter filter criteria -------
       // Displays a prompt to the user to select review decision, tags, and enter a custom tag.
@@ -282,13 +315,24 @@ ${hLine}
       }
       
       // ------- Get the link from the Link -------
-      // Retrieves and logs the UUID from the link.
-      let decideUUID = (link.href || "");
-      // console.log("decideUUID:", decideUUID);
-  
+      // Decide if this is a Amplenote URL
+      let decideUrl = (link.href || "");
+      // console.log("decideUrl:", decideUrl);
+
+      if (decideUrl.startsWith("https://www.amplenote.com/notes/")) {
+        // Code to execute if decideUrl contains the expected prefix
+        // console.log("decideUrl contains an Amplenote note URL.");
+        // decideUrl = (link.href || "");
+      } else {
+        // Code to execute if decideUrl doesn't contain the prefix
+        // console.log("decideUrl is not an Amplenote note URL.");
+        app.alert("Operation has been cancelled. As the Link is not a Amplenote note URL. Tata! Bye Bye! Cya!");
+        return;
+      }
+        
       // ------- Create a regular expression to match UUID patterns -------
       // Regular expression to match UUID patterns.
-      const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+	  const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
   
       // ------- Extract the UUID using match -------
       // Extracts and logs the UUID from the link.
@@ -297,11 +341,14 @@ ${hLine}
   
       // ------- Check if the extraction was successful and use the first match -------
       // Uses the extracted UUID if found, otherwise logs a message.
+      let decideUUID = "";
       if (extractedUUID) {
           decideUUID = extractedUUID[0];
           // console.log("decideUUID:", decideUUID);
       } else {
+          app.alert("No UUID found in the URL.");
           // console.log("No UUID found in the URL.");
+          
       }
   
       let fTags = new Set();
@@ -359,8 +406,10 @@ ${hLine}
       // console.log("fDate:", fDate);
       // console.log("formattedDate:", formattedDate);
   
-      const noteHandle = await app.findNote({ uuid: decideUUID });
-      const noteDescription = noteHandle.name;
+      const noteHandlez = await app.findNote({ uuid: decideUUID });
+      const noteDescription = noteHandlez.name;
+      // console.log("noteHandle:", noteHandlez);
+      // console.log("noteDescription:", noteDescription);
       const noteName = `[${noteDescription}](https://www.amplenote.com/notes/${decideUUID})`;
       // console.log("noteName:", noteName);
       // console.log("fTags:", fTags);
