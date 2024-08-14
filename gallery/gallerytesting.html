@@ -39,42 +39,29 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
+        .details-container {
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            justify-content: center;
-            align-items: center;
+            display: none;
             flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .modal img {
+        .details-container img {
             max-width: 90%;
-            max-height: 80%;
             border-radius: 10px;
             border: 5px solid #ffffff;
+            margin-bottom: 15px;
         }
 
-        .modal .details {
-            color: white;
+        .details-container .details {
+            color: #333;
             text-align: center;
-            margin-top: 15px;
             font-size: 16px;
-        }
-
-        .close {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            color: white;
-            font-size: 35px;
-            font-weight: bold;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -84,27 +71,36 @@
     <!-- Images will be dynamically added here -->
 </div>
 
-<div id="modal" class="modal">
-    <span class="close">&times;</span>
-    <img id="modal-img" src="">
-    <div id="caption" class="details"></div>
+<div id="details-container" class="details-container">
+    <img id="details-img" src="">
+    <div id="details-caption" class="details"></div>
 </div>
 
 <script>
+    const useDropDownEffect = true; // Toggle between modal pop-up and drop-down effect
+
     const markdownImages = [
         // Add your markdown image links here as strings, e.g.
         // '![Alt text](https://example.com/image1.jpg)',
         // '![Alt text](https://example.com/image2.jpg)',
         '![Beautiful Landscape](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
         '![Cityscape at Night](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
-        '![Mountain View](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)'
+        '![Mountain View](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape1](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night1](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain Vie3](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)'
     ];
 
     const gallery = document.querySelector('.gallery');
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modal-img');
-    const captionText = document.getElementById('caption');
-    const closeBtn = document.querySelector('.close');
+    const detailsContainer = document.getElementById('details-container');
+    const detailsImg = document.getElementById('details-img');
+    const detailsCaption = document.getElementById('details-caption');
 
     markdownImages.forEach(link => {
         const match = link.match(/!\[([^\]]*)\]\(([^)]+)\)/);
@@ -117,24 +113,25 @@
             imgElement.alt = altText;
 
             imgElement.onclick = function() {
-                modal.style.display = 'flex';
-                modalImg.src = imgUrl;
-                captionText.innerText = altText || 'No description available';
+                if (useDropDownEffect) {
+                    // Drop-down effect
+                    detailsContainer.style.display = 'flex';
+                    detailsImg.src = imgUrl;
+                    detailsCaption.innerText = altText || 'No description available';
+
+                    // Scroll to the details section smoothly
+                    detailsContainer.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Modal pop-up (from previous code)
+                    modal.style.display = 'flex';
+                    modalImg.src = imgUrl;
+                    captionText.innerText = altText || 'No description available';
+                }
             };
 
             gallery.appendChild(imgElement);
         }
     });
-
-    closeBtn.onclick = function() {
-        modal.style.display = 'none';
-    };
-
-    modal.onclick = function(event) {
-        if (event.target !== modalImg) {
-            modal.style.display = 'none';
-        }
-    };
 </script>
 
 </body>
