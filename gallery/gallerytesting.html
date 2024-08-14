@@ -23,10 +23,18 @@
             max-width: 1200px;
         }
 
+        .gallery-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 300px;
+        }
+
         .gallery img {
             width: 100%;
             height: auto;
-            max-width: 300px;
             cursor: pointer;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -40,22 +48,21 @@
         }
 
         .details-container {
-            width: 100%;
             display: none;
             flex-direction: column;
             align-items: center;
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 10px;
+            padding: 10px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .details-container img {
-            max-width: 90%;
+            max-width: 100%;
             border-radius: 10px;
             border: 5px solid #ffffff;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .details-container .details {
@@ -71,18 +78,8 @@
     <!-- Images will be dynamically added here -->
 </div>
 
-<div id="details-container" class="details-container">
-    <img id="details-img" src="">
-    <div id="details-caption" class="details"></div>
-</div>
-
 <script>
-    const useDropDownEffect = true; // Toggle between modal pop-up and drop-down effect
-
     const markdownImages = [
-        // Add your markdown image links here as strings, e.g.
-        // '![Alt text](https://example.com/image1.jpg)',
-        // '![Alt text](https://example.com/image2.jpg)',
         '![Beautiful Landscape](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
         '![Cityscape at Night](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
         '![Mountain View](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
@@ -98,9 +95,6 @@
     ];
 
     const gallery = document.querySelector('.gallery');
-    const detailsContainer = document.getElementById('details-container');
-    const detailsImg = document.getElementById('details-img');
-    const detailsCaption = document.getElementById('details-caption');
 
     markdownImages.forEach(link => {
         const match = link.match(/!\[([^\]]*)\]\(([^)]+)\)/);
@@ -108,28 +102,42 @@
             const altText = match[1];
             const imgUrl = match[2];
 
+            const galleryItem = document.createElement('div');
+            galleryItem.classList.add('gallery-item');
+
             const imgElement = document.createElement('img');
             imgElement.src = imgUrl;
             imgElement.alt = altText;
 
-            imgElement.onclick = function() {
-                if (useDropDownEffect) {
-                    // Drop-down effect
-                    detailsContainer.style.display = 'flex';
-                    detailsImg.src = imgUrl;
-                    detailsCaption.innerText = altText || 'No description available';
+            const detailsContainer = document.createElement('div');
+            detailsContainer.classList.add('details-container');
 
-                    // Scroll to the details section smoothly
-                    detailsContainer.scrollIntoView({ behavior: 'smooth' });
+            const expandedImg = document.createElement('img');
+            expandedImg.src = imgUrl;
+
+            const detailsCaption = document.createElement('div');
+            detailsCaption.classList.add('details');
+            detailsCaption.innerText = altText || 'No description available';
+
+            detailsContainer.appendChild(expandedImg);
+            detailsContainer.appendChild(detailsCaption);
+
+            imgElement.onclick = function() {
+                if (detailsContainer.style.display === 'flex') {
+                    detailsContainer.style.display = 'none';
                 } else {
-                    // Modal pop-up (from previous code)
-                    modal.style.display = 'flex';
-                    modalImg.src = imgUrl;
-                    captionText.innerText = altText || 'No description available';
+                    // Hide all other expanded images
+                    document.querySelectorAll('.details-container').forEach(container => {
+                        container.style.display = 'none';
+                    });
+                    // Show the clicked image's expanded view
+                    detailsContainer.style.display = 'flex';
                 }
             };
 
-            gallery.appendChild(imgElement);
+            galleryItem.appendChild(imgElement);
+            galleryItem.appendChild(detailsContainer);
+            gallery.appendChild(galleryItem);
         }
     });
 </script>
