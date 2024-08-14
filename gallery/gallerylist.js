@@ -47,41 +47,34 @@ ${hLine}
       let markdownTable = "";
       markdownTable += `${introLines}`;
       markdownTable += "| Note | Tags | Created Updated | Images |\n";
-      markdownTable += "|------|-----|-----------------|--------|\n";
+      markdownTable += "|------|------|-----------------|--------|\n";
 
       function formatDateTime(dateTimeStr) {
         const date = new Date(dateTimeStr);
         return date.toLocaleString(); // Formats date as a locale-specific string
       }
-
       const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
       const regex2 = /\/([^\/]+)$/;
       const imgRes = "300";
-      
       let markdownDocs = "";
       markdownDocs += `${introLines}`;
-
       for (let note of notes) {
         try {
           const noteContent = await app.getNoteContent({ uuid: note.uuid });
-
           // Define the regex pattern to match image URLs
-          const markdownImagePattern = allImages
-            ? /!\[.*?\]\((.*?)\)(?:\n>\s*(.*))?/g // Pattern for all markdown images
-            : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\)|$)\)(\n>\s*(.*))?/g; // Pattern for Amplenote images
-
+			const markdownImagePattern = allImages
+			  ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
+			  : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\s*\[\^.*?\])?(?:\)|$)\)(?:\n>\s*(.*))?/g;
           let matches;
           let images = [];
           // console.log("noteContent:",noteContent)
           // Extract image URLs from the note content
             while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
               console.log("matches:",matches)
-              const url = matches[1] || matches[2]; // Extract the image URL
-              const caption = matches[3] ? matches[3].trim() : ''; // Extract the caption if present, or use an empty string
-              // caption needs more work - In multiple locations it is displayed [^X]/n, in others just /n [Needs more workd!]
+              const url = matches[1]; // Extract the image URL
+              const caption = matches[2] ? matches[2].trim() : ''; // Extract the caption if present, or use an empty string
               images.push({ url, caption }); // Store both the URL and caption in the images array
             }
-          
           console.log("images.url:",images.url)
           console.log("images.caption:",images.caption)
           if (images.length > 0) {
@@ -89,14 +82,13 @@ ${hLine}
                 const imageLinks = images.map(image => {
                   const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
                   return image.caption
-                    ? `![${imageIdentifier}\\|${imgRes}](${image.url})\n> ${image.caption}`
+                    ? `![${imageIdentifier}\\|${imgRes}](${image.url})<br>> ${image.caption}`
                     : `![${imageIdentifier}\\|${imgRes}](${image.url})`;
                 }).join("<br>");
             
                 markdownTable += `| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${formatDateTime(note.created)} ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
               } else {
               // Generate document format if mdTable is false
-              //const imageLinks = images.map(url => `![image|${imgRes}](${url})`).join("<br>"); // Create markdown image links with line breaks
                 const imageLinks = images.map(image => {
                   const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
                   return image.caption
@@ -121,7 +113,6 @@ ${hLine}
           }
         }
       }
-
       // Store results based on the selected format
       if (mdTable) {
         results.push(markdownTable);
@@ -132,11 +123,9 @@ ${hLine}`;
         results.push(markdownDocs);
         fresults = markdownDocs;
       }
-
       console.log("markdownTable:", markdownTable);
       console.log("markdownDocs:", markdownDocs);
       console.log("fresults:", fresults);
-
       // Display the final results
       console.log("results:", results);
       const now = new Date();
@@ -146,8 +135,6 @@ ${hLine}`;
       const newTagName = ['-image-gallery'];
       let noteUUID = await app.createNote(newNoteName, newTagName);
       await app.replaceNoteContent({ uuid: noteUUID }, fresults);
-      // return fresults;
-      //return null
     }
   }
 }
