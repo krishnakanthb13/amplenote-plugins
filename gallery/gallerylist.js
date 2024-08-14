@@ -1,5 +1,5 @@
 {
-  insertText: {
+  appOption: {
     "List!": async function (app) {
       // Prompt the user to select tags and choose options
       const result = await app.prompt("Select Tags from which you want to list of Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
@@ -32,7 +32,21 @@
 
       let results = [];
       let fresults = "";
-      let markdownTable = "| Note | Tags | Created Updated | Images |\n";
+
+      const hLine = `
+
+---
+
+`;
+      const introLines = `
+# Welcome to your Gallery!
+## Here you can find all your Photos in your Amplenote Notes. 
+### Either you have selected it in Documentation Format or in a Table Format, you will get the complete list displayed here.
+${hLine}
+`;
+      let markdownTable = "";
+      markdownTable += `${introLines}`;
+      markdownTable += "| Note | Tags | Created Updated | Images |\n";
       markdownTable += "|------|-----|-----------------|--------|\n";
 
       function formatDateTime(dateTimeStr) {
@@ -40,7 +54,11 @@
         return date.toLocaleString(); // Formats date as a locale-specific string
       }
 
+      const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
+      const imgRes = "300";
+      
       let markdownDocs = "";
+      markdownDocs += `${introLines}`;
 
       for (let note of notes) {
         try {
@@ -53,7 +71,6 @@
 
           let matches;
           let images = [];
-          const hLine = `---`;
 
           // Extract image URLs from the note content
           while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
@@ -63,17 +80,16 @@
           if (images.length > 0) {
             if (mdTable) {
               // Generate table format if mdTable is true
-              const imageLinks = images.map(url => `![image](${url})`).join("<br>"); // Create markdown image links with line breaks
+              const imageLinks = images.map(url => `![${url.match(regex)[1]}\\|${imgRes}](${url})`).join("<br>"); // Create markdown image links with line breaks
               markdownTable += `| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${formatDateTime(note.created)} ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
             } else {
               // Generate document format if mdTable is false
-              const imageLinks = images.map(url => `![image](${url})`).join("<br>"); // Create markdown image links with line breaks
+              const imageLinks = images.map(url => `![image|${imgRes}](${url})`).join("<br>"); // Create markdown image links with line breaks
               markdownDocs += `
-${hLine}
->- Note: [${note.name}](https://www.amplenote.com/notes/${note.uuid})
-> - Tags: ${note.tags}
-> - Created: ${formatDateTime(note.created)}
-> - Updated: ${formatDateTime(note.updated)}
+### Note: [${note.name}](https://www.amplenote.com/notes/${note.uuid})
+> Tags: ${note.tags}
+> Created: ${formatDateTime(note.created)}
+> Updated: ${formatDateTime(note.updated)}
 
 ${imageLinks}
 
@@ -91,6 +107,8 @@ ${hLine}
       // Store results based on the selected format
       if (mdTable) {
         results.push(markdownTable);
+        markdownTable += `
+${hLine}`;
         fresults = markdownTable;
       } else {
         results.push(markdownDocs);
@@ -103,7 +121,14 @@ ${hLine}
 
       // Display the final results
       console.log("results:", results);
-      await app.context.replaceSelection(fresults);
+      const now = new Date();
+      const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+      const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+      const newNoteName = `Image_Gallery_${YYMMDD}_${HHMMSS}`;
+      const newTagName = ['-image-gallery'];
+      let noteUUID = await app.createNote(newNoteName, newTagName);
+      await app.replaceNoteContent({ uuid: noteUUID }, fresults);
+      // return fresults;
     }
   }
 }
