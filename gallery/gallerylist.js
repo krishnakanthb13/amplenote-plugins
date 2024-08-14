@@ -11,7 +11,7 @@
             placeholder: "Enter tag/'s' (Max 10)"
           },
           {
-            label: "Include Non Amplenote Images (Default: Only Amplenote Images)", 
+            label: "Include Non-Amplenote Images (Default: Only Amplenote Images)", 
             type: "checkbox"
           },
           {
@@ -25,76 +25,94 @@
       const [tagNames, allImages, mdTable] = result;
       console.log("tagNames:", tagNames);
 
+      // Filter notes by the selected tags
       let notes = [];
       let notesByTag = await app.filterNotes({ tag: tagNames });
       notes = notesByTag;
       console.log("notes:", notes);
 
+      // Prepare results
       let results = [];
-      let fresults = "";
+      let finalResults = "";
 
-      const hLine = `
+      // Define horizontal line and introductory lines for the markdown document
+      const horizontalLine = `
 
 ---
 
 `;
       const introLines = `
 # Welcome to your Gallery!
-## Here you can find all your Photos in your Amplenote Notes. 
+## Here you can find all your Photos in your Amplenote Notes.
 ### Either you have selected it in Documentation Format or in a Table Format, you will get the complete list displayed here.
-${hLine}
+${horizontalLine}
 `;
+
+      // Initialize markdown table format
       let markdownTable = "";
       markdownTable += `${introLines}`;
-      markdownTable += "| Note | Tags | Created Updated | Images |\n";
-      markdownTable += "|------|------|-----------------|--------|\n";
+      markdownTable += "| Note | Tags | Created | Updated | Images |\n";
+      markdownTable += "|------|------|---------|---------|--------|\n";
 
+      // Helper function to format date-time as a locale-specific string
       function formatDateTime(dateTimeStr) {
         const date = new Date(dateTimeStr);
-        return date.toLocaleString(); // Formats date as a locale-specific string
+        return date.toLocaleString();
       }
+
+      // Define regex patterns to extract image URLs
       const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
       const regex2 = /\/([^\/]+)$/;
-      const imgRes = "300";
+      const imageResolution = "300";
+
+      // Initialize markdown document format
       let markdownDocs = "";
       markdownDocs += `${introLines}`;
+
+      // Process each note to extract images
       for (let note of notes) {
         try {
           const noteContent = await app.getNoteContent({ uuid: note.uuid });
-          // Define the regex pattern to match image URLs
-			const markdownImagePattern = allImages
-			  ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
-			  : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\s*\[\^.*?\])?(?:\)|$)\)(?:\n>\s*(.*))?/g;
+
+          // Define regex pattern to match image URLs based on user selection
+          const markdownImagePattern = allImages
+            ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
+            : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\s*\[\^.*?\])?(?:\)|$)\)(?:\n>\s*(.*))?/g;
+
           let matches;
           let images = [];
-          // console.log("noteContent:",noteContent)
-          // Extract image URLs from the note content
-            while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
-              console.log("matches:",matches)
-              const url = matches[1]; // Extract the image URL
-              const caption = matches[2] ? matches[2].trim() : ''; // Extract the caption if present, or use an empty string
-              images.push({ url, caption }); // Store both the URL and caption in the images array
-            }
-          console.log("images.url:",images.url)
-          console.log("images.caption:",images.caption)
+          console.log("noteContent:",noteContent)
+          // Extract image URLs and captions from the note content
+          while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
+            console.log("matches:", matches);
+            const url = matches[1]; // Extract the image URL
+            const caption = matches[2] ? matches[2].trim() : ''; // Extract the caption if present, or use an empty string
+            images.push({ url, caption }); // Store both the URL and caption in the images array
+          }
+
+          console.log("images.url:", images.map(img => img.url));
+          console.log("images.caption:", images.map(img => img.caption));
+
           if (images.length > 0) {
-              if (mdTable) {
-                const imageLinks = images.map(image => {
-                  const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
-                  return image.caption
-                    ? `![${imageIdentifier}\\|${imgRes}](${image.url})<br>> ${image.caption}`
-                    : `![${imageIdentifier}\\|${imgRes}](${image.url})`;
-                }).join("<br>");
-            
-                markdownTable += `| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${formatDateTime(note.created)} ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
-              } else {
-              // Generate document format if mdTable is false
-                const imageLinks = images.map(image => {
-                  const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
-                  return image.caption
-                    ? `![${imageIdentifier}\\|${imgRes}](${image.url})\n> ${image.caption}`
-                    : `![${imageIdentifier}\\|${imgRes}](${image.url})`;
-                }).join("<br>");
+            if (mdTable) {
+              // If table format is selected, format images as table entries
+              const imageLinks = images.map(image => {
+                const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
+                return image.caption
+                  ? `![${imageIdentifier}\\|${imageResolution}](${image.url})<br>> ${image.caption}`
+                  : `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
+              }).join("<br>");
+
+              markdownTable += `| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${formatDateTime(note.created)} | ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
+            } else {
+              // Generate document format if table format is not selected
+              const imageLinks = images.map(image => {
+                const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
+                return image.caption
+                  ? `![${imageIdentifier}\\|${imageResolution}](${image.url})\n> ${image.caption}`
+                  : `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
+              }).join("<br>");
+
               markdownDocs += `
 ### Note: [${note.name}](https://www.amplenote.com/notes/${note.uuid})
 > Tags: ${note.tags}
@@ -103,7 +121,7 @@ ${hLine}
 
 ${imageLinks}
 
-${hLine}
+${horizontalLine}
               `;
             }
           }
@@ -113,28 +131,30 @@ ${hLine}
           }
         }
       }
+
       // Store results based on the selected format
       if (mdTable) {
         results.push(markdownTable);
         markdownTable += `
-${hLine}`;
-        fresults = markdownTable;
+${horizontalLine}`;
+        finalResults = markdownTable;
       } else {
         results.push(markdownDocs);
-        fresults = markdownDocs;
+        finalResults = markdownDocs;
       }
+
       console.log("markdownTable:", markdownTable);
       console.log("markdownDocs:", markdownDocs);
-      console.log("fresults:", fresults);
-      // Display the final results
-      console.log("results:", results);
+      console.log("finalResults:", finalResults);
+
+      // Generate a new note with the results
       const now = new Date();
       const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
       const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
       const newNoteName = `Image_Gallery_${YYMMDD}_${HHMMSS}`;
       const newTagName = ['-image-gallery'];
       let noteUUID = await app.createNote(newNoteName, newTagName);
-      await app.replaceNoteContent({ uuid: noteUUID }, fresults);
+      await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
     }
   }
 }
