@@ -9,18 +9,17 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            <!-- background-color: #f4f4f4; -->
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-			background-image:url(https://images.unsplash.com/photo-1499088513455-78ed88b7a5b4?crop=entropy&cs=srgb&fm=jpg&ixid=MnwzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2ODE0OTQ3MzM&ixlib=rb-4.0.3&q=85);
         }
 
         .gallery {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 20px;
             max-width: 1200px;
         }
 
@@ -29,8 +28,15 @@
             height: auto;
             max-width: 300px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 5px solid #ffffff;
+        }
+
+        .gallery img:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
         .modal {
@@ -50,7 +56,8 @@
         .modal img {
             max-width: 90%;
             max-height: 80%;
-            border-radius: 5px;
+            border-radius: 10px;
+            border: 5px solid #ffffff;
         }
 
         .modal .details {
@@ -69,7 +76,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-
     </style>
 </head>
 <body>
