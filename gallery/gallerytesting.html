@@ -8,19 +8,27 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+        }
+
+        .container {
+            border: 2px solid transparent; /* Invisible border */
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
         }
 
         .gallery {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            max-width: 1200px;
+            justify-content: center;
         }
 
         .gallery-item {
@@ -50,7 +58,7 @@
         .details-container {
             display: none;
             flex-direction: column;
-            align-items: center;
+            align-items: auto;
             margin-top: 10px;
             padding: 10px;
             background: white;
@@ -75,16 +83,54 @@
             word-wrap: break-word;
             padding: 5px;
         }
+
     </style>
 </head>
 <body>
 
-<div class="gallery">
-    <!-- Images will be dynamically added here -->
+<div class="container">
+    <div class="gallery">
+        <!-- Images will be dynamically added here -->
+    </div>
 </div>
 
 <script>
     const markdownImages = [
+        '![Beautiful Landscape](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape1](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night1](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain Vie3](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape1](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night1](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape1](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night1](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain View2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Beautiful Landscape2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Cityscape at Night2](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
+        '![Mountain Vie3](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
         '![Beautiful Landscape](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
         '![Cityscape at Night](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
         '![Mountain View](https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png)',
