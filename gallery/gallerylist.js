@@ -55,6 +55,7 @@ ${hLine}
       }
 
       const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
+      const regex2 = /\/([^\/]+)$/;
       const imgRes = "300";
       
       let markdownDocs = "";
@@ -66,25 +67,42 @@ ${hLine}
 
           // Define the regex pattern to match image URLs
           const markdownImagePattern = allImages
-            ? /!\[.*?\]\((.*?)\)/g // Pattern for all markdown images
-            : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\)|$)/g; // Pattern for Amplenote images
+            ? /!\[.*?\]\((.*?)\)(?:\n>\s*(.*))?/g // Pattern for all markdown images
+            : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\)|$)\)(\n>\s*(.*))?/g; // Pattern for Amplenote images
 
           let matches;
           let images = [];
-
+          // console.log("noteContent:",noteContent)
           // Extract image URLs from the note content
-          while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
-            images.push(matches[1]); // Add image URL to the list
-          }
-
+            while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
+              console.log("matches:",matches)
+              const url = matches[1] || matches[2]; // Extract the image URL
+              const caption = matches[3] ? matches[3].trim() : ''; // Extract the caption if present, or use an empty string
+              // caption needs more work - In multiple locations it is displayed [^X]/n, in others just /n [Needs more workd!]
+              images.push({ url, caption }); // Store both the URL and caption in the images array
+            }
+          
+          console.log("images.url:",images.url)
+          console.log("images.caption:",images.caption)
           if (images.length > 0) {
-            if (mdTable) {
-              // Generate table format if mdTable is true
-              const imageLinks = images.map(url => `![${url.match(regex)[1]}\\|${imgRes}](${url})`).join("<br>"); // Create markdown image links with line breaks
-              markdownTable += `| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${formatDateTime(note.created)} ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
-            } else {
+              if (mdTable) {
+                const imageLinks = images.map(image => {
+                  const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
+                  return image.caption
+                    ? `![${imageIdentifier}\\|${imgRes}](${image.url})\n> ${image.caption}`
+                    : `![${imageIdentifier}\\|${imgRes}](${image.url})`;
+                }).join("<br>");
+            
+                markdownTable += `| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${formatDateTime(note.created)} ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
+              } else {
               // Generate document format if mdTable is false
-              const imageLinks = images.map(url => `![image|${imgRes}](${url})`).join("<br>"); // Create markdown image links with line breaks
+              //const imageLinks = images.map(url => `![image|${imgRes}](${url})`).join("<br>"); // Create markdown image links with line breaks
+                const imageLinks = images.map(image => {
+                  const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
+                  return image.caption
+                    ? `![${imageIdentifier}\\|${imgRes}](${image.url})\n> ${image.caption}`
+                    : `![${imageIdentifier}\\|${imgRes}](${image.url})`;
+                }).join("<br>");
               markdownDocs += `
 ### Note: [${note.name}](https://www.amplenote.com/notes/${note.uuid})
 > Tags: ${note.tags}
@@ -129,6 +147,7 @@ ${hLine}`;
       let noteUUID = await app.createNote(newNoteName, newTagName);
       await app.replaceNoteContent({ uuid: noteUUID }, fresults);
       // return fresults;
+      //return null
     }
   }
 }
