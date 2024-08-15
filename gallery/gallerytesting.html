@@ -6,11 +6,9 @@
     <title>Image Gallery</title>
     <!-- UIkit CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/css/uikit.min.css" />
-
     <!-- UIkit JS -->
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/js/uikit-icons.min.js"></script>
-
     <style>
         /* Cool background gradient */
         body {
@@ -57,10 +55,10 @@
             margin-bottom: 20px;
         }
 
-		/* Button styles */
-		.tag-buttons button {
-			margin: 5px; /* Adjust this value to control the space between buttons */
-		}
+        /* Button styles */
+        .tag-buttons button {
+            margin: 5px; /* Adjust this value to control the space between buttons */
+        }
 
         /* Button hover effect */
         .uk-button:hover {
@@ -73,11 +71,33 @@
             background-color: #0056b3;
             color: white;
         }
+		/* Footer styles */
+		footer {
+			position: fixed; /* Fixes the footer at the bottom */
+			left: 0; /* Aligns the footer to the far left */
+			bottom: 0; /* Aligns the footer to the bottom */
+			width: 100%; /* Makes the footer span the full width of the page */
+			padding: 10px; /* Adds some padding */
+			text-align: left; /* Aligns text to the left */
+			margin: 0; /* Removes default margins */
+			background: none; /* Removes any background color */
+			color: #000; /* Sets text color (adjust as needed) */
+			font-size: 14px; /* Adjusts font size */
+		}
+
+		footer a {
+			color: #ffeb3b; /* Adjust color if needed */
+			text-decoration: none;
+		}
+
+		footer a:hover {
+			text-decoration: underline;
+		}
     </style>
 </head>
 <body>
 
-<div class="uk-h3 uk-text-center">Gallery</div>
+<div class="uk-h3 uk-text-center"></div>
 <div class="tag-buttons" id="tag-buttons">
     <!-- Tag buttons will be injected here -->
 </div>
@@ -85,45 +105,51 @@
     <!-- Images will be injected here -->
 </div>
 
+<footer>
+    <p>&copy; BKK 2024 | <a href="https://bio.site/krishnakanthb13" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+</footer>
+
 <script>
 // JSON data
-const jsonData = [
-    {
-        "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
-        "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
-        "caption": "Time here!<br>Notename: July 15th, 2024, Tags: (-0-planner, vacation), UUID: a8bd423c-4265-11ef-a3f4-6ef34fa959ce",
-        "alt": "July 15th, 2024",
-        "tags": ["-0-planner", "vacation"]
-    },
-    {
-        "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
-        "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
-        "caption": "Hello Buddy!<br>Notename: August 11th, 2024, Tags: (-0-planner, vacation), UUID: 5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd",
-        "alt": "August 11th, 2024",
-        "tags": ["-0-planner", "vacation"]
-    },
-    {
-        "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
-        "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
-        "caption": "No Caption Available or Unable to Fetch.<br>Notename: August 11th, 2024, Tags: (vacation), UUID: 5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd",
-        "alt": "August 11th, 2024",
-        "tags": ["vacation"]
-    },
-    {
-        "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
-        "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
-        "caption": "Hi, this is a Vacation Itinerary! Should Plan something!<br>Notename: July 20th, 2024, Tags: (vacation), UUID: b9b33974-4653-11ef-9826-26e37c279344",
-        "alt": "July 20th, 2024",
-        "tags": ["vacation"]
-    },
-    {
-        "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
-        "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
-        "caption": "No Caption Available or Unable to Fetch.<br>Notename: August 3rd, 2024, Tags: (-0-planner), UUID: 444b9d56-50c7-11ef-8a24-f2c7410336d6",
-        "alt": "August 3rd, 2024",
-        "tags": ["-0-planner"]
-    }
-];
+const jsonData = 
+[
+  {
+    "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "Time here!<br>Notename: July 15th, 2024, Tags: (-0-planner), UUID: a8bd423c-4265-11ef-a3f4-6ef34fa959ce",
+    "alt": "July 15th, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "Hello Buddy!<br>Notename: August 11th, 2024, Tags: (-0-planner), UUID: 5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd",
+    "alt": "August 11th, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: August 11th, 2024, Tags: (-0-planner), UUID: 5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd",
+    "alt": "August 11th, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "Hi, this is a Vacation Itinerary! Should Plan something!<br>Notename: July 20th, 2024, Tags: (-0-planner), UUID: b9b33974-4653-11ef-9826-26e37c279344",
+    "alt": "July 20th, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: August 3rd, 2024, Tags: (-0-planner), UUID: 444b9d56-50c7-11ef-8a24-f2c7410336d6",
+    "alt": "August 3rd, 2024",
+    "tags": "-0-planner"
+  }
+]
+;
 
 // Function to populate the gallery
 function populateGallery(data) {
@@ -134,23 +160,24 @@ function populateGallery(data) {
         div.classList.add('uk-inline');
         div.innerHTML = `
             <a href="${item.href}" data-caption="${item.caption}">
-                <img src="${item.src}" alt="${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+               <img src="${item.src}" alt="${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
             </a>
         `;
         gallery.appendChild(div);
     });
 }
 
-// Function to create tag buttons
-function createTagButtons(data) {
+// Function to create and update tag buttons
+function updateTagButtons(data) {
     const tagsSet = new Set();
     data.forEach(item => {
-        item.tags.forEach(tag => tagsSet.add(tag));
+        item.tags.split(',').map(tag => tag.trim()).forEach(tag => tagsSet.add(tag));
     });
 
     const tagButtons = document.getElementById('tag-buttons');
     tagButtons.innerHTML = ''; // Clear existing buttons
 
+    // Create tag buttons ensuring uniqueness
     tagsSet.forEach(tag => {
         const button = document.createElement('button');
         button.className = 'uk-button uk-button-default uk-button-small';
@@ -158,6 +185,7 @@ function createTagButtons(data) {
             <span class="uk-margin-small-right" uk-icon="icon: hashtag;"></span>
             ${tag}
         `;
+        button.dataset.tag = tag; // Store tag in data attribute
         button.addEventListener('click', () => toggleTagFilter(button, tag));
         tagButtons.appendChild(button);
     });
@@ -165,31 +193,67 @@ function createTagButtons(data) {
 
 // Function to toggle filter and button active state
 function toggleTagFilter(button, tag) {
-    const isActive = button.classList.contains('uk-button-primary uk-button-small');
+    const isActive = button.classList.contains('uk-button-primary');
+    
     if (isActive) {
-        button.classList.remove('uk-button-primary uk-button-small');
-        button.classList.add('uk-button-default uk-button-small');
-        populateGallery(jsonData); // Show all images when filter is removed
+        button.classList.remove('uk-button-primary');
+        button.classList.add('uk-button-default');
+        button.classList.remove('uk-button-small');
+        button.classList.add('uk-button-small');
+
+        // If no other buttons are active, show all images
+        if (document.querySelectorAll('#tag-buttons .uk-button-primary').length === 0) {
+            populateGallery(jsonData);
+        } else {
+            filterGallery(); // Apply the current active filters
+        }
     } else {
         document.querySelectorAll('#tag-buttons button').forEach(btn => {
             btn.classList.remove('uk-button-primary');
-            btn.classList.add('uk-button-default uk-button-small');
+            btn.classList.add('uk-button-default');
+            btn.classList.remove('uk-button-small');
+            btn.classList.add('uk-button-small');
         });
-        button.classList.add('uk-button-primary uk-button-small');
-        button.classList.remove('uk-button-default uk-button-small');
+        button.classList.add('uk-button-primary');
+        button.classList.remove('uk-button-default');
+        button.classList.add('uk-button-small');
+        button.classList.remove('uk-button-small');
         filterByTag(tag);
     }
 }
 
 // Function to filter images by tag
 function filterByTag(tag) {
-    const filteredData = jsonData.filter(item => item.tags.includes(tag));
+    const filteredData = jsonData.filter(item => {
+        const tags = item.tags.split(',').map(t => t.trim());
+        return tags.includes(tag);
+    });
+    populateGallery(filteredData);
+}
+
+// Function to filter the gallery based on selected tags
+function filterGallery() {
+    const activeTags = Array.from(document.querySelectorAll('#tag-buttons .uk-button-primary'))
+                            .map(button => button.dataset.tag);
+
+    // If no tags are selected, show all images
+    if (activeTags.length === 0) {
+        populateGallery(jsonData);
+        return;
+    }
+
+    const filteredData = jsonData.filter(item => {
+        const tags = item.tags.split(',').map(t => t.trim());
+        return activeTags.some(tag => tags.includes(tag));
+    });
+    
     populateGallery(filteredData);
 }
 
 // Initial setup
-createTagButtons(jsonData);
+updateTagButtons(jsonData);
 populateGallery(jsonData);
+
 </script>
 
 </body>

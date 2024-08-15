@@ -27,8 +27,21 @@
 
       // Filter notes by the selected tags
       let notes = [];
-      let notesByTag = await app.filterNotes({ tag: tagNames });
-      notes = notesByTag;
+      const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
+      let filteredNotes = [];
+      if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+          // If tagsArray is a valid non-empty array, filter notes by each tag
+          for (const tag of tagsArray) {
+              const notesByTag = await app.filterNotes({ tag: tag });
+              filteredNotes = [...filteredNotes, ...notesByTag];
+          }
+      } else {
+          // If tagsArray is null or not a valid array, default to filtering by group
+          const notesByGroup = await app.filterNotes({ group: "^vault" });
+          filteredNotes = [...filteredNotes, ...notesByGroup];
+      }
+      filteredNotes = [...new Set(filteredNotes)];
+      notes = filteredNotes;
       console.log("notes:", notes);
 
       // Prepare results
@@ -191,14 +204,28 @@ ${horizontalLine}`;
     const [tagNames, allImages, dwFormat] = result;
     console.log("tagNames:", tagNames);
 
-    // Filter notes by the selected tags
-    let notes = [];
-    let notesByTag = await app.filterNotes({ tag: tagNames });
-    notes = notesByTag;
-    console.log("notes:", notes);
+      // Filter notes by the selected tags
+      let notes = [];
+      const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
+      let filteredNotes = [];
+      if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+          // If tagsArray is a valid non-empty array, filter notes by each tag
+          for (const tag of tagsArray) {
+              const notesByTag = await app.filterNotes({ tag: tag });
+              filteredNotes = [...filteredNotes, ...notesByTag];
+          }
+      } else {
+          // If tagsArray is null or not a valid array, default to filtering by group
+          const notesByGroup = await app.filterNotes({ group: "^vault" });
+          filteredNotes = [...filteredNotes, ...notesByGroup];
+      }
+      filteredNotes = [...new Set(filteredNotes)];
+      notes = filteredNotes;
+      console.log("notes:", notes);
 
     // Prepare results
     let resultsArray = [];
+    let resultsArray2 = [];
     let htmlTemplate = "";
     let rawTemplate = "";
     let htmlDataTemplate = "";
@@ -266,13 +293,18 @@ ${horizontalLine}`;
                     // Append to htmlDataTemplate
                     htmlDataTemplate += `'![${resultEntry.imagename}](${resultEntry.imageurl})',\n`;
                     } else if (dwFormat === "html") {
-                    // Append to htmlDataTemplate
                     // Create an object with named properties
-                    htmlTemplate += `
-<a href="${image.url}" data-lightbox="gallery" data-title="${image.caption}<br>Notename: ${note.name}, Tags: (${note.tags.join(',')}), UUID: ${note.uuid}">
-    <img src="${image.url}" alt="${image.caption}">
-</a><br>
-`                   }
+                    let resultEntry2 = {
+                        href: image.url,
+                        src: image.url,
+                        caption: `${image.caption}<br>Notename: ${note.name}, Tags: (${note.tags.join(',')}), UUID: ${note.uuid}`,
+                        alt: note.name,
+                        tags: `${note.tags.join(',')}`
+                    };
+
+                    // Push the object into the results array
+                    resultsArray2.push(resultEntry2);
+                   }
                 }
             }
         } catch (err) {
@@ -281,41 +313,7 @@ ${horizontalLine}`;
         }
     }
 
-
-      const htmlTemplatez = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
-    <!-- Lightbox CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
-    <style>
-        /* Gallery styles */
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .gallery-item {
-            flex: 1 1 calc(33.333% - 20px); /* Responsive 3-column layout */
-            margin-bottom: 10px;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border: 1px solid #ddd;
-        }
-    </style>
-</head>
-<body>
-${htmlTemplate}
-</body>
-</html>
-`;
-  
+ 
     console.log("resultsArray:", resultsArray);
 
       // Generate a new note with the results
@@ -336,9 +334,23 @@ ${htmlTemplate}
         document.body.removeChild(link);
     }
 
+    function removeDuplicates(array) {
+        const seen = new Set();
+        return array.filter(item => {
+            const serialized = JSON.stringify(item);
+            if (seen.has(serialized)) {
+                return false;
+            } else {
+                seen.add(serialized);
+                return true;
+            }
+        });
+    }
+
     // Determine the format and trigger download
     if (dwFormat === "json") {
-        let jsonTemplate = JSON.stringify(resultsArray, null, 2);
+        let deduplicatedArray = removeDuplicates(resultsArray);
+        let jsonTemplate = JSON.stringify(deduplicatedArray, null, 2);
         downloadTextFile(jsonTemplate, "Gallery_JSON.json");
         console.log("jsonTemplate:", jsonTemplate);
     } else if (dwFormat === "raw") {
@@ -348,8 +360,237 @@ ${htmlTemplate}
         downloadTextFile(htmlDataTemplate, "Gallery_HTML_Data.txt");
         console.log("htmlDataTemplate:", htmlDataTemplate);
     } else if (dwFormat === "html") {
-        downloadTextFile(htmlTemplatez, "Gallery_HTML.html");
-        console.log("htmlTemplatez:", htmlTemplatez);
+        let deduplicatedArray2 = removeDuplicates(resultsArray2);
+        let jsonTemplate2 = JSON.stringify(deduplicatedArray2, null, 2);
+
+      htmlTemplate = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/css/uikit.min.css" />
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/js/uikit-icons.min.js"></script>
+    <style>
+        /* Cool background gradient */
+        body {
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            padding: 20px;
+        }
+
+        /* Container for the images */
+        .gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Image container */
+        .gallery-container .uk-inline {
+            overflow: hidden;
+            border-radius: 10px;
+            transition: transform 0.15s ease; /* Speed up transition */
+            display: flex; /* Enable flexbox */
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+            height: auto; /* Set a fixed height if needed */
+        }
+
+        /* Hover effect for images */
+        .gallery-container .uk-inline:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Image styles */
+        .gallery-container img {
+            border-radius: 10px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Tag buttons container */
+        .tag-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Button styles */
+        .tag-buttons button {
+            margin: 5px; /* Adjust this value to control the space between buttons */
+        }
+
+        /* Button hover effect */
+        .uk-button:hover {
+            background-color: #0056b3;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .uk-button.active {
+            background-color: #0056b3;
+            color: white;
+        }
+		/* Footer styles */
+		footer {
+			position: fixed; /* Fixes the footer at the bottom */
+			left: 0; /* Aligns the footer to the far left */
+			bottom: 0; /* Aligns the footer to the bottom */
+			width: 100%; /* Makes the footer span the full width of the page */
+			padding: 10px; /* Adds some padding */
+			text-align: left; /* Aligns text to the left */
+			margin: 0; /* Removes default margins */
+			background: none; /* Removes any background color */
+			color: #000; /* Sets text color (adjust as needed) */
+			font-size: 14px; /* Adjusts font size */
+		}
+
+		footer a {
+			color: #ffeb3b; /* Adjust color if needed */
+			text-decoration: none;
+		}
+
+		footer a:hover {
+			text-decoration: underline;
+		}
+    </style>
+</head>
+<body>
+
+<div class="uk-h3 uk-text-center"></div>
+<div class="tag-buttons" id="tag-buttons">
+    <!-- Tag buttons will be injected here -->
+</div>
+<div id="gallery" class="gallery-container" uk-lightbox="animation: scale">
+    <!-- Images will be injected here -->
+</div>
+
+<footer>
+    <p>&copy; BKK 2024 | <a href="https://bio.site/krishnakanthb13" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+</footer>
+
+<script>
+// JSON data
+const jsonData = 
+${jsonTemplate2}
+;
+
+// Function to populate the gallery
+function populateGallery(data) {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = ''; // Clear existing content
+    data.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('uk-inline');
+        div.innerHTML = \`
+            <a href="\${item.href}" data-caption="\${item.caption}">
+               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+            </a>
+        \`;
+        gallery.appendChild(div);
+    });
+}
+
+// Function to create and update tag buttons
+function updateTagButtons(data) {
+    const tagsSet = new Set();
+    data.forEach(item => {
+        item.tags.split(',').map(tag => tag.trim()).forEach(tag => tagsSet.add(tag));
+    });
+
+    const tagButtons = document.getElementById('tag-buttons');
+    tagButtons.innerHTML = ''; // Clear existing buttons
+
+    // Create tag buttons ensuring uniqueness
+    tagsSet.forEach(tag => {
+        const button = document.createElement('button');
+        button.className = 'uk-button uk-button-default uk-button-small';
+        button.innerHTML = \`
+            <span class="uk-margin-small-right" uk-icon="icon: hashtag;"></span>
+            \${tag}
+        \`;
+        button.dataset.tag = tag; // Store tag in data attribute
+        button.addEventListener('click', () => toggleTagFilter(button, tag));
+        tagButtons.appendChild(button);
+    });
+}
+
+// Function to toggle filter and button active state
+function toggleTagFilter(button, tag) {
+    const isActive = button.classList.contains('uk-button-primary');
+    
+    if (isActive) {
+        button.classList.remove('uk-button-primary');
+        button.classList.add('uk-button-default');
+        button.classList.remove('uk-button-small');
+        button.classList.add('uk-button-small');
+
+        // If no other buttons are active, show all images
+        if (document.querySelectorAll('#tag-buttons .uk-button-primary').length === 0) {
+            populateGallery(jsonData);
+        } else {
+            filterGallery(); // Apply the current active filters
+        }
+    } else {
+        document.querySelectorAll('#tag-buttons button').forEach(btn => {
+            btn.classList.remove('uk-button-primary');
+            btn.classList.add('uk-button-default');
+            btn.classList.remove('uk-button-small');
+            btn.classList.add('uk-button-small');
+        });
+        button.classList.add('uk-button-primary');
+        button.classList.remove('uk-button-default');
+        button.classList.add('uk-button-small');
+        button.classList.remove('uk-button-small');
+        filterByTag(tag);
+    }
+}
+
+// Function to filter images by tag
+function filterByTag(tag) {
+    const filteredData = jsonData.filter(item => {
+        const tags = item.tags.split(',').map(t => t.trim());
+        return tags.includes(tag);
+    });
+    populateGallery(filteredData);
+}
+
+// Function to filter the gallery based on selected tags
+function filterGallery() {
+    const activeTags = Array.from(document.querySelectorAll('#tag-buttons .uk-button-primary'))
+                            .map(button => button.dataset.tag);
+
+    // If no tags are selected, show all images
+    if (activeTags.length === 0) {
+        populateGallery(jsonData);
+        return;
+    }
+
+    const filteredData = jsonData.filter(item => {
+        const tags = item.tags.split(',').map(t => t.trim());
+        return activeTags.some(tag => tags.includes(tag));
+    });
+    
+    populateGallery(filteredData);
+}
+
+// Initial setup
+updateTagButtons(jsonData);
+populateGallery(jsonData);
+
+</script>
+
+</body>
+</html>
+`;
+        downloadTextFile(htmlTemplate, "Gallery_HTML.html");
+        console.log("htmlTemplate:", htmlTemplate);
     }
   }
     
