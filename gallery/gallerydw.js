@@ -177,7 +177,12 @@ ${horizontalLine}`;
             {
                 label: "Select the format that you want to download in!", 
                 type: "radio",
-                options: [ { label: "HTML Download", value: "html" }, { label: "RAW File", value: "raw" }, { label: "JSON", value: "json" }, { label: "Data for HTML", value: "datahtml" } ]
+                options: [ 
+                  { label: "HTML Gallery Download", value: "html" },
+                  { label: "Markdown Image Links", value: "datahtml" },
+                  { label: "Image Properties RAW File", value: "raw" },
+                  { label: "Image Properties JSON", value: "json" }
+                ]
             }
         ]
     });
@@ -257,10 +262,17 @@ ${horizontalLine}`;
                     if (dwFormat === "raw") {
                     // Append to rawTemplate
                     rawTemplate += `${resultEntry.notetags},${resultEntry.notelink},${resultEntry.noteurl},${resultEntry.notename},${resultEntry.noteuuid},${resultEntry.notecreated},${resultEntry.noteupdated},${resultEntry.imageurl},${resultEntry.imagename},${resultEntry.caption}\n`;
-                    } else if (dwFormat === "datahtml" || dwFormat === "html") {
+                    } else if (dwFormat === "datahtml") {
                     // Append to htmlDataTemplate
                     htmlDataTemplate += `'![${resultEntry.imagename}](${resultEntry.imageurl})',\n`;
-                    }
+                    } else if (dwFormat === "html") {
+                    // Append to htmlDataTemplate
+                    // Create an object with named properties
+                    htmlTemplate += `
+<a href="${image.url}" data-lightbox="gallery" data-title="${image.caption}<br>Notename: ${note.name}, Tags: (${note.tags.join(',')}), UUID: ${note.uuid}">
+    <img src="${image.url}" alt="${image.caption}">
+</a><br>
+`                   }
                 }
             }
         } catch (err) {
@@ -270,158 +282,36 @@ ${horizontalLine}`;
     }
 
 
-      htmlTemplate = `
+      const htmlTemplatez = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery</title>
+    <!-- Lightbox CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            border: 2px solid transparent; /* Invisible border */
-            padding: 20px;
-            max-width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
+        /* Gallery styles */
         .gallery {
             display: flex;
-			justify-content: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 10px;
         }
-
         .gallery-item {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .gallery img {
-            width: 100%;
-            height: auto;
-            cursor: pointer;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 5px solid #ffffff;
-        }
-
-        .gallery img:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .details-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-            padding: 10px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: auto;
-            <!-- max-width: 100%; -->
-        }
-
-        .details-container img {
-            width: auto;
-            height: auto;
-            border-radius: 10px;
-            border: 5px solid #ffffff;
+            flex: 1 1 calc(33.333% - 20px); /* Responsive 3-column layout */
             margin-bottom: 10px;
         }
-
-        .details-container .details {
-            color: #333;
-            text-align: center;
-            font-size: 16px;
-            word-wrap: break-word;
-            padding: 5px;
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid #ddd;
         }
-
     </style>
 </head>
-
-
 <body>
-
-<div class="container">
-    <div class="gallery">
-        <!-- Images will be dynamically added here -->
-    </div>
-</div>
-
-<script>
-    const markdownImages = [
-${htmlDataTemplate}
-    ];
-
-    const gallery = document.querySelector('.gallery');
-
-    markdownImages.forEach(link => {
-        const match = link.match(/!\[([^\]]*)\]\(([^)]+)\)/);
-        if (match) {
-            const altText = match[1];
-            const imgUrl = match[2];
-
-            const galleryItem = document.createElement('div');
-            galleryItem.classList.add('gallery-item');
-
-            const imgElement = document.createElement('img');
-            imgElement.src = imgUrl;
-            imgElement.alt = altText;
-
-            const detailsContainer = document.createElement('div');
-            detailsContainer.classList.add('details-container');
-
-            const expandedImg = document.createElement('img');
-            expandedImg.src = imgUrl;
-
-            const detailsCaption = document.createElement('div');
-            detailsCaption.classList.add('details');
-            detailsCaption.innerText = altText || 'No description available';
-
-            detailsContainer.appendChild(expandedImg);
-            detailsContainer.appendChild(detailsCaption);
-
-            imgElement.onclick = function() {
-                if (detailsContainer.style.display === 'flex') {
-                    detailsContainer.style.display = 'none';
-                } else {
-                    // Hide all other expanded images
-                    document.querySelectorAll('.details-container').forEach(container => {
-                        container.style.display = 'none';
-                    });
-                    // Show the clicked image's expanded view
-                    detailsContainer.style.display = 'flex';
-                }
-            };
-
-            galleryItem.appendChild(imgElement);
-            galleryItem.appendChild(detailsContainer);
-            gallery.appendChild(galleryItem);
-        }
-    });
-</script>
-
+${htmlTemplate}
 </body>
 </html>
 `;
@@ -458,8 +348,8 @@ ${htmlDataTemplate}
         downloadTextFile(htmlDataTemplate, "Gallery_HTML_Data.txt");
         console.log("htmlDataTemplate:", htmlDataTemplate);
     } else if (dwFormat === "html") {
-        downloadTextFile(htmlTemplate, "Gallery_HTML.html");
-        console.log("htmlDataTemplate:", htmlTemplate);
+        downloadTextFile(htmlTemplatez, "Gallery_HTML.html");
+        console.log("htmlTemplatez:", htmlTemplatez);
     }
   }
     

@@ -4,481 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery</title>
+    <!-- Lightbox CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            position: relative;
-            width: 90%;
-            max-width: 1200px;
-            display: flex;
-            gap: 20px;
-        }
-
+        /* Gallery styles */
         .gallery {
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
-            gap: 20px;
-            width: 100%;
+            gap: 10px;
         }
-
         .gallery-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 300px;
+            flex: 1 1 calc(33.333% - 20px); /* Responsive 3-column layout */
+            margin-bottom: 10px;
         }
-
-        .gallery img {
+        .gallery-item img {
             width: 100%;
             height: auto;
-            cursor: pointer;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 5px solid #ffffff;
+            display: block;
+            border: 1px solid #ddd;
         }
-
-        .gallery img:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-
-.popup-content {
-    position: relative;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 80%;
-    max-height: 80%;
-    text-align: center;
-    overflow: hidden;
-}
-
-.popup-content img {
-    max-width: 100%;
-    max-height: 60vh;
-    margin-bottom: 10px;
-    transition: transform 0.3s ease;
-    border: none; /* Remove border */
-}
-
-.popup-content {
-    display: flex;
-}
-
-.popup-content img {
-    border: none;
-}
-
-.properties {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    text-align: left;
-    font-size: 14px;
-    border-radius: 10px;
-    overflow: auto;
-    margin-left: 20px; /* Add space between image and properties */
-    max-width: 300px; /* Set a max-width for the properties section */
-}
-
-        .popup .close, .popup .arrow {
-            position: absolute;
-            top: 20px;
-            font-size: 30px;
-            color: #fff;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        .popup .close {
-            right: 20px;
-        }
-
-.popup .arrow.left, .popup .arrow.right {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 30px;
-    color: #fff;
-    cursor: pointer;
-    z-index: 1000;
-}
-
-.popup .arrow.left {
-    left: 20px;
-}
-
-.popup .arrow.right {
-    right: 60px;
-}
-
-        .popup .zoom, .popup .download {
-            position: absolute;
-            bottom: 20px;
-            font-size: 20px;
-            color: #fff;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        .popup .zoom {
-            left: 20px;
-        }
-
-        .popup .download {
-            right: 20px;
-        }
-
-.zoom-in, .zoom-out {
-    position: absolute;
-    top: 20px;
-    font-size: 24px;
-    color: #fff;
-    cursor: pointer;
-    z-index: 1000;
-}
-
-.zoom-in {
-    right: 50px;
-}
-
-.zoom-out {
-    right: 10px;
-}
-
     </style>
 </head>
 <body>
+    <div class="gallery"></div>
 
-<div class="container">
-    <div class="gallery">
-        <!-- Images will be dynamically added here -->
-    </div>
-</div>
-
-<div class="popup">
-    <span class="arrow left">&#8592;</span>
-    <span class="arrow right">&#8594;</span>
-    <div class="popup-content">
-        <img src="" alt="">
-        <div class="properties">
-            <!-- Image-specific properties will be dynamically added here -->
-        </div>
-        <span class="zoom zoom-in">&#128269;</span>
-        <span class="zoom zoom-out">&#128269;</span>
-    </div>
-    <span class="close">&times;</span>
-    <span class="download">&#128229;</span>
-</div>
-
-<script>
-    const markdownImages = 
-[
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notename": "Image_Gallery_240815_153617",
-    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notecreated": "8/15/2024, 3:36:17 PM",
-    "noteupdated": "8/15/2024, 5:07:17 PM",
-    "imageurl": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
-    "imagename": "8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notename": "Image_Gallery_240815_153617",
-    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notecreated": "8/15/2024, 3:36:17 PM",
-    "noteupdated": "8/15/2024, 5:07:17 PM",
-    "imageurl": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
-    "imagename": "c47b2c01-35cf-4d19-b81e-70d020869267.png",
-    "caption": "super duper hitu!"
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notename": "Image_Gallery_240815_153617",
-    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notecreated": "8/15/2024, 3:36:17 PM",
-    "noteupdated": "8/15/2024, 5:07:17 PM",
-    "imageurl": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
-    "imagename": "d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
-    "caption": "super duper hitu! 2"
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notename": "Image_Gallery_240815_153617",
-    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notecreated": "8/15/2024, 3:36:17 PM",
-    "noteupdated": "8/15/2024, 5:07:17 PM",
-    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
-    "imagename": "25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notename": "Image_Gallery_240815_153617",
-    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
-    "notecreated": "8/15/2024, 3:36:17 PM",
-    "noteupdated": "8/15/2024, 5:07:17 PM",
-    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
-    "imagename": "5a10822b-405c-492d-8591-f86ab0655a91.png",
-    "caption": "super super super 3333333"
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012259",
-    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:22:59 AM",
-    "noteupdated": "8/15/2024, 1:23:01 AM",
-    "imageurl": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
-    "imagename": "8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012259",
-    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:22:59 AM",
-    "noteupdated": "8/15/2024, 1:23:01 AM",
-    "imageurl": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
-    "imagename": "c47b2c01-35cf-4d19-b81e-70d020869267.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012259",
-    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:22:59 AM",
-    "noteupdated": "8/15/2024, 1:23:01 AM",
-    "imageurl": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
-    "imagename": "d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012259",
-    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:22:59 AM",
-    "noteupdated": "8/15/2024, 1:23:01 AM",
-    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
-    "imagename": "25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012259",
-    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:22:59 AM",
-    "noteupdated": "8/15/2024, 1:23:01 AM",
-    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
-    "imagename": "5a10822b-405c-492d-8591-f86ab0655a91.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012322",
-    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:23:22 AM",
-    "noteupdated": "8/15/2024, 1:23:23 AM",
-    "imageurl": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
-    "imagename": "8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012322",
-    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:23:22 AM",
-    "noteupdated": "8/15/2024, 1:23:23 AM",
-    "imageurl": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
-    "imagename": "c47b2c01-35cf-4d19-b81e-70d020869267.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012322",
-    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:23:22 AM",
-    "noteupdated": "8/15/2024, 1:23:23 AM",
-    "imageurl": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
-    "imagename": "d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012322",
-    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:23:22 AM",
-    "noteupdated": "8/15/2024, 1:23:23 AM",
-    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
-    "imagename": "25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-  {
-    "notetags": "-image-gallery",
-    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
-    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notename": "Image_Gallery_240814_012322",
-    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
-    "notecreated": "8/15/2024, 1:23:22 AM",
-    "noteupdated": "8/15/2024, 1:23:23 AM",
-    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
-    "imagename": "5a10822b-405c-492d-8591-f86ab0655a91.png",
-    "caption": "No Caption Available or Unable to Fetch."
-  },
-]
-	;
-
-    const gallery = document.querySelector('.gallery');
-    const popup = document.querySelector('.popup');
-    const popupImg = popup.querySelector('img');
-    const popupProperties = popup.querySelector('.properties');
-    const closeBtn = document.querySelector('.close');
-    const leftArrow = document.querySelector('.arrow.left');
-    const rightArrow = document.querySelector('.arrow.right');
-    const zoomInBtn = document.querySelector('.zoom-in');
-    const zoomOutBtn = document.querySelector('.zoom-out');
-    const downloadBtn = document.querySelector('.download');
-    let currentIndex = 0;
-    let scale = 1;
-
-    markdownImages.forEach((image, index) => {
-        const galleryItem = document.createElement('div');
-        galleryItem.classList.add('gallery-item');
-
-        const imgElement = document.createElement('img');
-        imgElement.src = image.imageurl;
-        imgElement.alt = image.caption;
-
-        imgElement.onclick = function() {
-            currentIndex = index;
-            openPopup(image);
-        };
-
-        galleryItem.appendChild(imgElement);
-        gallery.appendChild(galleryItem);
-    });
-
-function openPopup(image) {
-    popupImg.src = image.imageurl;
-    popup.style.display = 'flex';
-    renderProperties(popupProperties, image);
-    scale = 1; // Reset zoom scale when opening a new image
-    popupImg.style.transform = `scale(${scale})`;
-}
-
-    function renderProperties(container, image) {
-        container.innerHTML = ''; // Clear previous content
-        for (const key in image) {
-            const propertyItem = document.createElement('div');
-            propertyItem.classList.add('property-item');
-            propertyItem.innerText = `${key}: ${image[key]}`;
-            container.appendChild(propertyItem);
+    <!-- JSON data embedded in HTML -->
+    <script id="image-data" type="application/json">
+    [
+        {
+            "source": "https://example.com/images/image1.jpg",
+            "caption": "Caption for image 1",
+            "details": "Additional details for image 1"
+        },
+        {
+            "source": "https://example.com/images/image2.jpg",
+            "caption": "Caption for image 2",
+            "details": "Additional details for image 2"
         }
-    }
+    ]
+    </script>
 
-    function closePopup() {
-        popup.style.display = 'none';
-        scale = 1; // Reset zoom scale
-        popupImg.style.transform = `scale(${scale})`;
-    }
+    <!-- Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    <script>
+        // Parse the JSON data embedded in HTML
+        const jsonData = JSON.parse(document.getElementById('image-data').textContent);
 
-    function showNextImage() {
-        currentIndex = (currentIndex + 1) % markdownImages.length;
-        openPopup(markdownImages[currentIndex]);
-    }
-
-    function showPrevImage() {
-        currentIndex = (currentIndex - 1 + markdownImages.length) % markdownImages.length;
-        openPopup(markdownImages[currentIndex]);
-    }
-
-function zoomIn() {
-    scale += 0.1;
-    popupImg.style.transform = `scale(${scale})`;
-}
-
-function zoomOut() {
-    scale = Math.max(1, scale - 0.1); // Ensure scale doesn't go below 1
-    popupImg.style.transform = `scale(${scale})`;
-}
-
-    closeBtn.onclick = closePopup;
-    leftArrow.onclick = showPrevImage;
-    rightArrow.onclick = showNextImage;
-    zoomInBtn.onclick = zoomIn;
-    zoomOutBtn.onclick = zoomOut;
-    window.onkeydown = function(e) {
-        if (e.key === 'Escape') closePopup();
-        if (e.key === 'ArrowLeft') showPrevImage();
-        if (e.key === 'ArrowRight') showNextImage();
-    };
-
-    zoomBtn.onclick = function() {
-        // Implement zoom functionality here
-        alert('Zoom function not implemented yet.');
-    };
-
-    downloadBtn.onclick = function() {
-        const link = document.createElement('a');
-        link.href = popupImg.src;
-        link.download = popupImg.alt || 'download';
-        link.click();
-    };
-</script>
-
+        // Generate gallery items
+        const gallery = document.querySelector('.gallery');
+        jsonData.forEach(item => {
+            const div = document.createElement('div');
+            div.classList.add('gallery-item');
+            div.innerHTML = `
+                <a href="${item.source}" data-lightbox="gallery" data-title="${item.caption}<br>${item.details}">
+                    <img src="${item.source}" alt="${item.caption}">
+                </a>
+            `;
+            gallery.appendChild(div);
+        });
+    </script>
 </body>
 </html>
