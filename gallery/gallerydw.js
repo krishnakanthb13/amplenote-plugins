@@ -2,7 +2,7 @@
   appOption: {
     "List!": async function (app) {
       // Prompt the user to select tags and choose options
-      const result = await app.prompt("Select Tags from which you want to list of Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
+      const result = await app.prompt("Select Details on which you want to list of Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
         inputs: [
           {
             label: "Select Tags to filter (Max 10)", 
@@ -158,7 +158,7 @@ ${horizontalLine}`;
     },
         "Download!": async function (app) {
         // Prompt the user to select tags and choose options
-        const result = await app.prompt("Select Tags from which you want to list of Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
+        const result = await app.prompt("Select Details on which you want to Download Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
           inputs: [
             {
               label: "Select Tags to filter (Max 10)", 
@@ -171,8 +171,8 @@ ${horizontalLine}`;
               type: "checkbox"
             },
             {
-              label: "Get the details in a Table Format! (Default: Notes and their Images)", 
-              type: "checkbox",
+              label: "Select the format that you want to download in!", 
+              type: "radio",
               options: [ { label: "HTML", value: 1 }, { label: "RAW File", value: 2 }, { label: "JSON", value: 3 }, { label: "Data for HTML", value: 4 } ]
             }
           ]
