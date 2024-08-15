@@ -194,13 +194,12 @@ ${horizontalLine}`;
 
       // Prepare results
       let results = [];
-      let preResults = [];
       let finalResults = "";
 
           let htmlTemplate = ``;
-          let htmlDataTemplate = [];
-          let jsonTemplate = [];
-          let rawTemplate = [];
+          let htmlDataTemplate = ``;
+          let jsonTemplate = ``;
+          let rawTemplate = ``;
 
       // Helper function to format date-time as a locale-specific string
       function formatDateTime(dateTimeStr) {
@@ -235,7 +234,8 @@ ${horizontalLine}`;
 
           console.log("images.url:", images.map(img => img.url));
           console.log("images.caption:", images.map(img => img.caption));
-
+          console.log("images.length:", images.length);
+          
           if (images.length > 0) {
               // If table format is selected, format images as table entries
               const imageLinks = images.map(image => {
@@ -245,42 +245,31 @@ ${horizontalLine}`;
                   : `![${imageIdentifier}](${image.url})`;
               }).join("<br>");
 
-              const tag = note.tags;
-              const noteLink = `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`;
-              const noteurl = `https://www.amplenote.com/notes/${note.uuid}`;
-              const notename = note.name;
-              const noteuuid = note.uuid;
-              const notecreated = formatDateTime(note.created);
-              const noteupdated = formatDateTime(note.updated);
-              const imageurl = image.url;
-              const imagename = imageIdentifier;
-              const caption = image.caption || "";
+              const ztag = note.tags;
+              const znoteLink = `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`;
+              const znoteurl = `https://www.amplenote.com/notes/${note.uuid}`;
+              const znotename = note.name;
+              const znoteuuid = note.uuid;
+              const znotecreated = formatDateTime(note.created);
+              const znoteupdated = formatDateTime(note.updated);
+              const zimageurl = image.url;
+              const zimagename = imageIdentifier;
+              const zcaption = image.caption || "";
 
-              preResults.push(
-                {  tag, 
-                   notelinks, noteurl, notename, noteuuid,
-                   notecreated, noteupdated,
-                   imageslinks, imageurl, imagename, caption
-                });
-
-          console.log("preResults.tag:", preResults.map(pre => pre.tag));
-          console.log("preResults.notelinks:", preResults.map(pre => pre.notelinks));
-          console.log("preResults.notename:", preResults.map(pre => pre.notename));
-          console.log("preResults.noteuuid:", preResults.map(pre => pre.noteuuid));
-		  
-          console.log("preResults.notecreated:", preResults.map(pre => pre.notecreated));
-          console.log("preResults.noteupdated:", preResults.map(pre => pre.noteupdated));
-		  
-          console.log("preResults.imageslinks:", preResults.map(pre => pre.imageslinks));
-          console.log("preResults.imageurl:", preResults.map(pre => pre.imageurl));
-          console.log("preResults.imagename:", preResults.map(pre => pre.imagename));
-          console.log("preResults.caption:", preResults.map(pre => pre.caption));
-		  
+              console.log("znoteLink:", znoteLink);
+              console.log("znoteurl:", znoteurl);
+              console.log("znotename:", znotename);
+              console.log("znoteuuid:", znoteuuid);
+              console.log("znotecreated:", znotecreated);
+              console.log("znoteupdated:", znoteupdated);
+              console.log("zimageurl:", zimageurl);
+              console.log("zimagename:", zimagename);
+              console.log("zcaption:", zcaption);
             
             if (dwFormat === "1") {
-              htmlTemplate += '';
+              htmlTemplate += `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${imageLinks},${image.url},${imageIdentifier},${image.caption || ""}\n`;
             } else if (dwFormat === "2") {
-              rawTemplate.push({});
+              rawTemplate.push({tag, notelinks, noteurl, notename, noteuuid, notecreated, noteupdated, imageslinks, imageurl, imagename, caption});
             } else if (dwFormat === "3") {
               jsonTemplate.push({});
             } else if (dwFormat === "4") {
@@ -294,7 +283,11 @@ ${horizontalLine}`;
         }
       }
 
-      console.log("preResults:", preResults);
+
+      rawTemplate = Array.from(rawTemplate);
+      jsonTemplate = Array.from(jsonTemplate);
+      htmlDataTemplate = Array.from(htmlDataTemplate);
+
       console.log("htmlTemplate:", htmlTemplate);
       console.log("rawTemplate:", rawTemplate);
       console.log("jsonTemplate:", jsonTemplate);
