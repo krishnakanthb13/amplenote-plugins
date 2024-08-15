@@ -23,7 +23,7 @@
 
       // Extract user inputs
       const [tagNames, allImages, mdTable] = result;
-      console.log("tagNames:", tagNames);
+      // console.log("tagNames:", tagNames);
 
       // Filter notes by the selected tags
       let notes = [];
@@ -42,7 +42,7 @@
       }
       filteredNotes = [...new Set(filteredNotes)];
       notes = filteredNotes;
-      console.log("notes:", notes);
+      // console.log("notes:", notes);
 
       // Prepare results
       let results = [];
@@ -94,17 +94,17 @@ ${horizontalLine}
 
           let matches;
           let images = [];
-          console.log("noteContent:",noteContent)
+          // console.log("noteContent:",noteContent)
           // Extract image URLs and captions from the note content
           while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
-            console.log("matches:", matches);
+            // console.log("matches:", matches);
             const url = matches[1]; // Extract the image URL
             const caption = matches[2] ? matches[2].trim() : ''; // Extract the caption if present, or use an empty string
             images.push({ url, caption }); // Store both the URL and caption in the images array
           }
 
-          console.log("images.url:", images.map(img => img.url));
-          console.log("images.caption:", images.map(img => img.caption));
+          // console.log("images.url:", images.map(img => img.url));
+          // console.log("images.caption:", images.map(img => img.caption));
 
           if (images.length > 0) {
             if (mdTable) {
@@ -156,9 +156,9 @@ ${horizontalLine}`;
         finalResults = markdownDocs;
       }
 
-      console.log("markdownTable:", markdownTable);
-      console.log("markdownDocs:", markdownDocs);
-      console.log("finalResults:", finalResults);
+      // console.log("markdownTable:", markdownTable);
+      // console.log("markdownDocs:", markdownDocs);
+      // console.log("finalResults:", finalResults);
 
       // Generate a new note with the results
       const now = new Date();
@@ -202,7 +202,7 @@ ${horizontalLine}`;
 
     // Extract user inputs
     const [tagNames, allImages, dwFormat] = result;
-    console.log("tagNames:", tagNames);
+    // console.log("tagNames:", tagNames);
 
       // Filter notes by the selected tags
       let notes = [];
@@ -221,7 +221,7 @@ ${horizontalLine}`;
       }
       filteredNotes = [...new Set(filteredNotes)];
       notes = filteredNotes;
-      console.log("notes:", notes);
+      // console.log("notes:", notes);
 
     // Prepare results
     let resultsArray = [];
@@ -255,15 +255,15 @@ ${horizontalLine}`;
             
             // Extract image URLs and captions from the note content
             while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
-                console.log("matches:", matches);
+                // console.log("matches:", matches);
                 const url = matches[1]; // Extract the image URL
                 const caption = matches[2] ? matches[2].trim() : 'No Caption Available or Unable to Fetch.'; // Extract the caption if present, or use an empty string
                 images.push({ url, caption }); // Store both the URL and caption in the images array
             }
 
-            console.log("images.url:", images.map(img => img.url));
-            console.log("images.caption:", images.map(img => img.caption));
-            console.log("images.length:", images.length);
+            // console.log("images.url:", images.map(img => img.url));
+            // console.log("images.caption:", images.map(img => img.caption));
+            // console.log("images.length:", images.length);
 
             if (images.length > 0) {
                 for (let image of images) {
@@ -314,7 +314,7 @@ ${horizontalLine}`;
     }
 
  
-    console.log("resultsArray:", resultsArray);
+    // console.log("resultsArray:", resultsArray);
 
       // Generate a new note with the results
       const now = new Date();
@@ -352,13 +352,13 @@ ${horizontalLine}`;
         let deduplicatedArray = removeDuplicates(resultsArray);
         let jsonTemplate = JSON.stringify(deduplicatedArray, null, 2);
         downloadTextFile(jsonTemplate, "Gallery_JSON.json");
-        console.log("jsonTemplate:", jsonTemplate);
+        // console.log("jsonTemplate:", jsonTemplate);
     } else if (dwFormat === "raw") {
         downloadTextFile(rawTemplate, "Gallery_Raw_Template.txt");
-        console.log("rawTemplate:", rawTemplate);
+        // console.log("rawTemplate:", rawTemplate);
     } else if (dwFormat === "datahtml") {
         downloadTextFile(htmlDataTemplate, "Gallery_HTML_Data.txt");
-        console.log("htmlDataTemplate:", htmlDataTemplate);
+        // console.log("htmlDataTemplate:", htmlDataTemplate);
     } else if (dwFormat === "html") {
         let deduplicatedArray2 = removeDuplicates(resultsArray2);
         let jsonTemplate2 = JSON.stringify(deduplicatedArray2, null, 2);
@@ -590,7 +590,7 @@ populateGallery(jsonData);
 </html>
 `;
         downloadTextFile(htmlTemplate, "Gallery_HTML.html");
-        console.log("htmlTemplate:", htmlTemplate);
+        // console.log("htmlTemplate:", htmlTemplate);
     }
   }
     
