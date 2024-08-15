@@ -195,6 +195,7 @@ ${horizontalLine}`;
       // Prepare results
       let results = [];
       let finalResults = "";
+      let resultsArray = [];
 
           let htmlTemplate = [];
           let htmlDataTemplate = "";
@@ -228,50 +229,60 @@ ${horizontalLine}`;
           while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
             console.log("matches:", matches);
             const url = matches[1]; // Extract the image URL
-            const caption = matches[2] ? matches[2].trim() : ''; // Extract the caption if present, or use an empty string
+            const caption = matches[2] ? matches[2].trim() : 'No Caption Avalaible or Unable to Fetch.'; // Extract the caption if present, or use an empty string
             images.push({ url, caption }); // Store both the URL and caption in the images array
           }
 
           console.log("images.url:", images.map(img => img.url));
           console.log("images.caption:", images.map(img => img.caption));
           console.log("images.length:", images.length);
-          
-          if (images.length > 0) {
-              // If table format is selected, format images as table entries
-              const allimageLinks = 
-                images.map(image => {
-                  const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
-                  return image.caption
-                    ? `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier},${image.caption}`
-                    : `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier}`;
-                }
-              ).join("<br>");
 
-          console.log("allimageLinks:", allimageLinks);
-            
-            if (dwFormat === "html") {
-              htmlTemplate += `${allimageLinks}<br>`;
-              console.log("htmlTemplate:", htmlTemplate);
-            } else if (dwFormat === "raw") {
-              htmlTemplate += `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier},${image.caption || ""}\n`;
-            } else if (dwFormat === "json") {
-              htmlTemplate += `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier},${image.caption || ""}\n`;
-            } else if (dwFormat === "datahtml") {
-              htmlTemplate += `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${imageLinks},${image.url},${image.caption || ""}\n`;
+          if (images.length > 0) {
+            for (let image of images) {
+              const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
+              
+              // Create an object with named properties
+              let resultEntry = {
+                notetags: note.tags.join(','), // Note tags (assuming tags is an array)
+                notelink: `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`, // Note link
+                noteurl: `https://www.amplenote.com/notes/${note.uuid}`, // Note URL
+                notename: note.name, // Note name
+                noteuuid: note.uuid, // Note UUID
+                notecreated: formatDateTime(note.created), // Note created datetime
+                noteupdated: formatDateTime(note.updated), // Note updated datetime
+                imageurl: image.url, // Image URL
+                imagename: imageIdentifier, // Image identifier (from the URL)
+                caption: image.caption // Image caption
+              };
+        
+              // Push the array into the results array
+              resultsArray.push(resultEntry);
             }
           }
         } catch (err) {
-          if (err instanceof TypeError) {
-            continue; // Skip any notes with errors
-          }
+          console.error("Error while processing note:", note, err);
+          continue; // Skip any notes with errors
         }
       }
 
-      results.push(htmlTemplate);
-      const imageGalleryData = htmlTemplate.split("<br>");
-      console.log("imageGalleryData:", imageGalleryData);
+      console.log("resultsArray:", resultsArray);
+
+            if (dwFormat === "html") {
+              htmlTemplate += '';
+            } else if (dwFormat === "raw") {
+              rawTemplate.push({});
+            } else if (dwFormat === "json") {
+              let jsonTemplate = JSON.stringify(resultsArray, null, 2);
+            } else if (dwFormat === "datahtml") {
+              htmlDataTemplate.push({});
+            }
+          
+      jsonTemplate = JSON.stringify(resultsArray, null, 2);
+
+      htmlTemplate.push(resultsArray);
 
       console.log("results:", results);
+      console.log("htmlTemplate:", htmlTemplate);
       console.log("rawTemplate:", rawTemplate);
       console.log("jsonTemplate:", jsonTemplate);
       console.log("htmlDataTemplate:", htmlDataTemplate);
