@@ -592,6 +592,22 @@ populateGallery(jsonData);
         downloadTextFile(htmlTemplate, "Gallery_HTML.html");
         // console.log("htmlTemplate:", htmlTemplate);
     }
+  },
+    
+    
+    
+    
+    
+    
+    "Viewer!": async function (app) {
+      const now = new Date();
+      const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+      const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+      const newNoteName = `Image_Viewer_${YYMMDD}_${HHMMSS}`;
+      const newTagName = ['-image-gallery'];
+      let noteUUID = await app.createNote(newNoteName, newTagName);
+      await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="2" />`);
+      return null;
   }
 
 
@@ -885,9 +901,5 @@ populateGallery(jsonData);
 `;
         return(htmlTemplate);
 
-},
-    async insertText(app) {
-    await app.context.replaceSelection(`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
-    return null;
-  }
+}
 }
