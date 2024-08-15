@@ -156,6 +156,10 @@ ${horizontalLine}`;
       let noteUUID = await app.createNote(newNoteName, newTagName);
       await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
     },
+
+
+
+    
         "Download!": async function (app) {
         // Prompt the user to select tags and choose options
         const result = await app.prompt("Select Details on which you want to Download Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
@@ -173,11 +177,120 @@ ${horizontalLine}`;
             {
               label: "Select the format that you want to download in!", 
               type: "radio",
-              options: [ { label: "HTML", value: 1 }, { label: "RAW File", value: 2 }, { label: "JSON", value: 3 }, { label: "Data for HTML", value: 4 } ]
+              options: [ { label: "HTML Download", value: 1 }, { label: "RAW File", value: 2 }, { label: "JSON", value: 3 }, { label: "Data for HTML", value: 4 } ]
             }
           ]
         });
-      
+
+      // Extract user inputs
+      const [tagNames, allImages, dwFormat] = result;
+      console.log("tagNames:", tagNames);
+
+      // Filter notes by the selected tags
+      let notes = [];
+      let notesByTag = await app.filterNotes({ tag: tagNames });
+      notes = notesByTag;
+      console.log("notes:", notes);
+
+      // Prepare results
+      let results = [];
+      let preResults = [];
+      let finalResults = "";
+
+          let htmlTemplate = ``;
+          let htmlDataTemplate = [];
+          let jsonTemplate = [];
+          let rawTemplate = [];
+
+      // Helper function to format date-time as a locale-specific string
+      function formatDateTime(dateTimeStr) {
+        const date = new Date(dateTimeStr);
+        return date.toLocaleString();
       }
+
+      // Define regex patterns to extract image URLs
+      const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
+      const regex2 = /\/([^\/]+)$/;
+
+      // Process each note to extract images
+      for (let note of notes) {
+        try {
+          const noteContent = await app.getNoteContent({ uuid: note.uuid });
+
+          // Define regex pattern to match image URLs based on user selection
+          const markdownImagePattern = allImages
+            ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
+            : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\s*\[\^.*?\])?(?:\)|$)\)(?:\n>\s*(.*))?/g;
+
+          let matches;
+          let images = [];
+          // console.log("noteContent:",noteContent)
+          // Extract image URLs and captions from the note content
+          while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
+            console.log("matches:", matches);
+            const url = matches[1]; // Extract the image URL
+            const caption = matches[2] ? matches[2].trim() : ''; // Extract the caption if present, or use an empty string
+            images.push({ url, caption }); // Store both the URL and caption in the images array
+          }
+
+          console.log("images.url:", images.map(img => img.url));
+          console.log("images.caption:", images.map(img => img.caption));
+
+          if (images.length > 0) {
+              // If table format is selected, format images as table entries
+              const imageLinks = images.map(image => {
+                const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
+                return image.caption
+                  ? `![${imageIdentifier}](${image.url})\n> ${image.caption}`
+                  : `![${imageIdentifier}](${image.url})`;
+              }).join("<br>");
+
+              const noteLink = `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`;
+              const noteurl = `https://www.amplenote.com/notes/${note.uuid}`;
+              preResults.push(
+                {  tag: note.tags,
+                   notelinks: noteLink, noteurl: noteurl, notename: note.name, noteuuid: note.uuid,
+                   notecreated: formatDateTime(note.created), noteupdated: formatDateTime(note.updated),
+                   imageslinks: imageLinks, imageurl: image.url, imagename: imageIdentifier, caption: image.caption || ""
+                });
+
+          console.log("preResults.tag:", images.map(img => img.tag));
+          console.log("preResults.notelinks:", images.map(img => img.notelinks));
+          console.log("preResults.notename:", images.map(img => img.notename));
+          console.log("preResults.noteuuid:", images.map(img => img.noteuuid));
+		  
+          console.log("preResults.notecreated:", images.map(img => img.notecreated));
+          console.log("preResults.noteupdated:", images.map(img => img.noteupdated));
+		  
+          console.log("preResults.imageslinks:", images.map(img => img.imageslinks));
+          console.log("preResults.imageurl:", images.map(img => img.imageurl));
+          console.log("preResults.imagename:", images.map(img => img.imagename));
+          console.log("preResults.caption:", images.map(img => img.caption));
+		  
+            
+            if (dwFormat === "1") {
+              htmlTemplate += '';
+            } else if (dwFormat === "2") {
+              rawTemplate.push({});
+            } else if (dwFormat === "3") {
+              jsonTemplate.push({});
+            } else if (dwFormat === "4") {
+              htmlDataTemplate.push({});
+            }
+          }
+        } catch (err) {
+          if (err instanceof TypeError) {
+            continue; // Skip any notes with errors
+          }
+        }
+      }
+
+      console.log("preResults:", preResults);
+      console.log("htmlTemplate:", htmlTemplate);
+      console.log("rawTemplate:", rawTemplate);
+      console.log("jsonTemplate:", jsonTemplate);
+      console.log("htmlDataTemplate:", htmlDataTemplate);
+          
+    }
   }
 }
