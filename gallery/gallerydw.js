@@ -245,27 +245,36 @@ ${horizontalLine}`;
                   : `![${imageIdentifier}](${image.url})`;
               }).join("<br>");
 
+              const tag = note.tags;
               const noteLink = `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`;
               const noteurl = `https://www.amplenote.com/notes/${note.uuid}`;
+              const notename = note.name;
+              const noteuuid = note.uuid;
+              const notecreated = formatDateTime(note.created);
+              const noteupdated = formatDateTime(note.updated);
+              const imageurl = image.url;
+              const imagename = imageIdentifier;
+              const caption = image.caption || "";
+
               preResults.push(
-                {  tag: note.tags,
-                   notelinks: noteLink, noteurl: noteurl, notename: note.name, noteuuid: note.uuid,
-                   notecreated: formatDateTime(note.created), noteupdated: formatDateTime(note.updated),
-                   imageslinks: imageLinks, imageurl: image.url, imagename: imageIdentifier, caption: image.caption || ""
+                {  tag, 
+                   notelinks, noteurl, notename, noteuuid,
+                   notecreated, noteupdated,
+                   imageslinks, imageurl, imagename, caption
                 });
 
-          console.log("preResults.tag:", images.map(img => img.tag));
-          console.log("preResults.notelinks:", images.map(img => img.notelinks));
-          console.log("preResults.notename:", images.map(img => img.notename));
-          console.log("preResults.noteuuid:", images.map(img => img.noteuuid));
+          console.log("preResults.tag:", preResults.map(pre => pre.tag));
+          console.log("preResults.notelinks:", preResults.map(pre => pre.notelinks));
+          console.log("preResults.notename:", preResults.map(pre => pre.notename));
+          console.log("preResults.noteuuid:", preResults.map(pre => pre.noteuuid));
 		  
-          console.log("preResults.notecreated:", images.map(img => img.notecreated));
-          console.log("preResults.noteupdated:", images.map(img => img.noteupdated));
+          console.log("preResults.notecreated:", preResults.map(pre => pre.notecreated));
+          console.log("preResults.noteupdated:", preResults.map(pre => pre.noteupdated));
 		  
-          console.log("preResults.imageslinks:", images.map(img => img.imageslinks));
-          console.log("preResults.imageurl:", images.map(img => img.imageurl));
-          console.log("preResults.imagename:", images.map(img => img.imagename));
-          console.log("preResults.caption:", images.map(img => img.caption));
+          console.log("preResults.imageslinks:", preResults.map(pre => pre.imageslinks));
+          console.log("preResults.imageurl:", preResults.map(pre => pre.imageurl));
+          console.log("preResults.imagename:", preResults.map(pre => pre.imagename));
+          console.log("preResults.caption:", preResults.map(pre => pre.caption));
 		  
             
             if (dwFormat === "1") {
