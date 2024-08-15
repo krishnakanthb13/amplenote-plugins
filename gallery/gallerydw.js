@@ -196,7 +196,7 @@ ${horizontalLine}`;
       let results = [];
       let finalResults = "";
 
-          let htmlTemplate = "";
+          let htmlTemplate = [];
           let htmlDataTemplate = "";
           let jsonTemplate = "";
           let rawTemplate = "";
@@ -238,12 +238,14 @@ ${horizontalLine}`;
           
           if (images.length > 0) {
               // If table format is selected, format images as table entries
-              const allimageLinks = images.map(image => {
-                const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
-                return image.caption
-                  ? `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier},${image.caption}`
-                  : `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier}`;
-              }).join("<br>");
+              const allimageLinks = 
+                images.map(image => {
+                  const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
+                  return image.caption
+                    ? `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier},${image.caption}`
+                    : `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier}`;
+                }
+              ).join("<br>");
 
           console.log("allimageLinks:", allimageLinks);
             
