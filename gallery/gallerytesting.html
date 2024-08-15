@@ -13,30 +13,29 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
         }
 
         .container {
-            border: 2px solid transparent; /* Invisible border */
-            padding: 20px;
-            max-width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
             position: relative;
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            gap: 20px;
         }
 
         .gallery {
             display: flex;
-			justify-content: center;
+            justify-content: center;
             flex-wrap: wrap;
             gap: 20px;
+            width: 70%;
         }
 
         .gallery-item {
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
             max-width: 300px;
         }
 
@@ -55,103 +54,400 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .details-container {
+        .popup {
             display: none;
-            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
             align-items: center;
-            margin-top: 10px;
-            padding: 10px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: auto;
-            <!-- max-width: 100%; -->
+            z-index: 999;
         }
 
-        .details-container img {
-            width: auto;
-            height: auto;
+        .popup-content {
+            position: relative;
+            background-color: #fff;
+            padding: 20px;
             border-radius: 10px;
-            border: 5px solid #ffffff;
+            max-width: 80%;
+            max-height: 80%;
+            text-align: center;
+        }
+
+        .popup-content img {
+            max-width: 100%;
+            max-height: 60vh;
+            border-radius: 10px;
             margin-bottom: 10px;
         }
 
-        .details-container .details {
-            color: #333;
-            text-align: center;
-            font-size: 16px;
-            word-wrap: break-word;
-            padding: 5px;
+        .popup-content .properties {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+            border-radius: 10px;
+            overflow: auto;
+        }
+
+        .popup .close, .popup .arrow {
+            position: absolute;
+            top: 20px;
+            font-size: 30px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .popup .close {
+            right: 20px;
+        }
+
+        .popup .arrow.left {
+            left: 20px;
+        }
+
+        .popup .arrow.right {
+            right: 60px;
+        }
+
+        .properties-section {
+            width: 30%;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+
+        .properties-section h2 {
+            margin-top: 0;
+        }
+
+        .properties-section .property-item {
+            margin-bottom: 10px;
+        }
+
+        .popup .zoom, .popup .download {
+            position: absolute;
+            bottom: 20px;
+            font-size: 20px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .popup .zoom {
+            left: 20px;
+        }
+
+        .popup .download {
+            right: 20px;
         }
 
     </style>
 </head>
-
-
 <body>
 
 <div class="container">
     <div class="gallery">
         <!-- Images will be dynamically added here -->
     </div>
+    <div class="properties-section">
+        <h2>Image Properties</h2>
+        <!-- Properties will be dynamically added here -->
+    </div>
+</div>
+
+<div class="popup">
+    <span class="arrow left">&#8592;</span>
+    <span class="arrow right">&#8594;</span>
+    <div class="popup-content">
+        <img src="" alt="">
+        <div class="properties">
+            <!-- Image-specific properties will be dynamically added here -->
+        </div>
+    </div>
+    <span class="close">&times;</span>
+    <span class="zoom">&#128269;</span>
+    <span class="download">&#128229;</span>
 </div>
 
 <script>
-    const markdownImages = [
-'![8bacda78-06de-462d-b0ca-ed4c0ea0decc.png](https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png)',
-'![c47b2c01-35cf-4d19-b81e-70d020869267.png](https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png)',
-'![d5bfbb07-ad43-4b65-a850-9169d50f1b68.png](https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png)',
-'![25f75544-9360-4d38-bcc9-bb6baf0b9051.png](https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png)',
-'![5a10822b-405c-492d-8591-f86ab0655a91.png](https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png)',
-
-    ];
+    const markdownImages = 
+[
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notename": "Image_Gallery_240815_153617",
+    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notecreated": "8/15/2024, 3:36:17 PM",
+    "noteupdated": "8/15/2024, 5:07:17 PM",
+    "imageurl": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "imagename": "8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notename": "Image_Gallery_240815_153617",
+    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notecreated": "8/15/2024, 3:36:17 PM",
+    "noteupdated": "8/15/2024, 5:07:17 PM",
+    "imageurl": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "imagename": "c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "super duper hitu!"
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notename": "Image_Gallery_240815_153617",
+    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notecreated": "8/15/2024, 3:36:17 PM",
+    "noteupdated": "8/15/2024, 5:07:17 PM",
+    "imageurl": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "imagename": "d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "super duper hitu! 2"
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notename": "Image_Gallery_240815_153617",
+    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notecreated": "8/15/2024, 3:36:17 PM",
+    "noteupdated": "8/15/2024, 5:07:17 PM",
+    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "imagename": "25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240815_153617](https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notename": "Image_Gallery_240815_153617",
+    "noteuuid": "02cc5128-5aee-11ef-944a-22074e34eefe",
+    "notecreated": "8/15/2024, 3:36:17 PM",
+    "noteupdated": "8/15/2024, 5:07:17 PM",
+    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "imagename": "5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "super super super 3333333"
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012259",
+    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:22:59 AM",
+    "noteupdated": "8/15/2024, 1:23:01 AM",
+    "imageurl": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "imagename": "8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012259",
+    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:22:59 AM",
+    "noteupdated": "8/15/2024, 1:23:01 AM",
+    "imageurl": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "imagename": "c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012259",
+    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:22:59 AM",
+    "noteupdated": "8/15/2024, 1:23:01 AM",
+    "imageurl": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "imagename": "d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012259",
+    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:22:59 AM",
+    "noteupdated": "8/15/2024, 1:23:01 AM",
+    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "imagename": "25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012259](https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012259",
+    "noteuuid": "cf766088-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:22:59 AM",
+    "noteupdated": "8/15/2024, 1:23:01 AM",
+    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "imagename": "5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012322",
+    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:23:22 AM",
+    "noteupdated": "8/15/2024, 1:23:23 AM",
+    "imageurl": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "imagename": "8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012322",
+    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:23:22 AM",
+    "noteupdated": "8/15/2024, 1:23:23 AM",
+    "imageurl": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "imagename": "c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012322",
+    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:23:22 AM",
+    "noteupdated": "8/15/2024, 1:23:23 AM",
+    "imageurl": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "imagename": "d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012322",
+    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:23:22 AM",
+    "noteupdated": "8/15/2024, 1:23:23 AM",
+    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "imagename": "25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+  {
+    "notetags": "-image-gallery",
+    "notelink": "[Image_Gallery_240814_012322](https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe)",
+    "noteurl": "https://www.amplenote.com/notes/dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notename": "Image_Gallery_240814_012322",
+    "noteuuid": "dce6427e-5a76-11ef-a08e-22074e34eefe",
+    "notecreated": "8/15/2024, 1:23:22 AM",
+    "noteupdated": "8/15/2024, 1:23:23 AM",
+    "imageurl": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "imagename": "5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch."
+  },
+]
+	;
 
     const gallery = document.querySelector('.gallery');
+    const popup = document.querySelector('.popup');
+    const popupImg = popup.querySelector('img');
+    const propertiesSection = document.querySelector('.properties-section');
+    const popupProperties = popup.querySelector('.properties');
+    const closeBtn = document.querySelector('.close');
+    const leftArrow = document.querySelector('.arrow.left');
+    const rightArrow = document.querySelector('.arrow.right');
+    const zoomBtn = document.querySelector('.zoom');
+    const downloadBtn = document.querySelector('.download');
+    let currentIndex = 0;
 
-    markdownImages.forEach(link => {
-        const match = link.match(/!\[([^\]]*)\]\(([^)]+)\)/);
-        if (match) {
-            const altText = match[1];
-            const imgUrl = match[2];
+    markdownImages.forEach((image, index) => {
+        const galleryItem = document.createElement('div');
+        galleryItem.classList.add('gallery-item');
 
-            const galleryItem = document.createElement('div');
-            galleryItem.classList.add('gallery-item');
+        const imgElement = document.createElement('img');
+        imgElement.src = image.imageurl;
+        imgElement.alt = image.caption;
 
-            const imgElement = document.createElement('img');
-            imgElement.src = imgUrl;
-            imgElement.alt = altText;
+        imgElement.onclick = function() {
+            currentIndex = index;
+            openPopup(image);
+        };
 
-            const detailsContainer = document.createElement('div');
-            detailsContainer.classList.add('details-container');
-
-            const expandedImg = document.createElement('img');
-            expandedImg.src = imgUrl;
-
-            const detailsCaption = document.createElement('div');
-            detailsCaption.classList.add('details');
-            detailsCaption.innerText = altText || 'No description available';
-
-            detailsContainer.appendChild(expandedImg);
-            detailsContainer.appendChild(detailsCaption);
-
-            imgElement.onclick = function() {
-                if (detailsContainer.style.display === 'flex') {
-                    detailsContainer.style.display = 'none';
-                } else {
-                    // Hide all other expanded images
-                    document.querySelectorAll('.details-container').forEach(container => {
-                        container.style.display = 'none';
-                    });
-                    // Show the clicked image's expanded view
-                    detailsContainer.style.display = 'flex';
-                }
-            };
-
-            galleryItem.appendChild(imgElement);
-            galleryItem.appendChild(detailsContainer);
-            gallery.appendChild(galleryItem);
-        }
+        galleryItem.appendChild(imgElement);
+        gallery.appendChild(galleryItem);
     });
+
+    function openPopup(image) {
+        popupImg.src = image.imageurl;
+        popup.style.display = 'flex';
+        renderProperties(popupProperties, image);
+    }
+
+    function renderProperties(container, image) {
+        container.innerHTML = ''; // Clear previous content
+        for (const key in image) {
+            const propertyItem = document.createElement('div');
+            propertyItem.classList.add('property-item');
+            propertyItem.innerText = `${key}: ${image[key]}`;
+            container.appendChild(propertyItem);
+        }
+    }
+
+    function closePopup() {
+        popup.style.display = 'none';
+    }
+
+    function showNextImage() {
+        currentIndex = (currentIndex + 1) % markdownImages.length;
+        openPopup(markdownImages[currentIndex]);
+    }
+
+    function showPrevImage() {
+        currentIndex = (currentIndex - 1 + markdownImages.length) % markdownImages.length;
+        openPopup(markdownImages[currentIndex]);
+    }
+
+    closeBtn.onclick = closePopup;
+    leftArrow.onclick = showPrevImage;
+    rightArrow.onclick = showNextImage;
+    window.onkeydown = function(e) {
+        if (e.key === 'Escape') closePopup();
+        if (e.key === 'ArrowLeft') showPrevImage();
+        if (e.key === 'ArrowRight') showNextImage();
+    };
+
+    zoomBtn.onclick = function() {
+        // Implement zoom functionality here
+        alert('Zoom function not implemented yet.');
+    };
+
+    downloadBtn.onclick = function() {
+        const link = document.createElement('a');
+        link.href = popupImg.src;
+        link.download = popupImg.alt || 'download';
+        link.click();
+    };
+
+    // Initial render of the properties section
+    markdownImages.forEach(image => {
+        renderProperties(propertiesSection, image);
+    });
+
 </script>
 
 </body>
