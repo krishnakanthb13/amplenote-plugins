@@ -177,7 +177,7 @@ ${horizontalLine}`;
             {
               label: "Select the format that you want to download in!", 
               type: "radio",
-              options: [ { label: "HTML Download", value: 1 }, { label: "RAW File", value: 2 }, { label: "JSON", value: 3 }, { label: "Data for HTML", value: 4 } ]
+              options: [ { label: "HTML Download", value: "html" }, { label: "RAW File", value: "raw" }, { label: "JSON", value: "json" }, { label: "Data for HTML", value: "datahtml" } ]
             }
           ]
         });
@@ -196,10 +196,10 @@ ${horizontalLine}`;
       let results = [];
       let finalResults = "";
 
-          let htmlTemplate = ``;
-          let htmlDataTemplate = ``;
-          let jsonTemplate = ``;
-          let rawTemplate = ``;
+          let htmlTemplate = "";
+          let htmlDataTemplate = "";
+          let jsonTemplate = "";
+          let rawTemplate = "";
 
       // Helper function to format date-time as a locale-specific string
       function formatDateTime(dateTimeStr) {
@@ -238,42 +238,24 @@ ${horizontalLine}`;
           
           if (images.length > 0) {
               // If table format is selected, format images as table entries
-              const imageLinks = images.map(image => {
+              const allimageLinks = images.map(image => {
                 const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
                 return image.caption
-                  ? `![${imageIdentifier}](${image.url})\n> ${image.caption}`
-                  : `![${imageIdentifier}](${image.url})`;
+                  ? `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier},${image.caption}`
+                  : `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier}`;
               }).join("<br>");
 
-              const ztag = note.tags;
-              const znoteLink = `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`;
-              const znoteurl = `https://www.amplenote.com/notes/${note.uuid}`;
-              const znotename = note.name;
-              const znoteuuid = note.uuid;
-              const znotecreated = formatDateTime(note.created);
-              const znoteupdated = formatDateTime(note.updated);
-              const zimageurl = image.url;
-              const zimagename = imageIdentifier;
-              const zcaption = image.caption || "";
-
-              console.log("znoteLink:", znoteLink);
-              console.log("znoteurl:", znoteurl);
-              console.log("znotename:", znotename);
-              console.log("znoteuuid:", znoteuuid);
-              console.log("znotecreated:", znotecreated);
-              console.log("znoteupdated:", znoteupdated);
-              console.log("zimageurl:", zimageurl);
-              console.log("zimagename:", zimagename);
-              console.log("zcaption:", zcaption);
+          console.log("allimageLinks:", allimageLinks);
             
-            if (dwFormat === "1") {
-              htmlTemplate += `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${imageLinks},${image.url},${imageIdentifier},${image.caption || ""}\n`;
-            } else if (dwFormat === "2") {
-              rawTemplate.push({tag, notelinks, noteurl, notename, noteuuid, notecreated, noteupdated, imageslinks, imageurl, imagename, caption});
-            } else if (dwFormat === "3") {
-              jsonTemplate.push({});
-            } else if (dwFormat === "4") {
-              htmlDataTemplate.push({});
+            if (dwFormat === "html") {
+              htmlTemplate += `${allimageLinks}<br>`;
+              console.log("htmlTemplate:", htmlTemplate);
+            } else if (dwFormat === "raw") {
+              htmlTemplate += `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier},${image.caption || ""}\n`;
+            } else if (dwFormat === "json") {
+              htmlTemplate += `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${image.url},${imageIdentifier},${image.caption || ""}\n`;
+            } else if (dwFormat === "datahtml") {
+              htmlTemplate += `${note.tags},[${note.name}](https://www.amplenote.com/notes/${note.uuid}),https://www.amplenote.com/notes/${note.uuid},${note.name},${note.uuid},${formatDateTime(note.created)},${formatDateTime(note.updated)},${imageLinks},${image.url},${image.caption || ""}\n`;
             }
           }
         } catch (err) {
@@ -283,12 +265,11 @@ ${horizontalLine}`;
         }
       }
 
+      results.push(htmlTemplate);
+      const imageGalleryData = htmlTemplate.split("<br>");
+      console.log("imageGalleryData:", imageGalleryData);
 
-      rawTemplate = Array.from(rawTemplate);
-      jsonTemplate = Array.from(jsonTemplate);
-      htmlDataTemplate = Array.from(htmlDataTemplate);
-
-      console.log("htmlTemplate:", htmlTemplate);
+      console.log("results:", results);
       console.log("rawTemplate:", rawTemplate);
       console.log("jsonTemplate:", jsonTemplate);
       console.log("htmlDataTemplate:", htmlDataTemplate);
