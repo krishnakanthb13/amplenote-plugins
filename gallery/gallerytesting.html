@@ -1,67 +1,120 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery</title>
-    <!-- Lightbox CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/css/uikit.min.css" />
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/js/uikit-icons.min.js"></script>
+
     <style>
-        /* Gallery styles */
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .gallery-item {
-            flex: 1 1 calc(33.333% - 20px); /* Responsive 3-column layout */
-            margin-bottom: 10px;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border: 1px solid #ddd;
-        }
+		/* Cool background gradient */
+		body {
+			background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+			padding: 20px;
+		}
+
+		/* Container for the images */
+		.gallery-container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 15px;
+		}
+
+		/* Image container */
+		.gallery-container .uk-inline {
+			overflow: hidden;
+			border-radius: 10px;
+			transition: transform 0.15s ease; /* Speed up transition */
+			display: flex; /* Enable flexbox */
+			align-items: center; /* Center content vertically */
+			justify-content: center; /* Center content horizontally */
+			height: auto; /* Set a fixed height if needed */
+		}
+
+		/* Hover effect for images */
+		.gallery-container .uk-inline:hover {
+			transform: scale(1.05);
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+		}
+
+		/* Image styles */
+		.gallery-container img {
+			border-radius: 10px;
+			max-width: 100%;
+			height: auto;
+			display: block;
+		}
     </style>
 </head>
 <body>
-    <div class="gallery"></div>
 
-    <!-- JSON data embedded in HTML -->
-    <script id="image-data" type="application/json">
-    [
-        {
-            "source": "https://example.com/images/image1.jpg",
-            "caption": "Caption for image 1",
-            "details": "Additional details for image 1"
-        },
-        {
-            "source": "https://example.com/images/image2.jpg",
-            "caption": "Caption for image 2",
-            "details": "Additional details for image 2"
-        }
-    ]
-    </script>
+<div class="uk-h3 uk-text-center">Cool Image Gallery</div>
+<div id="gallery" class="gallery-container" uk-lightbox="animation: scale">
+    <!-- Images will be injected here -->
+</div>
 
-    <!-- Lightbox JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
-    <script>
-        // Parse the JSON data embedded in HTML
-        const jsonData = JSON.parse(document.getElementById('image-data').textContent);
+<script>
+// JSON data
+const jsonData = 
+[
+  {
+    "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "Time here!<br>Notename: July 15th, 2024, Tags: (-0-planner), UUID: a8bd423c-4265-11ef-a3f4-6ef34fa959ce",
+    "alt": "July 15th, 2024"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "Hello Buddy!<br>Notename: August 11th, 2024, Tags: (-0-planner), UUID: 5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd",
+    "alt": "August 11th, 2024"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: August 11th, 2024, Tags: (-0-planner), UUID: 5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd",
+    "alt": "August 11th, 2024"
+  },
+  {
+    "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "Hi, this is a Vacation Itinerary! Should Plan something!<br>Notename: July 20th, 2024, Tags: (-0-planner), UUID: b9b33974-4653-11ef-9826-26e37c279344",
+    "alt": "July 20th, 2024"
+  },
+  {
+    "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: August 3rd, 2024, Tags: (-0-planner), UUID: 444b9d56-50c7-11ef-8a24-f2c7410336d6",
+    "alt": "August 3rd, 2024"
+  }
+]
+;
 
-        // Generate gallery items
-        const gallery = document.querySelector('.gallery');
-        jsonData.forEach(item => {
-            const div = document.createElement('div');
-            div.classList.add('gallery-item');
-            div.innerHTML = `
-                <a href="${item.source}" data-lightbox="gallery" data-title="${item.caption}<br>${item.details}">
-                    <img src="${item.source}" alt="${item.caption}">
-                </a>
-            `;
-            gallery.appendChild(div);
-        });
-    </script>
+// Function to populate the gallery
+function populateGallery(data) {
+    const gallery = document.getElementById('gallery');
+    data.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('uk-inline');
+        div.innerHTML = `
+            <a href="${item.href}" data-caption="${item.caption}">
+                <img src="${item.src}" alt="${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+            </a>
+        `;
+        gallery.appendChild(div);
+    });
+}
+
+// Call function to populate gallery
+populateGallery(jsonData);
+</script>
+
 </body>
 </html>
