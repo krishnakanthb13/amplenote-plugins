@@ -606,7 +606,7 @@ populateGallery(jsonData);
       const newNoteName = `Image_Viewer_${YYMMDD}_${HHMMSS}`;
       const newTagName = ['-image-gallery'];
       let noteUUID = await app.createNote(newNoteName, newTagName);
-      await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="2" />`);
+      await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
       return null;
   }
 
