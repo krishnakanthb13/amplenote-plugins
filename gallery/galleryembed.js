@@ -510,7 +510,7 @@ ${horizontalLine}`;
 </div>
 
 <footer>
-    <p>&copy; BKK 2024 | <a href="https://bio.site/krishnakanthb13" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+    <p>&copy; BKK 2024 | <a href="https://public.amplenote.com/LpRxpX/gallery" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
 </footer>
 
 <script>
@@ -823,7 +823,7 @@ async renderEmbed(app, ...args) {
 </div>
 
 <footer>
-    <p>&copy; BKK 2024 | <a href="https://bio.site/krishnakanthb13" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+    <p>&copy; BKK 2024 | <a href="https://public.amplenote.com/LpRxpX/gallery" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
 </footer>
 
 <script>
