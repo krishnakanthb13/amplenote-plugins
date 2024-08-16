@@ -208,7 +208,7 @@ ${horizontalLine}`;
               placeholder: "Enter tag/'s' (Max 10)"
             },
             {
-                label: "Include Non-Amplenote Images (Default: Document Format!)", 
+                label: "Include Non-Amplenote Images (Default: Only Amplenote Images)", 
                 type: "checkbox"
             },
             {
@@ -217,8 +217,8 @@ ${horizontalLine}`;
                 options: [ 
                   { label: "HTML Gallery Download (Recommended)", value: "html" },
                   { label: "Markdown Image Links", value: "datahtml" },
-                  { label: "Image Properties RAW File", value: "raw" },
-                  { label: "Image Properties JSON", value: "json" }
+                  { label: "Image Properties JSON", value: "json" },
+                  { label: "Image Properties RAW File", value: "raw" }
                 ]
             }
         ]
