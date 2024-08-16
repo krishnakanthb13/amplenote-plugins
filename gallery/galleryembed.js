@@ -5,7 +5,13 @@
       const result = await app.prompt("Select Details on which you want to list of Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
         inputs: [
           {
-            label: "Select Tags to filter (Max 10)", 
+            label: "Select Tags [OR] (Each tag is searched separately)", 
+            type: "tags", 
+            limit: 10, 
+            placeholder: "Enter tag/'s' (Max 10)"
+          },
+          {
+            label: "Select Tags [AND] (Combined tag is searched)",
             type: "tags", 
             limit: 10, 
             placeholder: "Enter tag/'s' (Max 10)"
@@ -15,34 +21,37 @@
             type: "checkbox"
           },
           {
-            label: "Get the details in a Table Format! (Default: Notes and their Images)", 
+            label: "Get the details in a Table Format! (Default: Document Format!)", 
             type: "checkbox"
           }
         ]
       });
 
       // Extract user inputs
-      const [tagNames, allImages, mdTable] = result;
+      const [tagNamesOr, tagNamesAnd, allImages, mdTable] = result;
       // console.log("tagNames:", tagNames);
 
       // Filter notes by the selected tags
       let notes = [];
-      const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
+      const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
       let filteredNotes = [];
-      if (Array.isArray(tagsArray) && tagsArray.length > 0) {
-          // If tagsArray is a valid non-empty array, filter notes by each tag
-          for (const tag of tagsArray) {
-              const notesByTag = await app.filterNotes({ tag: tag });
-              filteredNotes = [...filteredNotes, ...notesByTag];
-          }
+      if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+            if ((Array.isArray(tagsArray) && tagsArray.length > 0)) {
+                for (const tag of tagsArray) {
+                    const notesByTag = await app.filterNotes({ tag: tag });
+                    filteredNotes = [...filteredNotes, ...notesByTag];
+                }
+            }
+            if (tagNamesAnd) {
+                const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+                filteredNotes = [...filteredNotes, ...notesByGroup];
+            }
       } else {
-          // If tagsArray is null or not a valid array, default to filtering by group
           const notesByGroup = await app.filterNotes({ group: "^vault" });
           filteredNotes = [...filteredNotes, ...notesByGroup];
       }
-      filteredNotes = [...new Set(filteredNotes)];
+      filteredNotes = [...new Set(filteredNotes)]; // remove duplicates
       notes = filteredNotes;
-      // console.log("notes:", notes);
 
       // Prepare results
       let results = [];
@@ -122,9 +131,9 @@ ${horizontalLine}
               const imageLinks = images.map(image => {
                 const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
                 return image.caption
-                  ? `![${imageIdentifier}\\|${imageResolution}](${image.url})\n> ${image.caption}`
+                  ? `![${imageIdentifier}\\|${imageResolution}](${image.url})\n> ${image.caption}\n\n`
                   : `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
-              }).join("<br>");
+              }).join(" ");
 
               markdownDocs += `
 ### Note: [${note.name}](https://www.amplenote.com/notes/${note.uuid})
@@ -161,10 +170,17 @@ ${horizontalLine}`;
       // console.log("finalResults:", finalResults);
 
       // Generate a new note with the results
-      const now = new Date();
-      const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
-      const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-      const newNoteName = `Image_Gallery_${YYMMDD}_${HHMMSS}`;
+      function getCurrentDateTime() {
+          const now = new Date();
+      
+          // Ensure the date is always accurate by using UTC or your local timezone as needed
+          const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+          const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+      
+          return { YYMMDD, HHMMSS };
+      }
+      const { YYMMDD, HHMMSS } = getCurrentDateTime();
+      const newNoteName = `Image_Gallery_List_${YYMMDD}_${HHMMSS}`;
       const newTagName = ['-image-gallery'];
       let noteUUID = await app.createNote(newNoteName, newTagName);
       await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
@@ -172,26 +188,34 @@ ${horizontalLine}`;
 
 
 
+
+    
     
 "Download!": async function (app) {
     // Prompt the user to select tags and choose options
     const result = await app.prompt("Select Details on which you want to Download Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
         inputs: [
             {
-                label: "Select Tags to filter (Max 10)", 
-                type: "tags", 
-                limit: 10, 
-                placeholder: "Enter tag/'s' (Max 10)"
+              label: "Select Tags [OR] (Each tag is searched separately)", 
+              type: "tags", 
+              limit: 10, 
+              placeholder: "Enter tag/'s' (Max 10)"
             },
             {
-                label: "Include Non-Amplenote Images (Default: Only Amplenote Images)", 
+              label: "Select Tags [AND] (Combined tag is searched)",
+              type: "tags", 
+              limit: 10, 
+              placeholder: "Enter tag/'s' (Max 10)"
+            },
+            {
+                label: "Include Non-Amplenote Images (Default: Document Format!)", 
                 type: "checkbox"
             },
             {
                 label: "Select the format that you want to download in!", 
                 type: "radio",
                 options: [ 
-                  { label: "HTML Gallery Download", value: "html" },
+                  { label: "HTML Gallery Download (Recommended)", value: "html" },
                   { label: "Markdown Image Links", value: "datahtml" },
                   { label: "Image Properties RAW File", value: "raw" },
                   { label: "Image Properties JSON", value: "json" }
@@ -200,28 +224,31 @@ ${horizontalLine}`;
         ]
     });
 
-    // Extract user inputs
-    const [tagNames, allImages, dwFormat] = result;
-    // console.log("tagNames:", tagNames);
+      // Extract user inputs
+      const [tagNamesOr, tagNamesAnd, allImages, dwFormat] = result;
+      // console.log("tagNames:", tagNames);
 
       // Filter notes by the selected tags
       let notes = [];
-      const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
+      const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
       let filteredNotes = [];
-      if (Array.isArray(tagsArray) && tagsArray.length > 0) {
-          // If tagsArray is a valid non-empty array, filter notes by each tag
-          for (const tag of tagsArray) {
-              const notesByTag = await app.filterNotes({ tag: tag });
-              filteredNotes = [...filteredNotes, ...notesByTag];
-          }
+      if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+            if ((Array.isArray(tagsArray) && tagsArray.length > 0)) {
+                for (const tag of tagsArray) {
+                    const notesByTag = await app.filterNotes({ tag: tag });
+                    filteredNotes = [...filteredNotes, ...notesByTag];
+                }
+            }
+            if (tagNamesAnd) {
+                const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+                filteredNotes = [...filteredNotes, ...notesByGroup];
+            }
       } else {
-          // If tagsArray is null or not a valid array, default to filtering by group
           const notesByGroup = await app.filterNotes({ group: "^vault" });
           filteredNotes = [...filteredNotes, ...notesByGroup];
       }
-      filteredNotes = [...new Set(filteredNotes)];
+      filteredNotes = [...new Set(filteredNotes)]; // remove duplicates
       notes = filteredNotes;
-      // console.log("notes:", notes);
 
     // Prepare results
     let resultsArray = [];
@@ -317,9 +344,16 @@ ${horizontalLine}`;
     // console.log("resultsArray:", resultsArray);
 
       // Generate a new note with the results
-      const now = new Date();
-      const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
-      const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+      function getCurrentDateTime() {
+          const now = new Date();
+      
+          // Ensure the date is always accurate by using UTC or your local timezone as needed
+          const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+          const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+      
+          return { YYMMDD, HHMMSS };
+      }
+      const { YYMMDD, HHMMSS } = getCurrentDateTime();
   
     // Function to download the data as a text file
     function downloadTextFile(resultText, filename) {
