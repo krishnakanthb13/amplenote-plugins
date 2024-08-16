@@ -467,7 +467,7 @@ ${horizontalLine}`;
 <div class="tag-buttons" id="tag-buttons">
     <!-- Tag buttons will be injected here -->
 </div>
-<div id="gallery" class="gallery-container" uk-lightbox="animation: scale">
+<div id="gallery" class="gallery-container" uk-lightbox="animation: scale; autoplay: true; autoplay-interval: 7000; pause-on-hover: true; velocity: 3">
     <!-- Images will be injected here -->
 </div>
 
@@ -775,7 +775,7 @@ populateGallery(jsonData);
 <div class="tag-buttons" id="tag-buttons">
     <!-- Tag buttons will be injected here -->
 </div>
-<div id="gallery" class="gallery-container" uk-lightbox="animation: scale">
+<div id="gallery" class="gallery-container" uk-lightbox="animation: scale; autoplay: true; autoplay-interval: 7000; pause-on-hover: true; velocity: 3">
     <!-- Images will be injected here -->
 </div>
 
