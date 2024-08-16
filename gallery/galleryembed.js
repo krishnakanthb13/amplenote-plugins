@@ -1,5 +1,5 @@
 {
-  appOption: {
+appOption: {
 /* ----------------------------------- */
 "List!": async function (app) {
     // Prompt the user to select tags and choose options
@@ -659,8 +659,12 @@ async renderEmbed(app, ...args) {
       try {
 		  // Get note content
           const noteContent = await app.getNoteContent({ uuid: note.uuid });
+          let allImages = (app.settings["Gallery_Image_Viewer_AllImgs"] === 1);
+          if (app.settings["Gallery_Image_Viewer_AllImgs"] != 1) { await app.setSetting("Gallery_Image_Viewer_AllImgs", 0); }
           // Define regex pattern to match image URLs and captions
-		  const markdownImagePattern = /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
+          const markdownImagePattern = allImages
+              ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
+              : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
           let matches;
           let images = [];
           // Extract image URLs and captions
