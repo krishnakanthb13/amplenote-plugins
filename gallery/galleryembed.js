@@ -1,271 +1,102 @@
 {
   appOption: {
-    "List!": async function (app) {
-      // Prompt the user to select tags and choose options
-      const result = await app.prompt("Select Details on which you want to list of Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
-        inputs: [
-          {
-            label: "Select Tags [OR] (Each tag is searched separately)", 
-            type: "tags", 
-            limit: 10, 
-            placeholder: "Enter tag/'s' (Max 10)"
-          },
-          {
-            label: "Select Tags [AND] (Combined tag is searched)",
-            type: "tags", 
-            limit: 10, 
-            placeholder: "Enter tag/'s' (Max 10)"
-          },
-          {
-            label: "Include Non-Amplenote Images (Default: Only Amplenote Images)", 
-            type: "checkbox"
-          },
-          {
-            label: "Get the details in a Table Format! (Default: Document Format!)", 
-            type: "checkbox"
-          }
-        ]
-      });
+/* ----------------------------------- */
+"List!": async function (app) {
+    // Prompt the user to select tags and choose options
+    const result = await app.prompt(
+        "Select Details on which you want to list of Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)",
+        {
+            inputs: [
+                {
+                    label: "Select Tags [OR] (Each tag is searched separately)",
+                    type: "tags",
+                    limit: 10,
+                    placeholder: "Enter tag/'s' (Max 10)"
+                },
+                {
+                    label: "Select Tags [AND] (Combined tag is searched)",
+                    type: "tags",
+                    limit: 10,
+                    placeholder: "Enter tag/'s' (Max 10)"
+                },
+                {
+                    label: "Include Non-Amplenote Images (Default: Only Amplenote Images)",
+                    type: "checkbox"
+                },
+                {
+                    label: "Get the details in a Table Format! (Default: Document Format!)",
+                    type: "checkbox"
+                }
+            ]
+        }
+    );
 
       // Extract user inputs
       const [tagNamesOr, tagNamesAnd, allImages, mdTable] = result;
       // console.log("tagNames:", tagNames);
 
-      // Filter notes by the selected tags
-      let notes = [];
-      const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
-      let filteredNotes = [];
-      if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
-            if ((Array.isArray(tagsArray) && tagsArray.length > 0)) {
-                for (const tag of tagsArray) {
-                    const notesByTag = await app.filterNotes({ tag: tag });
-                    filteredNotes = [...filteredNotes, ...notesByTag];
-                }
-            }
-            if (tagNamesAnd) {
-                const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
-                filteredNotes = [...filteredNotes, ...notesByGroup];
-            }
-      } else {
-          const notesByGroup = await app.filterNotes({ group: "^vault" });
-          filteredNotes = [...filteredNotes, ...notesByGroup];
-      }
-      filteredNotes = [...new Set(filteredNotes)]; // remove duplicates
-      notes = filteredNotes;
+    // Initialize arrays for notes and filtered notes
+    let notes = [];
+    const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
+    let filteredNotes = [];
 
-      // Prepare results
-      let results = [];
-      let finalResults = "";
+    // Filter notes based on the selected tags
+    if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+        if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+            for (const tag of tagsArray) {
+                const notesByTag = await app.filterNotes({ tag: tag });
+                filteredNotes = [...filteredNotes, ...notesByTag];
+            }
+        }
+        if (tagNamesAnd) {
+            const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+            filteredNotes = [...filteredNotes, ...notesByGroup];
+        }
+    } else {
+        // Default to filtering by a specific group if no tags are selected
+        const notesByGroup = await app.filterNotes({ group: "^vault" });
+        filteredNotes = [...filteredNotes, ...notesByGroup];
+    }
 
-      // Define horizontal line and introductory lines for the markdown document
-      const horizontalLine = `
+    // Remove duplicate notes
+    filteredNotes = [...new Set(filteredNotes)];
+    notes = filteredNotes;
+
+    // Prepare arrays and variables for storing results
+    let results = [];
+    let finalResults = "";
+
+    // Define horizontal line and introductory text for the markdown document
+    const horizontalLine = `
 
 ---
 
 `;
-      const introLines = `
+    const introLines = `
 # Welcome to your Gallery!
 ## Here you can find all your Photos in your Amplenote Notes.
-### Either you have selected it in Documentation Format or in a Table Format, you will get the complete list displayed here.
+### Whether you selected Documentation Format or Table Format, your complete list is displayed here.
 ${horizontalLine}
 `;
 
-      // Initialize markdown table format
-      let markdownTable = "";
-      markdownTable += `${introLines}`;
-      markdownTable += "| Note | Tags | Created | Updated | Images |\n";
-      markdownTable += "|------|------|---------|---------|--------|\n";
+    // Initialize the markdown table format
+    let markdownTable = `${introLines}`;
+    markdownTable += "| Note | Tags | Created | Updated | Images |\n";
+    markdownTable += "|------|------|---------|---------|--------|\n";
 
-      // Helper function to format date-time as a locale-specific string
-      function formatDateTime(dateTimeStr) {
-        const date = new Date(dateTimeStr);
-        return date.toLocaleString();
-      }
-
-      // Define regex patterns to extract image URLs
-      const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
-      const regex2 = /\/([^\/]+)$/;
-      const imageResolution = "300";
-
-      // Initialize markdown document format
-      let markdownDocs = "";
-      markdownDocs += `${introLines}`;
-
-      // Process each note to extract images
-      for (let note of notes) {
-        try {
-          const noteContent = await app.getNoteContent({ uuid: note.uuid });
-
-          // Define regex pattern to match image URLs based on user selection
-          const markdownImagePattern = allImages
-            ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
-            : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
-
-          let matches;
-          let images = [];
-          // console.log("noteContent:",noteContent)
-          // Extract image URLs and captions from the note content
-          while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
-            // console.log("matches:", matches);
-            const url = matches[1]; // Extract the image URL
-            const caption = matches[2] ? matches[2].trim() : ''; // Extract the caption if present, or use an empty string
-            images.push({ url, caption }); // Store both the URL and caption in the images array
-          }
-
-          // console.log("images.url:", images.map(img => img.url));
-          // console.log("images.caption:", images.map(img => img.caption));
-
-          if (images.length > 0) {
-            if (mdTable) {
-              // If table format is selected, format images as table entries
-              const imageLinks = images.map(image => {
-                const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
-                return image.caption
-                  ? `![${imageIdentifier}\\|${imageResolution}](${image.url})<br>> ${image.caption}`
-                  : `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
-              }).join("<br>");
-
-              markdownTable += `| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${formatDateTime(note.created)} | ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
-            } else {
-              // Generate document format if table format is not selected
-              const imageLinks = images.map(image => {
-                const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
-                return image.caption
-                  ? `![${imageIdentifier}\\|${imageResolution}](${image.url})\n> ${image.caption}\n\n`
-                  : `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
-              }).join(" ");
-
-              markdownDocs += `
-### Note: [${note.name}](https://www.amplenote.com/notes/${note.uuid})
-> Tags: ${note.tags}
-> Created: ${formatDateTime(note.created)}
-> Updated: ${formatDateTime(note.updated)}
-
-${imageLinks}
-
-${horizontalLine}
-              `;
-            }
-          }
-        } catch (err) {
-          if (err instanceof TypeError) {
-            continue; // Skip any notes with errors
-          }
-        }
-      }
-
-      // Store results based on the selected format
-      if (mdTable) {
-        results.push(markdownTable);
-        markdownTable += `
-${horizontalLine}`;
-        finalResults = markdownTable;
-      } else {
-        results.push(markdownDocs);
-        finalResults = markdownDocs;
-      }
-
-      // console.log("markdownTable:", markdownTable);
-      // console.log("markdownDocs:", markdownDocs);
-      // console.log("finalResults:", finalResults);
-
-      // Generate a new note with the results
-      function getCurrentDateTime() {
-          const now = new Date();
-      
-          // Ensure the date is always accurate by using UTC or your local timezone as needed
-          const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
-          const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
-      
-          return { YYMMDD, HHMMSS };
-      }
-      const { YYMMDD, HHMMSS } = getCurrentDateTime();
-      const newNoteName = `Image_Gallery_List_${YYMMDD}_${HHMMSS}`;
-      const newTagName = ['-image-gallery'];
-      let noteUUID = await app.createNote(newNoteName, newTagName);
-      await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
-    },
-
-
-
-
-    
-    
-"Download!": async function (app) {
-    // Prompt the user to select tags and choose options
-    const result = await app.prompt("Select Details on which you want to Download Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
-        inputs: [
-            {
-              label: "Select Tags [OR] (Each tag is searched separately)", 
-              type: "tags", 
-              limit: 10, 
-              placeholder: "Enter tag/'s' (Max 10)"
-            },
-            {
-              label: "Select Tags [AND] (Combined tag is searched)",
-              type: "tags", 
-              limit: 10, 
-              placeholder: "Enter tag/'s' (Max 10)"
-            },
-            {
-                label: "Include Non-Amplenote Images (Default: Only Amplenote Images)", 
-                type: "checkbox"
-            },
-            {
-                label: "Select the format that you want to download in!", 
-                type: "radio",
-                options: [ 
-                  { label: "HTML Gallery Download (Recommended)", value: "html" },
-                  { label: "Markdown Image Links", value: "datahtml" },
-                  { label: "Image Properties JSON", value: "json" },
-                  { label: "Image Properties RAW File", value: "raw" }
-                ]
-            }
-        ]
-    });
-
-      // Extract user inputs
-      const [tagNamesOr, tagNamesAnd, allImages, dwFormat] = result;
-      // console.log("tagNames:", tagNames);
-
-      // Filter notes by the selected tags
-      let notes = [];
-      const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
-      let filteredNotes = [];
-      if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
-            if ((Array.isArray(tagsArray) && tagsArray.length > 0)) {
-                for (const tag of tagsArray) {
-                    const notesByTag = await app.filterNotes({ tag: tag });
-                    filteredNotes = [...filteredNotes, ...notesByTag];
-                }
-            }
-            if (tagNamesAnd) {
-                const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
-                filteredNotes = [...filteredNotes, ...notesByGroup];
-            }
-      } else {
-          const notesByGroup = await app.filterNotes({ group: "^vault" });
-          filteredNotes = [...filteredNotes, ...notesByGroup];
-      }
-      filteredNotes = [...new Set(filteredNotes)]; // remove duplicates
-      notes = filteredNotes;
-
-    // Prepare results
-    let resultsArray = [];
-    let resultsArray2 = [];
-    let htmlTemplate = "";
-    let rawTemplate = "";
-    let htmlDataTemplate = "";
-
-    // Helper function to format date-time as a locale-specific string
+    // Helper function to format date-time strings
     function formatDateTime(dateTimeStr) {
         const date = new Date(dateTimeStr);
         return date.toLocaleString();
     }
 
-  // Define regex patterns to extract image URLs
-  const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
-  const regex2 = /\/([^\/]+)$/;
+    // Define regex patterns for extracting image URLs and identifiers
+    const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
+    const regex2 = /\/([^\/]+)$/;
+    const imageResolution = "300";
+
+    // Initialize markdown document format
+    let markdownDocs = `${introLines}`;
 
     // Process each note to extract images
     for (let note of notes) {
@@ -279,12 +110,190 @@ ${horizontalLine}`;
 
             let matches;
             let images = [];
-            
+            // console.log("noteContent:",noteContent)
+            // Extract image URLs and captions from the note content
+            while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
+            // console.log("matches:", matches);
+                const url = matches[1]; // Extract the image URL
+                const caption = matches[2] ? matches[2].trim() : ''; // Extract the caption if present
+                images.push({ url, caption }); // Store both URL and caption in the images array
+            }
+
+          // console.log("images.url:", images.map(img => img.url));
+          // console.log("images.caption:", images.map(img => img.caption));
+
+            // If images are found in the note, format them accordingly
+            if (images.length > 0) {
+                if (mdTable) {
+                    // Format images as table entries if table format is selected
+                    const imageLinks = images.map(image => {
+                        const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract identifier from URL
+                        return image.caption
+                            ? `![${imageIdentifier}\\|${imageResolution}](${image.url})<br>> ${image.caption}`
+                            : `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
+                    }).join("<br>");
+
+                    markdownTable += `| [${note.name}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${formatDateTime(note.created)} | ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
+                } else {
+                    // Format images as document entries if table format is not selected
+                    const imageLinks = images.map(image => {
+                        const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract identifier from URL
+                        return image.caption
+                            ? `![${imageIdentifier}\\|${imageResolution}](${image.url})\n> ${image.caption}\n\n`
+                            : `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
+                    }).join(" ");
+
+                    markdownDocs += `
+### Note: [${note.name}](https://www.amplenote.com/notes/${note.uuid})
+> Tags: ${note.tags}
+> Created: ${formatDateTime(note.created)}
+> Updated: ${formatDateTime(note.updated)}
+
+${imageLinks}
+
+${horizontalLine}
+                    `;
+            }
+          }
+        } catch (err) {
+            if (err instanceof TypeError) {
+                continue; // Skip notes with errors
+            }
+        }
+    }
+
+    // Store the results based on the selected format
+    if (mdTable) {
+        results.push(markdownTable);
+        markdownTable += `
+${horizontalLine}`;
+        finalResults = markdownTable;
+    } else {
+        results.push(markdownDocs);
+        finalResults = markdownDocs;
+    }
+
+      // console.log("markdownTable:", markdownTable);
+      // console.log("markdownDocs:", markdownDocs);
+      // console.log("finalResults:", finalResults);
+
+    // Function to get current date and time formatted as YYMMDD_HHMMSS
+    function getCurrentDateTime() {
+        const now = new Date();
+
+        // Format the date and time as per requirement
+        const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+        const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+
+        return { YYMMDD, HHMMSS };
+    }
+
+    // Generate a new note with the results
+    const { YYMMDD, HHMMSS } = getCurrentDateTime();
+    const newNoteName = `Image_Gallery_List_${YYMMDD}_${HHMMSS}`;
+    const newTagName = ['-image-gallery'];
+    let noteUUID = await app.createNote(newNoteName, newTagName);
+    await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
+},
+/* ----------------------------------- */
+"Download!": async function (app) {
+    // Prompt the user to select tags and choose options
+    const result = await app.prompt("Select Details on which you want to Download Images (Note: This will not be creating any new Images in Amplenote Domain!, Just uses the URL)", {
+        inputs: [
+            {
+                label: "Select Tags [OR] (Each tag is searched separately)",
+                type: "tags",
+                limit: 10,
+                placeholder: "Enter tag/'s' (Max 10)"
+            },
+            {
+                label: "Select Tags [AND] (Combined tag is searched)",
+                type: "tags",
+                limit: 10,
+                placeholder: "Enter tag/'s' (Max 10)"
+            },
+            {
+                label: "Include Non-Amplenote Images (Default: Only Amplenote Images)",
+                type: "checkbox"
+            },
+            {
+                label: "Select the format that you want to download in!",
+                type: "radio",
+                options: [
+                    { label: "HTML Gallery Download (Recommended)", value: "html" },
+                    { label: "Markdown Image Links", value: "datahtml" },
+                    { label: "Image Properties JSON", value: "json" },
+                    { label: "Image Properties RAW File", value: "raw" }
+                ]
+            }
+        ]
+    });
+
+    // Extract user inputs from the prompt
+    const [tagNamesOr, tagNamesAnd, allImages, dwFormat] = result;
+    // console.log("tagNames:", tagNames);
+
+    // Initialize variables
+    let notes = [];
+    const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
+    let filteredNotes = [];
+
+    // Filter notes based on user-selected tags
+    if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+        if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+            for (const tag of tagsArray) {
+                const notesByTag = await app.filterNotes({ tag: tag });
+                filteredNotes = [...filteredNotes, ...notesByTag];
+            }
+        }
+        if (tagNamesAnd) {
+            const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+            filteredNotes = [...filteredNotes, ...notesByGroup];
+        }
+    } else {
+        const notesByGroup = await app.filterNotes({ group: "^vault" });
+        filteredNotes = [...filteredNotes, ...notesByGroup];
+    }
+
+    // Remove duplicate notes
+    filteredNotes = [...new Set(filteredNotes)];
+    notes = filteredNotes;
+
+    // Prepare variables for storing results
+    let resultsArray = [];
+    let resultsArray2 = [];
+    let htmlTemplate = "";
+    let rawTemplate = "";
+    let htmlDataTemplate = "";
+
+    // Helper function to format date-time as a locale-specific string
+    function formatDateTime(dateTimeStr) {
+        const date = new Date(dateTimeStr);
+        return date.toLocaleString();
+    }
+
+    // Define regex patterns to extract image URLs
+    const regex = /https:\/\/images\.amplenote\.com\/(.+)/;
+    const regex2 = /\/([^\/]+)$/;
+
+    // Process each note to extract images
+    for (let note of notes) {
+        try {
+            const noteContent = await app.getNoteContent({ uuid: note.uuid });
+
+            // Define regex pattern to match image URLs based on user selection
+            const markdownImagePattern = allImages
+                ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
+                : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
+
+            let matches;
+            let images = [];
+
             // Extract image URLs and captions from the note content
             while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
                 // console.log("matches:", matches);
                 const url = matches[1]; // Extract the image URL
-                const caption = matches[2] ? matches[2].trim() : 'No Caption Available or Unable to Fetch.'; // Extract the caption if present, or use an empty string
+                const caption = matches[2] ? matches[2].trim() : 'No Caption Available or Unable to Fetch.'; // Extract the caption if present, or use a default message
                 images.push({ url, caption }); // Store both the URL and caption in the images array
             }
 
@@ -294,16 +303,16 @@ ${horizontalLine}`;
 
             if (images.length > 0) {
                 for (let image of images) {
-                    const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
-                    
+                    const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from the URL
+
                     // Create an object with named properties
                     let resultEntry = {
-                        notetags: note.tags.join(','), // Note tags (assuming tags is an array)
+                        notetags: note.tags.join(','), // Note tags
                         notelink: `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`, // Note link
                         noteurl: `https://www.amplenote.com/notes/${note.uuid}`, // Note URL
                         notename: note.name, // Note name
                         noteuuid: note.uuid, // Note UUID
-                        notecreated: formatDateTime(note.created), // Note created datetime
+                        notecreated: formatDateTime(note.created), // Note creation datetime
                         noteupdated: formatDateTime(note.updated), // Note updated datetime
                         imageurl: image.url, // Image URL
                         imagename: imageIdentifier, // Image identifier (from the URL)
@@ -313,6 +322,7 @@ ${horizontalLine}`;
                     // Push the object into the results array
                     resultsArray.push(resultEntry);
 
+                    // Handle different download formats
                     if (dwFormat === "raw") {
                     // Append to rawTemplate
                     rawTemplate += `${resultEntry.notetags},${resultEntry.notelink},${resultEntry.noteurl},${resultEntry.notename},${resultEntry.noteuuid},${resultEntry.notecreated},${resultEntry.noteupdated},${resultEntry.imageurl},${resultEntry.imagename},${resultEntry.caption}\n`;
@@ -340,26 +350,19 @@ ${horizontalLine}`;
         }
     }
 
- 
     // console.log("resultsArray:", resultsArray);
+    // Function to get the current date and time in YYMMDD and HHMMSS format
+    function getCurrentDateTime() {
+        const now = new Date();
+        const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+        const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+        return { YYMMDD, HHMMSS };
+    }
+    const { YYMMDD, HHMMSS } = getCurrentDateTime();
 
-      // Generate a new note with the results
-      function getCurrentDateTime() {
-          const now = new Date();
-      
-          // Ensure the date is always accurate by using UTC or your local timezone as needed
-          const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
-          const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
-      
-          return { YYMMDD, HHMMSS };
-      }
-      const { YYMMDD, HHMMSS } = getCurrentDateTime();
-  
     // Function to download the data as a text file
     function downloadTextFile(resultText, filename) {
-        let blob = new Blob([resultText], {
-            type: "text/plain;charset=utf-8"
-        });
+        let blob = new Blob([resultText], { type: "text/plain;charset=utf-8" });
         let link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = `${YYMMDD}_${HHMMSS}_${filename}`;
@@ -368,6 +371,7 @@ ${horizontalLine}`;
         document.body.removeChild(link);
     }
 
+    // Function to remove duplicate entries from an array
     function removeDuplicates(array) {
         const seen = new Set();
         return array.filter(item => {
@@ -381,7 +385,7 @@ ${horizontalLine}`;
         });
     }
 
-    // Determine the format and trigger download
+    // Determine the format and trigger the appropriate download
     if (dwFormat === "json") {
         let deduplicatedArray = removeDuplicates(resultsArray);
         let jsonTemplate = JSON.stringify(deduplicatedArray, null, 2);
@@ -623,87 +627,88 @@ populateGallery(jsonData);
 </body>
 </html>
 `;
+
         downloadTextFile(htmlTemplate, "Gallery_HTML.html");
         // console.log("htmlTemplate:", htmlTemplate);
     }
-  },
-    
-    
-    
-    
-    
-    
-    "Viewer!": async function (app) {
-      const newNoteName = `Gallery: Image_Viewer`;
-      const newTagName = ['-image-gallery'];
-      let noteUUID = app.settings["Gallery_Image_Viewer_UUID"] || await app.createNote(newNoteName, newTagName);
-      await app.setSetting("Gallery_Image_Viewer_UUID", noteUUID);
-      await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
-      await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+},
+/* ----------------------------------- */
+"Viewer!": async function (app) {
+  const newNoteName = `Gallery: Image_Viewer`;
+  const newTagName = ['-image-gallery'];
+  let noteUUID = app.settings["Gallery_Image_Viewer_UUID"] || await app.createNote(newNoteName, newTagName);
+  await app.setSetting("Gallery_Image_Viewer_UUID", noteUUID);
+  await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
+  await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+}
+},
+/* ----------------------------------- */
+async renderEmbed(app, ...args) {
+  // Initialize variables
+  let notes = [];
+  let resultsArray2 = [];
+  let htmlTemplate = "";
+  const regex2 = /\/([^\/]+)$/; // Regex pattern to extract image identifier from URL
+  
+  // Fetch notes from the specified group
+  const notesByGroup = await app.filterNotes({ group: "^vault" });
+  notes = notesByGroup;
+  
+  // Process each note to extract image details
+  for (let note of notes) {
+      try {
+		  // Get note content
+          const noteContent = await app.getNoteContent({ uuid: note.uuid });
+          // Define regex pattern to match image URLs and captions
+		  const markdownImagePattern = /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
+          let matches;
+          let images = [];
+          // Extract image URLs and captions
+		  while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
+              const url = matches[1]; // Extract the image URL
+              const caption = matches[2] ? matches[2].trim() : 'No Caption Available or Unable to Fetch.'; // Extract the caption if present, or use an empty string
+              images.push({ url, caption }); // Store both the URL and caption in the images array
+          }
+		  // Process extracted images
+          if (images.length > 0) {
+              for (let image of images) {
+                  const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
+                  // Create a result entry for each image
+				  let resultEntry2 = {
+                      href: image.url,
+                      src: image.url,
+                      caption: `${image.caption}<br>Notename: ${note.name}, Tags: (${note.tags.join(',')}), UUID: ${note.uuid}`,
+                      alt: note.name,
+                      tags: `${note.tags.join(',')}`
+                  };
+                  // Add the result entry to the results array
+				  resultsArray2.push(resultEntry2);
+              }
+          }
+      } catch (err) {
+		  // Log error if processing a note fails and continue with the next note
+          console.error("Error while processing note:", note, err);
+          continue; // Skip any notes with errors
+      }
     }
 
-
-
-    
- },
-  async renderEmbed(app, ...args) {
-
-    let notes = [];
-    const notesByGroup = await app.filterNotes({ group: "^vault" });
-    notes = notesByGroup;
-    let resultsArray2 = [];
-    let htmlTemplate = "";
-    const regex2 = /\/([^\/]+)$/;
-    
-    for (let note of notes) {
-        try {
-            const noteContent = await app.getNoteContent({ uuid: note.uuid });
-            const markdownImagePattern = /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
-            let matches;
-            let images = [];
-            while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
-                const url = matches[1]; // Extract the image URL
-                const caption = matches[2] ? matches[2].trim() : 'No Caption Available or Unable to Fetch.'; // Extract the caption if present, or use an empty string
-                images.push({ url, caption }); // Store both the URL and caption in the images array
+    // Helper function to remove duplicate entries from the results array
+	function removeDuplicates(array) {
+        const seen = new Set();
+        return array.filter(item => {
+            const serialized = JSON.stringify(item);
+            if (seen.has(serialized)) {
+                return false;
+            } else {
+                seen.add(serialized);
+                return true;
             }
-            if (images.length > 0) {
-                for (let image of images) {
-                    const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : ''; // Extract the identifier from URL
-                    let resultEntry2 = {
-                        href: image.url,
-                        src: image.url,
-                        caption: `${image.caption}<br>Notename: ${note.name}, Tags: (${note.tags.join(',')}), UUID: ${note.uuid}`,
-                        alt: note.name,
-                        tags: `${note.tags.join(',')}`
-                    };
-                    resultsArray2.push(resultEntry2);
-                }
-            }
-        } catch (err) {
-            console.error("Error while processing note:", note, err);
-            continue; // Skip any notes with errors
-        }
-      }
-
-      const now = new Date();
-      const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
-      const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    
-      function removeDuplicates(array) {
-          const seen = new Set();
-          return array.filter(item => {
-              const serialized = JSON.stringify(item);
-              if (seen.has(serialized)) {
-                  return false;
-              } else {
-                  seen.add(serialized);
-                  return true;
-              }
-          });
-      }
-    
-        let deduplicatedArray2 = removeDuplicates(resultsArray2);
-        let jsonTemplate2 = JSON.stringify(deduplicatedArray2, null, 2);
+        });
+    }
+  
+      // Remove duplicates and format results as JSON
+	  let deduplicatedArray2 = removeDuplicates(resultsArray2);
+      let jsonTemplate2 = JSON.stringify(deduplicatedArray2, null, 2);
 
       htmlTemplate = `
 <!DOCTYPE html>
@@ -931,7 +936,7 @@ populateGallery(jsonData);
 </body>
 </html>
 `;
-        return(htmlTemplate);
 
+      return(htmlTemplate);
 }
 }
