@@ -600,15 +600,13 @@ populateGallery(jsonData);
     
     
     "Viewer!": async function (app) {
-      const now = new Date();
-      const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
-      const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-      const newNoteName = `Image_Viewer_${YYMMDD}_${HHMMSS}`;
+      const newNoteName = `Gallery: Image_Viewer`;
       const newTagName = ['-image-gallery'];
-      let noteUUID = await app.createNote(newNoteName, newTagName);
+      let noteUUID = app.settings["Gallery_Image_Viewer_UUID"] || await app.createNote(newNoteName, newTagName);
+      await app.setSetting("Gallery_Image_Viewer_UUID", noteUUID);
       await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
-      return null;
-  }
+      await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+    }
 
 
 
