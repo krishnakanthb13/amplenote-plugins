@@ -1,7 +1,7 @@
 ﻿---
 title: "\U0001F4F8 Gallery"
 uuid: 0e218580-5be7-11ef-b179-22074e34eefe
-version: 307
+version: 317
 created: '2024-08-16T21:15:38+05:30'
 tags:
   - '-9-permanent'
@@ -94,7 +94,7 @@ By following these steps, you'll be able to efficiently explore, manage, and dow
 |-|-|
 |Name<!-- {"cell":{"colwidth":127}} -->|Gallery|
 |icon<!-- {"cell":{"colwidth":127}} -->|collections|
-|Description<!-- {"cell":{"colwidth":127}} -->|<mark style="color:#F8914D;">**`List, View, Download`**<!-- {"cycleColor":"24"} --></mark> <br />All you Amplenote Images in one location!<br />And that's here! Howz that!<br />[📸 Gallery - List! Docs](https://www.amplenote.com/notes/356bc1ea-5be8-11ef-8800-22074e34eefe) <br />[📸 Gallery - Download! Docs](https://www.amplenote.com/notes/dea6ac70-5be8-11ef-9902-22074e34eefe) <br />[📸 Gallery - Viewer! Docs](https://www.amplenote.com/notes/dea6ac70-5be8-11ef-9902-22074e34eefe) |
+|Description<!-- {"cell":{"colwidth":127}} -->|<mark style="color:#F8914D;">**`List, View, Download`**<!-- {"cycleColor":"24"} --></mark> <br />All your Amplenote Images at one location!<br />And that's here!<br />[📸 Gallery - List! Docs](https://www.amplenote.com/notes/356bc1ea-5be8-11ef-8800-22074e34eefe) <br />[📸 Gallery - Download! Docs](https://www.amplenote.com/notes/dea6ac70-5be8-11ef-9902-22074e34eefe) <br />[📸 Gallery - Viewer! Docs](https://www.amplenote.com/notes/dea6ac70-5be8-11ef-9902-22074e34eefe) |
 |setting|Gallery_Image_Viewer_UUID|
 |setting|Gallery_Image_Viewer_AllImgs|
 ---
