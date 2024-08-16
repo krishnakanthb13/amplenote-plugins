@@ -99,7 +99,7 @@ ${horizontalLine}
           // Define regex pattern to match image URLs based on user selection
           const markdownImagePattern = allImages
             ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
-            : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\s*\[\^.*?\])?(?:\)|$)\)(?:\n>\s*(.*))?/g;
+            : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
 
           let matches;
           let images = [];
@@ -275,7 +275,7 @@ ${horizontalLine}`;
             // Define regex pattern to match image URLs based on user selection
             const markdownImagePattern = allImages
                 ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
-                : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)(?:\s*\[\^.*?\])?(?:\)|$)\)(?:\n>\s*(.*))?/g;
+                : /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
 
             let matches;
             let images = [];
@@ -391,7 +391,7 @@ ${horizontalLine}`;
         downloadTextFile(rawTemplate, "Gallery_Raw_Template.txt");
         // console.log("rawTemplate:", rawTemplate);
     } else if (dwFormat === "datahtml") {
-        downloadTextFile(htmlDataTemplate, "Gallery_HTML_Data.txt");
+        downloadTextFile(htmlDataTemplate, "Gallery_Markdown_Data.txt");
         // console.log("htmlDataTemplate:", htmlDataTemplate);
     } else if (dwFormat === "html") {
         let deduplicatedArray2 = removeDuplicates(resultsArray2);
