@@ -194,6 +194,7 @@ ${horizontalLine}`;
     const newTagName = ['-image-gallery'];
     let noteUUID = await app.createNote(newNoteName, newTagName);
     await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
+    await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
 },
 /* ----------------------------------- */
 "Download!": async function (app) {
@@ -629,6 +630,7 @@ populateGallery(jsonData);
 `;
 
         downloadTextFile(htmlTemplate, "Gallery_HTML.html");
+        // await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`); - Navigate to Audit Page!
         // console.log("htmlTemplate:", htmlTemplate);
     }
 },
