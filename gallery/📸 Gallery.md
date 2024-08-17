@@ -1,7 +1,7 @@
 ﻿---
 title: "\U0001F4F8 Gallery"
 uuid: 0e218580-5be7-11ef-b179-22074e34eefe
-version: 317
+version: 318
 created: '2024-08-16T21:15:38+05:30'
 tags:
   - '-9-permanent'
@@ -294,10 +294,23 @@ ${horizontalLine}`;
 
     // Generate a new note with the results
     const { YYMMDD, HHMMSS } = getCurrentDateTime();
-    const newNoteName = `Image_Gallery_List_${YYMMDD}_${HHMMSS}`;
+    const newNoteName = `Image Gallery List ${YYMMDD}_${HHMMSS}`;
     const newTagName = ['-image-gallery'];
     let noteUUID = await app.createNote(newNoteName, newTagName);
     await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
+
+    // Audit Report
+    const auditNoteName = `Image Gallery Audit`;
+    const auditTagName = ['-image-gallery'];
+    let auditnoteUUID = app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
+	if (!app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
+    let auditReport = `
+- **Gallery Option:** List!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; All-Images: ${allImages}; Table: ${mdTable};], **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
+
+`;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+    
+    await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+
 },
 /* ----------------------------------- */
 "Download!": async function (app) {
@@ -325,7 +338,7 @@ ${horizontalLine}`;
                 type: "radio",
                 options: [
                     { label: "HTML Gallery Download (Recommended)", value: "html" },
-                    { label: "Markdown Image Links", value: "datahtml" },
+                    { label: "Markdown Image Links", value: "markdown" },
                     { label: "Image Properties JSON", value: "json" },
                     { label: "Image Properties RAW File", value: "raw" }
                 ]
@@ -430,7 +443,7 @@ ${horizontalLine}`;
                     if (dwFormat === "raw") {
                     // Append to rawTemplate
                     rawTemplate += `${resultEntry.notetags},${resultEntry.notelink},${resultEntry.noteurl},${resultEntry.notename},${resultEntry.noteuuid},${resultEntry.notecreated},${resultEntry.noteupdated},${resultEntry.imageurl},${resultEntry.imagename},${resultEntry.caption}\n`;
-                    } else if (dwFormat === "datahtml") {
+                    } else if (dwFormat === "markdown") {
                     // Append to htmlDataTemplate
                     htmlDataTemplate += `'![${resultEntry.imagename}](${resultEntry.imageurl})',\n`;
                     } else if (dwFormat === "html") {
@@ -498,7 +511,7 @@ ${horizontalLine}`;
     } else if (dwFormat === "raw") {
         downloadTextFile(rawTemplate, "Gallery_Raw_Template.txt");
         // console.log("rawTemplate:", rawTemplate);
-    } else if (dwFormat === "datahtml") {
+    } else if (dwFormat === "markdown") {
         downloadTextFile(htmlDataTemplate, "Gallery_Markdown_Data.txt");
         // console.log("htmlDataTemplate:", htmlDataTemplate);
     } else if (dwFormat === "html") {
@@ -733,15 +746,31 @@ populateGallery(jsonData);
 `;
 
         downloadTextFile(htmlTemplate, "Gallery_HTML.html");
+        // await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`); - Navigate to Audit Page!
         // console.log("htmlTemplate:", htmlTemplate);
     }
+
+    // Audit Report
+    const auditNoteName = `Image Gallery Audit`;
+    const auditTagName = ['-image-gallery'];
+    let auditnoteUUID = app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
+	if (!app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
+    let auditReport = `
+- **Gallery Option:** Download!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; All-Images: ${allImages}; Format: ${dwFormat};], **Filename:** Starts with At => **At:** ${YYMMDD}_${HHMMSS}.
+
+`;  
+    // const uuidRegex = /(?<=local-)\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/;
+    // auditnoteUUID = auditnoteUUID.match(uuidRegex);
+    await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+    await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
+
 },
 /* ----------------------------------- */
 "Viewer!": async function (app) {
-  const newNoteName = `Gallery: Image_Viewer`;
+  const newNoteName = `Gallery: Image Viewer`;
   const newTagName = ['-image-gallery'];
-  let noteUUID = app.settings["Gallery_Image_Viewer_UUID"] || await app.createNote(newNoteName, newTagName);
-  await app.setSetting("Gallery_Image_Viewer_UUID", noteUUID);
+  let noteUUID = app.settings["Gallery_Image_Viewer_UUID [Do not Edit!]"] || await app.createNote(newNoteName, newTagName);
+  await app.setSetting("Gallery_Image_Viewer_UUID [Do not Edit!]", noteUUID);
   await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
   await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
 }
@@ -763,8 +792,9 @@ async renderEmbed(app, ...args) {
       try {
 		  // Get note content
           const noteContent = await app.getNoteContent({ uuid: note.uuid });
-          let allImages = (app.settings["Gallery_Image_Viewer_AllImgs"] === 1);
-          if (app.settings["Gallery_Image_Viewer_AllImgs"] != 1) { await app.setSetting("Gallery_Image_Viewer_AllImgs", 0); }
+          let allImages = true; // Handling through Settings is creating a loop! Keeps on trying in the background!
+          // let allImages = (app.settings["Gallery_Image_Viewer_AllImgs"] === 1);
+          // if (app.settings["Gallery_Image_Viewer_AllImgs"] != 1) { await app.setSetting("Gallery_Image_Viewer_AllImgs", 0); }
           // Define regex pattern to match image URLs and captions
           const markdownImagePattern = allImages
               ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
