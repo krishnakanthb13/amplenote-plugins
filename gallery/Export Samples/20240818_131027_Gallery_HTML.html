@@ -1,0 +1,2375 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/css/uikit.min.css" />
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.9/dist/js/uikit-icons.min.js"></script>
+    <style>
+        /* Cool background gradient */
+        body {
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            padding: 20px;
+        }
+
+        /* Container for the images */
+        .gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Image container */
+        .gallery-container .uk-inline {
+            overflow: hidden;
+            border-radius: 10px;
+            transition: transform 0.15s ease; /* Speed up transition */
+            display: flex; /* Enable flexbox */
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+            height: auto; /* Set a fixed height if needed */
+        }
+
+        /* Hover effect for images */
+        .gallery-container .uk-inline:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Image styles */
+        .gallery-container img {
+            border-radius: 10px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Tag buttons container */
+        .tag-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Button styles */
+        .tag-buttons button {
+            margin: 5px; /* Adjust this value to control the space between buttons */
+        }
+
+        /* Button hover effect */
+        .uk-button:hover {
+            background-color: #0056b3;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .uk-button.active {
+            background-color: #0056b3;
+            color: white;
+        }
+		/* Footer styles */
+		footer {
+			position: fixed; /* Fixes the footer at the bottom */
+			left: 0; /* Aligns the footer to the far left */
+			bottom: 0; /* Aligns the footer to the bottom */
+			width: 100%; /* Makes the footer span the full width of the page */
+			padding: 10px; /* Adds some padding */
+			text-align: left; /* Aligns text to the left */
+			margin: 0; /* Removes default margins */
+			background: none; /* Removes any background color */
+			color: #000; /* Sets text color (adjust as needed) */
+			font-size: 14px; /* Adjusts font size */
+		}
+
+		footer a {
+			color: #ffeb3b; /* Adjust color if needed */
+			text-decoration: none;
+		}
+
+		footer a:hover {
+			text-decoration: underline;
+		}
+    </style>
+</head>
+<body>
+
+<div class="uk-h3 uk-text-center"></div>
+<div class="tag-buttons" id="tag-buttons">
+    <!-- Tag buttons will be injected here -->
+</div>
+<div id="gallery" class="gallery-container" uk-lightbox="animation: scale; autoplay: true; autoplay-interval: 7000; pause-on-hover: true; velocity: 3">
+    <!-- Images will be injected here -->
+</div>
+
+<footer>
+    <p>&copy; BKK 2024 | <a href="https://public.amplenote.com/LpRxpX/gallery" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+</footer>
+
+<script>
+// JSON data
+const jsonData = 
+[
+  {
+    "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_130908, Tags: (-image-gallery), UUID: f37883ce-5d34-11ef-be09-22074e34eefe",
+    "alt": "Image Gallery List 20240818_130908",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_130908, Tags: (-image-gallery), UUID: f37883ce-5d34-11ef-be09-22074e34eefe",
+    "alt": "Image Gallery List 20240818_130908",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_130908, Tags: (-image-gallery), UUID: f37883ce-5d34-11ef-be09-22074e34eefe",
+    "alt": "Image Gallery List 20240818_130908",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_130908, Tags: (-image-gallery), UUID: f37883ce-5d34-11ef-be09-22074e34eefe",
+    "alt": "Image Gallery List 20240818_130908",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_130908, Tags: (-image-gallery), UUID: f37883ce-5d34-11ef-be09-22074e34eefe",
+    "alt": "Image Gallery List 20240818_130908",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/7af791e0-5a39-11ef-82af-22074e34eefe/f84da71d-58ee-4d5d-aefe-dcaf9d02b013.png",
+    "src": "https://images.amplenote.com/7af791e0-5a39-11ef-82af-22074e34eefe/f84da71d-58ee-4d5d-aefe-dcaf9d02b013.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Gallery Test, Tags: (-1-working,-t/amplenote/testing), UUID: 7af791e0-5a39-11ef-82af-22074e34eefe",
+    "alt": "Gallery Test",
+    "tags": "-1-working,-t/amplenote/testing"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7ebfbf76-dd43-4996-bae3-9f64a40e011c.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7ebfbf76-dd43-4996-bae3-9f64a40e011c.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: c46c5e60-4066-11ef-832f-26e37c279344",
+    "alt": "Metadata 1.0 Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/779b31a5-04fe-48dc-9ed3-3a7aca8c73bf.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/779b31a5-04fe-48dc-9ed3-3a7aca8c73bf.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: c46c5e60-4066-11ef-832f-26e37c279344",
+    "alt": "Metadata 1.0 Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/40a5cd4a-2c0e-4246-860e-6557ccdaa7e1.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/40a5cd4a-2c0e-4246-860e-6557ccdaa7e1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: c46c5e60-4066-11ef-832f-26e37c279344",
+    "alt": "Metadata 1.0 Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/31c69256-5f10-475f-8eba-14eea1de0aa9.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/31c69256-5f10-475f-8eba-14eea1de0aa9.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: c46c5e60-4066-11ef-832f-26e37c279344",
+    "alt": "Metadata 1.0 Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/f1df288c-ea77-495f-a9f4-90e0cc94595e.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/f1df288c-ea77-495f-a9f4-90e0cc94595e.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: c46c5e60-4066-11ef-832f-26e37c279344",
+    "alt": "Metadata 1.0 Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: c46c5e60-4066-11ef-832f-26e37c279344",
+    "alt": "Metadata 1.0 Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/e12d34a5-bf5d-4a55-966c-3c5af653828a.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/e12d34a5-bf5d-4a55-966c-3c5af653828a.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: c46c5e60-4066-11ef-832f-26e37c279344",
+    "alt": "Metadata 1.0 Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7d1c3943-2a47-4712-8404-766a9b6b9178.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7d1c3943-2a47-4712-8404-766a9b6b9178.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: c46c5e60-4066-11ef-832f-26e37c279344",
+    "alt": "Metadata 1.0 Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "Time here!<br>Notename: July 15th, 2024, Tags: (-0-planner), UUID: a8bd423c-4265-11ef-a3f4-6ef34fa959ce",
+    "alt": "July 15th, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "Hello Buddy!<br>Notename: August 11th, 2024, Tags: (-0-planner), UUID: 5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd",
+    "alt": "August 11th, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: August 11th, 2024, Tags: (-0-planner), UUID: 5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd",
+    "alt": "August 11th, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/9939863b-db9a-4bb8-8891-75ab303053b3.png",
+    "src": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/9939863b-db9a-4bb8-8891-75ab303053b3.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: Welcome, Tags: (auto-archived,-t/amplenote), UUID: 8ccf3708-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: Welcome",
+    "tags": "auto-archived,-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/f83185df-258c-4d20-82d6-4907bc36c329.png",
+    "src": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/f83185df-258c-4d20-82d6-4907bc36c329.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: Welcome, Tags: (auto-archived,-t/amplenote), UUID: 8ccf3708-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: Welcome",
+    "tags": "auto-archived,-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/f71ed840-b94b-4943-8976-339ab188e553.gif",
+    "src": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/f71ed840-b94b-4943-8976-339ab188e553.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: Welcome, Tags: (auto-archived,-t/amplenote), UUID: 8ccf3708-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: Welcome",
+    "tags": "auto-archived,-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/afed7270-44f9-11ef-bdf6-26e37c279344/4ebfb802-e49d-4d8f-b574-f70d285edf97.gif",
+    "src": "https://images.amplenote.com/afed7270-44f9-11ef-bdf6-26e37c279344/4ebfb802-e49d-4d8f-b574-f70d285edf97.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: TextMagiQ, Tags: (-9-permanent,-t/amplenote/mine), UUID: afed7270-44f9-11ef-bdf6-26e37c279344",
+    "alt": "TextMagiQ",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/d36ac268-caec-40c3-81b2-b119e2590c7c.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/d36ac268-caec-40c3-81b2-b119e2590c7c.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata - BKK, Tags: (-1-working), UUID: f38439b4-4342-11ef-b895-26e37c279344",
+    "alt": "Metadata - BKK",
+    "tags": "-1-working"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/dc8f9bed-7a9f-4ba5-9394-96eef212474f.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/dc8f9bed-7a9f-4ba5-9394-96eef212474f.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata - BKK, Tags: (-1-working), UUID: f38439b4-4342-11ef-b895-26e37c279344",
+    "alt": "Metadata - BKK",
+    "tags": "-1-working"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/73cf91f6-cfc4-4a77-9187-dd20da6a76c8.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/73cf91f6-cfc4-4a77-9187-dd20da6a76c8.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata - BKK, Tags: (-1-working), UUID: f38439b4-4342-11ef-b895-26e37c279344",
+    "alt": "Metadata - BKK",
+    "tags": "-1-working"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/b5f10f91-0261-4c54-bc90-a2de82deb8e8.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/b5f10f91-0261-4c54-bc90-a2de82deb8e8.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata - BKK, Tags: (-1-working), UUID: f38439b4-4342-11ef-b895-26e37c279344",
+    "alt": "Metadata - BKK",
+    "tags": "-1-working"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/19f40031-d5c6-45fe-a578-9da9b2615cbb.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/19f40031-d5c6-45fe-a578-9da9b2615cbb.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata - BKK, Tags: (-1-working), UUID: f38439b4-4342-11ef-b895-26e37c279344",
+    "alt": "Metadata - BKK",
+    "tags": "-1-working"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/58d7d455-8e22-4656-b300-d5293bafb533.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/58d7d455-8e22-4656-b300-d5293bafb533.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata - BKK, Tags: (-1-working), UUID: f38439b4-4342-11ef-b895-26e37c279344",
+    "alt": "Metadata - BKK",
+    "tags": "-1-working"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/f7ad0a6a-d56a-4f36-8c5a-686257a78901.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/f7ad0a6a-d56a-4f36-8c5a-686257a78901.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata - BKK, Tags: (-1-working), UUID: f38439b4-4342-11ef-b895-26e37c279344",
+    "alt": "Metadata - BKK",
+    "tags": "-1-working"
+  },
+  {
+    "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "Hi, this is a Vacation Itinerary! Should Plan something!<br>Notename: July 20th, 2024, Tags: (-0-planner), UUID: b9b33974-4653-11ef-9826-26e37c279344",
+    "alt": "July 20th, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/3fb8955e-4664-11ef-9826-26e37c279344/f2e05247-cb94-4676-9767-aa632ca8b73f.png",
+    "src": "https://images.amplenote.com/3fb8955e-4664-11ef-9826-26e37c279344/f2e05247-cb94-4676-9767-aa632ca8b73f.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename:  TTD July 24 Plan, Tags: (-t/travel,-t/spirituality), UUID: 3fb8955e-4664-11ef-9826-26e37c279344",
+    "alt": " TTD July 24 Plan",
+    "tags": "-t/travel,-t/spirituality"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/b320ed3c-97df-4f05-8f84-87a9d3094193.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/b320ed3c-97df-4f05-8f84-87a9d3094193.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/1ada5676-4b3d-4f1a-bfa5-a7e0661bbcf8.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/1ada5676-4b3d-4f1a-bfa5-a7e0661bbcf8.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/93a5803c-a076-4468-9448-8f63025a997b.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/93a5803c-a076-4468-9448-8f63025a997b.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/6a782d89-3359-4cbd-993f-f4fe6fda1153.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/6a782d89-3359-4cbd-993f-f4fe6fda1153.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/bb8aca2e-38fe-41a2-8485-d2584452998d.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/bb8aca2e-38fe-41a2-8485-d2584452998d.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/2ab4282b-e5ba-4a8f-8759-967e9991bb95.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/2ab4282b-e5ba-4a8f-8759-967e9991bb95.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/23d5a247-4642-41ac-bf1b-83e90ef569ea.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/23d5a247-4642-41ac-bf1b-83e90ef569ea.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/a7632831-938d-46f1-ba6b-7e5319703c3c.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/a7632831-938d-46f1-ba6b-7e5319703c3c.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/0358ed27-c23f-4ddb-b548-461da6264266.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/0358ed27-c23f-4ddb-b548-461da6264266.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: URL-Search-GUI, Tags: (-t/amplenote/mine,-9-permanent), UUID: cfc0398e-467a-11ef-bc7e-26e37c279344",
+    "alt": "URL-Search-GUI",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/d73fb9ac-589d-11ef-9a1a-220e436b8a7b/0f36dad0-ab7b-4248-af30-3064d61baad5.png",
+    "src": "https://images.amplenote.com/d73fb9ac-589d-11ef-9a1a-220e436b8a7b/0f36dad0-ab7b-4248-af30-3064d61baad5.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: ANP AGENDA, Tags: (-t/amplenote/mine), UUID: d73fb9ac-589d-11ef-9a1a-220e436b8a7b",
+    "alt": "ANP AGENDA",
+    "tags": "-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/09eceb8a-5020-11ef-ab4e-2e138d9b4cca/a62ed6d3-10d4-486a-9bab-1992adf74bb1.png",
+    "src": "https://images.amplenote.com/09eceb8a-5020-11ef-ab4e-2e138d9b4cca/a62ed6d3-10d4-486a-9bab-1992adf74bb1.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplefocus (Work Cycles), Tags: (-t/amplenote/plugins), UUID: 4d6942c0-591a-11ef-bf57-22074e34eefe",
+    "alt": "Amplefocus (Work Cycles)",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/3140f0f2-c96c-480b-8136-ecbf1bbfddb5.png",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/3140f0f2-c96c-480b-8136-ecbf1bbfddb5.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Top 10 Amplenote Tips, Tags: (-t/amplenote), UUID: 8cc7c5d6-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Top 10 Amplenote Tips",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/3e521249-2d38-4edc-a4ef-fc50c8e321ed.png",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/3e521249-2d38-4edc-a4ef-fc50c8e321ed.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Top 10 Amplenote Tips, Tags: (-t/amplenote), UUID: 8cc7c5d6-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Top 10 Amplenote Tips",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/14a5d80d-3fec-41dc-bd44-1d1dc4ae682d.png",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/14a5d80d-3fec-41dc-bd44-1d1dc4ae682d.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Top 10 Amplenote Tips, Tags: (-t/amplenote), UUID: 8cc7c5d6-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Top 10 Amplenote Tips",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/c4948aee-f5da-444a-a1ef-63c1db41db63.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/c4948aee-f5da-444a-a1ef-63c1db41db63.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Top 10 Amplenote Tips, Tags: (-t/amplenote), UUID: 8cc7c5d6-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Top 10 Amplenote Tips",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/81c696c1-c0f1-4af6-8f3f-53ea2c5db181.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/81c696c1-c0f1-4af6-8f3f-53ea2c5db181.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Top 10 Amplenote Tips, Tags: (-t/amplenote), UUID: 8cc7c5d6-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Top 10 Amplenote Tips",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/76d2d41f-deec-49a1-93bd-b8b7afadd41d.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/76d2d41f-deec-49a1-93bd-b8b7afadd41d.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Top 10 Amplenote Tips, Tags: (-t/amplenote), UUID: 8cc7c5d6-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Top 10 Amplenote Tips",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/e61413f9-b59c-406a-a21d-ae9024934884.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/e61413f9-b59c-406a-a21d-ae9024934884.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Top 10 Amplenote Tips, Tags: (-t/amplenote), UUID: 8cc7c5d6-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Top 10 Amplenote Tips",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/ce9bbc75-0c94-4575-86ce-ad4b91e1f827.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/ce9bbc75-0c94-4575-86ce-ad4b91e1f827.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Top 10 Amplenote Tips, Tags: (-t/amplenote), UUID: 8cc7c5d6-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Top 10 Amplenote Tips",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/6591e720-dab3-11ee-a972-c250cfa702b7/e2cb2f3f-e6ee-44e5-a651-250d8b452d08.gif",
+    "src": "https://images.amplenote.com/6591e720-dab3-11ee-a972-c250cfa702b7/e2cb2f3f-e6ee-44e5-a651-250d8b452d08.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Progress Bar (Plugin), Tags: (auto-archived,-t/amplenote/plugins), UUID: a082b948-3604-11ef-94b9-ceb251bdbe82",
+    "alt": "Progress Bar (Plugin)",
+    "tags": "auto-archived,-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/e5a3ed9e-383f-11ee-8310-d60996a7cd9b/52c442d6-db01-4e4c-86d5-74c07d98df5e.png",
+    "src": "https://images.amplenote.com/e5a3ed9e-383f-11ee-8310-d60996a7cd9b/52c442d6-db01-4e4c-86d5-74c07d98df5e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Exporter, Tags: (auto-archived,-t/amplenote/plugins), UUID: f4b5cee4-3607-11ef-94b9-ceb251bdbe82",
+    "alt": "Exporter",
+    "tags": "auto-archived,-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/4a3d5cd4-086d-11ee-889d-8e37e8b27b1d/9ea6b8fe-6e3b-46e7-8343-6017bd41f9f0.png",
+    "src": "https://images.amplenote.com/4a3d5cd4-086d-11ee-889d-8e37e8b27b1d/9ea6b8fe-6e3b-46e7-8343-6017bd41f9f0.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Plugin: Find and replace, Tags: (-t/amplenote/plugins,auto-archived), UUID: 5a9d7aee-3609-11ef-a7e8-ceb251bdbe82",
+    "alt": "Plugin: Find and replace",
+    "tags": "-t/amplenote/plugins,auto-archived"
+  },
+  {
+    "href": "https://images.amplenote.com/4a3d5cd4-086d-11ee-889d-8e37e8b27b1d/3343864c-035f-49f4-8322-80d43ef1f8e5.png",
+    "src": "https://images.amplenote.com/4a3d5cd4-086d-11ee-889d-8e37e8b27b1d/3343864c-035f-49f4-8322-80d43ef1f8e5.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Plugin: Find and replace, Tags: (-t/amplenote/plugins,auto-archived), UUID: 5a9d7aee-3609-11ef-a7e8-ceb251bdbe82",
+    "alt": "Plugin: Find and replace",
+    "tags": "-t/amplenote/plugins,auto-archived"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/95450633-bff1-453f-9270-6785e42bf385.gif",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/95450633-bff1-453f-9270-6785e42bf385.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Notes Reviewer🕵 - Test, Tags: (-t/amplenote/testing), UUID: adba0db0-595d-11ef-a2e6-22074e34eefe",
+    "alt": "Notes Reviewer🕵 - Test",
+    "tags": "-t/amplenote/testing"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/7b24c4c7-1e10-48d0-b39c-9e614f8b16a4.png",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/7b24c4c7-1e10-48d0-b39c-9e614f8b16a4.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Notes Reviewer🕵 - Test, Tags: (-t/amplenote/testing), UUID: adba0db0-595d-11ef-a2e6-22074e34eefe",
+    "alt": "Notes Reviewer🕵 - Test",
+    "tags": "-t/amplenote/testing"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/98d9494e-4726-4599-861e-3dc67c3e1dd7.png",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/98d9494e-4726-4599-861e-3dc67c3e1dd7.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Notes Reviewer🕵 - Test, Tags: (-t/amplenote/testing), UUID: adba0db0-595d-11ef-a2e6-22074e34eefe",
+    "alt": "Notes Reviewer🕵 - Test",
+    "tags": "-t/amplenote/testing"
+  },
+  {
+    "href": "https://images.amplenote.com/1f9324d6-c971-11ed-acca-9e481d8d09ce/8baa8443-4552-464d-8f15-a470a27893ed.jpg",
+    "src": "https://images.amplenote.com/1f9324d6-c971-11ed-acca-9e481d8d09ce/8baa8443-4552-464d-8f15-a470a27893ed.jpg",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Plugin: Amplequery, Tags: (-t/amplenote/plugins), UUID: 69a37a92-3853-11ef-94c7-6ef34fa959ce",
+    "alt": "Plugin: Amplequery",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/d29e5676-57ca-11ee-a42d-066808e24877/e6c7d52f-27d3-4b14-b8bd-1245e7aef429.png",
+    "src": "https://images.amplenote.com/d29e5676-57ca-11ee-a42d-066808e24877/e6c7d52f-27d3-4b14-b8bd-1245e7aef429.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: AmpleTrack, Tags: (-t/amplenote/plugins), UUID: 57260090-3576-11ef-9bbb-ceb251bdbe82",
+    "alt": "AmpleTrack",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/09893384-58bc-11ef-a6ef-b6c19b417745/201723a4-0325-4384-8c38-fa98cda7423e.png",
+    "src": "https://images.amplenote.com/09893384-58bc-11ef-a6ef-b6c19b417745/201723a4-0325-4384-8c38-fa98cda7423e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: PC, Tags: (place-holders/loc/pc), UUID: 09893384-58bc-11ef-a6ef-b6c19b417745",
+    "alt": "PC",
+    "tags": "place-holders/loc/pc"
+  },
+  {
+    "href": "https://images.amplenote.com/1701987e-48c4-11ef-949a-6ef34fa959ce/8f9a9fa0-99dd-45fe-8946-d30fd10ce3c2.gif",
+    "src": "https://images.amplenote.com/1701987e-48c4-11ef-949a-6ef34fa959ce/8f9a9fa0-99dd-45fe-8946-d30fd10ce3c2.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Extract to a note 2.0 Docs, Tags: (-9-permanent,-t/amplenote/mine), UUID: 1701987e-48c4-11ef-949a-6ef34fa959ce",
+    "alt": "Extract to a note 2.0 Docs",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/cd42e680-f98f-11ee-b77a-96fa79d3b18e/05bd9054-9aa0-4363-916a-078da960eba0.gif",
+    "src": "https://images.amplenote.com/cd42e680-f98f-11ee-b77a-96fa79d3b18e/05bd9054-9aa0-4363-916a-078da960eba0.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Inline Checkbox Plugin, Tags: (-t/amplenote/plugins), UUID: bddeab44-3d04-11ef-ab73-6ef34fa959ce",
+    "alt": "Inline Checkbox Plugin",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/f22af900-8ba4-11ee-bbb6-1e01dee17a2b/d52f5c53-7792-4605-a9b4-f52004258443.gif",
+    "src": "https://images.amplenote.com/f22af900-8ba4-11ee-bbb6-1e01dee17a2b/d52f5c53-7792-4605-a9b4-f52004258443.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Checklists: Main plugin, Tags: (-t/amplenote/plugins), UUID: 776d1028-3d05-11ef-92e0-6ef34fa959ce",
+    "alt": "Checklists: Main plugin",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp, Tags: (-t/amplenote/mine,-9-permanent), UUID: 0fc33c04-3d0a-11ef-92e0-6ef34fa959ce",
+    "alt": "Timestamp",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/dab3062a-3ead-11ef-a563-26e37c279344/48fd3b8d-1553-40b0-8f29-b8db0f8d9c3e.gif",
+    "src": "https://images.amplenote.com/dab3062a-3ead-11ef-a563-26e37c279344/48fd3b8d-1553-40b0-8f29-b8db0f8d9c3e.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp Docs, Tags: (-t/amplenote/mine,-9-permanent), UUID: dab3062a-3ead-11ef-a563-26e37c279344",
+    "alt": "Timestamp Docs",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0a2e7014-31cc-11ee-9c16-d60996a7cd9b/d44938c3-04e5-40b0-a212-d07049e8fba5.png",
+    "src": "https://images.amplenote.com/0a2e7014-31cc-11ee-9c16-d60996a7cd9b/d44938c3-04e5-40b0-a212-d07049e8fba5.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplejots, Tags: (-t/amplenote/plugins), UUID: bb5f951e-3ec0-11ef-bd39-26e37c279344",
+    "alt": "Amplejots",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/413f16aa-4ad4-11ee-b384-32729d26749b/7a7909c8-508d-40af-9281-ff0ffa549ac2.png",
+    "src": "https://images.amplenote.com/413f16aa-4ad4-11ee-b384-32729d26749b/7a7909c8-508d-40af-9281-ff0ffa549ac2.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Dictionary, Tags: (auto-archived,-t/amplenote/plugins), UUID: 5d2f685a-3dfa-11ef-bd39-26e37c279344",
+    "alt": "Dictionary",
+    "tags": "auto-archived,-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/413f16aa-4ad4-11ee-b384-32729d26749b/cc3205fb-e2a0-4c7e-b02d-3e8873f7edad.png",
+    "src": "https://images.amplenote.com/413f16aa-4ad4-11ee-b384-32729d26749b/cc3205fb-e2a0-4c7e-b02d-3e8873f7edad.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Dictionary, Tags: (auto-archived,-t/amplenote/plugins), UUID: 5d2f685a-3dfa-11ef-bd39-26e37c279344",
+    "alt": "Dictionary",
+    "tags": "auto-archived,-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/fe39b41c-31fd-11ee-b6bc-fa0c75f9d0b6/6a12c7ea-db3d-4e52-a735-f01b17648e87.gif",
+    "src": "https://images.amplenote.com/fe39b41c-31fd-11ee-b6bc-fa0c75f9d0b6/6a12c7ea-db3d-4e52-a735-f01b17648e87.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Quick Add, Tags: (-t/amplenote/plugins), UUID: 30cb9ba2-3dfb-11ef-bd39-26e37c279344",
+    "alt": "Quick Add",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/122cc1f2-4758-11ee-aafc-ee71c81e2755/5d01bc5b-da42-4d19-88ee-747963423e78.png",
+    "src": "https://images.amplenote.com/122cc1f2-4758-11ee-aafc-ee71c81e2755/5d01bc5b-da42-4d19-88ee-747963423e78.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Calendar Plugin, Tags: (-t/amplenote/plugins,auto-archived), UUID: 53974968-3dfd-11ef-bd39-26e37c279344",
+    "alt": "Calendar Plugin",
+    "tags": "-t/amplenote/plugins,auto-archived"
+  },
+  {
+    "href": "https://images.amplenote.com/911d1d4a-0d5f-11ef-81d2-2e40d90dfe07/56c6a5f9-b948-4f69-945d-a9f245ed83c8.png",
+    "src": "https://images.amplenote.com/911d1d4a-0d5f-11ef-81d2-2e40d90dfe07/56c6a5f9-b948-4f69-945d-a9f245ed83c8.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Weather Plugin, Tags: (-t/amplenote/plugins), UUID: c89aa2a4-3dfe-11ef-a187-6ef34fa959ce",
+    "alt": "Weather Plugin",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/911d1d4a-0d5f-11ef-81d2-2e40d90dfe07/b83200f2-0729-41c5-8909-c380bd210da3.png",
+    "src": "https://images.amplenote.com/911d1d4a-0d5f-11ef-81d2-2e40d90dfe07/b83200f2-0729-41c5-8909-c380bd210da3.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Weather Plugin, Tags: (-t/amplenote/plugins), UUID: c89aa2a4-3dfe-11ef-a187-6ef34fa959ce",
+    "alt": "Weather Plugin",
+    "tags": "-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/9e7103ae-dcc1-11ee-9791-c250cfa702b7/7631d141-13aa-464d-a091-a3cb75d232d3.png",
+    "src": "https://images.amplenote.com/9e7103ae-dcc1-11ee-9791-c250cfa702b7/7631d141-13aa-464d-a091-a3cb75d232d3.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: New Note Link Wizard (Plugin), Tags: (-t/amplenote/plugins,auto-archived), UUID: 4db41a6c-3e02-11ef-a187-6ef34fa959ce",
+    "alt": "New Note Link Wizard (Plugin)",
+    "tags": "-t/amplenote/plugins,auto-archived"
+  },
+  {
+    "href": "https://images.amplenote.com/9e7103ae-dcc1-11ee-9791-c250cfa702b7/7b174c23-5315-48cf-bd1b-6cd0afede0d3.png",
+    "src": "https://images.amplenote.com/9e7103ae-dcc1-11ee-9791-c250cfa702b7/7b174c23-5315-48cf-bd1b-6cd0afede0d3.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: New Note Link Wizard (Plugin), Tags: (-t/amplenote/plugins,auto-archived), UUID: 4db41a6c-3e02-11ef-a187-6ef34fa959ce",
+    "alt": "New Note Link Wizard (Plugin)",
+    "tags": "-t/amplenote/plugins,auto-archived"
+  },
+  {
+    "href": "https://images.amplenote.com/98bb7f10-3f5f-11ef-a51c-6ef34fa959ce/99b1cd34-dccc-40f7-8456-7a6a276a158e.png",
+    "src": "https://images.amplenote.com/98bb7f10-3f5f-11ef-a51c-6ef34fa959ce/99b1cd34-dccc-40f7-8456-7a6a276a158e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Tasks✅- Inbox📩, Tags: (-1-inbox), UUID: 98bb7f10-3f5f-11ef-a51c-6ef34fa959ce",
+    "alt": "Tasks✅- Inbox📩",
+    "tags": "-1-inbox"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Timestamp - Backup, Tags: (-t/amplenote/mine,-9-permanent), UUID: 8fd5fa2a-3f81-11ef-bb5f-26e37c279344",
+    "alt": "Timestamp - Backup",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0ea7166e-3866-11ee-8310-d60996a7cd9b/7a58ddaa-4fc0-4f43-a167-d55759bdef21.png",
+    "src": "https://images.amplenote.com/0ea7166e-3866-11ee-8310-d60996a7cd9b/7a58ddaa-4fc0-4f43-a167-d55759bdef21.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Template Selector Plugin, Tags: (auto-archived,-t/amplenote/plugins), UUID: f7df72fe-3f86-11ef-bb5f-26e37c279344",
+    "alt": "Template Selector Plugin",
+    "tags": "auto-archived,-t/amplenote/plugins"
+  },
+  {
+    "href": "https://images.amplenote.com/1efc8016-9055-11ee-96dc-e6e121a71ab4/9437c1d8-5b7f-41a8-a6cd-80e7349a06d7.gif",
+    "src": "https://images.amplenote.com/1efc8016-9055-11ee-96dc-e6e121a71ab4/9437c1d8-5b7f-41a8-a6cd-80e7349a06d7.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Plugin: Encrypted Blocks, Tags: (-t/amplenote/plugins,auto-archived), UUID: 9addac10-3fc2-11ef-a711-26e37c279344",
+    "alt": "Plugin: Encrypted Blocks",
+    "tags": "-t/amplenote/plugins,auto-archived"
+  },
+  {
+    "href": "https://images.amplenote.com/13de338a-8918-11ee-a863-1e01dee17a2b/be2ecb71-425e-472c-851a-42edd7660949.png",
+    "src": "https://images.amplenote.com/13de338a-8918-11ee-a863-1e01dee17a2b/be2ecb71-425e-472c-851a-42edd7660949.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Ampletag, Tags: (-t/amplenote/plugins,auto-archived), UUID: f89b1b58-3fc2-11ef-b5c3-6ef34fa959ce",
+    "alt": "Ampletag",
+    "tags": "-t/amplenote/plugins,auto-archived"
+  },
+  {
+    "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: August 3rd, 2024, Tags: (-0-planner), UUID: 444b9d56-50c7-11ef-8a24-f2c7410336d6",
+    "alt": "August 3rd, 2024",
+    "tags": "-0-planner"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6917f1aa-85bb-4047-9b68-6821b97aa161.gif",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6917f1aa-85bb-4047-9b68-6821b97aa161.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 (Note_Tag), Tags: (-9-permanent,-t/amplenote/mine), UUID: af332c24-4064-11ef-b9a5-6ef34fa959ce",
+    "alt": "Metadata 1.0 (Note_Tag)",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/779b31a5-04fe-48dc-9ed3-3a7aca8c73bf.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/779b31a5-04fe-48dc-9ed3-3a7aca8c73bf.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 (Note_Tag), Tags: (-9-permanent,-t/amplenote/mine), UUID: af332c24-4064-11ef-b9a5-6ef34fa959ce",
+    "alt": "Metadata 1.0 (Note_Tag)",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/40a5cd4a-2c0e-4246-860e-6557ccdaa7e1.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/40a5cd4a-2c0e-4246-860e-6557ccdaa7e1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 (Note_Tag), Tags: (-9-permanent,-t/amplenote/mine), UUID: af332c24-4064-11ef-b9a5-6ef34fa959ce",
+    "alt": "Metadata 1.0 (Note_Tag)",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/31c69256-5f10-475f-8eba-14eea1de0aa9.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/31c69256-5f10-475f-8eba-14eea1de0aa9.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 (Note_Tag), Tags: (-9-permanent,-t/amplenote/mine), UUID: af332c24-4064-11ef-b9a5-6ef34fa959ce",
+    "alt": "Metadata 1.0 (Note_Tag)",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/f1df288c-ea77-495f-a9f4-90e0cc94595e.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/f1df288c-ea77-495f-a9f4-90e0cc94595e.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 (Note_Tag), Tags: (-9-permanent,-t/amplenote/mine), UUID: af332c24-4064-11ef-b9a5-6ef34fa959ce",
+    "alt": "Metadata 1.0 (Note_Tag)",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 (Note_Tag), Tags: (-9-permanent,-t/amplenote/mine), UUID: af332c24-4064-11ef-b9a5-6ef34fa959ce",
+    "alt": "Metadata 1.0 (Note_Tag)",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6546600e-6524-4f12-a868-5857ad06c10a.png",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6546600e-6524-4f12-a868-5857ad06c10a.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 (Note_Tag), Tags: (-9-permanent,-t/amplenote/mine), UUID: af332c24-4064-11ef-b9a5-6ef34fa959ce",
+    "alt": "Metadata 1.0 (Note_Tag)",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/9d01945c-930e-43d0-bf1f-5826a5b0b69d.png",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/9d01945c-930e-43d0-bf1f-5826a5b0b69d.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Metadata 1.0 (Note_Tag), Tags: (-9-permanent,-t/amplenote/mine), UUID: af332c24-4064-11ef-b9a5-6ef34fa959ce",
+    "alt": "Metadata 1.0 (Note_Tag)",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/c006fe15-93d2-4396-af40-65defc06a560.gif",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/c006fe15-93d2-4396-af40-65defc06a560.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Tagger 2.0, Tags: (-t/amplenote/mine,-9-permanent), UUID: 672c22b2-521d-11ef-8c2f-0663d8339c46",
+    "alt": "Tagger 2.0",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2c4e0503-b825-4233-9c41-a36c14021a26.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2c4e0503-b825-4233-9c41-a36c14021a26.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Tagger 2.0, Tags: (-t/amplenote/mine,-9-permanent), UUID: 672c22b2-521d-11ef-8c2f-0663d8339c46",
+    "alt": "Tagger 2.0",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2359ae8d-62d3-4c97-bced-ba5856280fd6.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2359ae8d-62d3-4c97-bced-ba5856280fd6.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Tagger 2.0, Tags: (-t/amplenote/mine,-9-permanent), UUID: 672c22b2-521d-11ef-8c2f-0663d8339c46",
+    "alt": "Tagger 2.0",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/1ee37943-b5dd-4bcf-8e10-58c648463d06.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/1ee37943-b5dd-4bcf-8e10-58c648463d06.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Tagger 2.0, Tags: (-t/amplenote/mine,-9-permanent), UUID: 672c22b2-521d-11ef-8c2f-0663d8339c46",
+    "alt": "Tagger 2.0",
+    "tags": "-t/amplenote/mine,-9-permanent"
+  },
+  {
+    "href": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/78fc5971-c995-4404-b965-1447f488d08c.png",
+    "src": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/78fc5971-c995-4404-b965-1447f488d08c.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: 📸 Gallery, Tags: (-9-permanent,-t/amplenote/mine), UUID: 0e218580-5be7-11ef-b179-22074e34eefe",
+    "alt": "📸 Gallery",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/6cad8312-5418-4366-87de-271f44821d21.gif",
+    "src": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/6cad8312-5418-4366-87de-271f44821d21.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: 📸 Gallery, Tags: (-9-permanent,-t/amplenote/mine), UUID: 0e218580-5be7-11ef-b179-22074e34eefe",
+    "alt": "📸 Gallery",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/7af791e0-5a39-11ef-82af-22074e34eefe/f84da71d-58ee-4d5d-aefe-dcaf9d02b013.png",
+    "src": "https://images.amplenote.com/7af791e0-5a39-11ef-82af-22074e34eefe/f84da71d-58ee-4d5d-aefe-dcaf9d02b013.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: 📸 Gallery, Tags: (-9-permanent,-t/amplenote/mine), UUID: 0e218580-5be7-11ef-b179-22074e34eefe",
+    "alt": "📸 Gallery",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png",
+    "src": "https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: ANP IMAGE VIEWER, Tags: (-t/amplenote/mine), UUID: 8b8dac54-4591-11ef-a034-26e37c279344",
+    "alt": "ANP IMAGE VIEWER",
+    "tags": "-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/d123725e-3fe6-11ef-b01a-26e37c279344/364464e5-9c4a-4922-ac63-090ba99ef925.png",
+    "src": "https://images.amplenote.com/d123725e-3fe6-11ef-b01a-26e37c279344/364464e5-9c4a-4922-ac63-090ba99ef925.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Plugin Maniac, Tags: (-1-working-big,-t/amplenote/mine), UUID: d123725e-3fe6-11ef-b01a-26e37c279344",
+    "alt": "Plugin Maniac",
+    "tags": "-1-working-big,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/cb0ae040-441a-11ef-8a60-26e37c279344/fa26b930-05b7-41f3-a25e-c746efaa550e.png",
+    "src": "https://images.amplenote.com/cb0ae040-441a-11ef-8a60-26e37c279344/fa26b930-05b7-41f3-a25e-c746efaa550e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Tara Srinivasulu B💖, Tags: (-t/personal/mom), UUID: cb0ae040-441a-11ef-8a60-26e37c279344",
+    "alt": "Tara Srinivasulu B💖",
+    "tags": "-t/personal/mom"
+  },
+  {
+    "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224526, Tags: (-image-gallery), UUID: 499831a6-5cbc-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_224526",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224526, Tags: (-image-gallery), UUID: 499831a6-5cbc-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_224526",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224526, Tags: (-image-gallery), UUID: 499831a6-5cbc-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_224526",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224526, Tags: (-image-gallery), UUID: 499831a6-5cbc-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_224526",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224526, Tags: (-image-gallery), UUID: 499831a6-5cbc-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_224526",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/7af791e0-5a39-11ef-82af-22074e34eefe/f84da71d-58ee-4d5d-aefe-dcaf9d02b013.png",
+    "src": "https://images.amplenote.com/7af791e0-5a39-11ef-82af-22074e34eefe/f84da71d-58ee-4d5d-aefe-dcaf9d02b013.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7ebfbf76-dd43-4996-bae3-9f64a40e011c.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7ebfbf76-dd43-4996-bae3-9f64a40e011c.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/779b31a5-04fe-48dc-9ed3-3a7aca8c73bf.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/779b31a5-04fe-48dc-9ed3-3a7aca8c73bf.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/40a5cd4a-2c0e-4246-860e-6557ccdaa7e1.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/40a5cd4a-2c0e-4246-860e-6557ccdaa7e1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/31c69256-5f10-475f-8eba-14eea1de0aa9.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/31c69256-5f10-475f-8eba-14eea1de0aa9.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/f1df288c-ea77-495f-a9f4-90e0cc94595e.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/f1df288c-ea77-495f-a9f4-90e0cc94595e.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/e12d34a5-bf5d-4a55-966c-3c5af653828a.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/e12d34a5-bf5d-4a55-966c-3c5af653828a.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7d1c3943-2a47-4712-8404-766a9b6b9178.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7d1c3943-2a47-4712-8404-766a9b6b9178.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/9939863b-db9a-4bb8-8891-75ab303053b3.png",
+    "src": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/9939863b-db9a-4bb8-8891-75ab303053b3.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/f83185df-258c-4d20-82d6-4907bc36c329.png",
+    "src": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/f83185df-258c-4d20-82d6-4907bc36c329.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/f71ed840-b94b-4943-8976-339ab188e553.gif",
+    "src": "https://images.amplenote.com/7cd14f88-0ccb-11ec-b829-427796570f24/f71ed840-b94b-4943-8976-339ab188e553.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/afed7270-44f9-11ef-bdf6-26e37c279344/4ebfb802-e49d-4d8f-b574-f70d285edf97.gif",
+    "src": "https://images.amplenote.com/afed7270-44f9-11ef-bdf6-26e37c279344/4ebfb802-e49d-4d8f-b574-f70d285edf97.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/d36ac268-caec-40c3-81b2-b119e2590c7c.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/d36ac268-caec-40c3-81b2-b119e2590c7c.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/dc8f9bed-7a9f-4ba5-9394-96eef212474f.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/dc8f9bed-7a9f-4ba5-9394-96eef212474f.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/73cf91f6-cfc4-4a77-9187-dd20da6a76c8.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/73cf91f6-cfc4-4a77-9187-dd20da6a76c8.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/b5f10f91-0261-4c54-bc90-a2de82deb8e8.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/b5f10f91-0261-4c54-bc90-a2de82deb8e8.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/19f40031-d5c6-45fe-a578-9da9b2615cbb.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/19f40031-d5c6-45fe-a578-9da9b2615cbb.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/58d7d455-8e22-4656-b300-d5293bafb533.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/58d7d455-8e22-4656-b300-d5293bafb533.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/f7ad0a6a-d56a-4f36-8c5a-686257a78901.png",
+    "src": "https://images.amplenote.com/f38439b4-4342-11ef-b895-26e37c279344/f7ad0a6a-d56a-4f36-8c5a-686257a78901.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/3fb8955e-4664-11ef-9826-26e37c279344/f2e05247-cb94-4676-9767-aa632ca8b73f.png",
+    "src": "https://images.amplenote.com/3fb8955e-4664-11ef-9826-26e37c279344/f2e05247-cb94-4676-9767-aa632ca8b73f.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/b320ed3c-97df-4f05-8f84-87a9d3094193.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/b320ed3c-97df-4f05-8f84-87a9d3094193.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/1ada5676-4b3d-4f1a-bfa5-a7e0661bbcf8.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/1ada5676-4b3d-4f1a-bfa5-a7e0661bbcf8.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/93a5803c-a076-4468-9448-8f63025a997b.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/93a5803c-a076-4468-9448-8f63025a997b.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/6a782d89-3359-4cbd-993f-f4fe6fda1153.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/6a782d89-3359-4cbd-993f-f4fe6fda1153.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/bb8aca2e-38fe-41a2-8485-d2584452998d.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/bb8aca2e-38fe-41a2-8485-d2584452998d.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/2ab4282b-e5ba-4a8f-8759-967e9991bb95.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/2ab4282b-e5ba-4a8f-8759-967e9991bb95.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/23d5a247-4642-41ac-bf1b-83e90ef569ea.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/23d5a247-4642-41ac-bf1b-83e90ef569ea.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/a7632831-938d-46f1-ba6b-7e5319703c3c.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/a7632831-938d-46f1-ba6b-7e5319703c3c.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/0358ed27-c23f-4ddb-b548-461da6264266.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/0358ed27-c23f-4ddb-b548-461da6264266.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/d73fb9ac-589d-11ef-9a1a-220e436b8a7b/0f36dad0-ab7b-4248-af30-3064d61baad5.png",
+    "src": "https://images.amplenote.com/d73fb9ac-589d-11ef-9a1a-220e436b8a7b/0f36dad0-ab7b-4248-af30-3064d61baad5.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/09eceb8a-5020-11ef-ab4e-2e138d9b4cca/a62ed6d3-10d4-486a-9bab-1992adf74bb1.png",
+    "src": "https://images.amplenote.com/09eceb8a-5020-11ef-ab4e-2e138d9b4cca/a62ed6d3-10d4-486a-9bab-1992adf74bb1.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/3140f0f2-c96c-480b-8136-ecbf1bbfddb5.png",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/3140f0f2-c96c-480b-8136-ecbf1bbfddb5.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/3e521249-2d38-4edc-a4ef-fc50c8e321ed.png",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/3e521249-2d38-4edc-a4ef-fc50c8e321ed.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/14a5d80d-3fec-41dc-bd44-1d1dc4ae682d.png",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/14a5d80d-3fec-41dc-bd44-1d1dc4ae682d.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/c4948aee-f5da-444a-a1ef-63c1db41db63.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/c4948aee-f5da-444a-a1ef-63c1db41db63.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/81c696c1-c0f1-4af6-8f3f-53ea2c5db181.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/81c696c1-c0f1-4af6-8f3f-53ea2c5db181.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/76d2d41f-deec-49a1-93bd-b8b7afadd41d.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/76d2d41f-deec-49a1-93bd-b8b7afadd41d.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/e61413f9-b59c-406a-a21d-ae9024934884.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/e61413f9-b59c-406a-a21d-ae9024934884.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/ce9bbc75-0c94-4575-86ce-ad4b91e1f827.gif",
+    "src": "https://images.amplenote.com/66beb850-0755-11ec-bd24-86f41816aee9/ce9bbc75-0c94-4575-86ce-ad4b91e1f827.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/6591e720-dab3-11ee-a972-c250cfa702b7/e2cb2f3f-e6ee-44e5-a651-250d8b452d08.gif",
+    "src": "https://images.amplenote.com/6591e720-dab3-11ee-a972-c250cfa702b7/e2cb2f3f-e6ee-44e5-a651-250d8b452d08.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/e5a3ed9e-383f-11ee-8310-d60996a7cd9b/52c442d6-db01-4e4c-86d5-74c07d98df5e.png",
+    "src": "https://images.amplenote.com/e5a3ed9e-383f-11ee-8310-d60996a7cd9b/52c442d6-db01-4e4c-86d5-74c07d98df5e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/4a3d5cd4-086d-11ee-889d-8e37e8b27b1d/9ea6b8fe-6e3b-46e7-8343-6017bd41f9f0.png",
+    "src": "https://images.amplenote.com/4a3d5cd4-086d-11ee-889d-8e37e8b27b1d/9ea6b8fe-6e3b-46e7-8343-6017bd41f9f0.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/4a3d5cd4-086d-11ee-889d-8e37e8b27b1d/3343864c-035f-49f4-8322-80d43ef1f8e5.png",
+    "src": "https://images.amplenote.com/4a3d5cd4-086d-11ee-889d-8e37e8b27b1d/3343864c-035f-49f4-8322-80d43ef1f8e5.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/95450633-bff1-453f-9270-6785e42bf385.gif",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/95450633-bff1-453f-9270-6785e42bf385.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/7b24c4c7-1e10-48d0-b39c-9e614f8b16a4.png",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/7b24c4c7-1e10-48d0-b39c-9e614f8b16a4.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/98d9494e-4726-4599-861e-3dc67c3e1dd7.png",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/98d9494e-4726-4599-861e-3dc67c3e1dd7.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/1f9324d6-c971-11ed-acca-9e481d8d09ce/8baa8443-4552-464d-8f15-a470a27893ed.jpg",
+    "src": "https://images.amplenote.com/1f9324d6-c971-11ed-acca-9e481d8d09ce/8baa8443-4552-464d-8f15-a470a27893ed.jpg",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/d29e5676-57ca-11ee-a42d-066808e24877/e6c7d52f-27d3-4b14-b8bd-1245e7aef429.png",
+    "src": "https://images.amplenote.com/d29e5676-57ca-11ee-a42d-066808e24877/e6c7d52f-27d3-4b14-b8bd-1245e7aef429.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/09893384-58bc-11ef-a6ef-b6c19b417745/201723a4-0325-4384-8c38-fa98cda7423e.png",
+    "src": "https://images.amplenote.com/09893384-58bc-11ef-a6ef-b6c19b417745/201723a4-0325-4384-8c38-fa98cda7423e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/1701987e-48c4-11ef-949a-6ef34fa959ce/8f9a9fa0-99dd-45fe-8946-d30fd10ce3c2.gif",
+    "src": "https://images.amplenote.com/1701987e-48c4-11ef-949a-6ef34fa959ce/8f9a9fa0-99dd-45fe-8946-d30fd10ce3c2.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cd42e680-f98f-11ee-b77a-96fa79d3b18e/05bd9054-9aa0-4363-916a-078da960eba0.gif",
+    "src": "https://images.amplenote.com/cd42e680-f98f-11ee-b77a-96fa79d3b18e/05bd9054-9aa0-4363-916a-078da960eba0.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f22af900-8ba4-11ee-bbb6-1e01dee17a2b/d52f5c53-7792-4605-a9b4-f52004258443.gif",
+    "src": "https://images.amplenote.com/f22af900-8ba4-11ee-bbb6-1e01dee17a2b/d52f5c53-7792-4605-a9b4-f52004258443.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/dab3062a-3ead-11ef-a563-26e37c279344/48fd3b8d-1553-40b0-8f29-b8db0f8d9c3e.gif",
+    "src": "https://images.amplenote.com/dab3062a-3ead-11ef-a563-26e37c279344/48fd3b8d-1553-40b0-8f29-b8db0f8d9c3e.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0a2e7014-31cc-11ee-9c16-d60996a7cd9b/d44938c3-04e5-40b0-a212-d07049e8fba5.png",
+    "src": "https://images.amplenote.com/0a2e7014-31cc-11ee-9c16-d60996a7cd9b/d44938c3-04e5-40b0-a212-d07049e8fba5.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/413f16aa-4ad4-11ee-b384-32729d26749b/7a7909c8-508d-40af-9281-ff0ffa549ac2.png",
+    "src": "https://images.amplenote.com/413f16aa-4ad4-11ee-b384-32729d26749b/7a7909c8-508d-40af-9281-ff0ffa549ac2.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/413f16aa-4ad4-11ee-b384-32729d26749b/cc3205fb-e2a0-4c7e-b02d-3e8873f7edad.png",
+    "src": "https://images.amplenote.com/413f16aa-4ad4-11ee-b384-32729d26749b/cc3205fb-e2a0-4c7e-b02d-3e8873f7edad.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/fe39b41c-31fd-11ee-b6bc-fa0c75f9d0b6/6a12c7ea-db3d-4e52-a735-f01b17648e87.gif",
+    "src": "https://images.amplenote.com/fe39b41c-31fd-11ee-b6bc-fa0c75f9d0b6/6a12c7ea-db3d-4e52-a735-f01b17648e87.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/122cc1f2-4758-11ee-aafc-ee71c81e2755/5d01bc5b-da42-4d19-88ee-747963423e78.png",
+    "src": "https://images.amplenote.com/122cc1f2-4758-11ee-aafc-ee71c81e2755/5d01bc5b-da42-4d19-88ee-747963423e78.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/911d1d4a-0d5f-11ef-81d2-2e40d90dfe07/56c6a5f9-b948-4f69-945d-a9f245ed83c8.png",
+    "src": "https://images.amplenote.com/911d1d4a-0d5f-11ef-81d2-2e40d90dfe07/56c6a5f9-b948-4f69-945d-a9f245ed83c8.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/911d1d4a-0d5f-11ef-81d2-2e40d90dfe07/b83200f2-0729-41c5-8909-c380bd210da3.png",
+    "src": "https://images.amplenote.com/911d1d4a-0d5f-11ef-81d2-2e40d90dfe07/b83200f2-0729-41c5-8909-c380bd210da3.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/9e7103ae-dcc1-11ee-9791-c250cfa702b7/7631d141-13aa-464d-a091-a3cb75d232d3.png",
+    "src": "https://images.amplenote.com/9e7103ae-dcc1-11ee-9791-c250cfa702b7/7631d141-13aa-464d-a091-a3cb75d232d3.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/9e7103ae-dcc1-11ee-9791-c250cfa702b7/7b174c23-5315-48cf-bd1b-6cd0afede0d3.png",
+    "src": "https://images.amplenote.com/9e7103ae-dcc1-11ee-9791-c250cfa702b7/7b174c23-5315-48cf-bd1b-6cd0afede0d3.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/98bb7f10-3f5f-11ef-a51c-6ef34fa959ce/99b1cd34-dccc-40f7-8456-7a6a276a158e.png",
+    "src": "https://images.amplenote.com/98bb7f10-3f5f-11ef-a51c-6ef34fa959ce/99b1cd34-dccc-40f7-8456-7a6a276a158e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0ea7166e-3866-11ee-8310-d60996a7cd9b/7a58ddaa-4fc0-4f43-a167-d55759bdef21.png",
+    "src": "https://images.amplenote.com/0ea7166e-3866-11ee-8310-d60996a7cd9b/7a58ddaa-4fc0-4f43-a167-d55759bdef21.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/1efc8016-9055-11ee-96dc-e6e121a71ab4/9437c1d8-5b7f-41a8-a6cd-80e7349a06d7.gif",
+    "src": "https://images.amplenote.com/1efc8016-9055-11ee-96dc-e6e121a71ab4/9437c1d8-5b7f-41a8-a6cd-80e7349a06d7.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/13de338a-8918-11ee-a863-1e01dee17a2b/be2ecb71-425e-472c-851a-42edd7660949.png",
+    "src": "https://images.amplenote.com/13de338a-8918-11ee-a863-1e01dee17a2b/be2ecb71-425e-472c-851a-42edd7660949.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6917f1aa-85bb-4047-9b68-6821b97aa161.gif",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6917f1aa-85bb-4047-9b68-6821b97aa161.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6546600e-6524-4f12-a868-5857ad06c10a.png",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6546600e-6524-4f12-a868-5857ad06c10a.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/9d01945c-930e-43d0-bf1f-5826a5b0b69d.png",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/9d01945c-930e-43d0-bf1f-5826a5b0b69d.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/c006fe15-93d2-4396-af40-65defc06a560.gif",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/c006fe15-93d2-4396-af40-65defc06a560.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2c4e0503-b825-4233-9c41-a36c14021a26.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2c4e0503-b825-4233-9c41-a36c14021a26.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2359ae8d-62d3-4c97-bced-ba5856280fd6.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2359ae8d-62d3-4c97-bced-ba5856280fd6.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/1ee37943-b5dd-4bcf-8e10-58c648463d06.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/1ee37943-b5dd-4bcf-8e10-58c648463d06.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/78fc5971-c995-4404-b965-1447f488d08c.png",
+    "src": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/78fc5971-c995-4404-b965-1447f488d08c.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/6cad8312-5418-4366-87de-271f44821d21.gif",
+    "src": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/6cad8312-5418-4366-87de-271f44821d21.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png",
+    "src": "https://images.amplenote.com/8b8dac54-4591-11ef-a034-26e37c279344/56129735-2386-40da-95a2-9906d8d66ca6.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/d123725e-3fe6-11ef-b01a-26e37c279344/364464e5-9c4a-4922-ac63-090ba99ef925.png",
+    "src": "https://images.amplenote.com/d123725e-3fe6-11ef-b01a-26e37c279344/364464e5-9c4a-4922-ac63-090ba99ef925.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cb0ae040-441a-11ef-8a60-26e37c279344/fa26b930-05b7-41f3-a25e-c746efaa550e.png",
+    "src": "https://images.amplenote.com/cb0ae040-441a-11ef-8a60-26e37c279344/fa26b930-05b7-41f3-a25e-c746efaa550e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/d53ebefc-5495-11ef-9d9d-f2c7410336d6/08a274a9-01f8-4580-ba90-ee15c07a7116.jpg",
+    "src": "https://images.amplenote.com/d53ebefc-5495-11ef-9d9d-f2c7410336d6/08a274a9-01f8-4580-ba90-ee15c07a7116.jpg",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/e3957368-5555-11ef-8729-f2c7410336d6/e26138db-fd3f-43a2-b93e-b9bbc306aabd.png",
+    "src": "https://images.amplenote.com/e3957368-5555-11ef-8729-f2c7410336d6/e26138db-fd3f-43a2-b93e-b9bbc306aabd.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/e3957368-5555-11ef-8729-f2c7410336d6/4afb3040-c450-4dbb-8fd0-ef8e11438e64.png",
+    "src": "https://images.amplenote.com/e3957368-5555-11ef-8729-f2c7410336d6/4afb3040-c450-4dbb-8fd0-ef8e11438e64.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/f9253dd6-91ff-11ee-b6cc-ee17344ed5d4/37f6089d-84c7-43c6-9f13-0b5411457f5a.gif",
+    "src": "https://images.amplenote.com/f9253dd6-91ff-11ee-b6cc-ee17344ed5d4/37f6089d-84c7-43c6-9f13-0b5411457f5a.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/b436a7d4-8cae-40ce-b91a-d8313851d0c4.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/b436a7d4-8cae-40ce-b91a-d8313851d0c4.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/a0f0e28f-341c-4fea-b572-eaf2f17cf95a.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/a0f0e28f-341c-4fea-b572-eaf2f17cf95a.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/c6f44ab1-9091-4ba3-acd4-64718954524c.gif",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/c6f44ab1-9091-4ba3-acd4-64718954524c.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/f2d89569-eba1-4e7e-b261-580b51063069.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/f2d89569-eba1-4e7e-b261-580b51063069.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/bd68fecd-2a39-4adb-81df-2d97a2141bf1.gif",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/bd68fecd-2a39-4adb-81df-2d97a2141bf1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/175e3fef-02a5-42b9-8151-bacfd8ba2792.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/175e3fef-02a5-42b9-8151-bacfd8ba2792.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/add38a07-c5c4-45e7-b665-b7341866480b.gif",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/add38a07-c5c4-45e7-b665-b7341866480b.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/af0ef31d-753a-41bc-a40c-9d7faf148aa8.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/af0ef31d-753a-41bc-a40c-9d7faf148aa8.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/8a13de0a-603e-420e-b735-95a19b5b9b23.gif",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/8a13de0a-603e-420e-b735-95a19b5b9b23.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/661329c0-a07e-11ea-b650-5669c178f1f1/7444425e-da5a-4381-bfae-8464744020fc.png",
+    "src": "https://images.amplenote.com/661329c0-a07e-11ea-b650-5669c178f1f1/7444425e-da5a-4381-bfae-8464744020fc.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_224742, Tags: (-image-gallery), UUID: 9aa54c00-5cbc-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_224742",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_230056, Tags: (-image-gallery), UUID: 73da15a4-5cbe-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_230056",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_230056, Tags: (-image-gallery), UUID: 73da15a4-5cbe-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_230056",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_230056, Tags: (-image-gallery), UUID: 73da15a4-5cbe-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_230056",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_230056, Tags: (-image-gallery), UUID: 73da15a4-5cbe-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_230056",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_230056, Tags: (-image-gallery), UUID: 73da15a4-5cbe-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240817_230056",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "src": "https://images.amplenote.com/a8bd423c-4265-11ef-a3f4-6ef34fa959ce/8bacda78-06de-462d-b0ca-ed4c0ea0decc.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_232034, Tags: (-image-gallery), UUID: 31fe45e4-5cc1-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_232034",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/25f75544-9360-4d38-bcc9-bb6baf0b9051.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_232034, Tags: (-image-gallery), UUID: 31fe45e4-5cc1-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_232034",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "src": "https://images.amplenote.com/5e9cfcec-5737-11ef-8e4c-d62e4d7f85cd/5a10822b-405c-492d-8591-f86ab0655a91.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_232034, Tags: (-image-gallery), UUID: 31fe45e4-5cc1-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_232034",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "src": "https://images.amplenote.com/b9b33974-4653-11ef-9826-26e37c279344/c47b2c01-35cf-4d19-b81e-70d020869267.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_232034, Tags: (-image-gallery), UUID: 31fe45e4-5cc1-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_232034",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "src": "https://images.amplenote.com/444b9d56-50c7-11ef-8a24-f2c7410336d6/d5bfbb07-ad43-4b65-a850-9169d50f1b68.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240817_232034, Tags: (-image-gallery), UUID: 31fe45e4-5cc1-11ef-b5d3-b6c19b417745",
+    "alt": "Image Gallery List 20240817_232034",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/95450633-bff1-453f-9270-6785e42bf385.gif",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/95450633-bff1-453f-9270-6785e42bf385.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Notes Reviewer🕵, Tags: (-9-permanent,-t/amplenote/mine), UUID: b7e36f98-532c-11ef-8716-0663d8339c46",
+    "alt": "Notes Reviewer🕵",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/7b24c4c7-1e10-48d0-b39c-9e614f8b16a4.png",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/7b24c4c7-1e10-48d0-b39c-9e614f8b16a4.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Notes Reviewer🕵, Tags: (-9-permanent,-t/amplenote/mine), UUID: b7e36f98-532c-11ef-8716-0663d8339c46",
+    "alt": "Notes Reviewer🕵",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/98d9494e-4726-4599-861e-3dc67c3e1dd7.png",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/98d9494e-4726-4599-861e-3dc67c3e1dd7.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Notes Reviewer🕵, Tags: (-9-permanent,-t/amplenote/mine), UUID: b7e36f98-532c-11ef-8716-0663d8339c46",
+    "alt": "Notes Reviewer🕵",
+    "tags": "-9-permanent,-t/amplenote/mine"
+  },
+  {
+    "href": "https://images.amplenote.com/d53ebefc-5495-11ef-9d9d-f2c7410336d6/08a274a9-01f8-4580-ba90-ee15c07a7116.jpg",
+    "src": "https://images.amplenote.com/d53ebefc-5495-11ef-9d9d-f2c7410336d6/08a274a9-01f8-4580-ba90-ee15c07a7116.jpg",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Detailed Analysis - Behavioral Changes!, Tags: (-t/psychology), UUID: d53ebefc-5495-11ef-9d9d-f2c7410336d6",
+    "alt": "Detailed Analysis - Behavioral Changes!",
+    "tags": "-t/psychology"
+  },
+  {
+    "href": "https://images.amplenote.com/e3957368-5555-11ef-8729-f2c7410336d6/e26138db-fd3f-43a2-b93e-b9bbc306aabd.png",
+    "src": "https://images.amplenote.com/e3957368-5555-11ef-8729-f2c7410336d6/e26138db-fd3f-43a2-b93e-b9bbc306aabd.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Thread Kaappu or Raksha Bandana Significance!, Tags: (-t/spirituality), UUID: e3957368-5555-11ef-8729-f2c7410336d6",
+    "alt": "Thread Kaappu or Raksha Bandana Significance!",
+    "tags": "-t/spirituality"
+  },
+  {
+    "href": "https://images.amplenote.com/e3957368-5555-11ef-8729-f2c7410336d6/4afb3040-c450-4dbb-8fd0-ef8e11438e64.png",
+    "src": "https://images.amplenote.com/e3957368-5555-11ef-8729-f2c7410336d6/4afb3040-c450-4dbb-8fd0-ef8e11438e64.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Thread Kaappu or Raksha Bandana Significance!, Tags: (-t/spirituality), UUID: e3957368-5555-11ef-8729-f2c7410336d6",
+    "alt": "Thread Kaappu or Raksha Bandana Significance!",
+    "tags": "-t/spirituality"
+  },
+  {
+    "href": "https://images.amplenote.com/f9253dd6-91ff-11ee-b6cc-ee17344ed5d4/37f6089d-84c7-43c6-9f13-0b5411457f5a.gif",
+    "src": "https://images.amplenote.com/f9253dd6-91ff-11ee-b6cc-ee17344ed5d4/37f6089d-84c7-43c6-9f13-0b5411457f5a.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Plugin: Markdown, Tags: (-t/amplenote/plugins,auto-archived), UUID: a23f2592-3fc2-11ef-a711-26e37c279344",
+    "alt": "Plugin: Markdown",
+    "tags": "-t/amplenote/plugins,auto-archived"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/b436a7d4-8cae-40ce-b91a-d8313851d0c4.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/b436a7d4-8cae-40ce-b91a-d8313851d0c4.png",
+    "caption": "*Idea Execution Funnel: try to capture everything, only the best stuff makes its way to Tasks and Calendar*<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/a0f0e28f-341c-4fea-b572-eaf2f17cf95a.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/a0f0e28f-341c-4fea-b572-eaf2f17cf95a.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/c6f44ab1-9091-4ba3-acd4-64718954524c.gif",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/c6f44ab1-9091-4ba3-acd4-64718954524c.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/f2d89569-eba1-4e7e-b261-580b51063069.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/f2d89569-eba1-4e7e-b261-580b51063069.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/bd68fecd-2a39-4adb-81df-2d97a2141bf1.gif",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/bd68fecd-2a39-4adb-81df-2d97a2141bf1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/175e3fef-02a5-42b9-8151-bacfd8ba2792.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/175e3fef-02a5-42b9-8151-bacfd8ba2792.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/add38a07-c5c4-45e7-b665-b7341866480b.gif",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/add38a07-c5c4-45e7-b665-b7341866480b.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/af0ef31d-753a-41bc-a40c-9d7faf148aa8.png",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/af0ef31d-753a-41bc-a40c-9d7faf148aa8.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/8a13de0a-603e-420e-b735-95a19b5b9b23.gif",
+    "src": "https://images.amplenote.com/892e49fa-0755-11ec-bd24-86f41816aee9/8a13de0a-603e-420e-b735-95a19b5b9b23.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/661329c0-a07e-11ea-b650-5669c178f1f1/7444425e-da5a-4381-bfae-8464744020fc.png",
+    "src": "https://images.amplenote.com/661329c0-a07e-11ea-b650-5669c178f1f1/7444425e-da5a-4381-bfae-8464744020fc.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Amplenote: the 5-minute startup guide, Tags: (-t/amplenote), UUID: 8cbee0c4-2fcb-11ef-bb65-3e95ff25d0e5",
+    "alt": "Amplenote: the 5-minute startup guide",
+    "tags": "-t/amplenote"
+  },
+  {
+    "href": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/78fc5971-c995-4404-b965-1447f488d08c.png",
+    "src": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/78fc5971-c995-4404-b965-1447f488d08c.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/6cad8312-5418-4366-87de-271f44821d21.gif",
+    "src": "https://images.amplenote.com/0e218580-5be7-11ef-b179-22074e34eefe/6cad8312-5418-4366-87de-271f44821d21.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/7af791e0-5a39-11ef-82af-22074e34eefe/f84da71d-58ee-4d5d-aefe-dcaf9d02b013.png",
+    "src": "https://images.amplenote.com/7af791e0-5a39-11ef-82af-22074e34eefe/f84da71d-58ee-4d5d-aefe-dcaf9d02b013.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7ebfbf76-dd43-4996-bae3-9f64a40e011c.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7ebfbf76-dd43-4996-bae3-9f64a40e011c.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/779b31a5-04fe-48dc-9ed3-3a7aca8c73bf.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/779b31a5-04fe-48dc-9ed3-3a7aca8c73bf.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/40a5cd4a-2c0e-4246-860e-6557ccdaa7e1.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/40a5cd4a-2c0e-4246-860e-6557ccdaa7e1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/31c69256-5f10-475f-8eba-14eea1de0aa9.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/31c69256-5f10-475f-8eba-14eea1de0aa9.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/f1df288c-ea77-495f-a9f4-90e0cc94595e.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/f1df288c-ea77-495f-a9f4-90e0cc94595e.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/9fd990db-8b08-4fba-9ef7-7fcd452c2a77.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/e12d34a5-bf5d-4a55-966c-3c5af653828a.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/e12d34a5-bf5d-4a55-966c-3c5af653828a.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7d1c3943-2a47-4712-8404-766a9b6b9178.png",
+    "src": "https://images.amplenote.com/c46c5e60-4066-11ef-832f-26e37c279344/7d1c3943-2a47-4712-8404-766a9b6b9178.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/afed7270-44f9-11ef-bdf6-26e37c279344/4ebfb802-e49d-4d8f-b574-f70d285edf97.gif",
+    "src": "https://images.amplenote.com/afed7270-44f9-11ef-bdf6-26e37c279344/4ebfb802-e49d-4d8f-b574-f70d285edf97.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/b320ed3c-97df-4f05-8f84-87a9d3094193.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/b320ed3c-97df-4f05-8f84-87a9d3094193.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/1ada5676-4b3d-4f1a-bfa5-a7e0661bbcf8.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/1ada5676-4b3d-4f1a-bfa5-a7e0661bbcf8.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/93a5803c-a076-4468-9448-8f63025a997b.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/93a5803c-a076-4468-9448-8f63025a997b.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/6a782d89-3359-4cbd-993f-f4fe6fda1153.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/6a782d89-3359-4cbd-993f-f4fe6fda1153.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/bb8aca2e-38fe-41a2-8485-d2584452998d.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/bb8aca2e-38fe-41a2-8485-d2584452998d.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/2ab4282b-e5ba-4a8f-8759-967e9991bb95.gif",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/2ab4282b-e5ba-4a8f-8759-967e9991bb95.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/23d5a247-4642-41ac-bf1b-83e90ef569ea.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/23d5a247-4642-41ac-bf1b-83e90ef569ea.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/a7632831-938d-46f1-ba6b-7e5319703c3c.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/a7632831-938d-46f1-ba6b-7e5319703c3c.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/0358ed27-c23f-4ddb-b548-461da6264266.png",
+    "src": "https://images.amplenote.com/cfc0398e-467a-11ef-bc7e-26e37c279344/0358ed27-c23f-4ddb-b548-461da6264266.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/1701987e-48c4-11ef-949a-6ef34fa959ce/8f9a9fa0-99dd-45fe-8946-d30fd10ce3c2.gif",
+    "src": "https://images.amplenote.com/1701987e-48c4-11ef-949a-6ef34fa959ce/8f9a9fa0-99dd-45fe-8946-d30fd10ce3c2.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/7f9efcdf-d517-456f-acd0-870800a65916.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a9f6a0c9-7baa-4b64-86c7-9cae1b9e18f2.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a94e9044-1c64-485a-89a5-69932d6cc388.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/c4e8c097-99d7-4c95-9dbc-3371ab39a7a1.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/6f77a141-be7b-4f99-a8cb-5bd35a8eeb6a.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f3642964-b336-4910-ad6c-03a52e99c1a8.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/f239dea8-94f5-43c4-8b91-eb11c439f99e.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/9d07ce02-9619-402a-818e-37ee8ebcf995.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/2bca9c21-a772-4848-82b5-b051d1e0fd86.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "src": "https://images.amplenote.com/0fc33c04-3d0a-11ef-92e0-6ef34fa959ce/a24be77e-7530-4377-9ebb-78eb130eff34.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/dab3062a-3ead-11ef-a563-26e37c279344/48fd3b8d-1553-40b0-8f29-b8db0f8d9c3e.gif",
+    "src": "https://images.amplenote.com/dab3062a-3ead-11ef-a563-26e37c279344/48fd3b8d-1553-40b0-8f29-b8db0f8d9c3e.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6917f1aa-85bb-4047-9b68-6821b97aa161.gif",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6917f1aa-85bb-4047-9b68-6821b97aa161.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6546600e-6524-4f12-a868-5857ad06c10a.png",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/6546600e-6524-4f12-a868-5857ad06c10a.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/9d01945c-930e-43d0-bf1f-5826a5b0b69d.png",
+    "src": "https://images.amplenote.com/af332c24-4064-11ef-b9a5-6ef34fa959ce/9d01945c-930e-43d0-bf1f-5826a5b0b69d.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/c006fe15-93d2-4396-af40-65defc06a560.gif",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/c006fe15-93d2-4396-af40-65defc06a560.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2c4e0503-b825-4233-9c41-a36c14021a26.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2c4e0503-b825-4233-9c41-a36c14021a26.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2359ae8d-62d3-4c97-bced-ba5856280fd6.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/2359ae8d-62d3-4c97-bced-ba5856280fd6.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/1ee37943-b5dd-4bcf-8e10-58c648463d06.png",
+    "src": "https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/1ee37943-b5dd-4bcf-8e10-58c648463d06.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/95450633-bff1-453f-9270-6785e42bf385.gif",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/95450633-bff1-453f-9270-6785e42bf385.gif",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/7b24c4c7-1e10-48d0-b39c-9e614f8b16a4.png",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/7b24c4c7-1e10-48d0-b39c-9e614f8b16a4.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  },
+  {
+    "href": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/98d9494e-4726-4599-861e-3dc67c3e1dd7.png",
+    "src": "https://images.amplenote.com/b7e36f98-532c-11ef-8716-0663d8339c46/98d9494e-4726-4599-861e-3dc67c3e1dd7.png",
+    "caption": "No Caption Available or Unable to Fetch.<br>Notename: Image Gallery List 20240818_011450, Tags: (-image-gallery), UUID: 2874d2bc-5cd1-11ef-a80b-22074e34eefe",
+    "alt": "Image Gallery List 20240818_011450",
+    "tags": "-image-gallery"
+  }
+]
+;
+
+// Function to populate the gallery
+function populateGallery(data) {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = ''; // Clear existing content
+    data.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('uk-inline');
+        div.innerHTML = `
+            <a href="${item.href}" data-caption="${item.caption}">
+               <img src="${item.src}" alt="${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+            </a>
+        `;
+        gallery.appendChild(div);
+    });
+}
+
+// Function to create and update tag buttons
+function updateTagButtons(data) {
+    const tagsSet = new Set();
+    data.forEach(item => {
+        item.tags.split(',').map(tag => tag.trim()).forEach(tag => tagsSet.add(tag));
+    });
+
+    const tagButtons = document.getElementById('tag-buttons');
+    tagButtons.innerHTML = ''; // Clear existing buttons
+
+    // Create tag buttons ensuring uniqueness
+    tagsSet.forEach(tag => {
+        const button = document.createElement('button');
+        button.className = 'uk-button uk-button-default uk-button-small';
+        button.innerHTML = `
+            <span class="uk-margin-small-right" uk-icon="icon: hashtag;"></span>
+            ${tag}
+        `;
+        button.dataset.tag = tag; // Store tag in data attribute
+        button.addEventListener('click', () => toggleTagFilter(button, tag));
+        tagButtons.appendChild(button);
+    });
+}
+
+// Function to toggle filter and button active state
+function toggleTagFilter(button, tag) {
+    const isActive = button.classList.contains('uk-button-primary');
+    
+    if (isActive) {
+        button.classList.remove('uk-button-primary');
+        button.classList.add('uk-button-default');
+        button.classList.remove('uk-button-small');
+        button.classList.add('uk-button-small');
+
+        // If no other buttons are active, show all images
+        if (document.querySelectorAll('#tag-buttons .uk-button-primary').length === 0) {
+            populateGallery(jsonData);
+        } else {
+            filterGallery(); // Apply the current active filters
+        }
+    } else {
+        document.querySelectorAll('#tag-buttons button').forEach(btn => {
+            btn.classList.remove('uk-button-primary');
+            btn.classList.add('uk-button-default');
+            btn.classList.remove('uk-button-small');
+            btn.classList.add('uk-button-small');
+        });
+        button.classList.add('uk-button-primary');
+        button.classList.remove('uk-button-default');
+        button.classList.add('uk-button-small');
+        button.classList.remove('uk-button-small');
+        filterByTag(tag);
+    }
+}
+
+// Function to filter images by tag
+function filterByTag(tag) {
+    const filteredData = jsonData.filter(item => {
+        const tags = item.tags.split(',').map(t => t.trim());
+        return tags.includes(tag);
+    });
+    populateGallery(filteredData);
+}
+
+// Function to filter the gallery based on selected tags
+function filterGallery() {
+    const activeTags = Array.from(document.querySelectorAll('#tag-buttons .uk-button-primary'))
+                            .map(button => button.dataset.tag);
+
+    // If no tags are selected, show all images
+    if (activeTags.length === 0) {
+        populateGallery(jsonData);
+        return;
+    }
+
+    const filteredData = jsonData.filter(item => {
+        const tags = item.tags.split(',').map(t => t.trim());
+        return activeTags.some(tag => tags.includes(tag));
+    });
+    
+    populateGallery(filteredData);
+}
+
+// Initial setup
+updateTagButtons(jsonData);
+populateGallery(jsonData);
+
+</script>
+
+</body>
+</html>

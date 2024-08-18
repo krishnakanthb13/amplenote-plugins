@@ -1,7 +1,7 @@
 ﻿---
 title: "\U0001F4F8 Gallery"
 uuid: 0e218580-5be7-11ef-b179-22074e34eefe
-version: 320
+version: 321
 created: '2024-08-16T21:15:38+05:30'
 tags:
   - '-9-permanent'
@@ -303,9 +303,17 @@ ${horizontalLine}`;
     // Audit Report
     const auditNoteName = `Image Gallery Audit`;
     const auditTagName = ['-image-gallery'];
-    let auditnoteUUID = app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
-	if (!app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
-    let auditReport = `
+    // let auditnoteUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
+	// if (!await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+    const auditReport = `
 - **Gallery Option:** List!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; All-Images: ${allImages}; Table: ${mdTable};], **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
 
 `;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
@@ -754,9 +762,17 @@ populateGallery(jsonData);
     // Audit Report
     const auditNoteName = `Image Gallery Audit`;
     const auditTagName = ['-image-gallery'];
-    let auditnoteUUID = app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
-	if (!app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
-    let auditReport = `
+    // let auditnoteUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
+	// if (!await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+    const auditReport = `
 - **Gallery Option:** Download!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; All-Images: ${allImages}; Format: ${dwFormat};], **Filename:** Starts with At => **At:** ${YYMMDD}_${HHMMSS}.
 
 `;  
@@ -768,12 +784,56 @@ populateGallery(jsonData);
 },
 /* ----------------------------------- */
 "Viewer!": async function (app) {
+  // Function to get current date and time formatted as YYMMDD_HHMMSS
+  function getCurrentDateTime() {
+    const now = new Date();
+    // Format the date and time as per requirement
+    const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+    const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+    return { YYMMDD, HHMMSS };
+    }
+  const { YYMMDD, HHMMSS } = getCurrentDateTime();
+  
+  // Create Save Retrive Save Note to View the Embeded Gallery
   const newNoteName = `Gallery: Image Viewer`;
   const newTagName = ['-image-gallery'];
-  let noteUUID = app.settings["Gallery_Image_Viewer_UUID [Do not Edit!]"] || await app.createNote(newNoteName, newTagName);
-  await app.setSetting("Gallery_Image_Viewer_UUID [Do not Edit!]", noteUUID);
+  
+  // Audit Report
+  const auditNoteName = `Image Gallery Audit`;
+  const auditTagName = ['-image-gallery'];
+
+  // noteUUID = await app.settings["Gallery_Image_Viewer_UUID [Do not Edit!]"] || await app.createNote(newNoteName, newTagName);
+  // await app.setSetting("Gallery_Image_Viewer_UUID [Do not Edit!]", noteUUID);
+
+	const noteUUID = await (async () => {
+	  const existingUUID = await app.settings["Gallery_Image_Viewer_UUID [Do not Edit!]"];
+	  if (existingUUID)
+		  return existingUUID;
+	  const newUUID = await app.createNote(newNoteName, newTagName);
+	  await app.setSetting("Gallery_Image_Viewer_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+
+  // auditnoteUUID= await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
+  // await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID);
+
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+
+  const auditReport = `
+- **Gallery Option:** Viewer!, **Inputs:** All Images: *true*, **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
+
+`;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+
   await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
   await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+  
 }
 },
 /* ----------------------------------- */
@@ -794,8 +854,8 @@ async renderEmbed(app, ...args) {
 		  // Get note content
           const noteContent = await app.getNoteContent({ uuid: note.uuid });
           let allImages = true; // Handling through Settings is creating a loop! Keeps on trying in the background!
-          // let allImages = (app.settings["Gallery_Image_Viewer_AllImgs"] === 1);
-          // if (app.settings["Gallery_Image_Viewer_AllImgs"] != 1) { await app.setSetting("Gallery_Image_Viewer_AllImgs", 0); }
+          // let allImages = (await app.settings["Gallery_Image_Viewer_AllImgs"] === 1);
+          // if (await app.settings["Gallery_Image_Viewer_AllImgs"] != 1) { await app.setSetting("Gallery_Image_Viewer_AllImgs", 0); }
           // Define regex pattern to match image URLs and captions
           const markdownImagePattern = allImages
               ? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
