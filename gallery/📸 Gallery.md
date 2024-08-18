@@ -1,7 +1,7 @@
 ﻿---
 title: "\U0001F4F8 Gallery"
 uuid: 0e218580-5be7-11ef-b179-22074e34eefe
-version: 321
+version: 357
 created: '2024-08-16T21:15:38+05:30'
 tags:
   - '-9-permanent'
@@ -75,6 +75,12 @@ Welcome to the Image Gallery Viewer! This guide will walk you through how to int
     1. **Image Properties RAW File**: A raw text file with image details in a structured format.
 
 1. **Download the File**: After choosing your format, the tool will generate and download the file to your device. You can then open this file with your regular browser.
+
+### Audit and Navigate feature  <mark style="background-color:undefined;">**<< New Feature >>**<!-- {"backgroundCycleColor":"60"} --></mark>
+
+- **Audit**: A separate note is automatically created and every time you run a report using List!, Download!, or Viewer! - A record gets added to this note, you will have all in one place and you know where to look for it.
+
+- **Navigate**: Not only it creates the report, audit, it also navigates you to the appropriate note and you can right away start using what you were looking for.
 
 ### Tips for a Smooth Experience
 
