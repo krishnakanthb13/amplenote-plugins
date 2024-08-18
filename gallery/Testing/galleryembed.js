@@ -549,7 +549,8 @@ function populateGallery(data) {
         div.classList.add('uk-inline');
         div.innerHTML = \`
             <a href="\${item.href}" data-caption="\${item.caption}">
-               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;"
+               onerror="this.onerror=null; this.src='https://img.icons8.com/dusk/64/no-image.png';">
             </a>
         \`;
         gallery.appendChild(div);
@@ -931,7 +932,8 @@ function populateGallery(data) {
         div.classList.add('uk-inline');
         div.innerHTML = \`
             <a href="\${item.href}" data-caption="\${item.caption}">
-               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;"
+               onerror="this.onerror=null; this.src='https://img.icons8.com/dusk/64/no-image.png';">
             </a>
         \`;
         gallery.appendChild(div);
