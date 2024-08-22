@@ -1,359 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Advanced Charts with Markdown Data</title>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-plot@1.0.0-9/dist/chart.min.js"></script>
-<style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            display: flex;
-            width: 100%;
-            max-width: 800px;
-            height: 50%;
-			font-size: 13px;
-        }
-
-        .chart-options {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 5px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        }
-
-        .chart-options label {
-            margin-bottom: 10px;
-        }
-
-        .axis-select {
-            display: flex;
-            flex-direction: column;
-            margin-top: 20px;
-        }
-
-        .chart-container {
-            flex: 4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .chart-container canvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        .axis-dropdowns {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-center;
-            padding: 10px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .axis-dropdowns select {
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-
-    <div class="container">
-        <div class="chart-options">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Advanced Charts with Markdown Data</title>
+      <!-- Include Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <!-- Include chartjs-chart-box-plot -->
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-plot@1.1.2/dist/chartjs-chart-box-plot.min.js"></script>
+      <style>
+         body {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         height: 100vh;
+         margin: 0;
+         font-family: Arial, sans-serif;
+         }
+         .container {
+         display: flex;
+         width: 100%;
+         max-width: 800px;
+         height: 50%;
+         font-size: 13px;
+         background-color: rgba(0,0,0,0.1);
+         }
+         .chart-options {
+         flex: 1;
+         display: flex;
+         flex-direction: column;
+         align-items: flex-start;
+         padding: 5px;
+         box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+         }
+         .chart-options label {
+         margin-bottom: 10px;
+         }
+         .axis-select {
+         display: flex;
+         flex-direction: column;
+         margin-top: 20px;
+         }
+         .chart-container {
+         flex: 4;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         padding: 10px;
+         }
+         .chart-container canvas {
+         width: 100%;
+         height: 100%;
+         }
+         .axis-dropdowns {
+         flex: 1;
+         display: flex;
+         flex-direction: column;
+         align-items: flex-center;
+         padding: 10px;
+         box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+         }
+         .axis-dropdowns select {
+         margin-bottom: 10px;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="container">
+         <div class="chart-options">
             <label><input type="radio" name="chartType" value="line" checked> Line Chart</label>
             <label><input type="radio" name="chartType" value="bar"> Bar Chart</label>
             <label><input type="radio" name="chartType" value="pie"> Pie Chart</label>
-            <label><input type="radio" name="chartType" value="scatter"> Scatter Plot</label>
             <label><input type="radio" name="chartType" value="histogram"> Histogram</label>
             <!-- <label><input type="radio" name="chartType" value="boxplot"> Box Plot</label> -->
             <!-- <label><input type="radio" name="chartType" value="area"> Area Chart</label> -->
             <label><input type="radio" name="chartType" value="pareto"> Pareto Chart</label>
             <label><input type="radio" name="chartType" value="waterfall"> Waterfall Chart</label>
-            <label><input type="radio" name="chartType" value="bubble"> Bubble Chart</label>
-        </div>
-        <div class="chart-container">
+            <label><input type="radio" name="chartType" value="scatter"> Scatter Plot</label>
+            <label><input type="radio" name="chartType" value="bubble"> 3D Bubble Chart</label>
+         </div>
+         <div class="chart-container">
             <canvas id="myChart" width="400" height="200"></canvas>
-        </div>
-        <div class="axis-dropdowns">
+         </div>
+         <div class="axis-dropdowns">
             <div class="axis-select">
-                <label for="xAxisSelect">Select X-Axis: </label>
-                <select id="xAxisSelect"></select>
-                <label for="yAxisSelect">Select Y-Axis: </label>
-                <select id="yAxisSelect"></select>
-                <label for="zAxisSelect">Select Z-Axis: </label>
-                <select id="zAxisSelect"></select>
+               <label for="xAxisSelect">Select X-Axis: </label>
+               <select id="xAxisSelect"></select>
+               <label for="yAxisSelect">Select Y-Axis: </label>
+               <select id="yAxisSelect"></select>
+               <label for="zAxisSelect">Select Z-Axis: </label>
+               <select id="zAxisSelect"></select>
             </div>
-        </div>
-    </div>
-	
-	
-	<script>
-	// Sample markdown table data
-	const markdownTable = `
-| Date       | Value1 | Value2 | Value3 |
-|------------|--------|--------|--------|
-| 2024-08-01 | 10     | 5      | 7      |
-| 2024-08-02 | 15     | 8      | 14     |
-| 2024-08-03 | 7      | 3      | 4      |
-| 2024-08-04 | 12     | 9      | 6      |
-| 2024-08-05 | 20     | 7      | 8      |
-        `;
-	// Function to parse markdown table
-	function parseMarkdownTable(mdTable) {
-		const rows = mdTable.trim().split('\n');
-		const headers = rows[0].split('|').slice(1, -1).map(header => header.trim());
-		const data = rows.slice(2).map(row => {
-			const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
-			const rowObject = {};
-			headers.forEach((header, index) => {
-				rowObject[header] = isNaN(cells[index]) ? cells[index] : parseFloat(cells[index]);
-			});
-			return rowObject;
-		});
-		return {
-			headers,
-			data
-		};
-	}
-	const {
-		headers,
-		data
-	} = parseMarkdownTable(markdownTable);
-	// Populate axis selection dropdowns with headers
-	const xAxisSelect = document.getElementById('xAxisSelect');
-	const yAxisSelect = document.getElementById('yAxisSelect');
-	const zAxisSelect = document.getElementById('zAxisSelect');
-	headers.forEach(header => {
-		const optionX = document.createElement('option');
-		optionX.value = header;
-		optionX.text = header;
-		xAxisSelect.appendChild(optionX);
-		const optionY = document.createElement('option');
-		optionY.value = header;
-		optionY.text = header;
-		yAxisSelect.appendChild(optionY);
-		const optionZ = document.createElement('option');
-		optionZ.value = header;
-		optionZ.text = header;
-		zAxisSelect.appendChild(optionZ);
-	});
-	// Set initial selections
-	xAxisSelect.value = headers[0];
-	yAxisSelect.value = headers[0];
-	yAxisSelect.value = headers[0];
-	let chartType = 'line';
-	let myChart;
-	const ctx = document.getElementById('myChart').getContext('2d');
-
-	function createChart(type) {
-		if (myChart) {
-			myChart.destroy(); // Destroy previous chart before creating a new one
-		}
-
-		const xAxis = xAxisSelect.value;
-		const yAxis = yAxisSelect.value;
-		const zAxis = zAxisSelect.value;
-
-    let datasets = getDatasets(type, xAxis, yAxis, zAxis);
-
-    myChart = new Chart(ctx, {
-        type: getChartType(type),
-        data: {
-            labels: data.map(item => item[xAxis]),
-            datasets: datasets
-        },
-        options: {
-            scales: type === 'pie' ? {} : {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: xAxis
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: yAxis
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: type !== 'pie1', // Show legend only for non-pie charts
-                },
-                tooltip: {
-                    callbacks: {
-                        label: (context) => {
-                            if (type === 'pie') {
-                                return `${context.label}: ${context.raw}`;
+         </div>
+      </div>
+      <script>
+         // Sample markdown table data
+         const markdownTable = `
+         | Date       | Value1 | Value2 | Value3 |
+         |------------|--------|--------|--------|
+         | 2024-08-01 | 10     | 5      | 7      |
+         | 2024-08-02 | 15     | 8      | 14     |
+         | 2024-08-03 | 7      | 3      | 4      |
+         | 2024-08-04 | 12     | 9      | 6      |
+         | 2024-08-05 | 20     | 7      | 8      |
+                `;
+         // Function to parse markdown table
+         function parseMarkdownTable(mdTable) {
+         	const rows = mdTable.trim().split('\n');
+         	const headers = rows[0].split('|').slice(1, -1).map(header => header.trim());
+         	const data = rows.slice(2).map(row => {
+         		const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
+         		const rowObject = {};
+         		headers.forEach((header, index) => {
+         			rowObject[header] = isNaN(cells[index]) ? cells[index] : parseFloat(cells[index]);
+         		});
+         		return rowObject;
+         	});
+         	return {
+         		headers,
+         		data
+         	};
+         }
+         const {
+         	headers,
+         	data
+         } = parseMarkdownTable(markdownTable);
+         // Populate axis selection dropdowns with headers
+         const xAxisSelect = document.getElementById('xAxisSelect');
+         const yAxisSelect = document.getElementById('yAxisSelect');
+         const zAxisSelect = document.getElementById('zAxisSelect');
+         headers.forEach(header => {
+         	const optionX = document.createElement('option');
+         	optionX.value = header;
+         	optionX.text = header;
+         	xAxisSelect.appendChild(optionX);
+         	const optionY = document.createElement('option');
+         	optionY.value = header;
+         	optionY.text = header;
+         	yAxisSelect.appendChild(optionY);
+         	const optionZ = document.createElement('option');
+         	optionZ.value = header;
+         	optionZ.text = header;
+         	zAxisSelect.appendChild(optionZ);
+         });
+         // Set initial selections
+         xAxisSelect.value = headers[0];
+         yAxisSelect.value = headers[0];
+         zAxisSelect.value = headers[0];
+         let chartType = 'line';
+         let myChart;
+         const ctx = document.getElementById('myChart').getContext('2d');
+         
+         function createChart(type) {
+         	if (myChart) {
+         		myChart.destroy(); // Destroy previous chart before creating a new one
+         	}
+         
+         	const xAxis = xAxisSelect.value;
+         	const yAxis = yAxisSelect.value;
+         	const zAxis = zAxisSelect.value;
+         
+            let datasets = getDatasets(type, xAxis, yAxis, zAxis);
+         
+                    myChart = new Chart(ctx, {
+                        type: getChartType(type),
+                        data: {
+                            labels: type === 'boxplot' ? [] : data.map(item => item[xAxis]),
+                            datasets: datasets
+                        },
+                        options: {
+                            scales: type === 'pie' ? {} : {
+                                x: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: xAxis
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: yAxis
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: type !== 'piez', // Show legend only for non-pie charts
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => {
+                                            if (type === 'pie') {
+                                                return `${context.label}: ${context.raw}`;
+                                            }
+                                            return `${context.dataset.label}: ${context.raw}`;
+                                        }
+                                    }
+                                }
                             }
-                            return `${context.dataset.label}: ${context.raw}`;
                         }
-                    }
+                    });
                 }
+         
+         function getDatasets(type, xAxis, yAxis, zAxis) {
+            switch (type) {
+                case 'line':
+                    return [{
+         			label: `${yAxis} vs ${xAxis}`,
+         			data: data.map(item => ({
+         				x: item[xAxis],
+         				y: item[yAxis]
+         			})),
+         				fill: false, // change to true for area plot
+         				backgroundColor: 'rgba(75, 192, 192, 0.2)',
+         				borderColor: 'rgba(75, 192, 192, 1)',
+         				borderWidth: 1,
+                    }];
+                case 'pie':
+                    return [{
+                        label: yAxis,
+                        data: data.map(item => item[yAxis]),
+                        backgroundColor: getRandomColors(data.length),
+                        borderColor: getRandomColors(data.length, false), // true to random color
+                        borderWidth: 1,
+                    }];
+                case 'histogram':
+                    return [{
+                        label: yAxis,
+                        data: data.map(item => item[yAxis]),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    }];
+                        case 'boxplot':
+                            return [{
+                                label: yAxis,
+                                data: [
+                                    {
+                                        min: Math.min(...data.map(item => item[yAxis])),
+                                        q1: calculateQuartile(data.map(item => item[yAxis]), 1),
+                                        median: calculateMedian(data.map(item => item[yAxis])),
+                                        q3: calculateQuartile(data.map(item => item[yAxis]), 3),
+                                        max: Math.max(...data.map(item => item[yAxis])),
+                                    }
+                                ],
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                            }];
+                case 'area':
+                    return [{
+                        label: `${yAxis} vs ${xAxis}`,
+         			data: data.map(item => ({
+         				x: item[xAxis],
+         				y: item[yAxis]
+         			})),
+         			fill: true,
+         			backgroundColor: 'rgba(75, 191, 191, 0.2)',
+         			borderColor: 'rgba(75, 191, 191, 1)',
+         			borderWidth: 1,
+                    }];
+                case 'bubble':
+                    return [{
+         			label: `${yAxis} vs ${xAxis} (Radius: ${zAxis})`,
+         			data: data.map(item => ({
+         				x: item[xAxis],
+         				y: item[yAxis],
+         				r: type === 'bubble' ? (item[zAxis] || 5) : undefined
+         			})),
+         			backgroundColor: 'rgba(75, 192, 192, 0.2)',
+         			borderColor: 'rgba(75, 192, 192, 1)',
+         			borderWidth: 1,
+                    }];
+                case 'pareto':
+                    return [{
+         			label: `${yAxis} (Bars)`,
+         			type: 'bar',
+         			data: data.map(item => item[yAxis]),
+         			backgroundColor: 'rgba(75, 192, 192, 0.2)',
+         			borderColor: 'rgba(75, 192, 192, 1)',
+         			borderWidth: 1,
+         		}, {
+         			label: 'Cumulative Percentage (Line)',
+         			type: 'line',
+         			data: data.map((item, index) => {
+         				const total = data.reduce((acc, curr) => acc + curr[yAxis], 0);
+         				const cumulative = data.slice(0, index + 1).reduce((acc, curr) => acc + curr[yAxis], 0);
+         				return (cumulative / total) * 100;
+         			}),
+         			borderColor: 'rgba(255, 99, 132, 1)',
+         			fill: false,
+         			borderWidth: 2,
+                    }];
+                case 'waterfall':
+                    return [{
+         			label: `${yAxis}`,
+         			data: data.map(item => item[yAxis]),
+         			backgroundColor: (ctx) => {
+         				const index = ctx.dataIndex;
+         				return index % 2 === 0 ? 'rgba(75, 192, 192, 0.2)' : 'rgba(255, 99, 132,0.2)';
+         			},
+         			borderColor: (ctx) => {
+         				const index = ctx.dataIndex;
+         				return index % 2 === 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)';
+         			},
+         			borderWidth: 1,
+                    }];			
+                // Add cases for other chart types
+                default:
+                    return [{
+                        label: `${yAxis} vs ${xAxis}`,
+                        data: data.map(item => ({
+                            x: item[xAxis],
+                            y: item[yAxis],
+                            r: type === 'bubble' ? (item[zAxis] || 5) : undefined
+                        })),
+                        fill: type === 'area',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    }];
             }
-        }
-    });
-}
-
-function getDatasets(type, xAxis, yAxis, zAxis) {
-    switch (type) {
-        case 'line':
-            return [{
-				label: `${yAxis} vs ${xAxis}`,
-				data: data.map(item => ({
-					x: item[xAxis],
-					y: item[yAxis]
-				})),
-					fill: false, // change to true for area plot
-					backgroundColor: 'rgba(75, 192, 192, 0.2)',
-					borderColor: 'rgba(75, 192, 192, 1)',
-					borderWidth: 1,
-            }];
-        case 'pie':
-            return [{
-                label: yAxis,
-                data: data.map(item => item[yAxis]),
-                backgroundColor: getRandomColors(data.length),
-                borderColor: getRandomColors(data.length, false), // true to random color
-                borderWidth: 1,
-            }];
-        case 'histogram':
-            return [{
-                label: yAxis,
-                data: data.map(item => item[yAxis]),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-            }];
-        case 'boxplot':
-            return [{
-                label: yAxis,
-                data: data.map(item => item[yAxis]),
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-            }];
-        case 'area':
-            return [{
-                label: `${yAxis} vs ${xAxis}`,
-				data: data.map(item => ({
-					x: item[xAxis],
-					y: item[yAxis]
-				})),
-				fill: true,
-				backgroundColor: 'rgba(75, 191, 191, 0.2)',
-				borderColor: 'rgba(75, 191, 191, 1)',
-				borderWidth: 1,
-            }];
-        case 'bubble':
-            return [{
-				label: `${yAxis} vs ${xAxis} (Radius: ${zAxis})`,
-				data: data.map(item => ({
-					x: item[xAxis],
-					y: item[yAxis],
-					r: type === 'bubble' ? (item[zAxis] || 5) : undefined
-				})),
-				backgroundColor: 'rgba(75, 192, 192, 0.2)',
-				borderColor: 'rgba(75, 192, 192, 1)',
-				borderWidth: 1,
-            }];
-        case 'pareto':
-            return [{
-				label: `${yAxis} (Bars)`,
-				type: 'bar',
-				data: data.map(item => item[yAxis]),
-				backgroundColor: 'rgba(75, 192, 192, 0.2)',
-				borderColor: 'rgba(75, 192, 192, 1)',
-				borderWidth: 1,
-			}, {
-				label: 'Cumulative Percentage (Line)',
-				type: 'line',
-				data: data.map((item, index) => {
-					const total = data.reduce((acc, curr) => acc + curr[yAxis], 0);
-					const cumulative = data.slice(0, index + 1).reduce((acc, curr) => acc + curr[yAxis], 0);
-					return (cumulative / total) * 100;
-				}),
-				borderColor: 'rgba(255, 99, 132, 1)',
-				fill: false,
-				borderWidth: 2,
-            }];
-        case 'waterfall':
-            return [{
-				label: `${yAxis}`,
-				data: data.map(item => item[yAxis]),
-				backgroundColor: (ctx) => {
-					const index = ctx.dataIndex;
-					return index % 2 === 0 ? 'rgba(75, 192, 192, 0.2)' : 'rgba(255, 99, 132,0.2)';
-				},
-				borderColor: (ctx) => {
-					const index = ctx.dataIndex;
-					return index % 2 === 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)';
-				},
-				borderWidth: 1,
-            }];			
-        // Add cases for other chart types
-        default:
-            return [{
-                label: `${yAxis} vs ${xAxis}`,
-                data: data.map(item => ({
-                    x: item[xAxis],
-                    y: item[yAxis],
-                    r: type === 'bubble' ? (item[zAxis] || 5) : undefined
-                })),
-                fill: type === 'area',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-            }];
-    }
-}
-
-function getChartType(type) {
-    return ['histogram', 'boxplot', 'pareto', 'waterfall'].includes(type) ? 'bar' : type;
-}
-
-function getRandomColors(count, isBorder = false) {
-    const colors = [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)'
-    ];
-    const borderColors = [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)'
-    ];
-    return Array.from({ length: count }, (_, i) => isBorder ? borderColors[i % borderColors.length] : colors[i % colors.length]);
-}
-
-	document.querySelectorAll('input[name="chartType"]').forEach(input => {
-		input.addEventListener('change', (event) => {
-			chartType = event.target.value;
-			createChart(chartType);
-		});
-	});
-	xAxisSelect.addEventListener('change', () => createChart(chartType));
-	yAxisSelect.addEventListener('change', () => createChart(chartType));
-	// Initial chart rendering
-	createChart(chartType);
-	</script>
+         }
+         
+         function getChartType(type) {
+            return ['histogram', 'boxplot', 'pareto', 'waterfall'].includes(type) ? 'bar' : type;
+         }
+         
+         function getRandomColors(count, isBorder = false) {
+            const colors = [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ];
+            const borderColors = [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ];
+            return Array.from({ length: count }, (_, i) => isBorder ? borderColors[i % borderColors.length] : colors[i % colors.length]);
+         }
+         
+         function calculateQuartile(arr, quartile) {
+                    arr.sort((a, b) => a - b);
+                    const q = (quartile / 4) * (arr.length + 1);
+                    return arr[Math.floor(q) - 1];
+                }
+         
+                function calculateMedian(arr) {
+                    arr.sort((a, b) => a - b);
+                    const mid = Math.floor(arr.length / 2);
+                    return arr.length % 2 !== 0 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
+                }
+         
+                function calculateCumulativePercentage(data, field) {
+                    const total = data.reduce((sum, item) => sum + item[field], 0);
+                    let cumulative = 0;
+                    return data.map(item => {
+                        cumulative += item[field];
+                        return (cumulative / total) * 100;
+                    });
+                }
+         
+                function calculateWaterfallData(data, field) {
+                    let cumulative = 0;
+                    return data.map(item => {
+                        cumulative += item[field];
+                        return { x: item.Date, y: cumulative };
+                    });
+                }
+         
+         
+                // Event listeners for chart type change
+                document.querySelectorAll('input[name="chartType"]').forEach(input => {
+                    input.addEventListener('change', (event) => {
+                        chartType = event.target.value;
+                        createChart(chartType);
+                    });
+                });
+         	
+         xAxisSelect.addEventListener('change', () => createChart(chartType));
+         yAxisSelect.addEventListener('change', () => createChart(chartType));
+         zAxisSelect.addEventListener('change', () => createChart(chartType));
+         // Initial chart rendering
+         createChart(chartType);
+      </script>
+   </body>
