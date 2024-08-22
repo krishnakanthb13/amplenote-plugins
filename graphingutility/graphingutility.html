@@ -22,6 +22,7 @@
             width: 100%;
             max-width: 800px;
             height: 50%;
+			font-size: 13px;
         }
 
         .chart-options {
@@ -44,7 +45,7 @@
         }
 
         .chart-container {
-            flex: 3;
+            flex: 4;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -152,55 +153,105 @@
 	});
 	// Set initial selections
 	xAxisSelect.value = headers[0];
-	yAxisSelect.value = headers[1];
-	yAxisSelect.value = headers[2];
+	yAxisSelect.value = headers[0];
+	yAxisSelect.value = headers[0];
 	let chartType = 'line';
 	let myChart;
 	const ctx = document.getElementById('myChart').getContext('2d');
 
 	function createChart(type) {
-		if(myChart) {
+		if (myChart) {
 			myChart.destroy(); // Destroy previous chart before creating a new one
 		}
+
 		const xAxis = xAxisSelect.value;
 		const yAxis = yAxisSelect.value;
 		const zAxis = zAxisSelect.value;
-		let datasets = [{
-			label: `${yAxis} vs ${xAxis}`,
-			data: data.map(item => ({
-				x: item[xAxis],
-				y: item[yAxis]
-			})),
-				fill: false, // change to true for area plot
-				backgroundColor: 'rgba(75, 192, 192, 0.2)',
-				borderColor: 'rgba(75, 192, 192, 1)',
-				borderWidth: 1,
-		}];
-		if(type === 'pie') {
-			datasets = [{
-				label: yAxis,
-				data: data.map(item => item[yAxis]),
-				backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)'],
-				borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
-				borderWidth: 1,
-			}];
-		} else if(type === 'histogram') {
-			datasets = [{
-				label: yAxis,
-				data: data.map(item => item[yAxis]),
-				backgroundColor: 'rgba(75, 192, 192, 0.2)',
-				borderColor: 'rgba(75, 192, 192, 1)',
-				borderWidth: 1,
-			}];
-		} else if(type === 'boxplot') {
-			datasets = [{
-				label: yAxis,
-				data: data.map(item => item[yAxis]),
-				borderColor: 'rgba(255, 99, 132, 1)',
-			}];
-		} else if (chartType === 'area') {
-			datasets = [{
+
+    let datasets = getDatasets(type, xAxis, yAxis, zAxis);
+
+    myChart = new Chart(ctx, {
+        type: getChartType(type),
+        data: {
+            labels: data.map(item => item[xAxis]),
+            datasets: datasets
+        },
+        options: {
+            scales: type === 'pie' ? {} : {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: xAxis
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: yAxis
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: type !== 'pie1', // Show legend only for non-pie charts
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            if (type === 'pie') {
+                                return `${context.label}: ${context.raw}`;
+                            }
+                            return `${context.dataset.label}: ${context.raw}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function getDatasets(type, xAxis, yAxis, zAxis) {
+    switch (type) {
+        case 'line':
+            return [{
 				label: `${yAxis} vs ${xAxis}`,
+				data: data.map(item => ({
+					x: item[xAxis],
+					y: item[yAxis]
+				})),
+					fill: false, // change to true for area plot
+					backgroundColor: 'rgba(75, 192, 192, 0.2)',
+					borderColor: 'rgba(75, 192, 192, 1)',
+					borderWidth: 1,
+            }];
+        case 'pie':
+            return [{
+                label: yAxis,
+                data: data.map(item => item[yAxis]),
+                backgroundColor: getRandomColors(data.length),
+                borderColor: getRandomColors(data.length, false), // true to random color
+                borderWidth: 1,
+            }];
+        case 'histogram':
+            return [{
+                label: yAxis,
+                data: data.map(item => item[yAxis]),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            }];
+        case 'boxplot':
+            return [{
+                label: yAxis,
+                data: data.map(item => item[yAxis]),
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+            }];
+        case 'area':
+            return [{
+                label: `${yAxis} vs ${xAxis}`,
 				data: data.map(item => ({
 					x: item[xAxis],
 					y: item[yAxis]
@@ -209,21 +260,21 @@
 				backgroundColor: 'rgba(75, 191, 191, 0.2)',
 				borderColor: 'rgba(75, 191, 191, 1)',
 				borderWidth: 1,
-			}];
-		} else if(type === 'bubble') {
-			datasets = [{
-				label: `${yAxis} vs ${xAxis} Radius: ${zAxis}`,
+            }];
+        case 'bubble':
+            return [{
+				label: `${yAxis} vs ${xAxis} (Radius: ${zAxis})`,
 				data: data.map(item => ({
 					x: item[xAxis],
 					y: item[yAxis],
-					r: item[zAxis] || 5
+					r: type === 'bubble' ? (item[zAxis] || 5) : undefined
 				})),
 				backgroundColor: 'rgba(75, 192, 192, 0.2)',
 				borderColor: 'rgba(75, 192, 192, 1)',
 				borderWidth: 1,
-			}];
-		} else if(type === 'pareto') {
-			datasets = [{
+            }];
+        case 'pareto':
+            return [{
 				label: `${yAxis} (Bars)`,
 				type: 'bar',
 				data: data.map(item => item[yAxis]),
@@ -241,9 +292,9 @@
 				borderColor: 'rgba(255, 99, 132, 1)',
 				fill: false,
 				borderWidth: 2,
-			}];
-		} else if(type === 'waterfall') {
-			datasets = [{
+            }];
+        case 'waterfall':
+            return [{
 				label: `${yAxis}`,
 				data: data.map(item => item[yAxis]),
 				backgroundColor: (ctx) => {
@@ -255,34 +306,43 @@
 					return index % 2 === 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)';
 				},
 				borderWidth: 1,
-			}];
-		}
-		myChart = new Chart(ctx, {
-			type: (type === 'histogram' || type === 'boxplot' || type === 'pareto' || type === 'waterfall') ? 'bar' : type,
-			data: {
-				labels: data.map(item => item[xAxis]),
-				datasets: datasets
-			},
-			options: {
-				scales: {
-					x: {
-						beginAtZero: true,
-						title: {
-							display: true,
-							text: xAxis
-						}
-					},
-					y: {
-						beginAtZero: true,
-						title: {
-							display: true,
-							text: yAxis
-						}
-					}
-				}
-			}
-		});
-	}
+            }];			
+        // Add cases for other chart types
+        default:
+            return [{
+                label: `${yAxis} vs ${xAxis}`,
+                data: data.map(item => ({
+                    x: item[xAxis],
+                    y: item[yAxis],
+                    r: type === 'bubble' ? (item[zAxis] || 5) : undefined
+                })),
+                fill: type === 'area',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            }];
+    }
+}
+
+function getChartType(type) {
+    return ['histogram', 'boxplot', 'pareto', 'waterfall'].includes(type) ? 'bar' : type;
+}
+
+function getRandomColors(count, border = false) {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+        colors.push(border ? `rgba(${getRandomInt(0, 255)}, ${getRandomInt(0, 255)}, ${getRandomInt(0, 255)}, 1)` : `rgba(${getRandomInt(0, 255)}, ${getRandomInt(0, 255)}, ${getRandomInt(0, 255)}, 0.2)`);
+    }
+    return colors;
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+
+
 	document.querySelectorAll('input[name="chartType"]').forEach(input => {
 		input.addEventListener('change', (event) => {
 			chartType = event.target.value;
