@@ -1,7 +1,10 @@
 {
   async noteOption(app, noteUUID) {
     const markdown = await app.getNoteContent({ uuid: noteUUID });
-    
+
+    // Function to remove HTML comments
+    const removeHtmlComments = (content) => content.replace(/<!--[\s\S]*?-->/g, '').trim();
+
     const lines = markdown.split('\n');
     let tableCount = 0;
     let inTable = false;
@@ -57,8 +60,11 @@
       tables.push(currentTable.join('\n'));
     }
 
+    // Join all tables and remove HTML comments at the end
     const processedContent = tables.join('\n\n');
-    app.alert(processedContent);
-	console.log("processedContent:",processedContent);
+    const cleanedContent = removeHtmlComments(processedContent);
+
+    app.alert(cleanedContent);
+    console.log("cleanedContent:",cleanedContent);
   }
 }
