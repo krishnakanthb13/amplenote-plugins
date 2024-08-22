@@ -7,10 +7,10 @@
     let inTable = false;
     const tables = [];
     let currentTable = [];
-    console.log("tableCount:",tableCount);
-    console.log("inTable:",inTable);
-    console.log("tables:",tableCount);
-    console.log("tableCount:",currentTable);
+    // console.log("tableCount:",tableCount);
+    // console.log("inTable:",inTable);
+    // console.log("tables:",tableCount);
+    // console.log("tableCount:",currentTable);
     
     lines.forEach((line, index) => {
       if (line.trim().startsWith('|')) {  // Identifying table rows
@@ -22,10 +22,10 @@
           tables.push(`# Table ${tableCount}\n`);
           inTable = true;
         }
-    console.log("tableCount:",tableCount);
-    console.log("inTable:",inTable);
-    console.log("tables:",tableCount);
-    console.log("tableCount:",currentTable);
+    // console.log("tableCount:",tableCount);
+    // console.log("inTable:",inTable);
+    // console.log("tables:",tableCount);
+    // console.log("tableCount:",currentTable);
 
         // If first row is empty, add column headers
         if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
@@ -33,10 +33,10 @@
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
           currentTable.push(`| ${headers} |`);
         }
-		console.log("tableCount:",tableCount);
-		console.log("inTable:",inTable);
-		console.log("tables:",tableCount);
-		console.log("tableCount:",currentTable);
+		// console.log("tableCount:",tableCount);
+		// console.log("inTable:",inTable);
+		// console.log("tables:",tableCount);
+		// console.log("tableCount:",currentTable);
 
         currentTable.push(line);
       } else if (inTable) {
@@ -47,10 +47,10 @@
         currentTable = [];
       }
     });
-    console.log("tableCount:",tableCount);
-    console.log("inTable:",inTable);
-    console.log("tables:",tableCount);
-    console.log("tableCount:",currentTable);
+    // console.log("tableCount:",tableCount);
+    // console.log("inTable:",inTable);
+    // console.log("tables:",tableCount);
+    // console.log("tableCount:",currentTable);
 
     // Ensure the last table is pushed if the markdown ends with a table
     if (currentTable.length > 0) {
