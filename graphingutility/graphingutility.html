@@ -53,9 +53,9 @@
 
         // Function to parse markdown table
         function parseMarkdownTable(mdTable) {
-            const [headersRow, ...rows] = mdTable.trim().split('\n').slice(1);
-            const headers = headersRow.split('|').slice(1, -1).map(header => header.trim());
-            const data = rows.map(row => {
+            const rows = mdTable.trim().split('\n');
+            const headers = rows[0].split('|').slice(1, -1).map(header => header.trim());
+            const data = rows.slice(2).map(row => {
                 const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
                 const rowObject = {};
                 headers.forEach((header, index) => {
