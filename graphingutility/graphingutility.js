@@ -2,9 +2,7 @@
   async noteOption(app, noteUUID) {
     const markdown = await app.getNoteContent({ uuid: noteUUID });
     
-    // Split content into lines
     const lines = markdown.split('\n');
-    
     let tableCount = 0;
     let inTable = false;
     const tables = [];
@@ -18,6 +16,9 @@
       if (line.trim().startsWith('|')) {  // Identifying table rows
         if (!inTable) {
           tableCount++;
+          if (tableCount > 1) {
+            tables.push('---');  // Add separator between tables
+          }
           tables.push(`# Table ${tableCount}\n`);
           inTable = true;
         }
@@ -25,25 +26,24 @@
     console.log("inTable:",inTable);
     console.log("tables:",tableCount);
     console.log("tableCount:",currentTable);
-        
-        // Check if the first row is empty
-        if (currentTable.length === 0 && line.trim() === '|') {
-          // Add Column headers if first line is empty
-          const columnCount = line.split('|').length - 2;
-          const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
-          tables.push(`| ${headers} |`);
-        } else {
-          currentTable.push(line);
-        }
-        console.log("tableCount:",tableCount);
-        console.log("inTable:",inTable);
-        console.log("tables:",tableCount);
-        console.log("tableCount:",currentTable);
 
-        tables.push(line);  // Add the table row to the tables array
+        // If first row is empty, add column headers
+        if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
+          const columnCount = line.split('|').length - 2;  // -2 to exclude the leading and trailing empty cells
+          const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
+          currentTable.push(`| ${headers} |`);
+        }
+		console.log("tableCount:",tableCount);
+		console.log("inTable:",inTable);
+		console.log("tables:",tableCount);
+		console.log("tableCount:",currentTable);
+
+        currentTable.push(line);
       } else if (inTable) {
+        // End of table
         inTable = false;
         tables.push(currentTable.join('\n'));
+        tables.push('');  // Add an additional blank line between tables
         currentTable = [];
       }
     });
@@ -51,9 +51,14 @@
     console.log("inTable:",inTable);
     console.log("tables:",tableCount);
     console.log("tableCount:",currentTable);
-    
-    const processedContent = tables.join('\n');
+
+    // Ensure the last table is pushed if the markdown ends with a table
+    if (currentTable.length > 0) {
+      tables.push(currentTable.join('\n'));
+    }
+
+    const processedContent = tables.join('\n\n');
     app.alert(processedContent);
-    console.log("processedContent:",processedContent);
+	console.log("processedContent:",processedContent);
   }
 }
