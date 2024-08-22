@@ -3,11 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown Table to Graph</title>
+    <title>Markdown Table to Multiple Charts</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            width: 60%;
+            margin: auto;
+            text-align: center;
+        }
+        .chart-options {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <div class="chart-container">
+        <div class="chart-options">
+            <label><input type="radio" name="chartType" value="line" checked> Line Chart</label>
+            <label><input type="radio" name="chartType" value="bar"> Bar Chart</label>
+            <label><input type="radio" name="chartType" value="pie"> Pie Chart</label>
+            <label><input type="radio" name="chartType" value="scatter"> Scatter Plot</label>
+        </div>
+        <canvas id="myChart" width="400" height="200"></canvas>
+    </div>
 
     <script>
         // Sample markdown table data
@@ -31,31 +49,58 @@
         }
 
         const data = parseMarkdownTable(markdownTable);
-
-        // Prepare data for Chart.js
         const labels = data.map(item => item.date);
         const values = data.map(item => item.value);
 
+        // Initialize the chart
+        let chartType = 'line';
+        let myChart;
         const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Value Over Time',
-                    data: values,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    fill: false
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+
+        function createChart(type) {
+            if (myChart) {
+                myChart.destroy();  // Destroy previous chart before creating a new one
+            }
+
+            const datasets = [{
+                label: 'Value Over Time',
+                data: values,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Used for Bar and Pie charts
+            }];
+
+            myChart = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: type === 'scatter' ? 'nearest' : 'index'
+                        }
                     }
                 }
-            }
+            });
+        }
+
+        // Initial chart render
+        createChart(chartType);
+
+        // Update chart when radio button is clicked
+        document.querySelectorAll('input[name="chartType"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                chartType = event.target.value;
+                createChart(chartType);
+            });
         });
     </script>
 </body>
