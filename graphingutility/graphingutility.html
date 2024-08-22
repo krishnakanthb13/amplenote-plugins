@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Advanced Charts with Markdown Data</title>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-boxplot"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-plot@1.0.0-9/dist/chart.min.js"></script>
 <style>
         body {
             display: flex;
@@ -79,11 +79,11 @@
             <label><input type="radio" name="chartType" value="pie"> Pie Chart</label>
             <label><input type="radio" name="chartType" value="scatter"> Scatter Plot</label>
             <label><input type="radio" name="chartType" value="histogram"> Histogram</label>
-            <label><input type="radio" name="chartType" value="boxplot"> Box Plot</label>
+            <!-- <label><input type="radio" name="chartType" value="boxplot"> Box Plot</label> -->
             <!-- <label><input type="radio" name="chartType" value="area"> Area Chart</label> -->
-            <label><input type="radio" name="chartType" value="bubble"> Bubble Chart</label>
             <label><input type="radio" name="chartType" value="pareto"> Pareto Chart</label>
             <label><input type="radio" name="chartType" value="waterfall"> Waterfall Chart</label>
+            <label><input type="radio" name="chartType" value="bubble"> Bubble Chart</label>
         </div>
         <div class="chart-container">
             <canvas id="myChart" width="400" height="200"></canvas>
@@ -328,20 +328,23 @@ function getChartType(type) {
     return ['histogram', 'boxplot', 'pareto', 'waterfall'].includes(type) ? 'bar' : type;
 }
 
-function getRandomColors(count, border = false) {
-    const colors = [];
-    for (let i = 0; i < count; i++) {
-        colors.push(border ? `rgba(${getRandomInt(0, 255)}, ${getRandomInt(0, 255)}, ${getRandomInt(0, 255)}, 1)` : `rgba(${getRandomInt(0, 255)}, ${getRandomInt(0, 255)}, ${getRandomInt(0, 255)}, 0.2)`);
-    }
-    return colors;
+function getRandomColors(count, isBorder = false) {
+    const colors = [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)'
+    ];
+    const borderColors = [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)'
+    ];
+    return Array.from({ length: count }, (_, i) => isBorder ? borderColors[i % borderColors.length] : colors[i % colors.length]);
 }
-
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-
-
 
 	document.querySelectorAll('input[name="chartType"]').forEach(input => {
 		input.addEventListener('change', (event) => {
