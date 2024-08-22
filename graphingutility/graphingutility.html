@@ -162,7 +162,7 @@
 				<input type="radio" name="chartType" value="bubble"> 3D Bubble Chart
 				<span class="tooltip">
 					<i class="fa fa-info-circle" style="color:blue"></i>
-					<span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, color, and position.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+					<span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
 				</span>
 			</label>
          </div>
@@ -172,32 +172,42 @@
          <div class="axis-dropdowns">
             <div class="axis-select">
 				<br><br>
-               <label for="xAxisSelect">Select X-Axis: </label>
+               <label for="tableSelect"> Select Table:
+					<span class="tooltip">
+						<i class="fa fa-info-circle" style="color:blue"></i>
+						<span class="tooltiptext">Lists all the Tables in the Current Note!</span>
+					</span>
+				</label>
+               <select id="tableSelect"></select>
+			   <hr>
+               <label for="xAxisSelect"> Select X-Axis:
+					<span class="tooltip">
+						<i class="fa fa-info-circle" style="color:blue"></i>
+						<span class="tooltiptext">Horizontal Line / Axis!</span>
+					</span>
+			   </label>
                <select id="xAxisSelect"></select>
-               <label for="yAxisSelect">Select Y-Axis: </label>
+               <label for="yAxisSelect"> Select Y-Axis:
+					<span class="tooltip">
+						<i class="fa fa-info-circle" style="color:blue"></i>
+						<span class="tooltiptext">Vertical Line / Axis!</span>
+					</span>
+			   </label>
                <select id="yAxisSelect"></select>
-               <label for="zAxisSelect">Select Z-Axis: </label>
+               <label for="zAxisSelect"> Select Z-Axis:
+					<span class="tooltip">
+						<i class="fa fa-info-circle" style="color:blue"></i>
+						<span class="tooltiptext">Depth / Size!</span>
+					</span>
+			   </label>
                <select id="zAxisSelect"></select>
+			   <hr>
+			   Note Name:<br>
+			   Note Tags:<br>
+			   Note UUID:
             </div>
          </div>
       </div>
-
-		<script>
-		function showInfo(chartType) {
-			const info = {
-				line: 'A Line Chart shows trends over time or categories with lines connecting data points.',
-				bar: 'A Bar Chart compares quantities across different categories with rectangular bars.',
-				pie: 'A Pie Chart displays proportions of a whole with slices of a circle.',
-				histogram: 'A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.',
-				pareto: 'A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.',
-				waterfall: 'A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.',
-				scatter: 'A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.',
-				bubble: 'A 3D Bubble Chart represents three variables with bubbles of varying size, color, and position.'
-			};
-			
-			alert(info[chartType]);
-		}
-		</script>
 
       <script>
          // Sample markdown table data
