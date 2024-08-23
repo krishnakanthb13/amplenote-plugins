@@ -198,6 +198,10 @@ const htmlTemplate = `
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Advanced Charts with Markdown Data</title>
+      <!-- Include Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <!-- Include chartjs-chart-box-plot -->
+      <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-plot@1.1.2/dist/chartjs-chart-box-plot.min.js"></script> -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <style>
          body {
@@ -439,14 +443,11 @@ const htmlTemplate = `
             </div>
          </div>
       </div>
-      <!-- Include Chart.js --> 
-	  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
       <script>
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
 \`;
-         
          
          // Function to parse the markdown data
          function parseMarkdownTables(markdown) {
@@ -1114,6 +1115,10 @@ const htmlTemplate = `
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Advanced Charts with Markdown Data</title>
+      <!-- Include Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <!-- Include chartjs-chart-box-plot -->
+      <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-plot@1.1.2/dist/chartjs-chart-box-plot.min.js"></script> -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <style>
          body {
@@ -1355,14 +1360,11 @@ const htmlTemplate = `
             </div>
          </div>
       </div>
-      <!-- Include Chart.js --> 
-	  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
       <script>
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
 \`;
-         
          
          // Function to parse the markdown data
          function parseMarkdownTables(markdown) {
