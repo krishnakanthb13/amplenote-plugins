@@ -101,9 +101,8 @@
    <body>
       <div class="container">
          <div class="chart-options">
-            <br><br>
             <center>Simple Charts:</center>
-            <hr>
+            <br>
             <label>
             <input type="radio" name="chartType" value="line" checked> Line Chart
             <span class="tooltip">
@@ -111,51 +110,80 @@
             <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
-            <!-- 			<label>
-               <input type="radio" name="chartType" value="area" checked> Area Chart
-               <span class="tooltip">
-               	<i class="fa fa-info-circle" style="color:blue"></i>
-               	<span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
-               </span>
-               </label> -->
+            <label>
+            <input type="radio" name="chartType" value="area" checked> Area Chart
+            <span class="tooltip">
+            <i class="fa fa-info-circle" style="color:blue"></i>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            </span>
+            </label>
+            <!--<label>
+            <input type="radio" name="chartType" value="boxplot" checked> Box Plot Chart
+            <span class="tooltip">
+            <i class="fa fa-info-circle" style="color:blue"></i>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            </span>
+            </label> -->
             <label>
             <input type="radio" name="chartType" value="bar"> Bar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            </span>
+            </label>
+			<label>
+            <input type="radio" name="chartType" value="histogram"> Histogram
+            <span class="tooltip">
+            <i class="fa fa-info-circle" style="color:blue"></i>
+            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pie"> Pie Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<br><br>Note: Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            </span>
+            </label>
+            </label>
+            <label>
+            <input type="radio" name="chartType" value="doughnut"> Doughnut Chart
+            <span class="tooltip">
+            <i class="fa fa-info-circle" style="color:blue"></i>
+            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
-            <input type="radio" name="chartType" value="histogram"> Histogram
+            <input type="radio" name="chartType" value="polarArea"> Polar Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
-            </span>
-            </label>
-            <label>
-            <input type="radio" name="chartType" value="pareto"> Pareto Chart
-            <span class="tooltip">
-            <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="waterfall"> Waterfall Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <br>
             <center>Advanced Charts:</center>
-            <hr>
+            <br>
+            <label>
+            <input type="radio" name="chartType" value="mixed"> Mixed Chart
+            <span class="tooltip">
+            <i class="fa fa-info-circle" style="color:blue"></i>
+            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<br><br>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
+            </span>
+            </label>
+            <label>
+            <input type="radio" name="chartType" value="pareto"> Pareto Chart
+            <span class="tooltip">
+            <i class="fa fa-info-circle" style="color:blue"></i>
+            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            </span>
+            </label>
             <label>
             <input type="radio" name="chartType" value="scatter"> Scatter Plot
             <span class="tooltip">
@@ -167,10 +195,18 @@
             <input type="radio" name="chartType" value="bubble"> 3D Bubble Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
-         </div>
+            <label>
+            <input type="radio" name="chartType" value="radar"> 3D Radar Chart
+            <span class="tooltip">
+            <i class="fa fa-info-circle" style="color:blue"></i>
+            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            </span>
+            </label>
+
+			</div>
          <div class="chart-container">
             <canvas id="myChart" width="400" height="200"></canvas>
          </div>
@@ -184,7 +220,7 @@
                </span>
                </label>
                <select id="tableSelect"></select>
-               <hr>
+               <br>
                <label for="xAxisSelect"> Select X-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
@@ -206,7 +242,7 @@
                </span>
                </label>
                <select id="zAxisSelect"></select>
-               <hr>
+               <br>
                Note Name:<br>
                Note Tags:<br>
                Note UUID:
@@ -408,67 +444,63 @@
          let myChart;
          const ctx = document.getElementById('myChart').getContext('2d');
          		 
-         // Function to create a chart
-         function createChart(type, headers, data) {
-             if (!data || !headers || !data.length) {
-                 // console.error("Invalid data or headers passed to createChart function");
-                 return;
-             }
-         
-             // console.log("Creating chart with headers:", headers);
-             // console.log("Creating chart with data:", data);
-         
-             if (myChart) {
-                 myChart.destroy();
-             }
-         
-             const xAxis = xAxisSelect.value;
-             const yAxis = yAxisSelect.value;
-             const zAxis = zAxisSelect.value;
-         
-             let datasets = getDatasets(type, data, xAxis, yAxis, zAxis);
-         
-             myChart = new Chart(ctx, {
-                 type: getChartType(type),
-                 data: {
-                     labels: type === 'boxplot' ? [] : data.map(item => item[xAxis]),
-                     datasets: datasets
-                 },
-                 options: {
-                     scales: type === 'pie' ? {} : {
-                         x: {
-                             beginAtZero: true,
-                             title: {
-                                 display: true,
-                                 text: xAxis
-                             }
-                         },
-                         y: {
-                             beginAtZero: true,
-                             title: {
-                                 display: true,
-                                 text: yAxis
-                             }
-                         }
-                     },
-                     plugins: {
-                         legend: {
-                             display: type !== 'piex',
-                         },
-                         tooltip: {
-                             callbacks: {
-                                 label: (context) => {
-                                     if (type === 'pie') {
-                                         return `${context.label}: ${context.raw}`;
-                                     }
-                                     return `${context.dataset.label}: ${context.raw}`;
-                                 }
-                             }
-                         }
-                     }
-                 }
-             });
-         }
+		// Function to create a chart
+		function createChart(type, headers, data) {
+			if (!data || !headers || !data.length) {
+				return;
+			}
+
+			if (myChart) {
+				myChart.destroy();
+			}
+
+			const xAxis = xAxisSelect.value;
+			const yAxis = yAxisSelect.value;
+			const zAxis = zAxisSelect.value;
+
+			let datasets = getDatasets(type, data, xAxis, yAxis, zAxis);
+
+			myChart = new Chart(ctx, {
+				type: getChartType(type),
+				data: {
+					labels: type === 'boxplot' ? [] : data.map(item => item[xAxis]),
+					datasets: datasets
+				},
+				options: {
+					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
+						x: {
+							beginAtZero: true,
+							title: {
+								display: true,
+								text: xAxis
+							}
+						},
+						y: {
+							beginAtZero: true,
+							title: {
+								display: true,
+								text: yAxis
+							}
+						}
+					},
+					plugins: {
+						legend: {
+							display: type !== 'piez' && type !== 'doughnutz',
+						},
+						tooltip: {
+							callbacks: {
+								label: (context) => {
+									if (type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea') {
+										return `${context.label}: ${context.raw}`;
+									}
+									return `${context.dataset.label}: ${context.raw}`;
+								}
+							}
+						}
+					}
+				}
+			});
+		}
          
          // Initial setup
          const initialData = updateAxisSelectionsAndData(markdownTable);
@@ -500,7 +532,7 @@
              });
          });
          
-                  
+                  // Documentation from https://www.chartjs.org/docs/latest/
                   function getDatasets(type, data, xAxis, yAxis, zAxis) {
                      switch (type) {
                          case 'line':
@@ -516,6 +548,7 @@
                   				borderWidth: 1,
                              }];
                          case 'pie':
+						 case 'doughnut':
                              return [{
                                  label: yAxis,
                                  data: data.map(item => item[yAxis]),
@@ -523,30 +556,38 @@
                                  borderColor: getRandomColors(data.length, false), // true to random color
                                  borderWidth: 1,
                              }];
-                         case 'histogram':
+						case 'histogram':
+							return [{
+								label: yAxis,
+								data: data.map(item => ({
+									x: item[xAxis], // xAxis typically represents the bin range
+									y: item[yAxis]
+								})),
+								backgroundColor: 'rgba(75, 192, 192, 0.5)', // More transparent color
+								borderColor: 'rgba(75, 192, 192, 0.8)',
+								borderWidth: 1,
+								barPercentage: 1.0, // Full bar width
+								categoryPercentage: 1.0,
+								type: 'bar',
+								// Additional histogram-specific settings
+								// e.g., custom bins or scaling might be added here
+							}];
+                         case 'boxplot':
                              return [{
                                  label: yAxis,
-                                 data: data.map(item => item[yAxis]),
+                                 data: [
+                                     {
+                                         min: Math.min(...data.map(item => item[yAxis])),
+                                         q1: calculateQuartile(data.map(item => item[yAxis]), 1),
+                                         median: calculateMedian(data.map(item => item[yAxis])),
+                                         q3: calculateQuartile(data.map(item => item[yAxis]), 3),
+                                         max: Math.max(...data.map(item => item[yAxis])),
+                                     }
+                                 ],
                                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                  borderColor: 'rgba(75, 192, 192, 1)',
                                  borderWidth: 1,
                              }];
-                                 case 'boxplot':
-                                     return [{
-                                         label: yAxis,
-                                         data: [
-                                             {
-                                                 min: Math.min(...data.map(item => item[yAxis])),
-                                                 q1: calculateQuartile(data.map(item => item[yAxis]), 1),
-                                                 median: calculateMedian(data.map(item => item[yAxis])),
-                                                 q3: calculateQuartile(data.map(item => item[yAxis]), 3),
-                                                 max: Math.max(...data.map(item => item[yAxis])),
-                                             }
-                                         ],
-                                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                         borderColor: 'rgba(75, 192, 192, 1)',
-                                         borderWidth: 1,
-                                     }];
                          case 'area':
                              return [{
                                  label: `${yAxis} vs ${xAxis}`,
@@ -591,6 +632,21 @@
                   			fill: false,
                   			borderWidth: 2,
                              }];
+                         case 'mixed':
+                             return [{
+                  			label: `${yAxis} (Bars)`,
+                  			type: 'bar',
+                  			data: data.map(item => item[yAxis]),
+                  			backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  			borderColor: 'rgba(75, 192, 192, 1)',
+                  			borderWidth: 1,
+                  		}, {
+                  			label: `${xAxis} (Line)`,
+                  			type: 'line',
+                  			data: data.map(item => item[xAxis]),
+							borderColor: 'rgba(255, 99, 132, 1)',
+                  			borderWidth: 1,
+                             }];
                          case 'waterfall':
                              return [{
                   			label: `${yAxis}`,
@@ -605,7 +661,47 @@
                   			},
                   			borderWidth: 1,
                              }];			
-                         // Add cases for other chart types
+						case 'polarArea':
+							return [{
+								label: yAxis,
+								data: data.map(item => item[yAxis]),
+								backgroundColor: getRandomColors(data.length),
+								borderColor: getRandomColors(data.length, false),
+								borderWidth: 1,
+							}];
+						case 'radar':
+							return [
+								{
+									label: `${xAxis}`,
+									data: data.map(item => item[xAxis]),
+									backgroundColor: 'rgba(75, 192, 192, 0.2)',
+									borderColor: 'rgba(75, 192, 192, 1)',
+									borderWidth: 1,
+								},
+								{
+									label: `${yAxis}`,
+									data: data.map(item => item[yAxis]),
+									backgroundColor: 'rgba(153, 102, 255, 0.2)',
+									borderColor: 'rgba(153, 102, 255, 1)',
+									borderWidth: 1,
+								},
+								{
+									label: `${zAxis}`,
+									data: data.map(item => item[zAxis]),
+									backgroundColor: 'rgba(255, 159, 64, 0.2)',
+									borderColor: 'rgba(255, 159, 64, 1)',
+									borderWidth: 1,
+								}
+							];
+						case 'scatter':
+							return [{
+								label: `${yAxis} vs ${xAxis}`,
+								data: data.map(item => ({ x: item[xAxis], y: item[yAxis] })),
+								backgroundColor: 'rgba(75, 192, 192, 0.2)',
+								borderColor: 'rgba(75, 192, 192, 1)',
+								borderWidth: 1,
+							}];
+						 // Add cases for other chart types
                          default:
                              return [{
                                  label: `${yAxis} vs ${xAxis}`,
@@ -622,9 +718,28 @@
                      }
                   }
                   
-                  function getChartType(type) {
-                     return ['histogram', 'boxplot', 'pareto', 'waterfall'].includes(type) ? 'bar' : type;
-                  }
+					// Helper function to get Chart.js type
+					function getChartType(type) {
+						const customTypes = ['histogram', 'boxplot', 'pareto', 'waterfall'];
+						if (customTypes.includes(type)) {
+							return 'bar'; // Custom types are mapped to 'bar'
+						}
+						switch (type) {
+							case 'line':
+							case 'bar':
+							case 'bubble':
+							case 'doughnut':
+							case 'pie':
+							case 'polarArea':
+							case 'radar':
+							case 'scatter':
+								return type;
+							case 'area':
+								return 'line'; // 'area' is implemented as a 'line' chart with filling
+							default:
+								return 'line';
+						}
+					}
                   
                   function getRandomColors(count, isBorder = false) {
                      const colors = [
