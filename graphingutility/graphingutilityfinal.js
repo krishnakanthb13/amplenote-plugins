@@ -215,8 +215,8 @@ const htmlTemplate = `
          .container {
          display: flex;
          width: 100%;
-         max-width: 1000px;
-         height: 50%;
+         max-width: 1800px;
+         height: 90%;
          font-size: 13px;
          background-color: rgb(245,245,245);
          }
@@ -237,7 +237,7 @@ const htmlTemplate = `
          margin-top: 20px;
          }
          .chart-container {
-         flex: 4;
+         flex: 6;
          display: flex;
          justify-content: center;
          align-items: center;
@@ -290,6 +290,28 @@ const htmlTemplate = `
          visibility: visible;
          opacity: 1;
          }
+		/* Footer styles */
+		footer {
+			position: fixed; /* Fixes the footer at the bottom */
+			left: 0; /* Aligns the footer to the far left */
+			bottom: 0; /* Aligns the footer to the bottom */
+			width: 100%; /* Makes the footer span the full width of the page */
+			padding: 10px; /* Adds some padding */
+			text-align: left; /* Aligns text to the left */
+			margin: 0; /* Removes default margins */
+			background: none; /* Removes any background color */
+			color: #000; /* Sets text color (adjust as needed) */
+			font-size: 14px; /* Adjusts font size */
+		}
+
+		footer a {
+			color: #ffeb3b; /* Adjust color if needed */
+			text-decoration: none;
+		}
+
+		footer a:hover {
+			text-decoration: underline;
+		}
       </style>
    </head>
    <body>
@@ -437,12 +459,30 @@ const htmlTemplate = `
                </label>
                <select id="zAxisSelect"></select>
                <br>
-               Note Name: ${note.name}<br>
-               Note Tags: ${note.tags}<br>
-               Note UUID: ${noteUUID}
+			   <label> Note Name:
+               <span class="tooltip">
+               <i class="fa fa-info-circle" style="color:blue"></i>
+               <span class="tooltiptext">${note.name}</span>
+               </span>
+			   </label>
+			   <label> Note Tags:
+               <span class="tooltip">
+               <i class="fa fa-info-circle" style="color:blue"></i>
+               <span class="tooltiptext">${note.tags}</span>
+               </span>
+			   </label>
+			   <label> Note UUID:
+               <span class="tooltip">
+               <i class="fa fa-info-circle" style="color:blue"></i>
+               <span class="tooltiptext">${noteUUID}</span>
+               </span>
+			   </label>
             </div>
          </div>
       </div>
+	<footer>
+		<p>&copy; BKK 2024 | <a href="" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+	</footer>
       <script>
          // Sample markdown data
          const markdownData = \`
@@ -1132,8 +1172,8 @@ const htmlTemplate = `
          .container {
          display: flex;
          width: 100%;
-         max-width: 1000px;
-         height: 50%;
+         max-width: 1800px;
+         height: 90%;
          font-size: 13px;
          background-color: rgb(245,245,245);
          }
@@ -1154,7 +1194,7 @@ const htmlTemplate = `
          margin-top: 20px;
          }
          .chart-container {
-         flex: 4;
+         flex: 6;
          display: flex;
          justify-content: center;
          align-items: center;
@@ -1207,6 +1247,28 @@ const htmlTemplate = `
          visibility: visible;
          opacity: 1;
          }
+		/* Footer styles */
+		footer {
+			position: fixed; /* Fixes the footer at the bottom */
+			left: 0; /* Aligns the footer to the far left */
+			bottom: 0; /* Aligns the footer to the bottom */
+			width: 100%; /* Makes the footer span the full width of the page */
+			padding: 10px; /* Adds some padding */
+			text-align: left; /* Aligns text to the left */
+			margin: 0; /* Removes default margins */
+			background: none; /* Removes any background color */
+			color: #000; /* Sets text color (adjust as needed) */
+			font-size: 14px; /* Adjusts font size */
+		}
+
+		footer a {
+			color: #ffeb3b; /* Adjust color if needed */
+			text-decoration: none;
+		}
+
+		footer a:hover {
+			text-decoration: underline;
+		}
       </style>
    </head>
    <body>
@@ -1319,7 +1381,10 @@ const htmlTemplate = `
 
 			</div>
          <div class="chart-container">
-            <canvas id="myChart" width="400" height="200"></canvas>
+			<img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjgzdmhraW9sdmNsajM4YWw0amticXQ5MmQyOGowcW85eDAwZmpkYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eIERe7YjwgF9SXqaiy/giphy.gif" alt="Italian Trulli" width="300" height="300">
+			<hr>
+			<p>Humans At Work! - Trying to find a alternative way to get this working on Amplenote. Till then experience the Graph Utility by downloading the Recommended HTML. Thank you.</p>
+            <!--<canvas id="myChart" width="400" height="200"></canvas> -->
          </div>
          <div class="axis-dropdowns">
             <div class="axis-select">
@@ -1354,12 +1419,30 @@ const htmlTemplate = `
                </label>
                <select id="zAxisSelect"></select>
                <br>
-               Note Name: ${note.name}<br>
-               Note Tags: ${note.tags}<br>
-               Note UUID: ${noteUUID}
+			   <label> Note Name:
+               <span class="tooltip">
+               <i class="fa fa-info-circle" style="color:blue"></i>
+               <span class="tooltiptext">${note.name}</span>
+               </span>
+			   </label>
+			   <label> Note Tags:
+               <span class="tooltip">
+               <i class="fa fa-info-circle" style="color:blue"></i>
+               <span class="tooltiptext">${note.tags}</span>
+               </span>
+			   </label>
+			   <label> Note UUID:
+               <span class="tooltip">
+               <i class="fa fa-info-circle" style="color:blue"></i>
+               <span class="tooltiptext">${noteUUID}</span>
+               </span>
+			   </label>
             </div>
          </div>
       </div>
+	<footer>
+		<p>&copy; BKK 2024 | <a href="" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+	</footer>
       <script>
          // Sample markdown data
          const markdownData = \`
