@@ -22,11 +22,11 @@ noteOption: {
 
       // Extract user inputs
       // const downloadOption = result;
-      // console.log("result:", result);
+      console.log("result:", result);
 	
 	//const note = await app.notes.find(noteUUID);
     const markdown = await app.getNoteContent({ uuid: noteUUID });
-    // console.log("Initial markdown:", markdown);
+    console.log("Initial markdown:", markdown);
 
     // Function to remove HTML comments
     const removeHtmlComments = (content) => content.replace(/<!--[\s\S]*?-->/g, '').trim();
@@ -34,49 +34,49 @@ noteOption: {
     // Function to remove empty rows and columns
     const removeEmptyRowsAndColumns = (table) => {
       const rows = table.split('\n').filter(row => row.trim().startsWith('|'));
-      // console.log("Rows before filtering:", rows);
+      console.log("Rows before filtering:", rows);
 
       // Remove completely empty rows
       const filteredRows = rows.filter(row => {
         const cells = row.split('|').slice(1, -1); // Exclude the leading and trailing empty cells
-        // console.log("Cells in current row:", cells);
+        console.log("Cells in current row:", cells);
         const hasContent = cells.some(cell => cell.trim() !== '');
-        // console.log("Row has content:", hasContent);
+        console.log("Row has content:", hasContent);
         return hasContent;
       });
 
-      // console.log("Filtered rows (no empty rows):", filteredRows);
+      console.log("Filtered rows (no empty rows):", filteredRows);
 
       if (filteredRows.length === 0) {
-        // console.log("All rows are empty, returning empty string.");
+        console.log("All rows are empty, returning empty string.");
         return ''; // If all rows are empty, return empty string
       }
 
       // Determine the columns that are not empty across all rows
       const columnCount = filteredRows[0].split('|').length - 2;
-      // console.log("Column count:", columnCount);
+      console.log("Column count:", columnCount);
       const nonEmptyColumns = Array.from({ length: columnCount }, (_, colIndex) => 
         filteredRows.some(row => row.split('|')[colIndex + 1].trim() !== '')
       );
 
-      // console.log("Non-empty columns flags:", nonEmptyColumns);
+      console.log("Non-empty columns flags:", nonEmptyColumns);
 
       // Remove empty columns
       const cleanedRows = filteredRows.map(row => {
         const cells = row.split('|').slice(1, -1); // Exclude the leading and trailing empty cells
-        // console.log("Cells before filtering empty columns:", cells);
+        console.log("Cells before filtering empty columns:", cells);
         const filteredCells = cells.filter((_, i) => nonEmptyColumns[i]);
-        // console.log("Filtered cells (no empty columns):", filteredCells);
+        console.log("Filtered cells (no empty columns):", filteredCells);
         return `| ${filteredCells.join(' | ')} |`;
       });
 
-      // console.log("Cleaned rows after removing empty columns:", cleanedRows);
+      console.log("Cleaned rows after removing empty columns:", cleanedRows);
 
       return cleanedRows.join('\n');
     };
 
     const lines = markdown.split('\n');
-    // console.log("Lines:", lines);
+    console.log("Lines:", lines);
 
     let tableCount = 0;
     let inTable = false;
@@ -84,65 +84,65 @@ noteOption: {
     let currentTable = [];
 
     lines.forEach((line, index) => {
-      // console.log(`Processing line ${index}:`, line);
+      console.log(`Processing line ${index}:`, line);
 
       if (line.trim().startsWith('|')) {  // Identifying table rows
         if (!inTable) {
           tableCount++;
-          // console.log("New table detected, tableCount incremented:", tableCount);
+          console.log("New table detected, tableCount incremented:", tableCount);
 
           if (tableCount > 1) {
             tables.push('---');  // Add separator between tables
-            // console.log("Added table separator ('---').");
+            console.log("Added table separator ('---').");
           }
           tables.push(`# Table ${tableCount}\n`);
           inTable = true;
-          // console.log("In table set to true:", inTable);
+          console.log("In table set to true:", inTable);
         }
 
         if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
           const columnCount = line.split('|').length - 2;
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
           currentTable.push(`| ${headers} |`);
-          // console.log("Added headers to empty table row:", currentTable);
+          console.log("Added headers to empty table row:", currentTable);
         }
 
         currentTable.push(line);
-        // console.log("Current table content:", currentTable);
+        console.log("Current table content:", currentTable);
       } else if (inTable) {
         inTable = false;
-        // console.log("End of table detected, inTable set to false.");
+        console.log("End of table detected, inTable set to false.");
 
         const tableContent = currentTable.join('\n');
-        // console.log("Current table content before cleaning:", tableContent);
+        console.log("Current table content before cleaning:", tableContent);
 
         tables.push(removeEmptyRowsAndColumns(tableContent));
         tables.push('');  // Add an additional blank line between tables
-        // console.log("Added cleaned table and blank line to tables:", tables);
+        console.log("Added cleaned table and blank line to tables:", tables);
 
         currentTable = [];
-        // console.log("Reset currentTable:", currentTable);
+        console.log("Reset currentTable:", currentTable);
       }
     });
 
     // Ensure the last table is pushed if the markdown ends with a table
     if (currentTable.length > 0) {
       const tableContent = currentTable.join('\n');
-      // console.log("Final table content before cleaning:", tableContent);
+      console.log("Final table content before cleaning:", tableContent);
 
       tables.push(removeEmptyRowsAndColumns(tableContent));
-      // console.log("Added final cleaned table to tables:", tables);
+      console.log("Added final cleaned table to tables:", tables);
     }
 
     // Join all tables and remove HTML comments at the end
     const processedContent = tables.join('\n\n');
-    // console.log("Processed content before removing HTML comments:", processedContent);
+    console.log("Processed content before removing HTML comments:", processedContent);
 
     const cleanedContent = removeHtmlComments(processedContent);
-    // console.log("Cleaned content after removing HTML comments:", cleanedContent);
+    console.log("Cleaned content after removing HTML comments:", cleanedContent);
 
     // app.alert(cleanedContent);
-    // console.log("Final cleaned content:", cleanedContent);
+    console.log("Final cleaned content:", cleanedContent);
 	
 	const noteUUIDx = noteUUID;
 	const note = await app.notes.find(noteUUIDx);
@@ -185,10 +185,10 @@ ${cleanedContent}
 		let noteUUIDz = await app.createNote(newNoteName, newTagName);
 		await app.replaceNoteContent({ uuid: noteUUIDz }, cleanedContentz);
 		await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
-        // console.log("cleanedContentz:", cleanedContentz);
+        console.log("cleanedContentz:", cleanedContentz);
     } else if (result === "2") {
         downloadTextFile(cleanedContentz, "Markdown_Tables.txt");
-        // console.log("cleanedContentz:", cleanedContentz);
+        console.log("cleanedContentz:", cleanedContentz);
     } else if (result === "1") {
 
 const htmlTemplate = `
@@ -452,14 +452,14 @@ ${cleanedContent}
          function parseMarkdownTables(markdown) {
          // Split the markdown content into sections based on the '---' delimiter
          const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
-         // console.log('Sections:', sections);
+         console.log('Sections:', sections);
          
          // Extract tables from each section
          return sections.map((section, index) => {
-         // console.log(\`Processing section \${index + 1}:\`, section);
+         console.log(\`Processing section \${index + 1}:\`, section);
          // Split the section to get the table part, ignoring the first line (table name)
          const tablePart = section.split('\\n').slice(2).join('\\n').trim();
-         // console.log('Table part:', tablePart);
+         console.log('Table part:', tablePart);
          return tablePart; // Return the table part directly without headers
          });
          }
@@ -479,7 +479,7 @@ ${cleanedContent}
          tableSelect.appendChild(option);
          });
          
-         // console.log("tables:", tables);
+         console.log("tables:", tables);
          let markdownTable = tables[0];
          
          // Function to parse a markdown table
@@ -505,8 +505,8 @@ ${cleanedContent}
                  return rowObject;
              });
          
-             // console.log("Parsed headers:", headers);
-             // console.log("Parsed data:", data);
+             console.log("Parsed headers:", headers);
+             console.log("Parsed data:", data);
          
              return {
                  headers,
@@ -518,8 +518,8 @@ ${cleanedContent}
          		// const { headers, data } = parseMarkdownTable(markdownTable);
          		//updateAxisSelections(headers);
          
-         		 // console.log('headers:', headers);
-         		 // console.log('data:', data);
+         		 console.log('headers:', headers);
+         		 console.log('data:', data);
                   // Populate axis selection dropdowns with headers
          // Function to update axis selections and data
          function updateAxisSelectionsAndData(mdTable) {
@@ -530,7 +530,7 @@ ${cleanedContent}
                  return { headers: [], data: [] };
              }
          
-             // console.log("Updating axis selections with headers:", headers);
+             console.log("Updating axis selections with headers:", headers);
          
              // Preserve the current selections
              const currentXSelection = xAxisSelect.value;
@@ -943,19 +943,19 @@ ${cleanedContent}
                   	
          // Add event listeners for axis selections
          xAxisSelect.addEventListener('change', () => {
-             // console.log("xAxis changed:", xAxisSelect.value);
+             console.log("xAxis changed:", xAxisSelect.value);
              const { headers, data } = updateAxisSelectionsAndData(markdownTable);
              createChart(chartType, headers, data);
          });
          
          yAxisSelect.addEventListener('change', () => {
-             // console.log("yAxis changed:", yAxisSelect.value);
+             console.log("yAxis changed:", yAxisSelect.value);
              const { headers, data } = updateAxisSelectionsAndData(markdownTable);
              createChart(chartType, headers, data);
          });
          
          zAxisSelect.addEventListener('change', () => {
-             // console.log("zAxis changed:", zAxisSelect.value);
+             console.log("zAxis changed:", zAxisSelect.value);
              const { headers, data } = updateAxisSelectionsAndData(markdownTable);
              createChart(chartType, headers, data);
          });
@@ -969,7 +969,7 @@ ${cleanedContent}
 `;
 
         downloadTextFile(htmlTemplate, "InteractiveCharts.html");
-        // console.log("htmlTemplate:", htmlTemplate);
+        console.log("htmlTemplate:", htmlTemplate);
   }
 },
 /* ----------------------------------- */
@@ -1368,14 +1368,14 @@ ${cleanedContent}
          function parseMarkdownTables(markdown) {
          // Split the markdown content into sections based on the '---' delimiter
          const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
-         // console.log('Sections:', sections);
+         console.log('Sections:', sections);
          
          // Extract tables from each section
          return sections.map((section, index) => {
-         // console.log(\`Processing section \${index + 1}:\`, section);
+         console.log(\`Processing section \${index + 1}:\`, section);
          // Split the section to get the table part, ignoring the first line (table name)
          const tablePart = section.split('\\n').slice(2).join('\\n').trim();
-         // console.log('Table part:', tablePart);
+         console.log('Table part:', tablePart);
          return tablePart; // Return the table part directly without headers
          });
          }
@@ -1395,7 +1395,7 @@ ${cleanedContent}
          tableSelect.appendChild(option);
          });
          
-         // console.log("tables:", tables);
+         console.log("tables:", tables);
          let markdownTable = tables[0];
          
          // Function to parse a markdown table
@@ -1421,8 +1421,8 @@ ${cleanedContent}
                  return rowObject;
              });
          
-             // console.log("Parsed headers:", headers);
-             // console.log("Parsed data:", data);
+             console.log("Parsed headers:", headers);
+             console.log("Parsed data:", data);
          
              return {
                  headers,
@@ -1434,8 +1434,8 @@ ${cleanedContent}
          		// const { headers, data } = parseMarkdownTable(markdownTable);
          		//updateAxisSelections(headers);
          
-         		 // console.log('headers:', headers);
-         		 // console.log('data:', data);
+         		 console.log('headers:', headers);
+         		 console.log('data:', data);
                   // Populate axis selection dropdowns with headers
          // Function to update axis selections and data
          function updateAxisSelectionsAndData(mdTable) {
@@ -1446,7 +1446,7 @@ ${cleanedContent}
                  return { headers: [], data: [] };
              }
          
-             // console.log("Updating axis selections with headers:", headers);
+             console.log("Updating axis selections with headers:", headers);
          
              // Preserve the current selections
              const currentXSelection = xAxisSelect.value;
@@ -1859,19 +1859,19 @@ ${cleanedContent}
                   	
          // Add event listeners for axis selections
          xAxisSelect.addEventListener('change', () => {
-             // console.log("xAxis changed:", xAxisSelect.value);
+             console.log("xAxis changed:", xAxisSelect.value);
              const { headers, data } = updateAxisSelectionsAndData(markdownTable);
              createChart(chartType, headers, data);
          });
          
          yAxisSelect.addEventListener('change', () => {
-             // console.log("yAxis changed:", yAxisSelect.value);
+             console.log("yAxis changed:", yAxisSelect.value);
              const { headers, data } = updateAxisSelectionsAndData(markdownTable);
              createChart(chartType, headers, data);
          });
          
          zAxisSelect.addEventListener('change', () => {
-             // console.log("zAxis changed:", zAxisSelect.value);
+             console.log("zAxis changed:", zAxisSelect.value);
              const { headers, data } = updateAxisSelectionsAndData(markdownTable);
              createChart(chartType, headers, data);
          });
