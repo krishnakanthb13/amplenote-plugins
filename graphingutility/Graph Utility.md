@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility
 uuid: 2d631ce2-6169-11ef-a048-22074e34eefe
-version: 689
+version: 695
 created: '2024-08-23T21:33:02+05:30'
 tags:
   - '-9-permanent'
@@ -103,7 +103,7 @@ For more details, refer to the Full Documentation in the Instruction below or co
 |name<!-- {"cell":{"colwidth":105}} -->|Graph Utility|
 |icon<!-- {"cell":{"colwidth":105}} -->|query_stats|
 |setting<!-- {"cell":{"colwidth":105}} -->|Current_Note_UUID \[Do not Edit!\]|
-|description|In Progress|
+|description|Thinking to Visualize your Tables. Look no were else, this is your Go To Plugin Tool.|
 |instructions|[Graph Utility - Download!](https://www.amplenote.com/notes/d08099c8-616d-11ef-beb6-b6c19b417745) <br />[Graph Utility - Viewer!](https://www.amplenote.com/notes/05aef748-616e-11ef-a048-22074e34eefe) <br />[Graph Utility - Interactive Charts...](https://www.amplenote.com/notes/2dd7876c-616e-11ef-a048-22074e34eefe) <br />[Graph Utility - Animations](https://www.amplenote.com/notes/edd30c6a-623d-11ef-bed3-b6c19b417745) |
 ---
 
