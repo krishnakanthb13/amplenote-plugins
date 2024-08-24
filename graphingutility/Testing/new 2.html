@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Table Headers</title>
+</head>
+<body>
+    <select id="tableSelect">
+        <option value="">Select a table</option>
+    </select>
+    <div id="tableDisplay"></div>
+	
+    <script>
+        // Sample markdown data
+        const markdownData = `
+# Table 1
+
+| Date       | Value1 | Value2 | Value3 |
+|------------|--------|--------|--------|
+| 2024-08-01 | 10     | 5      | 7      |
+| 2024-08-02 | 15     | 8      | 14     |
+| 2024-08-03 | 7      | 3      | 4      |
+| 2024-08-04 | 12     | 9      | 6      |
+| 2024-08-05 | 20     | 7      | 8      |
+
+---
+
+# Table 2
+
+| Date       | ValueA | ValueB | ValueC |
+|------------|--------|--------|--------|
+| 2024-08-01 | 8      | 12     | 16     |
+| 2024-08-02 | 6      | 14     | 18     |
+| 2024-08-03 | 9      | 11     | 15     |
+| 2024-08-04 | 7      | 13     | 17     |
+| 2024-08-05 | 10     | 9      | 13     |
+
+---
+
+# Table 3
+
+| Column 1 | Column 2 |
+| | |
+|-|-|
+|name|Graphing Utility|
+|icon|query_stats|
+|setting|In Progress|
+|description|In Progress|
+`;
+
+        // Function to parse the markdown data
+        function parseMarkdownTables(markdown) {
+            // Split the markdown content into sections based on the '---' delimiter
+            const sections = markdown.split(/\n---\n/).filter(section => section.trim());
+            console.log('Sections:', sections);
+
+            // Extract tables from each section
+            return sections.map((section, index) => {
+                console.log(`Processing section ${index + 1}:`, section);
+                // Split the section to get the table part, ignoring the first line (table name)
+                const tablePart = section.split('\n').slice(2).join('\n').trim();
+                console.log('Table part:', tablePart);
+                return tablePart; // Return the table part directly without headers
+            });
+        }
+
+        // Parse the markdown data
+        const tables = parseMarkdownTables(markdownData);
+
+        // Get the select element and display element
+        const selectElement = document.getElementById('tableSelect');
+        const tableDisplay = document.getElementById('tableDisplay');
+
+        // Populate the select element with table headers
+        tables.forEach((_, index) => {
+            const header = `Table ${index + 1}`;
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `${header}`;
+            selectElement.appendChild(option);
+        });
+
+        // Event listener for select element
+        selectElement.addEventListener('change', (event) => {
+            const selectedIndex = event.target.value;
+            if (selectedIndex === "") {
+                tableDisplay.innerHTML = "";
+                return;
+            }
+            const markdownTable = tables[selectedIndex];
+            tableDisplay.innerHTML = `<pre>${markdownTable}</pre>`;
+        });
+    </script>
+</body>
+</html>
