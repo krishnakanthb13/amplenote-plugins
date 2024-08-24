@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility
 uuid: 2d631ce2-6169-11ef-a048-22074e34eefe
-version: 652
+version: 664
 created: '2024-08-23T21:33:02+05:30'
 tags:
   - '-9-permanent'
@@ -41,6 +41,10 @@ In summary, this plugin is an essential tool for anyone looking to elevate their
 \
 
 ![](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/00af011b-823b-4193-ab72-5174c2e0708e.gif)
+
+- <mark style="background-color:undefined;">**Demo with Valid Data - Gold Prize Trend in India.**<!-- {"backgroundCycleColor":"58"} --></mark>
+
+![](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/9f14f443-158b-4530-8dc1-f55e14b3889c.gif)
 
 ---
 
