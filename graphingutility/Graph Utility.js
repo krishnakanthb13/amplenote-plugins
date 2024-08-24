@@ -477,6 +477,37 @@ const htmlTemplate = `
                <span class="tooltiptext">${noteUUID}</span>
                </span>
 			   </label>
+			   <br>
+				<label for="easingSelect"> Select Easing Function:
+					<span class="tooltip">
+						<i class="fa fa-info-circle" style="color:blue"></i>
+						<span class="tooltiptext">Choose how the animation progresses over time.</span>
+					</span>
+				</label>
+				<select id="easingSelect">
+					<option value="linear">Linear</option>
+					<option value="easeInQuad">Ease In Quad</option>
+					<option value="easeOutQuad">Ease Out Quad</option>
+					<option value="easeInOutQuad">Ease In Out Quad</option>
+					<option value="easeInCubic">Ease In Cubic</option>
+					<option value="easeOutCubic">Ease Out Cubic</option>
+					<option value="easeInOutCubic">Ease In Out Cubic</option>
+					<option value="easeInQuart">Ease In Quart</option>
+					<option value="easeOutQuart">Ease Out Quart</option>
+					<option value="easeInOutQuart">Ease In Out Quart</option>
+					<option value="easeInQuint">Ease In Quint</option>
+					<option value="easeOutQuint">Ease Out Quint</option>
+					<option value="easeInOutQuint">Ease In Out Quint</option>
+					<option value="easeInBounce">Ease In Bounce</option>
+					<option value="easeOutBounce">Ease Out Bounce</option>
+					<option value="easeInOutBounce">Ease In Out Bounce</option>
+					<option value="easeInElastic">Ease In Elastic</option>
+					<option value="easeOutElastic">Ease Out Elastic</option>
+					<option value="easeInOutElastic">Ease In Out Elastic</option>
+					<option value="easeInBack">Ease In Back</option>
+					<option value="easeOutBack">Ease Out Back</option>
+					<option value="easeInOutBack">Ease In Out Back</option>
+				</select>
             </div>
          </div>
       </div>
@@ -484,6 +515,9 @@ const htmlTemplate = `
 		<p>&copy; BKK 2024 | <a href="https://public.amplenote.com/sDBcbB/graph-utility" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
 	</footer>
       <script>
+	  
+        _loadLibrary("https://cdn.jsdelivr.net/npm/chart.js").then(() => {
+			
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
@@ -621,12 +655,12 @@ ${cleanedContent}
          
              return { headers, data };
          }
-         
-         		
+      		
          // Chart related variables
          let chartType = 'line';
          let myChart;
          const ctx = document.getElementById('myChart').getContext('2d');
+		 const easingSelect = document.getElementById('easingSelect');
          		 
 		// Function to create a chart
 		function createChart(type, headers, data) {
@@ -651,6 +685,12 @@ ${cleanedContent}
 					datasets: datasets
 				},
 				options: {
+					animation: {
+						animateRotate: true,   // Enable rotation animation for 'pie' and 'doughnut'
+						animateScale: true,    // Enable scaling animation for 'radar' and 'polarArea'
+						duration: 1500,        // Duration of the animation in milliseconds
+						easing: easingSelect.value // Easing function for the animation
+					},
 					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
 						x: {
 							beginAtZero: true,
@@ -685,7 +725,7 @@ ${cleanedContent}
 				}
 			});
 		}
-         
+        
          // Initial setup
          const initialData = updateAxisSelectionsAndData(markdownTable);
          if (initialData.data.length > 0) {
@@ -706,6 +746,13 @@ ${cleanedContent}
                  console.error("No data available after table selection");
              }
          });
+
+		// Update chart animation on dropdown change
+		easingSelect.addEventListener('change', () => {
+			const selectedEasing = easingSelect.value;
+			myChart.options.animation.easing = selectedEasing;
+			createChart(chartType, initialData.headers, initialData.data);
+		});
          
          // Event listeners for chart type change
          document.querySelectorAll('input[name="chartType"]').forEach(input => {
@@ -739,6 +786,12 @@ ${cleanedContent}
                                  backgroundColor: getRandomColors(data.length),
                                  borderColor: getRandomColors(data.length, false), // true to random color
                                  borderWidth: 1,
+								 animation: {
+									animateRotate: true,
+									animateScale: true,
+									duration: 1500,
+									easing: easingSelect.value
+								}
                              }];
 						case 'histogram':
 							return [{
@@ -852,6 +905,12 @@ ${cleanedContent}
 								backgroundColor: getRandomColors(data.length),
 								borderColor: getRandomColors(data.length, false),
 								borderWidth: 1,
+								animation: {
+									animateRotate: true,
+									animateScale: true,
+									duration: 1500,
+									easing: easingSelect.value
+								}
 							}];
 						case 'radar':
 							return [
@@ -861,6 +920,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(75, 192, 192, 0.2)',
 									borderColor: 'rgba(75, 192, 192, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1000,
+										easing: easingSelect.value
+									 }
 								},
 								{
 									label: \`\${yAxis}\`,
@@ -868,6 +933,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(153, 102, 255, 0.2)',
 									borderColor: 'rgba(153, 102, 255, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1250,
+										easing: easingSelect.value
+									 }
 								},
 								{
 									label: \`\${zAxis}\`,
@@ -875,6 +946,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(255, 159, 64, 0.2)',
 									borderColor: 'rgba(255, 159, 64, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1500,
+										easing: easingSelect.value
+									 }
 								}
 							];
 						case 'scatter':
@@ -980,8 +1057,7 @@ ${cleanedContent}
                                  createChart(chartType);
                              });
                          });
-         			
-                  	
+
          // Add event listeners for axis selections
          xAxisSelect.addEventListener('change', () => {
              // console.log("xAxis changed:", xAxisSelect.value);
@@ -1002,7 +1078,20 @@ ${cleanedContent}
          });
                   // Initial chart rendering
                   // createChart(chartType);
-         
+
+        });
+
+    function _loadLibrary(url) {
+        return new Promise(function(resolve) {
+            const script = document.createElement("script");
+            script.setAttribute("type", "text/javascript");
+            script.setAttribute("src", url);
+            script.addEventListener("load", function() {
+                resolve(true);
+            });
+            document.body.appendChild(script);
+        });
+    }         
                
       </script>
    </body>
@@ -1022,6 +1111,27 @@ ${cleanedContent}
 	return null;
   }
 },
+/* ----------------------------------- */
+/* async _loadChartJS() {
+  // Check if the library is already loaded
+  if (this._haveLoadedChartJS) return Promise.resolve(true);
+ 
+  return new Promise(function(resolve) {
+    // Create a new script element
+    const script = document.createElement("script");
+    script.setAttribute("type", "text/javascript");
+    script.setAttribute("src", "https://cdn.jsdelivr.net/npm/chart.js");
+
+    // Listen for the load event
+    script.addEventListener("load", function() {
+      this._haveLoadedChartJS = true; // Set the flag to indicate the library is loaded
+      resolve(true); // Resolve the promise
+    });
+
+    // Append the script to the document body
+    document.body.appendChild(script);
+  });
+}, */
 /* ----------------------------------- */
 async renderEmbed(app, ...args) {
 	const noteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
@@ -1381,10 +1491,7 @@ const htmlTemplate = `
 
 			</div>
          <div class="chart-container">
-			<img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjgzdmhraW9sdmNsajM4YWw0amticXQ5MmQyOGowcW85eDAwZmpkYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eIERe7YjwgF9SXqaiy/giphy.gif" alt="Italian Trulli" width="300" height="300">
-			<hr>
-			<p>Humans At Work! - Trying to find a alternative way to get this working on Amplenote. Till then experience the Graph Utility by downloading the Recommended HTML. Thank you.</p>
-            <!--<canvas id="myChart" width="400" height="200"></canvas> -->
+            <canvas id="myChart" width="400" height="200"></canvas>
          </div>
          <div class="axis-dropdowns">
             <div class="axis-select">
@@ -1437,6 +1544,37 @@ const htmlTemplate = `
                <span class="tooltiptext">${noteUUID}</span>
                </span>
 			   </label>
+			   <br>
+				<label for="easingSelect"> Select Easing Function:
+					<span class="tooltip">
+						<i class="fa fa-info-circle" style="color:blue"></i>
+						<span class="tooltiptext">Choose how the animation progresses over time.</span>
+					</span>
+				</label>
+				<select id="easingSelect">
+					<option value="linear">Linear</option>
+					<option value="easeInQuad">Ease In Quad</option>
+					<option value="easeOutQuad">Ease Out Quad</option>
+					<option value="easeInOutQuad">Ease In Out Quad</option>
+					<option value="easeInCubic">Ease In Cubic</option>
+					<option value="easeOutCubic">Ease Out Cubic</option>
+					<option value="easeInOutCubic">Ease In Out Cubic</option>
+					<option value="easeInQuart">Ease In Quart</option>
+					<option value="easeOutQuart">Ease Out Quart</option>
+					<option value="easeInOutQuart">Ease In Out Quart</option>
+					<option value="easeInQuint">Ease In Quint</option>
+					<option value="easeOutQuint">Ease Out Quint</option>
+					<option value="easeInOutQuint">Ease In Out Quint</option>
+					<option value="easeInBounce">Ease In Bounce</option>
+					<option value="easeOutBounce">Ease Out Bounce</option>
+					<option value="easeInOutBounce">Ease In Out Bounce</option>
+					<option value="easeInElastic">Ease In Elastic</option>
+					<option value="easeOutElastic">Ease Out Elastic</option>
+					<option value="easeInOutElastic">Ease In Out Elastic</option>
+					<option value="easeInBack">Ease In Back</option>
+					<option value="easeOutBack">Ease Out Back</option>
+					<option value="easeInOutBack">Ease In Out Back</option>
+				</select>
             </div>
          </div>
       </div>
@@ -1444,6 +1582,9 @@ const htmlTemplate = `
 		<p>&copy; BKK 2024 | <a href="https://public.amplenote.com/sDBcbB/graph-utility" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
 	</footer>
       <script>
+	  
+        _loadLibrary("https://cdn.jsdelivr.net/npm/chart.js").then(() => {
+			
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
@@ -1581,12 +1722,12 @@ ${cleanedContent}
          
              return { headers, data };
          }
-         
-         		
+      		
          // Chart related variables
          let chartType = 'line';
          let myChart;
          const ctx = document.getElementById('myChart').getContext('2d');
+		 const easingSelect = document.getElementById('easingSelect');
          		 
 		// Function to create a chart
 		function createChart(type, headers, data) {
@@ -1611,6 +1752,12 @@ ${cleanedContent}
 					datasets: datasets
 				},
 				options: {
+					animation: {
+						animateRotate: true,   // Enable rotation animation for 'pie' and 'doughnut'
+						animateScale: true,    // Enable scaling animation for 'radar' and 'polarArea'
+						duration: 1500,        // Duration of the animation in milliseconds
+						easing: easingSelect.value // Easing function for the animation
+					},
 					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
 						x: {
 							beginAtZero: true,
@@ -1645,7 +1792,7 @@ ${cleanedContent}
 				}
 			});
 		}
-         
+        
          // Initial setup
          const initialData = updateAxisSelectionsAndData(markdownTable);
          if (initialData.data.length > 0) {
@@ -1666,6 +1813,13 @@ ${cleanedContent}
                  console.error("No data available after table selection");
              }
          });
+
+		// Update chart animation on dropdown change
+		easingSelect.addEventListener('change', () => {
+			const selectedEasing = easingSelect.value;
+			myChart.options.animation.easing = selectedEasing;
+			createChart(chartType, initialData.headers, initialData.data);
+		});
          
          // Event listeners for chart type change
          document.querySelectorAll('input[name="chartType"]').forEach(input => {
@@ -1699,6 +1853,12 @@ ${cleanedContent}
                                  backgroundColor: getRandomColors(data.length),
                                  borderColor: getRandomColors(data.length, false), // true to random color
                                  borderWidth: 1,
+								 animation: {
+									animateRotate: true,
+									animateScale: true,
+									duration: 1500,
+									easing: easingSelect.value
+								}
                              }];
 						case 'histogram':
 							return [{
@@ -1812,6 +1972,12 @@ ${cleanedContent}
 								backgroundColor: getRandomColors(data.length),
 								borderColor: getRandomColors(data.length, false),
 								borderWidth: 1,
+								animation: {
+									animateRotate: true,
+									animateScale: true,
+									duration: 1500,
+									easing: easingSelect.value
+								}
 							}];
 						case 'radar':
 							return [
@@ -1821,6 +1987,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(75, 192, 192, 0.2)',
 									borderColor: 'rgba(75, 192, 192, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1000,
+										easing: easingSelect.value
+									 }
 								},
 								{
 									label: \`\${yAxis}\`,
@@ -1828,6 +2000,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(153, 102, 255, 0.2)',
 									borderColor: 'rgba(153, 102, 255, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1250,
+										easing: easingSelect.value
+									 }
 								},
 								{
 									label: \`\${zAxis}\`,
@@ -1835,6 +2013,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(255, 159, 64, 0.2)',
 									borderColor: 'rgba(255, 159, 64, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1500,
+										easing: easingSelect.value
+									 }
 								}
 							];
 						case 'scatter':
@@ -1940,8 +2124,7 @@ ${cleanedContent}
                                  createChart(chartType);
                              });
                          });
-         			
-                  	
+
          // Add event listeners for axis selections
          xAxisSelect.addEventListener('change', () => {
              // console.log("xAxis changed:", xAxisSelect.value);
@@ -1962,7 +2145,20 @@ ${cleanedContent}
          });
                   // Initial chart rendering
                   // createChart(chartType);
-         
+
+        });
+
+    function _loadLibrary(url) {
+        return new Promise(function(resolve) {
+            const script = document.createElement("script");
+            script.setAttribute("type", "text/javascript");
+            script.setAttribute("src", url);
+            script.addEventListener("load", function() {
+                resolve(true);
+            });
+            document.body.appendChild(script);
+        });
+    }         
                
       </script>
    </body>
