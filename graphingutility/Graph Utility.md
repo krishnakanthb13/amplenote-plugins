@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility
 uuid: 2d631ce2-6169-11ef-a048-22074e34eefe
-version: 664
+version: 689
 created: '2024-08-23T21:33:02+05:30'
 tags:
   - '-9-permanent'
@@ -2333,13 +2333,17 @@ return(htmlTemplate);
 
 - ~~**Dataset Generation:** Prepares datasets for Chart.js visualization.~~
 
+- ~~Figure out a way to get the Embed working. - <mark style="color:#F8914D;">**In progress**<!-- {"cycleColor":"24"} --></mark>~~
+
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 
-- Figure out a way to get the Embed working. - <mark style="color:#F8914D;">**In progress**<!-- {"cycleColor":"24"} --></mark>
+- Have the Ability to <mark style="color:#F8914D;">Select Rows as data chain<!-- {"cycleColor":"24"} --></mark> for the Graphs. Currently only support Columns.
 
-- Provide a download Image option or save image option or copy image option to the Interactive charts.
+- Have to Ability to <mark style="color:#F8914D;">Select First Column or Row as Headers<!-- {"cycleColor":"24"} --></mark>. Currently applies Headers irrespective of how the source table is.
 
-- Note: Upon request, will implement Audit function similar to [Gallery ](https://public.amplenote.com/LpRxpX/gallery)Plugin. (If at least 15 comment or unique interactions of implementation of Audit is useful, I can make it happen).
+- Provide a <mark style="color:#F8914D;">download Image option<!-- {"cycleColor":"24"} --></mark> or save image option or copy image option to the Interactive charts.
+
+- Note: Upon request, will implement <mark style="color:#F8914D;">Audit function<!-- {"cycleColor":"24"} --></mark> similar to [Gallery ](https://public.amplenote.com/LpRxpX/gallery)Plugin. (If at least 15 comment or unique interactions of implementation of Audit is useful, I can make it happen).
 
 - [Future Plan - Amplenote Plugins!](https://www.amplenote.com/notes/78995798-3f78-11ef-9b28-26e37c279344) 
 
