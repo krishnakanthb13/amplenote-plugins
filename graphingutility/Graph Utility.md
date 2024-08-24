@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility
 uuid: 2d631ce2-6169-11ef-a048-22074e34eefe
-version: 449
+version: 652
 created: '2024-08-23T21:33:02+05:30'
 tags:
   - '-9-permanent'
@@ -42,62 +42,40 @@ In summary, this plugin is an essential tool for anyone looking to elevate their
 
 ![](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/00af011b-823b-4193-ab72-5174c2e0708e.gif)
 
--  <mark style="background-color:undefined;color:#454545;">**>> Viewer is still in the making! <<**<!-- {"backgroundCycleColor":"59","cycleColor":"22"} --></mark> 
-
-    - Humans At Work! - Trying to find a alternative way to get this working on Amplenote. Till then experience the Graph Utility by downloading the Recommended HTML.
-
-    - Thank you.
-
-![80c06f8c-27f8-415f-9526-3ee92eea8465.png|1200](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/80c06f8c-27f8-415f-9526-3ee92eea8465.png) [^3]
-
-\
-
 ---
 
 ## <mark style="color:#F8D616;">Documentation:<!-- {"cycleColor":"25"} --></mark>
 
-Welcome to the Markdown Table to Chart Plugin! This guide will help you understand how to use the plugin to turn your markdown tables into easy-to-read charts. No technical background needed!
+### Getting Started <mark style="color:#F8914D;">\[Readme!\]<!-- {"cycleColor":"24"} --></mark>
 
-\
+- After installing, Open your Note Options (Three dots on top right of the Note.) You will see Three Options.
 
-### What Is This Plugin?
+- `Graph Utility: Download!`
 
-The Markdown Table to Chart Plugin helps you create charts from tables written in markdown. Markdown is a simple way to format text, and sometimes it’s hard to see trends or patterns just from a table. This plugin solves that by turning your tables into charts, making your data more understandable and visually appealing.
+    - `Download - Interactive Charts (Recommended)` Download a HTML file with all the Interactive Chart Options, with all the table data from the note that you are selecting from.
 
-\
+    - `Download all Tables - Markdown` This option will let you download a formatted markdown type of all the tables present in the note that you selected from, this can used in the above HTML, by editing using a notepad or any other software that support markdown tables.
 
-### How Does It Work?
+    - `Copy all Tables from this Note to a new Note` If you have to many data points or to much noise data, which is not letting you focus on your data, then move all your data in tables alone into a clean and separate note.
 
-**`Select Your Table:`** The plugin automatically finds tables in your markdown document. You just choose the table you want to visualize.
+- `Graph Utility: Viewer!`
 
-**`Pick Your Chart Type:`** You can select from different types of charts like line charts, bar charts, or pie charts. This depends on how you want to see your data.
+    - Do not want to download the data or create unnecessary duplication of data, best is to use this option. Upon selecting, this inserts a HTML embed into your current Note from you selected it. In which you will have options to play around.
 
-**`Customize Your Chart:`** Choose which parts of your table will be used for the chart’s X-axis (horizontal), Y-axis (vertical), or Z-axis (if needed). This lets you control what your chart will show.
+- `Graph Utility: Update Viewer!`
 
-**`View Your Chart:`** Once you’ve set everything up, the plugin creates the chart and places it directly in your document. You don’t need to use any other tools or leave your current workspace.
+    - Once you insert a Viewer, by default that note will be considered as the default data source for the Embed. Incase if you want to use a different note as it's data source you need to select this option.
 
-\
-
-### Getting Started
-
-**`Install the Plugin:`** Follow the installation instructions specific to Amplnote.
-
-**`Open Your Amplenote Note - Markdown Document:`** This is where your tables are located.
-
-**`Run the Plugin:`** The plugin will scan your document and show a list of tables. Select the one you want to convert.
-
-**`Insert and Save:`** The plugin generates the chart and inserts it into your document.
-
-**`Configure Your Chart:`** Choose the chart type and configure which data columns to use.
-
-\
+    - Note: If you are planning to insert a new viewer in a different note, that particular note will be updated as the Source. And the way how this Embed works is, it is universal across your notes. Hence when going back to earlier note where the Viewer was already inserted, then you need to use this `Update Viewer` Option, for the Plugin to pick up the latest note as its source.
 
 ### Features
 
-**`Easy Table Selection:`** Automatically identifies tables in your markdown.\
-**`Variety of Chart Types:`** Line, bar, pie, and more.\
-**`Customizable Axes:`** Choose which data goes on the X, Y, or Z axis.\
-**`Immediate Visualization:`** View your chart right in your document.
+**`Easy Table Selection:`** Automatically identifies tables in your markdown. You just have to select which table that you want to select in the order in which it is present in your note.\
+**`Variety of Chart Types:`** Line, bar, pie, and advanced charts as well.\
+**`Customizable Axes:`** Choose which data goes on the X, Y, or Z axis. (Limited to Column data alone for now!)\
+**`Immediate Visualization:`** View your chart right in your document. Quickly compare and see which one suits you best for your visualization.
+
+**`Select your Fav Animations:`** Feeling overwhelmed by your data. Have some fidgeting with some animation, see which one is distracting you and get a chance to unwind occasionally.
 
 \
 Troubleshooting
@@ -110,7 +88,7 @@ For more details, refer to the Full Documentation in the Instruction below or co
 
 \
 
-Happy charting! 🎉
+`Happy charting! 🎉`
 
 ---
 
@@ -122,7 +100,7 @@ Happy charting! 🎉
 |icon<!-- {"cell":{"colwidth":105}} -->|query_stats|
 |setting<!-- {"cell":{"colwidth":105}} -->|Current_Note_UUID \[Do not Edit!\]|
 |description|In Progress|
-|instructions|[Graph Utility - Download!](https://www.amplenote.com/notes/d08099c8-616d-11ef-beb6-b6c19b417745) <br />[Graph Utility - Interactive Charts](https://www.amplenote.com/notes/2dd7876c-616e-11ef-a048-22074e34eefe)<br />[Graph Utility - Viewer!](https://www.amplenote.com/notes/05aef748-616e-11ef-a048-22074e34eefe) |
+|instructions|[Graph Utility - Download!](https://www.amplenote.com/notes/d08099c8-616d-11ef-beb6-b6c19b417745) <br />[Graph Utility - Viewer!](https://www.amplenote.com/notes/05aef748-616e-11ef-a048-22074e34eefe) <br />[Graph Utility - Interactive Charts...](https://www.amplenote.com/notes/2dd7876c-616e-11ef-a048-22074e34eefe) <br />[Graph Utility - Animations](https://www.amplenote.com/notes/edd30c6a-623d-11ef-bed3-b6c19b417745) |
 ---
 
 ## <mark style="color:#F8D616;">Code Base:<!-- {"cycleColor":"25"} --></mark>
@@ -607,6 +585,37 @@ const htmlTemplate = `
                <span class="tooltiptext">${noteUUID}</span>
                </span>
 			   </label>
+			   <br>
+				<label for="easingSelect"> Select Easing Function:
+					<span class="tooltip">
+						<i class="fa fa-info-circle" style="color:blue"></i>
+						<span class="tooltiptext">Choose how the animation progresses over time.</span>
+					</span>
+				</label>
+				<select id="easingSelect">
+					<option value="linear">Linear</option>
+					<option value="easeInQuad">Ease In Quad</option>
+					<option value="easeOutQuad">Ease Out Quad</option>
+					<option value="easeInOutQuad">Ease In Out Quad</option>
+					<option value="easeInCubic">Ease In Cubic</option>
+					<option value="easeOutCubic">Ease Out Cubic</option>
+					<option value="easeInOutCubic">Ease In Out Cubic</option>
+					<option value="easeInQuart">Ease In Quart</option>
+					<option value="easeOutQuart">Ease Out Quart</option>
+					<option value="easeInOutQuart">Ease In Out Quart</option>
+					<option value="easeInQuint">Ease In Quint</option>
+					<option value="easeOutQuint">Ease Out Quint</option>
+					<option value="easeInOutQuint">Ease In Out Quint</option>
+					<option value="easeInBounce">Ease In Bounce</option>
+					<option value="easeOutBounce">Ease Out Bounce</option>
+					<option value="easeInOutBounce">Ease In Out Bounce</option>
+					<option value="easeInElastic">Ease In Elastic</option>
+					<option value="easeOutElastic">Ease Out Elastic</option>
+					<option value="easeInOutElastic">Ease In Out Elastic</option>
+					<option value="easeInBack">Ease In Back</option>
+					<option value="easeOutBack">Ease Out Back</option>
+					<option value="easeInOutBack">Ease In Out Back</option>
+				</select>
             </div>
          </div>
       </div>
@@ -614,6 +623,9 @@ const htmlTemplate = `
 		<p>&copy; BKK 2024 | <a href="https://public.amplenote.com/sDBcbB/graph-utility" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
 	</footer>
       <script>
+	  
+        _loadLibrary("https://cdn.jsdelivr.net/npm/chart.js").then(() => {
+			
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
@@ -751,12 +763,12 @@ ${cleanedContent}
          
              return { headers, data };
          }
-         
-         		
+      		
          // Chart related variables
          let chartType = 'line';
          let myChart;
          const ctx = document.getElementById('myChart').getContext('2d');
+		 const easingSelect = document.getElementById('easingSelect');
          		 
 		// Function to create a chart
 		function createChart(type, headers, data) {
@@ -781,6 +793,12 @@ ${cleanedContent}
 					datasets: datasets
 				},
 				options: {
+					animation: {
+						animateRotate: true,   // Enable rotation animation for 'pie' and 'doughnut'
+						animateScale: true,    // Enable scaling animation for 'radar' and 'polarArea'
+						duration: 1500,        // Duration of the animation in milliseconds
+						easing: easingSelect.value // Easing function for the animation
+					},
 					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
 						x: {
 							beginAtZero: true,
@@ -815,7 +833,7 @@ ${cleanedContent}
 				}
 			});
 		}
-         
+        
          // Initial setup
          const initialData = updateAxisSelectionsAndData(markdownTable);
          if (initialData.data.length > 0) {
@@ -836,6 +854,13 @@ ${cleanedContent}
                  console.error("No data available after table selection");
              }
          });
+
+		// Update chart animation on dropdown change
+		easingSelect.addEventListener('change', () => {
+			const selectedEasing = easingSelect.value;
+			myChart.options.animation.easing = selectedEasing;
+			createChart(chartType, initialData.headers, initialData.data);
+		});
          
          // Event listeners for chart type change
          document.querySelectorAll('input[name="chartType"]').forEach(input => {
@@ -869,6 +894,12 @@ ${cleanedContent}
                                  backgroundColor: getRandomColors(data.length),
                                  borderColor: getRandomColors(data.length, false), // true to random color
                                  borderWidth: 1,
+								 animation: {
+									animateRotate: true,
+									animateScale: true,
+									duration: 1500,
+									easing: easingSelect.value
+								}
                              }];
 						case 'histogram':
 							return [{
@@ -982,6 +1013,12 @@ ${cleanedContent}
 								backgroundColor: getRandomColors(data.length),
 								borderColor: getRandomColors(data.length, false),
 								borderWidth: 1,
+								animation: {
+									animateRotate: true,
+									animateScale: true,
+									duration: 1500,
+									easing: easingSelect.value
+								}
 							}];
 						case 'radar':
 							return [
@@ -991,6 +1028,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(75, 192, 192, 0.2)',
 									borderColor: 'rgba(75, 192, 192, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1000,
+										easing: easingSelect.value
+									 }
 								},
 								{
 									label: \`\${yAxis}\`,
@@ -998,6 +1041,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(153, 102, 255, 0.2)',
 									borderColor: 'rgba(153, 102, 255, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1250,
+										easing: easingSelect.value
+									 }
 								},
 								{
 									label: \`\${zAxis}\`,
@@ -1005,6 +1054,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(255, 159, 64, 0.2)',
 									borderColor: 'rgba(255, 159, 64, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1500,
+										easing: easingSelect.value
+									 }
 								}
 							];
 						case 'scatter':
@@ -1110,8 +1165,7 @@ ${cleanedContent}
                                  createChart(chartType);
                              });
                          });
-         			
-                  	
+
          // Add event listeners for axis selections
          xAxisSelect.addEventListener('change', () => {
              // console.log("xAxis changed:", xAxisSelect.value);
@@ -1132,7 +1186,20 @@ ${cleanedContent}
          });
                   // Initial chart rendering
                   // createChart(chartType);
-         
+
+        });
+
+    function _loadLibrary(url) {
+        return new Promise(function(resolve) {
+            const script = document.createElement("script");
+            script.setAttribute("type", "text/javascript");
+            script.setAttribute("src", url);
+            script.addEventListener("load", function() {
+                resolve(true);
+            });
+            document.body.appendChild(script);
+        });
+    }         
                
       </script>
    </body>
@@ -1148,10 +1215,44 @@ ${cleanedContent}
     // app.alert(noteUUID);
 	await app.setSetting("Current_Note_UUID [Do not Edit!]", noteUUID);
 	const noteUUIDz = noteUUID;
+	  // Load the Chart.js library
+	  // await this._loadChartJS();
 	await app.insertNoteContent({ uuid: noteUUIDz },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="2" />`);
+	return null;
+},
+/* ----------------------------------- */
+"Update Viewer!":  async function (app, noteUUID) {
+    // app.alert(noteUUID);
+	await app.setSetting("Current_Note_UUID [Do not Edit!]", noteUUID);
+	// const noteUUIDz = noteUUID;
+	  // Load the Chart.js library
+	  // await this._loadChartJS();
+	// await app.insertNoteContent({ uuid: noteUUIDz },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="2" />`);
+	app.alert("Current Note is updated for your Graph Utlity Viewer!");
 	return null;
   }
 },
+/* ----------------------------------- */
+/* async _loadChartJS() {
+  // Check if the library is already loaded
+  if (this._haveLoadedChartJS) return Promise.resolve(true);
+ 
+  return new Promise(function(resolve) {
+    // Create a new script element
+    const script = document.createElement("script");
+    script.setAttribute("type", "text/javascript");
+    script.setAttribute("src", "https://cdn.jsdelivr.net/npm/chart.js");
+
+    // Listen for the load event
+    script.addEventListener("load", function() {
+      this._haveLoadedChartJS = true; // Set the flag to indicate the library is loaded
+      resolve(true); // Resolve the promise
+    });
+
+    // Append the script to the document body
+    document.body.appendChild(script);
+  });
+}, */
 /* ----------------------------------- */
 async renderEmbed(app, ...args) {
 	const noteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
@@ -1511,10 +1612,7 @@ const htmlTemplate = `
 
 			</div>
          <div class="chart-container">
-			<img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjgzdmhraW9sdmNsajM4YWw0amticXQ5MmQyOGowcW85eDAwZmpkYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eIERe7YjwgF9SXqaiy/giphy.gif" alt="Italian Trulli" width="300" height="300">
-			<hr>
-			<p>Humans At Work! - Trying to find a alternative way to get this working on Amplenote. Till then experience the Graph Utility by downloading the Recommended HTML. Thank you.</p>
-            <!--<canvas id="myChart" width="400" height="200"></canvas> -->
+            <canvas id="myChart" width="400" height="200"></canvas>
          </div>
          <div class="axis-dropdowns">
             <div class="axis-select">
@@ -1567,6 +1665,37 @@ const htmlTemplate = `
                <span class="tooltiptext">${noteUUID}</span>
                </span>
 			   </label>
+			   <br>
+				<label for="easingSelect"> Select Easing Function:
+					<span class="tooltip">
+						<i class="fa fa-info-circle" style="color:blue"></i>
+						<span class="tooltiptext">Choose how the animation progresses over time.</span>
+					</span>
+				</label>
+				<select id="easingSelect">
+					<option value="linear">Linear</option>
+					<option value="easeInQuad">Ease In Quad</option>
+					<option value="easeOutQuad">Ease Out Quad</option>
+					<option value="easeInOutQuad">Ease In Out Quad</option>
+					<option value="easeInCubic">Ease In Cubic</option>
+					<option value="easeOutCubic">Ease Out Cubic</option>
+					<option value="easeInOutCubic">Ease In Out Cubic</option>
+					<option value="easeInQuart">Ease In Quart</option>
+					<option value="easeOutQuart">Ease Out Quart</option>
+					<option value="easeInOutQuart">Ease In Out Quart</option>
+					<option value="easeInQuint">Ease In Quint</option>
+					<option value="easeOutQuint">Ease Out Quint</option>
+					<option value="easeInOutQuint">Ease In Out Quint</option>
+					<option value="easeInBounce">Ease In Bounce</option>
+					<option value="easeOutBounce">Ease Out Bounce</option>
+					<option value="easeInOutBounce">Ease In Out Bounce</option>
+					<option value="easeInElastic">Ease In Elastic</option>
+					<option value="easeOutElastic">Ease Out Elastic</option>
+					<option value="easeInOutElastic">Ease In Out Elastic</option>
+					<option value="easeInBack">Ease In Back</option>
+					<option value="easeOutBack">Ease Out Back</option>
+					<option value="easeInOutBack">Ease In Out Back</option>
+				</select>
             </div>
          </div>
       </div>
@@ -1574,6 +1703,9 @@ const htmlTemplate = `
 		<p>&copy; BKK 2024 | <a href="https://public.amplenote.com/sDBcbB/graph-utility" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
 	</footer>
       <script>
+	  
+        _loadLibrary("https://cdn.jsdelivr.net/npm/chart.js").then(() => {
+			
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
@@ -1711,12 +1843,12 @@ ${cleanedContent}
          
              return { headers, data };
          }
-         
-         		
+      		
          // Chart related variables
          let chartType = 'line';
          let myChart;
          const ctx = document.getElementById('myChart').getContext('2d');
+		 const easingSelect = document.getElementById('easingSelect');
          		 
 		// Function to create a chart
 		function createChart(type, headers, data) {
@@ -1741,6 +1873,12 @@ ${cleanedContent}
 					datasets: datasets
 				},
 				options: {
+					animation: {
+						animateRotate: true,   // Enable rotation animation for 'pie' and 'doughnut'
+						animateScale: true,    // Enable scaling animation for 'radar' and 'polarArea'
+						duration: 1500,        // Duration of the animation in milliseconds
+						easing: easingSelect.value // Easing function for the animation
+					},
 					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
 						x: {
 							beginAtZero: true,
@@ -1775,7 +1913,7 @@ ${cleanedContent}
 				}
 			});
 		}
-         
+        
          // Initial setup
          const initialData = updateAxisSelectionsAndData(markdownTable);
          if (initialData.data.length > 0) {
@@ -1796,6 +1934,13 @@ ${cleanedContent}
                  console.error("No data available after table selection");
              }
          });
+
+		// Update chart animation on dropdown change
+		easingSelect.addEventListener('change', () => {
+			const selectedEasing = easingSelect.value;
+			myChart.options.animation.easing = selectedEasing;
+			createChart(chartType, initialData.headers, initialData.data);
+		});
          
          // Event listeners for chart type change
          document.querySelectorAll('input[name="chartType"]').forEach(input => {
@@ -1829,6 +1974,12 @@ ${cleanedContent}
                                  backgroundColor: getRandomColors(data.length),
                                  borderColor: getRandomColors(data.length, false), // true to random color
                                  borderWidth: 1,
+								 animation: {
+									animateRotate: true,
+									animateScale: true,
+									duration: 1500,
+									easing: easingSelect.value
+								}
                              }];
 						case 'histogram':
 							return [{
@@ -1942,6 +2093,12 @@ ${cleanedContent}
 								backgroundColor: getRandomColors(data.length),
 								borderColor: getRandomColors(data.length, false),
 								borderWidth: 1,
+								animation: {
+									animateRotate: true,
+									animateScale: true,
+									duration: 1500,
+									easing: easingSelect.value
+								}
 							}];
 						case 'radar':
 							return [
@@ -1951,6 +2108,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(75, 192, 192, 0.2)',
 									borderColor: 'rgba(75, 192, 192, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1000,
+										easing: easingSelect.value
+									 }
 								},
 								{
 									label: \`\${yAxis}\`,
@@ -1958,6 +2121,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(153, 102, 255, 0.2)',
 									borderColor: 'rgba(153, 102, 255, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1250,
+										easing: easingSelect.value
+									 }
 								},
 								{
 									label: \`\${zAxis}\`,
@@ -1965,6 +2134,12 @@ ${cleanedContent}
 									backgroundColor: 'rgba(255, 159, 64, 0.2)',
 									borderColor: 'rgba(255, 159, 64, 1)',
 									borderWidth: 1,
+									 animation: {
+										animateRotate: true,
+										animateScale: true,
+										duration: 1500,
+										easing: easingSelect.value
+									 }
 								}
 							];
 						case 'scatter':
@@ -2070,8 +2245,7 @@ ${cleanedContent}
                                  createChart(chartType);
                              });
                          });
-         			
-                  	
+
          // Add event listeners for axis selections
          xAxisSelect.addEventListener('change', () => {
              // console.log("xAxis changed:", xAxisSelect.value);
@@ -2092,7 +2266,20 @@ ${cleanedContent}
          });
                   // Initial chart rendering
                   // createChart(chartType);
-         
+
+        });
+
+    function _loadLibrary(url) {
+        return new Promise(function(resolve) {
+            const script = document.createElement("script");
+            script.setAttribute("type", "text/javascript");
+            script.setAttribute("src", url);
+            script.addEventListener("load", function() {
+                resolve(true);
+            });
+            document.body.appendChild(script);
+        });
+    }         
                
       </script>
    </body>
@@ -2122,7 +2309,7 @@ return(htmlTemplate);
 
 - August 23rd, 2024 - Started from where I left off. After multiple iterations completed the worked code to fetch multiple tables from amplenote note, and make into a clean and organized format. Also figured out a way to fetch data from those tables separately, and use them into the charts that were already existing, this step was challenging, multiple parameters and functions involved. I figured out to give an download option, and included html, md, and copy only tables to new note. Then added advanced charts and gave some info into the chart, about the note from which the table data is extracted from. Also added info buttons for easy readability and understanding on how to use. When implementing the Embed, stuck with few errors as the scripts word independently, hence some scripts from chart.js were not utilized by my create chart scripts. Hence Embed is going on Hold, until I figure out a solution.
 
-- August 24th, 2024 - Images, Documentation, Publish, Email, Discord!
+- August 24th, 2024 - Images, Documentation, Publish, Email, Discord! After Lucian confirmed and shared the update to fix the above mentioned embed issue, tested it and it was working, implemented, added Animations and also add documentation for the Animations as well. You will thank me for it, as it clearly can help you to `figit `with when you are feeling overwhelmed by your number work! haha! Also added Update View option!
 
 ---
 
@@ -2154,11 +2341,11 @@ return(htmlTemplate);
 
 ---
 
-[High-Level Explanation of the Code][^4]   For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
+[High-Level Explanation of the Code][^3]   For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
 
 ---
 
-Time Invested For this Plugin: 8h 9m + 11h 48m + 2h 11m = 22h 8m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 8h 9m + 11h 48m + 5h 49m = 25h 47m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
  
 
@@ -2184,36 +2371,7 @@ Time Invested For this Plugin: 8h 9m + 11h 48m + 2h 11m = 22h 8m. \[Not includin
     SUBMIT
     Cancel
 
-[^3]: Simple Charts:
-    O Line Chart 0
-    Select Table: 0
-    Table 1
-    Area Chart O
-    O Bar Chart 0
-    Select X-Axis: 0
-    O Histogram 0
-    Select Y-Axis: 0
-    O Pie Chart 0
-    Doughnut Chart 0
-    Select Z-Axis: 0
-    O Polar Area Chart 0
-    O Waterfall Chart 0
-    Note Name: 0
-    I'M A WORK IN PROGRESS
-    Note Tags: 0
-    Note UUID: 0
-    Advanced Charts:
-    O Mixed Chart 0
-    Pareto Chart 0
-    O Scatter Plot 0
-    Humans At Work! - Trying to find a alternative way to get this working on Amplenote. Till then experience the Graph Utility by downloading the Recommended
-    HTML. Thank you.
-    3D Bubble Chart 0
-    3D Radar Chart
-    2024
-    Open Source
-
-[^4]: [High-Level Explanation of the Code]()
+[^3]: [High-Level Explanation of the Code]()
 
     ### High-Level Overview of the JavaScript Code
 
