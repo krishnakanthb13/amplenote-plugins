@@ -481,7 +481,7 @@ const htmlTemplate = `
          </div>
       </div>
 	<footer>
-		<p>&copy; BKK 2024 | <a href="" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+		<p>&copy; BKK 2024 | <a href="https://public.amplenote.com/sDBcbB/graph-utility" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
 	</footer>
       <script>
          // Sample markdown data
@@ -1441,7 +1441,7 @@ const htmlTemplate = `
          </div>
       </div>
 	<footer>
-		<p>&copy; BKK 2024 | <a href="" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
+		<p>&copy; BKK 2024 | <a href="https://public.amplenote.com/sDBcbB/graph-utility" target="_blank" style="color: #ffeb3b; text-decoration: none;">Open Source</a></p>
 	</footer>
       <script>
          // Sample markdown data
