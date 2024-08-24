@@ -1107,7 +1107,20 @@ ${cleanedContent}
     // app.alert(noteUUID);
 	await app.setSetting("Current_Note_UUID [Do not Edit!]", noteUUID);
 	const noteUUIDz = noteUUID;
+	  // Load the Chart.js library
+	  // await this._loadChartJS();
 	await app.insertNoteContent({ uuid: noteUUIDz },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="2" />`);
+	return null;
+},
+/* ----------------------------------- */
+"Update Viewer!":  async function (app, noteUUID) {
+    // app.alert(noteUUID);
+	await app.setSetting("Current_Note_UUID [Do not Edit!]", noteUUID);
+	// const noteUUIDz = noteUUID;
+	  // Load the Chart.js library
+	  // await this._loadChartJS();
+	// await app.insertNoteContent({ uuid: noteUUIDz },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="2" />`);
+	app.alert("Current Note is updated for your Graph Utlity Viewer!");
 	return null;
   }
 },
