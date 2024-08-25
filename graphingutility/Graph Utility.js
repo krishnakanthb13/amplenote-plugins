@@ -30,6 +30,8 @@ noteOption: {
 
     // Function to remove HTML comments
     const removeHtmlComments = (content) => content.replace(/<!--[\s\S]*?-->/g, '').trim();
+	
+	// *************************************************************** //
 
     // Function to remove empty rows and columns
     const removeEmptyRowsAndColumns = (table) => {
@@ -74,6 +76,8 @@ noteOption: {
 
       return cleanedRows.join('\n');
     };
+
+	// *************************************************************** //
 
     const lines = markdown.split('\n');
     // console.log("Lines:", lines);
@@ -1231,6 +1235,8 @@ async renderEmbed(app, ...args) {
     // Function to remove HTML comments
     const removeHtmlComments = (content) => content.replace(/<!--[\s\S]*?-->/g, '').trim();
 
+	// *************************************************************** //
+
     // Function to remove empty rows and columns
     const removeEmptyRowsAndColumns = (table) => {
       const rows = table.split('\n').filter(row => row.trim().startsWith('|'));
@@ -1274,6 +1280,8 @@ async renderEmbed(app, ...args) {
 
       return cleanedRows.join('\n');
     };
+
+	// *************************************************************** //
 
     const lines = markdown.split('\n');
     // console.log("Lines:", lines);
