@@ -107,7 +107,7 @@ noteOption: {
         if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
           const columnCount = line.split('|').length - 2;
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
-          // currentTable.push(`| ${headers} |`);
+          // currentTable.push(`| ${headers} |`); // Automatically Adding Columns is disabled for now!
           // console.log("Added headers to empty table row:", currentTable);
         }
 
@@ -1311,7 +1311,7 @@ async renderEmbed(app, ...args) {
         if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
           const columnCount = line.split('|').length - 2;
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
-          // currentTable.push(`| ${headers} |`);
+          // currentTable.push(`| ${headers} |`); // Automatically Adding Columns is disabled for now!
           // console.log("Added headers to empty table row:", currentTable);
         }
 
