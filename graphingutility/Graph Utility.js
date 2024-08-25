@@ -103,7 +103,7 @@ noteOption: {
         if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
           const columnCount = line.split('|').length - 2;
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
-          currentTable.push(`| ${headers} |`);
+          // currentTable.push(`| ${headers} |`);
           // console.log("Added headers to empty table row:", currentTable);
         }
 
@@ -116,7 +116,8 @@ noteOption: {
         const tableContent = currentTable.join('\n');
         // console.log("Current table content before cleaning:", tableContent);
 
-        tables.push(removeEmptyRowsAndColumns(tableContent));
+        // tables.push(removeEmptyRowsAndColumns(tableContent));
+        tables.push(tableContent);
         tables.push('');  // Add an additional blank line between tables
         // console.log("Added cleaned table and blank line to tables:", tables);
 
@@ -573,8 +574,8 @@ ${cleanedContent}
                  return { headers: [], data: [] };
              }
          
-             const headers = rows[0]?.split('|').slice(1, -1).map(header => header.trim()) || [];
-             const data = rows.slice(2).map(row => {
+             const headers = rows[2]?.split('|').slice(1, -1).map(header => header.trim()) || [];
+             const data = rows.slice(3).map(row => {
                  const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
                  const rowObject = {};
                  headers.forEach((header, index) => {
@@ -1230,7 +1231,7 @@ async renderEmbed(app, ...args) {
         if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
           const columnCount = line.split('|').length - 2;
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
-          currentTable.push(`| ${headers} |`);
+          // currentTable.push(`| ${headers} |`);
           // console.log("Added headers to empty table row:", currentTable);
         }
 
@@ -1243,7 +1244,8 @@ async renderEmbed(app, ...args) {
         const tableContent = currentTable.join('\n');
         // console.log("Current table content before cleaning:", tableContent);
 
-        tables.push(removeEmptyRowsAndColumns(tableContent));
+        // tables.push(removeEmptyRowsAndColumns(tableContent));
+        tables.push(tableContent);
         tables.push('');  // Add an additional blank line between tables
         // console.log("Added cleaned table and blank line to tables:", tables);
 
@@ -1656,8 +1658,8 @@ ${cleanedContent}
                  return { headers: [], data: [] };
              }
          
-             const headers = rows[0]?.split('|').slice(1, -1).map(header => header.trim()) || [];
-             const data = rows.slice(2).map(row => {
+             const headers = rows[2]?.split('|').slice(1, -1).map(header => header.trim()) || [];
+             const data = rows.slice(3).map(row => {
                  const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
                  const rowObject = {};
                  headers.forEach((header, index) => {
