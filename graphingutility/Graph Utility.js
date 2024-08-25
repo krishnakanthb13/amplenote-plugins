@@ -396,42 +396,42 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="line" checked> Line Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="area" checked> Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <!--<label>
             <input type="radio" name="chartType" value="boxplot" checked> Box Plot Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label> -->
             <label>
             <input type="radio" name="chartType" value="bar"> Bar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
 			<label>
             <input type="radio" name="chartType" value="histogram"> Histogram
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pie"> Pie Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             </label>
@@ -439,21 +439,21 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="doughnut"> Doughnut Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="polarArea"> Polar Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="waterfall"> Waterfall Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <br>
@@ -463,35 +463,35 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="mixed"> Mixed Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<br><br>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
+            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<hr>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pareto"> Pareto Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="scatter"> Scatter Plot
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.<br><br>Note: Select Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.<hr>Note: Select Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="bubble"> 3D Bubble Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="radar"> 3D Radar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
 
@@ -505,7 +505,7 @@ const htmlTemplate = `
                <label for="tableSelect"> Select Table:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
-               <span class="tooltiptext">Lists all the Tables in the Current Note!</span>
+               <span class="tooltiptext">Lists all the Tables in the Current Note!<hr>If the data is in Row Format, then use (Transposed)</span>
                </span>
                </label>
                <select id="tableSelect"></select>
@@ -1552,42 +1552,42 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="line" checked> Line Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="area" checked> Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <!--<label>
             <input type="radio" name="chartType" value="boxplot" checked> Box Plot Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label> -->
             <label>
             <input type="radio" name="chartType" value="bar"> Bar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
 			<label>
             <input type="radio" name="chartType" value="histogram"> Histogram
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pie"> Pie Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             </label>
@@ -1595,21 +1595,21 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="doughnut"> Doughnut Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="polarArea"> Polar Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="waterfall"> Waterfall Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <br>
@@ -1619,35 +1619,35 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="mixed"> Mixed Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<br><br>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
+            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<hr>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pareto"> Pareto Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="scatter"> Scatter Plot
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.<br><br>Note: Select Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.<hr>Note: Select Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="bubble"> 3D Bubble Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="radar"> 3D Radar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
 
@@ -1661,7 +1661,7 @@ const htmlTemplate = `
                <label for="tableSelect"> Select Table:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
-               <span class="tooltiptext">Lists all the Tables in the Current Note!</span>
+               <span class="tooltiptext">Lists all the Tables in the Current Note!<hr>If the data is in Row Format, then use (Transposed)</span>
                </span>
                </label>
                <select id="tableSelect"></select>
