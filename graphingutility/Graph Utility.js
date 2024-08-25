@@ -134,11 +134,64 @@ noteOption: {
       // console.log("Added final cleaned table to tables:", tables);
     }
 
-    // Join all tables and remove HTML comments at the end
+    function transposeTable(table) {
+        // Split the table into rows
+        const rows = table.trim().split('\n');
+        console.log("Original Rows:", rows);
+    
+        // Extract headers and data rows
+        const headers = rows[4].split('|').map(header => header.trim()).slice(1, -1);
+        console.log("Headers:", headers);
+    
+        // Extract the data rows
+        const dataRows = rows.slice(5).map(row => {
+            // Split row by '|', trim each cell, and filter out empty cells
+            return row.split('|').map(cell => cell.trim()).filter(cell => cell.length > 0);
+        });
+        console.log("Data Rows:", dataRows);
+    
+        // Transpose the data rows
+        const transposedData = headers.map((_, colIndex) =>
+            [headers[colIndex], ...dataRows.map(row => row[colIndex] || '')]
+        );
+        console.log("Transposed Data:", transposedData);
+    
+        // Construct the transposed table markdown
+        const transposedTable = transposedData.map(row => `| ${row.join(' | ')} |`).join('\n');
+        console.log("Transposed Table:", transposedTable);
+        
+        // Create new transposed table with a header
+        return `#${rows[0].trim()} (Transposed)\n\n| ${headers.join(' | ')} |\n| ${headers.map(() => '-').join(' | ')} |\n${transposedTable}`;
+    }
+    
+    function appendTransposedTables(content) {
+        // Split the content into individual tables
+        const tables = content.split('\n\n---\n\n');
+        console.log("Tables Split:", tables);
+    
+        // Process each table
+        const processedTables = tables.map(table => {
+            console.log("Processing Table:", table);
+            const transposed = transposeTable(table);
+            return table + '\n\n---\n\n' + transposed;
+        });
+    
+        // Join everything back together
+        const result = processedTables.join('\n\n---\n\n');
+        console.log("Final Result:", result);
+        return result;
+    }
+    
     const processedContent = tables.join('\n\n');
+    const resultz = appendTransposedTables(processedContent);
+    console.log("processedContent:",processedContent);
+    console.log("resultz:",resultz);
+  
+    // Join all tables and remove HTML comments at the end
+    // const processedContent = tables.join('\n\n');
     // console.log("Processed content before removing HTML comments:", processedContent);
 
-    const cleanedContent = removeHtmlComments(processedContent);
+    const cleanedContent = removeHtmlComments(resultz);
     // console.log("Cleaned content after removing HTML comments:", cleanedContent);
 
     // app.alert(cleanedContent);
