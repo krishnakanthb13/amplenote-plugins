@@ -144,6 +144,70 @@ noteOption: {
 
     // app.alert(cleanedContent);
     // console.log("Final cleaned content:", cleanedContent);
+
+	// *************************************************************** //
+
+	function transposeMarkdownTables(content) {
+		// Step 1: Split content based on "---"
+		let sections = content.split('---');
+		console.log("sections:",sections);
+		
+		let processedSections = sections.map(section => {
+			let lines = section.trim().split('\n');
+			if (lines.length < 3) return section; // Not a valid table section
+			
+			// Step 2a: Extract header
+			let header = lines[0].trim();
+			let transposedHeader = header + " (Transposed)";
+			console.log("transposedHeader:",transposedHeader);
+			
+			// Step 2b: Extract table rows, ignore first two lines
+			let tableRows = lines.slice(3).map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
+			console.log("tableRows:",tableRows);
+			
+			// Check if tableRows has data
+			if (tableRows.length === 0 || tableRows[0].length === 0) {
+				return section; // Return original if no valid table rows are found
+			}
+
+			// Separate the first two rows (0 and 1) and the rest for transposing
+			let firstTwoRows = tableRows.slice(0, 2);
+			let restRows = tableRows.slice(2);
+			
+			// Step 2c: Transpose the table
+			let transposedRows = transposeArray(restRows);
+			console.log("transposedRows:",transposedRows);
+			
+			// Step 2d: Add two empty rows at the start
+			let columnCount = transposedRows[0].length;
+			let firstRow = '| ' + Array(columnCount).fill(' ').join(' | ') + ' |';
+			let separatorRow = '| ' + Array(columnCount).fill('-').join(' | ') + ' |';
+			
+			let transposedTable = [
+				firstRow,
+				separatorRow,
+				...transposedRows.map(row => '| ' + row.join(' | ') + ' |')
+			].join('\n');
+			
+			// Step 2e: Combine header with transposed table
+			return `${transposedHeader}\n\n\n${transposedTable}`;
+		});
+		
+		console.log("processedSections:",processedSections);
+
+		// Step 3: Reassemble the processed sections
+		return processedSections.join('\n\n---\n\n');
+	}
+
+	// Helper function to transpose a 2D array
+	function transposeArray(array) {
+		return array[0].map((_, colIndex) => array.map(row => row[colIndex]));
+	}
+
+	const transposeContent = transposeMarkdownTables(cleanedContent);
+	console.log("transposeContent:",transposeContent);
+
+	// *************************************************************** //
 	
 	const noteUUIDx = noteUUID;
 	const note = await app.notes.find(noteUUIDx);
@@ -156,6 +220,10 @@ Note UUID: ${noteUUID}
 ---
 
 ${cleanedContent}
+
+---
+
+${transposeContent}
 
 `;
 
@@ -522,6 +590,10 @@ const htmlTemplate = `
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
+
+---
+
+${transposeContent}
 \`;
          
          // Function to parse the markdown data
@@ -1272,6 +1344,70 @@ async renderEmbed(app, ...args) {
 
     // app.alert(cleanedContent);
     // console.log("Final cleaned content:", cleanedContent);
+
+	// *************************************************************** //
+
+	function transposeMarkdownTables(content) {
+		// Step 1: Split content based on "---"
+		let sections = content.split('---');
+		console.log("sections:",sections);
+		
+		let processedSections = sections.map(section => {
+			let lines = section.trim().split('\n');
+			if (lines.length < 3) return section; // Not a valid table section
+			
+			// Step 2a: Extract header
+			let header = lines[0].trim();
+			let transposedHeader = header + " (Transposed)";
+			console.log("transposedHeader:",transposedHeader);
+			
+			// Step 2b: Extract table rows, ignore first two lines
+			let tableRows = lines.slice(3).map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
+			console.log("tableRows:",tableRows);
+			
+			// Check if tableRows has data
+			if (tableRows.length === 0 || tableRows[0].length === 0) {
+				return section; // Return original if no valid table rows are found
+			}
+
+			// Separate the first two rows (0 and 1) and the rest for transposing
+			let firstTwoRows = tableRows.slice(0, 2);
+			let restRows = tableRows.slice(2);
+			
+			// Step 2c: Transpose the table
+			let transposedRows = transposeArray(restRows);
+			console.log("transposedRows:",transposedRows);
+			
+			// Step 2d: Add two empty rows at the start
+			let columnCount = transposedRows[0].length;
+			let firstRow = '| ' + Array(columnCount).fill(' ').join(' | ') + ' |';
+			let separatorRow = '| ' + Array(columnCount).fill('-').join(' | ') + ' |';
+			
+			let transposedTable = [
+				firstRow,
+				separatorRow,
+				...transposedRows.map(row => '| ' + row.join(' | ') + ' |')
+			].join('\n');
+			
+			// Step 2e: Combine header with transposed table
+			return `${transposedHeader}\n\n\n${transposedTable}`;
+		});
+		
+		console.log("processedSections:",processedSections);
+
+		// Step 3: Reassemble the processed sections
+		return processedSections.join('\n\n---\n\n');
+	}
+
+	// Helper function to transpose a 2D array
+	function transposeArray(array) {
+		return array[0].map((_, colIndex) => array.map(row => row[colIndex]));
+	}
+
+	const transposeContent = transposeMarkdownTables(cleanedContent);
+	console.log("transposeContent:",transposeContent);
+
+	// *************************************************************** //
 	
 	const noteUUIDx = noteUUID;
 	const note = await app.notes.find(noteUUIDx);
@@ -1606,6 +1742,10 @@ const htmlTemplate = `
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
+
+---
+
+${transposeContent}
 \`;
          
          // Function to parse the markdown data
