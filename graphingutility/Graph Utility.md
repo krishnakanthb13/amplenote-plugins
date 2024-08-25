@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility
 uuid: 2d631ce2-6169-11ef-a048-22074e34eefe
-version: 695
+version: 769
 created: '2024-08-23T21:33:02+05:30'
 tags:
   - '-9-permanent'
@@ -65,6 +65,10 @@ In summary, this plugin is an essential tool for anyone looking to elevate their
 - `Graph Utility: Viewer!`
 
     - Do not want to download the data or create unnecessary duplication of data, best is to use this option. Upon selecting, this inserts a HTML embed into your current Note from you selected it. In which you will have options to play around.
+
+    - For Row wise data, use Transposed Option in the table Selection dropdown.
+
+    - To Save the Graph, right click on the image and click on `Save Image as..` or  `Copy Image`.
 
 - `Graph Utility: Update Viewer!`
 
@@ -142,6 +146,8 @@ noteOption: {
 
     // Function to remove HTML comments
     const removeHtmlComments = (content) => content.replace(/<!--[\s\S]*?-->/g, '').trim();
+	
+	// *************************************************************** //
 
     // Function to remove empty rows and columns
     const removeEmptyRowsAndColumns = (table) => {
@@ -187,6 +193,8 @@ noteOption: {
       return cleanedRows.join('\n');
     };
 
+	// *************************************************************** //
+
     const lines = markdown.split('\n');
     // console.log("Lines:", lines);
 
@@ -215,7 +223,7 @@ noteOption: {
         if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
           const columnCount = line.split('|').length - 2;
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
-          currentTable.push(`| ${headers} |`);
+          // currentTable.push(`| ${headers} |`); // Automatically Adding Columns is disabled for now!
           // console.log("Added headers to empty table row:", currentTable);
         }
 
@@ -228,7 +236,8 @@ noteOption: {
         const tableContent = currentTable.join('\n');
         // console.log("Current table content before cleaning:", tableContent);
 
-        tables.push(removeEmptyRowsAndColumns(tableContent));
+        // tables.push(removeEmptyRowsAndColumns(tableContent));
+        tables.push(tableContent);
         tables.push('');  // Add an additional blank line between tables
         // console.log("Added cleaned table and blank line to tables:", tables);
 
@@ -255,6 +264,70 @@ noteOption: {
 
     // app.alert(cleanedContent);
     // console.log("Final cleaned content:", cleanedContent);
+
+	// *************************************************************** //
+
+	function transposeMarkdownTables(content) {
+		// Step 1: Split content based on "---"
+		let sections = content.split('---');
+		// console.log("sections:",sections);
+		
+		let processedSections = sections.map(section => {
+			let lines = section.trim().split('\n');
+			if (lines.length < 3) return section; // Not a valid table section
+			
+			// Step 2a: Extract header
+			let header = lines[0].trim();
+			let transposedHeader = header + " (Transposed)";
+			// console.log("transposedHeader:",transposedHeader);
+			
+			// Step 2b: Extract table rows, ignore first two lines
+			let tableRows = lines.slice(3).map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
+			// console.log("tableRows:",tableRows);
+			
+			// Check if tableRows has data
+			if (tableRows.length === 0 || tableRows[0].length === 0) {
+				return section; // Return original if no valid table rows are found
+			}
+
+			// Separate the first two rows (0 and 1) and the rest for transposing
+			let firstTwoRows = tableRows.slice(0, 2);
+			let restRows = tableRows.slice(2);
+			
+			// Step 2c: Transpose the table
+			let transposedRows = transposeArray(restRows);
+			// console.log("transposedRows:",transposedRows);
+			
+			// Step 2d: Add two empty rows at the start
+			let columnCount = transposedRows[0].length;
+			let firstRow = '| ' + Array(columnCount).fill(' ').join(' | ') + ' |';
+			let separatorRow = '| ' + Array(columnCount).fill('-').join(' | ') + ' |';
+			
+			let transposedTable = [
+				firstRow,
+				separatorRow,
+				...transposedRows.map(row => '| ' + row.join(' | ') + ' |')
+			].join('\n');
+			
+			// Step 2e: Combine header with transposed table
+			return `${transposedHeader}\n\n\n${transposedTable}`;
+		});
+		
+		// console.log("processedSections:",processedSections);
+
+		// Step 3: Reassemble the processed sections
+		return processedSections.join('\n\n---\n\n');
+	}
+
+	// Helper function to transpose a 2D array
+	function transposeArray(array) {
+		return array[0].map((_, colIndex) => array.map(row => row[colIndex]));
+	}
+
+	const transposeContent = transposeMarkdownTables(cleanedContent);
+	// console.log("transposeContent:",transposeContent);
+
+	// *************************************************************** //
 	
 	const noteUUIDx = noteUUID;
 	const note = await app.notes.find(noteUUIDx);
@@ -267,6 +340,10 @@ Note UUID: ${noteUUID}
 ---
 
 ${cleanedContent}
+
+---
+
+${transposeContent}
 
 `;
 
@@ -435,42 +512,42 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="line" checked> Line Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="area" checked> Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <!--<label>
             <input type="radio" name="chartType" value="boxplot" checked> Box Plot Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label> -->
             <label>
             <input type="radio" name="chartType" value="bar"> Bar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
 			<label>
             <input type="radio" name="chartType" value="histogram"> Histogram
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pie"> Pie Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             </label>
@@ -478,21 +555,21 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="doughnut"> Doughnut Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="polarArea"> Polar Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="waterfall"> Waterfall Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <br>
@@ -502,35 +579,35 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="mixed"> Mixed Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<br><br>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
+            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<hr>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pareto"> Pareto Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="scatter"> Scatter Plot
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.<br><br>Note: Select Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.<hr>Note: Select Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="bubble"> 3D Bubble Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="radar"> 3D Radar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
 
@@ -544,7 +621,7 @@ const htmlTemplate = `
                <label for="tableSelect"> Select Table:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
-               <span class="tooltiptext">Lists all the Tables in the Current Note!</span>
+               <span class="tooltiptext">Lists all the Tables in the Current Note!<hr>If the data is in Row Format, then use (Transposed)</span>
                </span>
                </label>
                <select id="tableSelect"></select>
@@ -633,38 +710,45 @@ const htmlTemplate = `
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
+
+---
+
+${transposeContent}
 \`;
          
          // Function to parse the markdown data
-         function parseMarkdownTables(markdown) {
-         // Split the markdown content into sections based on the '---' delimiter
-         const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
-         // console.log('Sections:', sections);
-         
-         // Extract tables from each section
-         return sections.map((section, index) => {
-         // console.log(\`Processing section \${index + 1}:\`, section);
-         // Split the section to get the table part, ignoring the first line (table name)
-         const tablePart = section.split('\\n').slice(2).join('\\n').trim();
-         // console.log('Table part:', tablePart);
-         return tablePart; // Return the table part directly without headers
-         });
-         }
-         
-         // Parse the markdown data
-         const tables = parseMarkdownTables(markdownData);
-         
-         // Get the select element
-         const tableSelect = document.getElementById('tableSelect');
-         
-         // Populate the select element with table headers
-         tables.forEach((_, index) => {
-         const header = \`Table \${index + 1}\`;
-         const option = document.createElement('option');
-         option.value = index;
-         option.textContent = \`\${header}\`;
-         tableSelect.appendChild(option);
-         });
+		function parseMarkdownTables(markdown) {
+			// Split the markdown content into sections based on the '---' delimiter
+			const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
+			
+			// Extract tables from each section
+			return sections.map(section => {
+				const lines = section.split('\\n').filter(line => line.trim());
+				
+				// Assuming the first line is the table title
+				const title = lines[0].replace(/^#\\s*/, '');  // Remove '#' and any leading space
+				
+				// Get the table data (excluding title line)
+				const tableData = lines.slice(1).join('\\n').trim();
+				
+				return { title, tableData };
+			});
+		}
+
+		// Parse the markdown data
+		const tablesz = parseMarkdownTables(markdownData);
+		const tables = tablesz.map(table => table.tableData);
+
+		// Get the select element
+		const tableSelect = document.getElementById('tableSelect');
+
+		// Populate the select element with table titles
+		tablesz.forEach((table, index) => {
+			const option = document.createElement('option');
+			option.value = index;
+			option.textContent = table.title;
+			tableSelect.appendChild(option);
+		});
          
          // console.log("tables:", tables);
          let markdownTable = tables[0];
@@ -682,8 +766,8 @@ ${cleanedContent}
                  return { headers: [], data: [] };
              }
          
-             const headers = rows[0]?.split('|').slice(1, -1).map(header => header.trim()) || [];
-             const data = rows.slice(2).map(row => {
+             const headers = rows[2]?.split('|').slice(1, -1).map(header => header.trim()) || [];
+             const data = rows.slice(3).map(row => {
                  const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
                  const rowObject = {};
                  headers.forEach((header, index) => {
@@ -800,7 +884,7 @@ ${cleanedContent}
 					animation: {
 						animateRotate: true,   // Enable rotation animation for 'pie' and 'doughnut'
 						animateScale: true,    // Enable scaling animation for 'radar' and 'polarArea'
-						duration: 1500,        // Duration of the animation in milliseconds
+						duration: 500,        // Duration of the animation in milliseconds
 						easing: easingSelect.value // Easing function for the animation
 					},
 					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
@@ -901,7 +985,7 @@ ${cleanedContent}
 								 animation: {
 									animateRotate: true,
 									animateScale: true,
-									duration: 1500,
+									duration: 800,
 									easing: easingSelect.value
 								}
                              }];
@@ -1020,7 +1104,7 @@ ${cleanedContent}
 								animation: {
 									animateRotate: true,
 									animateScale: true,
-									duration: 1500,
+									duration: 800,
 									easing: easingSelect.value
 								}
 							}];
@@ -1035,7 +1119,7 @@ ${cleanedContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1000,
+										duration: 500,
 										easing: easingSelect.value
 									 }
 								},
@@ -1048,7 +1132,7 @@ ${cleanedContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1250,
+										duration: 600,
 										easing: easingSelect.value
 									 }
 								},
@@ -1061,7 +1145,7 @@ ${cleanedContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1500,
+										duration: 800,
 										easing: easingSelect.value
 									 }
 								}
@@ -1267,6 +1351,8 @@ async renderEmbed(app, ...args) {
     // Function to remove HTML comments
     const removeHtmlComments = (content) => content.replace(/<!--[\s\S]*?-->/g, '').trim();
 
+	// *************************************************************** //
+
     // Function to remove empty rows and columns
     const removeEmptyRowsAndColumns = (table) => {
       const rows = table.split('\n').filter(row => row.trim().startsWith('|'));
@@ -1311,6 +1397,8 @@ async renderEmbed(app, ...args) {
       return cleanedRows.join('\n');
     };
 
+	// *************************************************************** //
+
     const lines = markdown.split('\n');
     // console.log("Lines:", lines);
 
@@ -1339,7 +1427,7 @@ async renderEmbed(app, ...args) {
         if (currentTable.length === 0 && line.split('|').every(cell => cell.trim() === '')) {
           const columnCount = line.split('|').length - 2;
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
-          currentTable.push(`| ${headers} |`);
+          // currentTable.push(`| ${headers} |`); // Automatically Adding Columns is disabled for now!
           // console.log("Added headers to empty table row:", currentTable);
         }
 
@@ -1352,7 +1440,8 @@ async renderEmbed(app, ...args) {
         const tableContent = currentTable.join('\n');
         // console.log("Current table content before cleaning:", tableContent);
 
-        tables.push(removeEmptyRowsAndColumns(tableContent));
+        // tables.push(removeEmptyRowsAndColumns(tableContent));
+        tables.push(tableContent);
         tables.push('');  // Add an additional blank line between tables
         // console.log("Added cleaned table and blank line to tables:", tables);
 
@@ -1379,6 +1468,70 @@ async renderEmbed(app, ...args) {
 
     // app.alert(cleanedContent);
     // console.log("Final cleaned content:", cleanedContent);
+
+	// *************************************************************** //
+
+	function transposeMarkdownTables(content) {
+		// Step 1: Split content based on "---"
+		let sections = content.split('---');
+		// console.log("sections:",sections);
+		
+		let processedSections = sections.map(section => {
+			let lines = section.trim().split('\n');
+			if (lines.length < 3) return section; // Not a valid table section
+			
+			// Step 2a: Extract header
+			let header = lines[0].trim();
+			let transposedHeader = header + " (Transposed)";
+			// console.log("transposedHeader:",transposedHeader);
+			
+			// Step 2b: Extract table rows, ignore first two lines
+			let tableRows = lines.slice(3).map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
+			// console.log("tableRows:",tableRows);
+			
+			// Check if tableRows has data
+			if (tableRows.length === 0 || tableRows[0].length === 0) {
+				return section; // Return original if no valid table rows are found
+			}
+
+			// Separate the first two rows (0 and 1) and the rest for transposing
+			let firstTwoRows = tableRows.slice(0, 2);
+			let restRows = tableRows.slice(2);
+			
+			// Step 2c: Transpose the table
+			let transposedRows = transposeArray(restRows);
+			// console.log("transposedRows:",transposedRows);
+			
+			// Step 2d: Add two empty rows at the start
+			let columnCount = transposedRows[0].length;
+			let firstRow = '| ' + Array(columnCount).fill(' ').join(' | ') + ' |';
+			let separatorRow = '| ' + Array(columnCount).fill('-').join(' | ') + ' |';
+			
+			let transposedTable = [
+				firstRow,
+				separatorRow,
+				...transposedRows.map(row => '| ' + row.join(' | ') + ' |')
+			].join('\n');
+			
+			// Step 2e: Combine header with transposed table
+			return `${transposedHeader}\n\n\n${transposedTable}`;
+		});
+		
+		// console.log("processedSections:",processedSections);
+
+		// Step 3: Reassemble the processed sections
+		return processedSections.join('\n\n---\n\n');
+	}
+
+	// Helper function to transpose a 2D array
+	function transposeArray(array) {
+		return array[0].map((_, colIndex) => array.map(row => row[colIndex]));
+	}
+
+	const transposeContent = transposeMarkdownTables(cleanedContent);
+	// console.log("transposeContent:",transposeContent);
+
+	// *************************************************************** //
 	
 	const noteUUIDx = noteUUID;
 	const note = await app.notes.find(noteUUIDx);
@@ -1515,42 +1668,42 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="line" checked> Line Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Line Chart shows trends over time or categories with lines connecting data points.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="area" checked> Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <!--<label>
             <input type="radio" name="chartType" value="boxplot" checked> Box Plot Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<br><br>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Area Chart shows trends over time or categories with lines connecting data points, with space under the line filled.<hr>Note: Select Dimensions in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label> -->
             <label>
             <input type="radio" name="chartType" value="bar"> Bar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Bar Chart compares quantities across different categories with rectangular bars.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
 			<label>
             <input type="radio" name="chartType" value="histogram"> Histogram
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Histogram shows the distribution of a dataset with bars representing frequency of data ranges.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pie"> Pie Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pie Chart displays proportions of a whole with slices of a circle.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             </label>
@@ -1558,21 +1711,21 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="doughnut"> Doughnut Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Doughnut charts are used to show the proportions of categorical data, with the size of each piece representing the proportion of each category.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="polarArea"> Polar Area Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="waterfall"> Waterfall Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Waterfall Chart displays cumulative values with bars showing the impact of incremental changes.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <br>
@@ -1582,35 +1735,35 @@ const htmlTemplate = `
             <input type="radio" name="chartType" value="mixed"> Mixed Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<br><br>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
+            <span class="tooltiptext">A Mixed Chart combines a bar chart with a line chart to show the relative importance of two different factors.<hr>Note: Select Dimensions/Measures in X-Axis (Line) & Measures in Y-Axis (Bars).</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="pareto"> Pareto Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Pareto Chart combines a bar chart with a line chart to show the relative importance of different factors.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="scatter"> Scatter Plot
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.<br><br>Note: Select Measures in X-Axis & Measures in Y-Axis.</span>
+            <span class="tooltiptext">A Scatter Plot shows the relationship between two numerical variables with points plotted on an X-Y axis.<hr>Note: Select Measures in X-Axis & Measures in Y-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="bubble"> 3D Bubble Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A 3D Bubble Chart represents three variables with bubbles of varying size, and points plotted on an X-Y axis.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
             <label>
             <input type="radio" name="chartType" value="radar"> 3D Radar Chart
             <span class="tooltip">
             <i class="fa fa-info-circle" style="color:blue"></i>
-            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<br><br>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
+            <span class="tooltiptext">A Radar chart displays multivariate data stacked at an axis with the same central point.<hr>Note: Select Dimensions/Measures in X-Axis & Measures in Y-Axis & Measures in Z-Axis.</span>
             </span>
             </label>
 
@@ -1624,7 +1777,7 @@ const htmlTemplate = `
                <label for="tableSelect"> Select Table:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
-               <span class="tooltiptext">Lists all the Tables in the Current Note!</span>
+               <span class="tooltiptext">Lists all the Tables in the Current Note!<hr>If the data is in Row Format, then use (Transposed)</span>
                </span>
                </label>
                <select id="tableSelect"></select>
@@ -1713,38 +1866,45 @@ const htmlTemplate = `
          // Sample markdown data
          const markdownData = \`
 ${cleanedContent}
+
+---
+
+${transposeContent}
 \`;
          
          // Function to parse the markdown data
-         function parseMarkdownTables(markdown) {
-         // Split the markdown content into sections based on the '---' delimiter
-         const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
-         // console.log('Sections:', sections);
-         
-         // Extract tables from each section
-         return sections.map((section, index) => {
-         // console.log(\`Processing section \${index + 1}:\`, section);
-         // Split the section to get the table part, ignoring the first line (table name)
-         const tablePart = section.split('\\n').slice(2).join('\\n').trim();
-         // console.log('Table part:', tablePart);
-         return tablePart; // Return the table part directly without headers
-         });
-         }
-         
-         // Parse the markdown data
-         const tables = parseMarkdownTables(markdownData);
-         
-         // Get the select element
-         const tableSelect = document.getElementById('tableSelect');
-         
-         // Populate the select element with table headers
-         tables.forEach((_, index) => {
-         const header = \`Table \${index + 1}\`;
-         const option = document.createElement('option');
-         option.value = index;
-         option.textContent = \`\${header}\`;
-         tableSelect.appendChild(option);
-         });
+		function parseMarkdownTables(markdown) {
+			// Split the markdown content into sections based on the '---' delimiter
+			const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
+			
+			// Extract tables from each section
+			return sections.map(section => {
+				const lines = section.split('\\n').filter(line => line.trim());
+				
+				// Assuming the first line is the table title
+				const title = lines[0].replace(/^#\\s*/, '');  // Remove '#' and any leading space
+				
+				// Get the table data (excluding title line)
+				const tableData = lines.slice(1).join('\\n').trim();
+				
+				return { title, tableData };
+			});
+		}
+
+		// Parse the markdown data
+		const tablesz = parseMarkdownTables(markdownData);
+		const tables = tablesz.map(table => table.tableData);
+
+		// Get the select element
+		const tableSelect = document.getElementById('tableSelect');
+
+		// Populate the select element with table titles
+		tablesz.forEach((table, index) => {
+			const option = document.createElement('option');
+			option.value = index;
+			option.textContent = table.title;
+			tableSelect.appendChild(option);
+		});
          
          // console.log("tables:", tables);
          let markdownTable = tables[0];
@@ -1762,8 +1922,8 @@ ${cleanedContent}
                  return { headers: [], data: [] };
              }
          
-             const headers = rows[0]?.split('|').slice(1, -1).map(header => header.trim()) || [];
-             const data = rows.slice(2).map(row => {
+             const headers = rows[2]?.split('|').slice(1, -1).map(header => header.trim()) || [];
+             const data = rows.slice(3).map(row => {
                  const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
                  const rowObject = {};
                  headers.forEach((header, index) => {
@@ -1880,7 +2040,7 @@ ${cleanedContent}
 					animation: {
 						animateRotate: true,   // Enable rotation animation for 'pie' and 'doughnut'
 						animateScale: true,    // Enable scaling animation for 'radar' and 'polarArea'
-						duration: 1500,        // Duration of the animation in milliseconds
+						duration: 500,        // Duration of the animation in milliseconds
 						easing: easingSelect.value // Easing function for the animation
 					},
 					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
@@ -1981,7 +2141,7 @@ ${cleanedContent}
 								 animation: {
 									animateRotate: true,
 									animateScale: true,
-									duration: 1500,
+									duration: 800,
 									easing: easingSelect.value
 								}
                              }];
@@ -2100,7 +2260,7 @@ ${cleanedContent}
 								animation: {
 									animateRotate: true,
 									animateScale: true,
-									duration: 1500,
+									duration: 800,
 									easing: easingSelect.value
 								}
 							}];
@@ -2115,7 +2275,7 @@ ${cleanedContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1000,
+										duration: 500,
 										easing: easingSelect.value
 									 }
 								},
@@ -2128,7 +2288,7 @@ ${cleanedContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1250,
+										duration: 600,
 										easing: easingSelect.value
 									 }
 								},
@@ -2141,7 +2301,7 @@ ${cleanedContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1500,
+										duration: 700,
 										easing: easingSelect.value
 									 }
 								}
@@ -2315,6 +2475,8 @@ return(htmlTemplate);
 
 - August 24th, 2024 - Images, Documentation, Publish, Email, Discord! After Lucian confirmed and shared the update to fix the above mentioned embed issue, tested it and it was working, implemented, added Animations and also add documentation for the Animations as well. You will thank me for it, as it clearly can help you to `figit `with when you are feeling overwhelmed by your number work! haha! Also added Update View option!
 
+- August 25th, 2024 + August 26th, 2024 - Added Transpose for Row wise data. Disabled Auto populate column names and use the names already existing in the Table. Skipping download Image option, as right click and save as is enabled by default. Testing of all the feature mentioned earlier in this line, and also respective documentations required.
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -2335,15 +2497,21 @@ return(htmlTemplate);
 
 - ~~Figure out a way to get the Embed working. - <mark style="color:#F8914D;">**In progress**<!-- {"cycleColor":"24"} --></mark>~~
 
+- ~~Have the Ability to <mark style="color:#F8914D;">Select Rows as data chain<!-- {"cycleColor":"24"} --></mark> for the Graphs. Currently only support Columns.~~
+
+    - ~~Transpose the table as per requirements. Use Transpose for Row wise Data.~~
+
+- ~~Have to Ability to <mark style="color:#F8914D;">Select First Column or Row as Headers<!-- {"cycleColor":"24"} --></mark>. Currently applies Headers irrespective of how the source table is.~~
+
+    - ~~Disabled auto populate Column names~~
+
+- ~~Provide a <mark style="color:#F8914D;">download Image option<!-- {"cycleColor":"24"} --></mark> or save image option or copy image option to the Interactive charts.~~
+
+    - ~~Right click and save Image!~~
+
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 
-- Have the Ability to <mark style="color:#F8914D;">Select Rows as data chain<!-- {"cycleColor":"24"} --></mark> for the Graphs. Currently only support Columns.
-
-- Have to Ability to <mark style="color:#F8914D;">Select First Column or Row as Headers<!-- {"cycleColor":"24"} --></mark>. Currently applies Headers irrespective of how the source table is.
-
-- Provide a <mark style="color:#F8914D;">download Image option<!-- {"cycleColor":"24"} --></mark> or save image option or copy image option to the Interactive charts.
-
-- Note: Upon request, will implement <mark style="color:#F8914D;">Audit function<!-- {"cycleColor":"24"} --></mark> similar to [Gallery ](https://public.amplenote.com/LpRxpX/gallery)Plugin. (If at least 15 comment or unique interactions of implementation of Audit is useful, I can make it happen).
+- Note: Upon request, will implement <mark style="color:#F8914D;">Audit function<!-- {"cycleColor":"24"} --></mark> similar to [Gallery](https://public.amplenote.com/LpRxpX/gallery) Plugin. (If at least 15 comment or unique interactions of implementation of Audit is useful, I can make it happen).
 
 - [Future Plan - Amplenote Plugins!](https://www.amplenote.com/notes/78995798-3f78-11ef-9b28-26e37c279344) 
 
@@ -2353,7 +2521,7 @@ return(htmlTemplate);
 
 ---
 
-Time Invested For this Plugin: 8h 9m + 11h 48m + 5h 49m = 25h 47m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 8h 9m + 11h 48m + 5h 49m + 3h 40m + 3h 2m = \~32h 30m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
  
 

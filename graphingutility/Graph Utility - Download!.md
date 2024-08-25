@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility - Download!
 uuid: d08099c8-616d-11ef-beb6-b6c19b417745
-version: 25
+version: 61
 created: '2024-08-23T22:06:14+05:30'
 tags:
   - '-9-permanent'
@@ -338,6 +338,191 @@ const htmlTemplate = `
 - **Option 3:** If the user selects `"Copy all Tables from this Note to a new Note"`, a new note is created with the cleaned content, and the user is navigated to the new note.
 
     - Very useful when you want to collect all the tables from a single note and copy it to a new note and start working on it, without any other further information.
+
+---
+
+## Documentation: Transposing Markdown Tables
+
+## Overview
+
+This part of the document explains the `transposeMarkdownTables` function, a JavaScript utility designed to process and transpose the data within markdown tables. The function is useful for dynamically manipulating markdown content by reorganizing table data while preserving the original structure and adding a transposed version of the table.
+
+## Function: `transposeMarkdownTables`
+
+### **Purpose**
+
+The `transposeMarkdownTables` function processes a markdown content string that contains multiple tables separated by "---". It transposes the data in each table while maintaining the table structure and appending a header to indicate the transposed version.
+
+### **Input**
+
+- **`content`** (string): The markdown content containing one or more tables. Tables are expected to be separated by `---`, and each table should have a header followed by a table with columns separated by `\|`.
+
+### **Output**
+
+- **Returns** (string): The processed markdown content with each table transposed and restructured. The transposed table is inserted below the original one, each with its corresponding header.
+
+### **Function Steps**
+
+#### 1. **Splitting Content**
+
+- **Action**: The content string is split into sections using `---` as a delimiter. This results in an array where each element corresponds to a section of the markdown content.
+
+- **Code**: 
+
+
+  ```
+  let sections = content.split('---');
+  ```
+
+#### 2. **Processing Each Section**
+
+- **Action**: Each section is processed individually to extract and transpose the table data.
+
+- **Details**:
+
+    - **Step 2a: Extracting the Header**
+
+        - The first line of the section is treated as the header.
+
+        - The transposed version of the header is created by appending " (Transposed)".
+
+        - **Code**:
+
+
+          ```
+          let header = lines[0].trim();
+          let transposedHeader = header + " (Transposed)";
+          ```
+
+- **Step 2b: Extracting Table Rows**<!-- {"indent":1} -->
+
+    - Table rows are extracted starting from the third line (ignoring the first two lines which usually contain the header and separator).<!-- {"indent":2} -->
+
+        - Each row is split by the `\|` character, trimmed, and the empty columns at the edges are removed.
+
+        - **Code**:
+
+
+          ```
+          let tableRows = lines.slice(3).map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
+          ```
+
+- **Check for Valid Rows**:<!-- {"indent":2} -->
+
+    - If the table has no data rows or all rows are empty, the section is returned as is without further processing.<!-- {"indent":3} -->
+
+        - **Code**:<!-- {"indent":3} -->
+
+
+          ```
+          if (tableRows.length === 0 || tableRows[0].length === 0) {
+              return section;
+          }
+          ```
+
+- **Step 2c: Transposing the Table**<!-- {"indent":1} -->
+
+    - The table data is split into the first two rows (which are not transposed) and the rest of the rows.<!-- {"indent":2} -->
+
+        - The rest of the rows are transposed using the helper function `transposeArray`.
+
+        - **Code**:
+
+
+          ```
+          let firstTwoRows = tableRows.slice(0, 2);
+          let restRows = tableRows.slice(2);
+          let transposedRows = transposeArray(restRows);
+          ```
+
+- **Step 2d: Formatting the Transposed Table**<!-- {"indent":1} -->
+
+    - Two new rows are added at the start: one with empty cells and one with separators.<!-- {"indent":2} -->
+
+        - The transposed rows are then combined into a markdown table format.
+
+        - **Code**:
+
+
+          ```
+          let columnCount = transposedRows[0].length;
+          let firstRow = '| ' + Array(columnCount).fill(' ').join(' | ') + ' |';
+          let separatorRow = '| ' + Array(columnCount).fill('-').join(' | ') + ' |';
+          let transposedTable = [
+              firstRow,
+              separatorRow,
+              ...transposedRows.map(row => '| ' + row.join(' | ') + ' |')
+          ].join('\n');
+          ```
+
+- **Step 2e: Combining Header and Table**<!-- {"indent":1} -->
+
+    - The transposed table is combined with the transposed header to form the final section content.<!-- {"indent":2} -->
+
+        - **Code**:
+
+
+          ```
+          return `${transposedHeader}\n\n\n${transposedTable}`;
+          ```
+
+#### 3. **Reassembling the Processed Content**
+
+- **Action**: The processed sections are rejoined using `---` to form the final markdown content.
+
+- **Code**:
+
+
+  ```
+  return processedSections.join('\n\n---\n\n');
+  ```
+
+### **Helper Function: `transposeArray`**
+
+#### **Purpose**
+
+The `transposeArray` function is a utility that transposes a 2D array, effectively swapping its rows with its columns.
+
+#### **Input**
+
+- **`array`** (2D array): An array of arrays, where each inner array represents a row of data.
+
+#### **Output**
+
+- **Returns** (2D array): A new array where the columns and rows of the input array are swapped.
+
+#### **Code**
+
+```javascript
+function transposeArray(array) {
+    return array[0].map((_, colIndex) => array.map(row => row[colIndex]));
+}
+```
+
+### **Final Usage**
+
+- **How It Works**:
+
+    1. Pass the markdown content to the `transposeMarkdownTables` function.
+
+    1. The function will automatically process and transpose the tables.
+
+    1. The final output will contain both the original and transposed versions of each table, separated by `---`.
+
+- **Example**:
+
+
+  ```
+  const transposeContent = transposeMarkdownTables(cleanedContent);
+  ```
+
+### **Considerations**
+
+- Ensure the markdown content is well-structured with proper table formatting.
+
+- The function assumes that tables are separated by `---` and that each table section contains a header followed by a markdown table.
+
+This documentation should serve as a comprehensive guide to understanding and using the `transposeMarkdownTables` function.
 
 ---
 
