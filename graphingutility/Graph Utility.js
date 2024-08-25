@@ -154,7 +154,7 @@ noteOption: {
 	function transposeMarkdownTables(content) {
 		// Step 1: Split content based on "---"
 		let sections = content.split('---');
-		console.log("sections:",sections);
+		// console.log("sections:",sections);
 		
 		let processedSections = sections.map(section => {
 			let lines = section.trim().split('\n');
@@ -163,11 +163,11 @@ noteOption: {
 			// Step 2a: Extract header
 			let header = lines[0].trim();
 			let transposedHeader = header + " (Transposed)";
-			console.log("transposedHeader:",transposedHeader);
+			// console.log("transposedHeader:",transposedHeader);
 			
 			// Step 2b: Extract table rows, ignore first two lines
 			let tableRows = lines.slice(3).map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
-			console.log("tableRows:",tableRows);
+			// console.log("tableRows:",tableRows);
 			
 			// Check if tableRows has data
 			if (tableRows.length === 0 || tableRows[0].length === 0) {
@@ -180,7 +180,7 @@ noteOption: {
 			
 			// Step 2c: Transpose the table
 			let transposedRows = transposeArray(restRows);
-			console.log("transposedRows:",transposedRows);
+			// console.log("transposedRows:",transposedRows);
 			
 			// Step 2d: Add two empty rows at the start
 			let columnCount = transposedRows[0].length;
@@ -197,7 +197,7 @@ noteOption: {
 			return `${transposedHeader}\n\n\n${transposedTable}`;
 		});
 		
-		console.log("processedSections:",processedSections);
+		// console.log("processedSections:",processedSections);
 
 		// Step 3: Reassemble the processed sections
 		return processedSections.join('\n\n---\n\n');
@@ -209,7 +209,7 @@ noteOption: {
 	}
 
 	const transposeContent = transposeMarkdownTables(cleanedContent);
-	console.log("transposeContent:",transposeContent);
+	// console.log("transposeContent:",transposeContent);
 
 	// *************************************************************** //
 	
@@ -768,7 +768,7 @@ ${transposeContent}
 					animation: {
 						animateRotate: true,   // Enable rotation animation for 'pie' and 'doughnut'
 						animateScale: true,    // Enable scaling animation for 'radar' and 'polarArea'
-						duration: 1500,        // Duration of the animation in milliseconds
+						duration: 500,        // Duration of the animation in milliseconds
 						easing: easingSelect.value // Easing function for the animation
 					},
 					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
@@ -869,7 +869,7 @@ ${transposeContent}
 								 animation: {
 									animateRotate: true,
 									animateScale: true,
-									duration: 1500,
+									duration: 800,
 									easing: easingSelect.value
 								}
                              }];
@@ -988,7 +988,7 @@ ${transposeContent}
 								animation: {
 									animateRotate: true,
 									animateScale: true,
-									duration: 1500,
+									duration: 800,
 									easing: easingSelect.value
 								}
 							}];
@@ -1003,7 +1003,7 @@ ${transposeContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1000,
+										duration: 500,
 										easing: easingSelect.value
 									 }
 								},
@@ -1016,7 +1016,7 @@ ${transposeContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1250,
+										duration: 600,
 										easing: easingSelect.value
 									 }
 								},
@@ -1029,7 +1029,7 @@ ${transposeContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1500,
+										duration: 800,
 										easing: easingSelect.value
 									 }
 								}
@@ -1358,7 +1358,7 @@ async renderEmbed(app, ...args) {
 	function transposeMarkdownTables(content) {
 		// Step 1: Split content based on "---"
 		let sections = content.split('---');
-		console.log("sections:",sections);
+		// console.log("sections:",sections);
 		
 		let processedSections = sections.map(section => {
 			let lines = section.trim().split('\n');
@@ -1367,11 +1367,11 @@ async renderEmbed(app, ...args) {
 			// Step 2a: Extract header
 			let header = lines[0].trim();
 			let transposedHeader = header + " (Transposed)";
-			console.log("transposedHeader:",transposedHeader);
+			// console.log("transposedHeader:",transposedHeader);
 			
 			// Step 2b: Extract table rows, ignore first two lines
 			let tableRows = lines.slice(3).map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
-			console.log("tableRows:",tableRows);
+			// console.log("tableRows:",tableRows);
 			
 			// Check if tableRows has data
 			if (tableRows.length === 0 || tableRows[0].length === 0) {
@@ -1384,7 +1384,7 @@ async renderEmbed(app, ...args) {
 			
 			// Step 2c: Transpose the table
 			let transposedRows = transposeArray(restRows);
-			console.log("transposedRows:",transposedRows);
+			// console.log("transposedRows:",transposedRows);
 			
 			// Step 2d: Add two empty rows at the start
 			let columnCount = transposedRows[0].length;
@@ -1401,7 +1401,7 @@ async renderEmbed(app, ...args) {
 			return `${transposedHeader}\n\n\n${transposedTable}`;
 		});
 		
-		console.log("processedSections:",processedSections);
+		// console.log("processedSections:",processedSections);
 
 		// Step 3: Reassemble the processed sections
 		return processedSections.join('\n\n---\n\n');
@@ -1413,7 +1413,7 @@ async renderEmbed(app, ...args) {
 	}
 
 	const transposeContent = transposeMarkdownTables(cleanedContent);
-	console.log("transposeContent:",transposeContent);
+	// console.log("transposeContent:",transposeContent);
 
 	// *************************************************************** //
 	
@@ -1924,7 +1924,7 @@ ${transposeContent}
 					animation: {
 						animateRotate: true,   // Enable rotation animation for 'pie' and 'doughnut'
 						animateScale: true,    // Enable scaling animation for 'radar' and 'polarArea'
-						duration: 1500,        // Duration of the animation in milliseconds
+						duration: 500,        // Duration of the animation in milliseconds
 						easing: easingSelect.value // Easing function for the animation
 					},
 					scales: type === 'pie' || type === 'doughnut' || type === 'radar' || type === 'polarArea' ? {} : {
@@ -2025,7 +2025,7 @@ ${transposeContent}
 								 animation: {
 									animateRotate: true,
 									animateScale: true,
-									duration: 1500,
+									duration: 800,
 									easing: easingSelect.value
 								}
                              }];
@@ -2144,7 +2144,7 @@ ${transposeContent}
 								animation: {
 									animateRotate: true,
 									animateScale: true,
-									duration: 1500,
+									duration: 800,
 									easing: easingSelect.value
 								}
 							}];
@@ -2159,7 +2159,7 @@ ${transposeContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1000,
+										duration: 500,
 										easing: easingSelect.value
 									 }
 								},
@@ -2172,7 +2172,7 @@ ${transposeContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1250,
+										duration: 600,
 										easing: easingSelect.value
 									 }
 								},
@@ -2185,7 +2185,7 @@ ${transposeContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 1500,
+										duration: 700,
 										easing: easingSelect.value
 									 }
 								}
