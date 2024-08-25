@@ -104,7 +104,7 @@ noteOption: {
           const columnCount = line.split('|').length - 2;
           const headers = Array.from({ length: columnCount }, (_, i) => `Column ${i + 1}`).join(' | ');
           currentTable.push(`| ${headers} |`);
-          // console.log("Added headers to empty table row:", currentTable);
+          console.log("Added headers to empty table row:", currentTable);
         }
 
         currentTable.push(line);
@@ -577,35 +577,38 @@ ${cleanedContent}
 \`;
          
          // Function to parse the markdown data
-         function parseMarkdownTables(markdown) {
-         // Split the markdown content into sections based on the '---' delimiter
-         const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
-         // console.log('Sections:', sections);
-         
-         // Extract tables from each section
-         return sections.map((section, index) => {
-         // console.log(\`Processing section \${index + 1}:\`, section);
-         // Split the section to get the table part, ignoring the first line (table name)
-         const tablePart = section.split('\\n').slice(2).join('\\n').trim();
-         // console.log('Table part:', tablePart);
-         return tablePart; // Return the table part directly without headers
-         });
-         }
-         
-         // Parse the markdown data
-         const tables = parseMarkdownTables(markdownData);
-         
-         // Get the select element
-         const tableSelect = document.getElementById('tableSelect');
-         
-         // Populate the select element with table headers
-         tables.forEach((_, index) => {
-         const header = \`Table \${index + 1}\`;
-         const option = document.createElement('option');
-         option.value = index;
-         option.textContent = \`\${header}\`;
-         tableSelect.appendChild(option);
-         });
+		function parseMarkdownTables(markdown) {
+			// Split the markdown content into sections based on the '---' delimiter
+			const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
+			
+			// Extract tables from each section
+			return sections.map(section => {
+				const lines = section.split('\\n').filter(line => line.trim());
+				
+				// Assuming the first line is the table title
+				const title = lines[0].replace(/^#\\s*/, '');  // Remove '#' and any leading space
+				
+				// Get the table data (excluding title line)
+				const tableData = lines.slice(1).join('\\n').trim();
+				
+				return { title, tableData };
+			});
+		}
+
+		// Parse the markdown data
+		const tablesz = parseMarkdownTables(markdownData);
+		const tables = tablesz.map(table => table.tableData);
+
+		// Get the select element
+		const tableSelect = document.getElementById('tableSelect');
+
+		// Populate the select element with table titles
+		tablesz.forEach((table, index) => {
+			const option = document.createElement('option');
+			option.value = index;
+			option.textContent = table.title;
+			tableSelect.appendChild(option);
+		});
          
          // console.log("tables:", tables);
          let markdownTable = tables[0];
@@ -1657,35 +1660,38 @@ ${cleanedContent}
 \`;
          
          // Function to parse the markdown data
-         function parseMarkdownTables(markdown) {
-         // Split the markdown content into sections based on the '---' delimiter
-         const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
-         // console.log('Sections:', sections);
-         
-         // Extract tables from each section
-         return sections.map((section, index) => {
-         // console.log(\`Processing section \${index + 1}:\`, section);
-         // Split the section to get the table part, ignoring the first line (table name)
-         const tablePart = section.split('\\n').slice(2).join('\\n').trim();
-         // console.log('Table part:', tablePart);
-         return tablePart; // Return the table part directly without headers
-         });
-         }
-         
-         // Parse the markdown data
-         const tables = parseMarkdownTables(markdownData);
-         
-         // Get the select element
-         const tableSelect = document.getElementById('tableSelect');
-         
-         // Populate the select element with table headers
-         tables.forEach((_, index) => {
-         const header = \`Table \${index + 1}\`;
-         const option = document.createElement('option');
-         option.value = index;
-         option.textContent = \`\${header}\`;
-         tableSelect.appendChild(option);
-         });
+		function parseMarkdownTables(markdown) {
+			// Split the markdown content into sections based on the '---' delimiter
+			const sections = markdown.split(/\\n---\\n/).filter(section => section.trim());
+			
+			// Extract tables from each section
+			return sections.map(section => {
+				const lines = section.split('\\n').filter(line => line.trim());
+				
+				// Assuming the first line is the table title
+				const title = lines[0].replace(/^#\\s*/, '');  // Remove '#' and any leading space
+				
+				// Get the table data (excluding title line)
+				const tableData = lines.slice(1).join('\\n').trim();
+				
+				return { title, tableData };
+			});
+		}
+
+		// Parse the markdown data
+		const tablesz = parseMarkdownTables(markdownData);
+		const tables = tablesz.map(table => table.tableData);
+
+		// Get the select element
+		const tableSelect = document.getElementById('tableSelect');
+
+		// Populate the select element with table titles
+		tablesz.forEach((table, index) => {
+			const option = document.createElement('option');
+			option.value = index;
+			option.textContent = table.title;
+			tableSelect.appendChild(option);
+		});
          
          // console.log("tables:", tables);
          let markdownTable = tables[0];
