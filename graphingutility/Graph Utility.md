@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility
 uuid: 2d631ce2-6169-11ef-a048-22074e34eefe
-version: 769
+version: 780
 created: '2024-08-23T21:33:02+05:30'
 tags:
   - '-9-permanent'
@@ -403,9 +403,9 @@ const htmlTemplate = `
          }
          .container {
          display: flex;
-         width: 100%;
-         max-width: 1800px;
-         height: 90%;
+         width: 90%;
+         max-width: 1600px;
+         height: 80%;
          font-size: 13px;
          background-color: rgb(245,245,245);
          }
@@ -426,7 +426,7 @@ const htmlTemplate = `
          margin-top: 20px;
          }
          .chart-container {
-         flex: 6;
+         flex: 5;
          display: flex;
          justify-content: center;
          align-items: center;
@@ -624,7 +624,7 @@ const htmlTemplate = `
                <span class="tooltiptext">Lists all the Tables in the Current Note!<hr>If the data is in Row Format, then use (Transposed)</span>
                </span>
                </label>
-               <select id="tableSelect"></select>
+               <select id="tableSelect" multiple></select>
                <br>
                <label for="xAxisSelect"> Select X-Axis:
                <span class="tooltip">
@@ -632,21 +632,21 @@ const htmlTemplate = `
                <span class="tooltiptext">Horizontal Line / Axis!</span>
                </span>
                </label>
-               <select id="xAxisSelect"></select>
+               <select id="xAxisSelect" multiple></select>
                <label for="yAxisSelect"> Select Y-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
                <span class="tooltiptext">Vertical Line / Axis!</span>
                </span>
                </label>
-               <select id="yAxisSelect"></select>
+               <select id="yAxisSelect" multiple></select>
                <label for="zAxisSelect"> Select Z-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
                <span class="tooltiptext">Depth / Size!</span>
                </span>
                </label>
-               <select id="zAxisSelect"></select>
+               <select id="zAxisSelect" multiple></select>
                <br>
 			   <label> Note Name:
                <span class="tooltip">
@@ -1145,7 +1145,7 @@ ${transposeContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 800,
+										duration: 700,
 										easing: easingSelect.value
 									 }
 								}
@@ -1559,9 +1559,9 @@ const htmlTemplate = `
          }
          .container {
          display: flex;
-         width: 100%;
-         max-width: 1800px;
-         height: 90%;
+         width: 90%;
+         max-width: 1600px;
+         height: 80%;
          font-size: 13px;
          background-color: rgb(245,245,245);
          }
@@ -1582,7 +1582,7 @@ const htmlTemplate = `
          margin-top: 20px;
          }
          .chart-container {
-         flex: 6;
+         flex: 5;
          display: flex;
          justify-content: center;
          align-items: center;
@@ -1780,7 +1780,7 @@ const htmlTemplate = `
                <span class="tooltiptext">Lists all the Tables in the Current Note!<hr>If the data is in Row Format, then use (Transposed)</span>
                </span>
                </label>
-               <select id="tableSelect"></select>
+               <select id="tableSelect" multiple></select>
                <br>
                <label for="xAxisSelect"> Select X-Axis:
                <span class="tooltip">
@@ -1788,21 +1788,21 @@ const htmlTemplate = `
                <span class="tooltiptext">Horizontal Line / Axis!</span>
                </span>
                </label>
-               <select id="xAxisSelect"></select>
+               <select id="xAxisSelect" multiple></select>
                <label for="yAxisSelect"> Select Y-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
                <span class="tooltiptext">Vertical Line / Axis!</span>
                </span>
                </label>
-               <select id="yAxisSelect"></select>
+               <select id="yAxisSelect" multiple></select>
                <label for="zAxisSelect"> Select Z-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
                <span class="tooltiptext">Depth / Size!</span>
                </span>
                </label>
-               <select id="zAxisSelect"></select>
+               <select id="zAxisSelect" multiple></select>
                <br>
 			   <label> Note Name:
                <span class="tooltip">
@@ -2475,7 +2475,7 @@ return(htmlTemplate);
 
 - August 24th, 2024 - Images, Documentation, Publish, Email, Discord! After Lucian confirmed and shared the update to fix the above mentioned embed issue, tested it and it was working, implemented, added Animations and also add documentation for the Animations as well. You will thank me for it, as it clearly can help you to `figit `with when you are feeling overwhelmed by your number work! haha! Also added Update View option!
 
-- August 25th, 2024 + August 26th, 2024 - Added Transpose for Row wise data. Disabled Auto populate column names and use the names already existing in the Table. Skipping download Image option, as right click and save as is enabled by default. Testing of all the feature mentioned earlier in this line, and also respective documentations required.
+- August 25th, 2024 + August 26th, 2024 - Added Transpose for Row wise data. Disabled Auto populate column names and use the names already existing in the Table. Skipping download Image option, as right click and save as is enabled by default. Testing of all the feature mentioned earlier in this line, and also respective documentations required. Added Multiselect, in the backend still working on it (Will be applicable only for few charts!).
 
 ---
 
