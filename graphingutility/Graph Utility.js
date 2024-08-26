@@ -508,7 +508,7 @@ const htmlTemplate = `
                <span class="tooltiptext">Lists all the Tables in the Current Note!<hr>If the data is in Row Format, then use (Transposed)</span>
                </span>
                </label>
-               <select id="tableSelect"></select>
+               <select id="tableSelect" multiple></select>
                <br>
                <label for="xAxisSelect"> Select X-Axis:
                <span class="tooltip">
@@ -516,21 +516,21 @@ const htmlTemplate = `
                <span class="tooltiptext">Horizontal Line / Axis!</span>
                </span>
                </label>
-               <select id="xAxisSelect"></select>
+               <select id="xAxisSelect" multiple></select>
                <label for="yAxisSelect"> Select Y-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
                <span class="tooltiptext">Vertical Line / Axis!</span>
                </span>
                </label>
-               <select id="yAxisSelect"></select>
+               <select id="yAxisSelect" multiple></select>
                <label for="zAxisSelect"> Select Z-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
                <span class="tooltiptext">Depth / Size!</span>
                </span>
                </label>
-               <select id="zAxisSelect"></select>
+               <select id="zAxisSelect" multiple></select>
                <br>
 			   <label> Note Name:
                <span class="tooltip">
@@ -1664,7 +1664,7 @@ const htmlTemplate = `
                <span class="tooltiptext">Lists all the Tables in the Current Note!<hr>If the data is in Row Format, then use (Transposed)</span>
                </span>
                </label>
-               <select id="tableSelect"></select>
+               <select id="tableSelect" multiple></select>
                <br>
                <label for="xAxisSelect"> Select X-Axis:
                <span class="tooltip">
@@ -1672,21 +1672,21 @@ const htmlTemplate = `
                <span class="tooltiptext">Horizontal Line / Axis!</span>
                </span>
                </label>
-               <select id="xAxisSelect"></select>
+               <select id="xAxisSelect" multiple></select>
                <label for="yAxisSelect"> Select Y-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
                <span class="tooltiptext">Vertical Line / Axis!</span>
                </span>
                </label>
-               <select id="yAxisSelect"></select>
+               <select id="yAxisSelect" multiple></select>
                <label for="zAxisSelect"> Select Z-Axis:
                <span class="tooltip">
                <i class="fa fa-info-circle" style="color:blue"></i>
                <span class="tooltiptext">Depth / Size!</span>
                </span>
                </label>
-               <select id="zAxisSelect"></select>
+               <select id="zAxisSelect" multiple></select>
                <br>
 			   <label> Note Name:
                <span class="tooltip">
