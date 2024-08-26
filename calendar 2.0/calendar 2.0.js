@@ -1,4 +1,6 @@
 {
+  // --------------------------------------------------------------------------
+  // Class definition for settings related to the calendar feature.
   Settings: class {
     constructor(dailyJotLink, sectionHeader, monthYear) {
       this.dailyJotLink = dailyJotLink;
@@ -6,40 +8,114 @@
       this.monthYear = monthYear;
     }
   },
-
-  constants: {
-    version: "1.0.0",
-    settingDailyJotLinkName: "Link to Daily Jot (true/false, default true)",
-    settingSectionHeaderName: "Section header (default 'Calendar')",
-    settingMonthYear: "Month-Year (12-2024) / (8-2024)", // New setting
-  },
-
   // --------------------------------------------------------------------------
+  // Function to handle month and year selection from a prompt, including calendar creation.
   noteOption: {
-    "Month": async function(app) {
-      const settings = new this.Settings(
-        app.settings[this.constants.settingDailyJotLinkName] !== "false",
-        app.settings[this.constants.settingSectionHeaderName] || "Calendar",
-        app.settings[this.constants.settingMonthYear] || this._getCurrentMonthYear() // Use current month-year if not provided
-      );
+    "Month": async function(app, noteUUID) {
+      const currentYear = new Date().getFullYear();
+      const years = [currentYear - 1, currentYear, currentYear + 2]; // Adjust the range as needed
 
-      const sections = await app.getNoteSections({ uuid: app.context.noteUUID });
-      const section = sections.find((section) => section.heading?.text === settings.sectionHeader);
-      if (section === undefined) {
-        app.alert(`There needs to be a '${settings.sectionHeader}' section`);
-        return;
+      const result = await app.prompt("Select Month and Year (If left Empty, current Month-Year will be considered!)", {
+        inputs: [
+          {
+            label: "Month",
+            type: "select",
+            options: [
+              { label: "January", value: "1" },
+              { label: "February", value: "2" },
+              { label: "March", value: "3" },
+              { label: "April", value: "4" },
+              { label: "May", value: "5" },
+              { label: "June", value: "6" },
+              { label: "July", value: "7" },
+              { label: "August", value: "8" },
+              { label: "September", value: "9" },
+              { label: "October", value: "10" },
+              { label: "November", value: "11" },
+              { label: "December", value: "12" }
+            ]
+          },
+          {
+            label: "Year",
+            type: "select",
+            options: years.map(year => ({ label: year.toString(), value: year.toString() }))
+          },
+          { 
+            label: "Insert Calendar without links (Unchecked - Link to Daily Jot)", 
+            type: "checkbox" 
+          },
+          { 
+            label: "Select a Different Tag (Default:'daily-jots')", 
+            type: "tags", 
+            limit: 1, 
+            placeholder: "Enter tag (Max 1)" 
+          }
+        ]
+      });
+
+      // ----------------------------------------------------------------------
+      // Extract results from the prompt and handle default values.
+      let [monthNum, yearNum, calWolinks, dailyJotreplace] = result;
+      console.log("dailyJotreplace:", dailyJotreplace);
+	  
+      // Reverse the checkbox boolean value.
+      calWolinksz = !calWolinks;
+      // Default to the current month if no month is selected.
+      monthNum = monthNum || new Date().getMonth() + 1;
+      // Default to the current year if no year is selected.
+      yearNum = yearNum || new Date().getFullYear();
+
+      // ----------------------------------------------------------------------
+      // Handle the default tag settings based on the user input.
+      const defaultTag = await (async () => {
+        if (dailyJotreplace) {
+          await app.setSetting("Default Tag to Create Calendar on.", dailyJotreplace);
+        }
+        const existingTag = await app.settings["Default Tag to Create Calendar on."] || "daily-jots";
+        return existingTag;
+      })();
+		
+      console.log("defaultTag:",defaultTag);
+
+      // ----------------------------------------------------------------------
+      // Create and insert the calendar content if the month and year are provided.
+      if (monthNum && yearNum) {
+
+        // Create monthName from monthNum
+        const monthNames = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+        const monthName = monthNames[parseInt(monthNum) - 1];
+        
+        const monthYear = `${monthNum}-${yearNum}`;
+        const headerName = `Calendar (${monthName}-${yearNum}):`;
+        const settings = new this.Settings(
+          calWolinksz, // Insert or not insert links based on checkbox
+          headerName, // Header name for the calendar
+          monthYear // Selected month and year
+        );
+
+        const dailyJots = settings.dailyJotLink ? await this._getDailyJotsForMonth(app, settings.monthYear, defaultTag) : new Map();
+        const finalContent = `
+## ${settings.sectionHeader}
+
+${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
+
+---
+
+`;
+        console.log("finalContent:", finalContent);
+        app.insertNoteContent({ uuid: noteUUID }, finalContent);
       }
-
-      const dailyJots = settings.dailyJotLink ? await this._getDailyJotsForMonth(app, settings.monthYear) : new Map();
-      app.replaceNoteContent({ uuid: app.context.noteUUID }, this._createMonthlyCalendar(dailyJots, settings.monthYear), { section });
     },
   },
 
   // --------------------------------------------------------------------------
-  // Impure Functions
-  async _getDailyJotsForMonth(app, monthYear) {
+  // Function to retrieve daily jot notes for a given month and year.
+  async _getDailyJotsForMonth(app, monthYear, defaultTag) {
     const [month, year] = this._parseMonthYear(monthYear);
-    const dailyJots = await app.filterNotes({ tag: "-0-planner", query: `${month} ${year}` });
+    const dailyJots = await app.filterNotes({ tag: `${defaultTag}`, query: `${month} ${year}` });
     const map = dailyJots.reduce((map, jot) => {
       map.set(jot.name.split(" ")[1].replace(/(st,|rd,|th,|nd,)/, ""), jot);
       return map;
@@ -48,7 +124,7 @@
   },
 
   // --------------------------------------------------------------------------
-  // Pure Functions
+  // Function to create a formatted calendar for the month, including links to notes if applicable.
   _createMonthlyCalendar(dailyJots, monthYear) {
     const [month, year] = this._parseMonthYear(monthYear);
     const today = new Date(`${month} 1, ${year}`);
@@ -61,7 +137,7 @@
       return content +
         "|" +
         dayCell +
-        ((index + 1) % 7 === 0 ? "|\n" : ""); // If we have reached Sunday start a new row
+        ((index + 1) % 7 === 0 ? "|\n" : ""); // If we have reached Sunday, start a new row
     };
 
     const initialValue = "|S|M|T|W|T|F|S|\n|-|-|-|-|-|-|-|-|\n";
@@ -70,20 +146,21 @@
     return calendar;
   },
 
-// --------------------------------------------------------------------------
-  // Helper function to parse "Month-Year" setting
+  // --------------------------------------------------------------------------
+  // Helper function to parse a "Month-Year" string into month name and year.
   _parseMonthYear(monthYear) {
     const [month, year] = monthYear.split("-").map(Number);
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     return [monthNames[month - 1], year];
   },
 
-  // Helper function to get current month and year in "Month-Year" format
+  // --------------------------------------------------------------------------
+  // Helper function to get the current month and year in "Month-Year" format.
   _getCurrentMonthYear() {
     const today = new Date();
     const month = today.getMonth() + 1; // Months are 0-based, so add 1
     const year = today.getFullYear();
     return `${month}-${year}`;
   },
-}
   // --------------------------------------------------------------------------
+}
