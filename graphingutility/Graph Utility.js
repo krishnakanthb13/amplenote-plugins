@@ -287,9 +287,9 @@ const htmlTemplate = `
          }
          .container {
          display: flex;
-         width: 100%;
-         max-width: 1800px;
-         height: 90%;
+         width: 90%;
+         max-width: 1600px;
+         height: 80%;
          font-size: 13px;
          background-color: rgb(245,245,245);
          }
@@ -310,7 +310,7 @@ const htmlTemplate = `
          margin-top: 20px;
          }
          .chart-container {
-         flex: 6;
+         flex: 5;
          display: flex;
          justify-content: center;
          align-items: center;
@@ -1029,7 +1029,7 @@ ${transposeContent}
 									 animation: {
 										animateRotate: true,
 										animateScale: true,
-										duration: 800,
+										duration: 700,
 										easing: easingSelect.value
 									 }
 								}
@@ -1443,9 +1443,9 @@ const htmlTemplate = `
          }
          .container {
          display: flex;
-         width: 100%;
-         max-width: 1800px;
-         height: 90%;
+         width: 90%;
+         max-width: 1600px;
+         height: 80%;
          font-size: 13px;
          background-color: rgb(245,245,245);
          }
@@ -1466,7 +1466,7 @@ const htmlTemplate = `
          margin-top: 20px;
          }
          .chart-container {
-         flex: 6;
+         flex: 5;
          display: flex;
          justify-content: center;
          align-items: center;
