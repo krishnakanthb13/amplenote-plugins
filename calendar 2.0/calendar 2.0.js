@@ -56,7 +56,7 @@
       // ----------------------------------------------------------------------
       // Extract results from the prompt and handle default values.
       let [monthNum, yearNum, calWolinks, dailyJotreplace] = result;
-      console.log("dailyJotreplace:", dailyJotreplace);
+      // console.log("dailyJotreplace:", dailyJotreplace);
 	  
       // Reverse the checkbox boolean value.
       calWolinks = !calWolinks;
@@ -73,10 +73,10 @@
         }
         const existingTag = await app.settings["Default Tag to Create Calendar on."] || "daily-jots";
     	return existingTag;
-        console.log("existingTag:",existingTag);
+        // console.log("existingTag:",existingTag);
       })();
 		
-      console.log("defaultTag:",defaultTag);
+      // console.log("defaultTag:",defaultTag);
 
       // ----------------------------------------------------------------------
       // Create and insert the calendar content if the month and year are provided.
@@ -106,7 +106,7 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 
 
 `;
-        console.log("finalContent:", finalContent);
+        // console.log("finalContent:", finalContent);
         app.insertNoteContent({ uuid: noteUUID }, finalContent);
       }
     },
