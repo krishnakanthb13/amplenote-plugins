@@ -13,7 +13,7 @@
   noteOption: {
     "Month": async function(app, noteUUID) {
       const currentYear = new Date().getFullYear();
-      const years = [currentYear - 1, currentYear, currentYear + 2]; // Adjust the range as needed
+      const years = [currentYear, currentYear - 1 , currentYear - 2 , currentYear - 3 , currentYear - 4]; // Adjust the range as needed
 
       const result = await app.prompt("Select Month and Year (If left Empty, current Month-Year will be considered!)", {
         inputs: [
@@ -59,7 +59,7 @@
       console.log("dailyJotreplace:", dailyJotreplace);
 	  
       // Reverse the checkbox boolean value.
-      calWolinksz = !calWolinks;
+      calWolinks = !calWolinks;
       // Default to the current month if no month is selected.
       monthNum = monthNum || new Date().getMonth() + 1;
       // Default to the current year if no year is selected.
@@ -72,7 +72,8 @@
           await app.setSetting("Default Tag to Create Calendar on.", dailyJotreplace);
         }
         const existingTag = await app.settings["Default Tag to Create Calendar on."] || "daily-jots";
-        return existingTag;
+    	return existingTag;
+        console.log("existingTag:",existingTag);
       })();
 		
       console.log("defaultTag:",defaultTag);
@@ -91,18 +92,18 @@
         const monthYear = `${monthNum}-${yearNum}`;
         const headerName = `Calendar (${monthName}-${yearNum}):`;
         const settings = new this.Settings(
-          calWolinksz, // Insert or not insert links based on checkbox
+          calWolinks, // Insert or not insert links based on checkbox
           headerName, // Header name for the calendar
           monthYear // Selected month and year
         );
 
         const dailyJots = settings.dailyJotLink ? await this._getDailyJotsForMonth(app, settings.monthYear, defaultTag) : new Map();
         const finalContent = `
-## ${settings.sectionHeader}
+> ${settings.sectionHeader}
+
 
 ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 
----
 
 `;
         console.log("finalContent:", finalContent);
