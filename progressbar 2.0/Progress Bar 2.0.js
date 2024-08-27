@@ -72,7 +72,7 @@
       .map(formatPendingTask);
 
     // Combine all categorized tasks into a single string output
-    const allTaskCategorized = `*Pending Tasks:*\n${Pending.join('\n')}\n*Completed Tasks:*\n${Completed.join('\n')}\n*Dismissed Tasks:*\n${Dismissed.join('\n')}`;
+    const allTaskCategorized = `*Pending Tasks: (#${Pending.length})*\n${Pending.join('\n')}\n*Completed Tasks: (#${Completed.length})*\n${Completed.join('\n')}\n*Dismissed Tasks: (#${Dismissed.length})*\n${Dismissed.join('\n')}`;
 
     console.log("allTaskCategorized:", allTaskCategorized);
 
@@ -97,44 +97,81 @@
     // Initialize a variable to hold the progress bar string
     let taskProgress;
 
+	// Set of desired emoji set
+	const emojiSets = {
+		default: ['⬛', '🟩'], // Default: Empty and Filled squares
+		stars: ['☆', '★'], // Stars: Empty and Filled stars
+		circles: ['⚪', '🔵'], // Circles: Empty and Filled circles
+		hearts: ['🖤', '❤️'], // Hearts: Empty and Filled hearts
+		fire: ['🔥', '💥'], // Fire: Fire and Explosion
+		custom: ['🍫', '🍬'], // Custom: Chocolate and Candy
+
+		// New Sets
+		moons: ['🌑', '🌕'], // Moons: New moon and Full moon
+		books: ['📖', '📚'], // Books: Open book and Stack of books
+		faces: ['😐', '😁'], // Faces: Neutral face and Grinning face
+		trees: ['🌱', '🌳'], // Trees: Seedling and Mature tree
+		fruits: ['🍏', '🍎'], // Fruits: Green apple and Red apple
+		paws: ['🐾', '🐾🐾'], // Paws: Single paw and Double paw prints
+		fish: ['🐟', '🐠'], // Fish: Blue fish and Tropical fish
+		sports: ['⚽', '🏆'], // Sports: Soccer ball and Trophy
+		flowers: ['🌸', '🌹'], // Flowers: Cherry blossom and Rose
+		diamonds: ['💎', '🔷'], // Diamonds: Gem and Blue diamond
+		planes: ['🛫', '🛬'], // Planes: Take-off and Landing
+		clouds: ['🌥️', '⛅'], // Clouds: Cloudy and Partly sunny
+		arrows: ['➡️', '⬅️'], // Arrows: Right arrow and Left arrow
+		clocks: ['🕰️', '⏰'], // Clocks: Old clock and Alarm clock
+		notes: ['🎵', '🎶'], // Notes: Single music note and Multiple notes
+		pencils: ['✏️', '🖊️'], // Pencils: Pencil and Pen
+	};
+
+	// Set this to the desired emoji set
+	const selectedSet = app.settings["Emoji"] || "default";
+    console.log("selectedSet:", selectedSet);
+	
+	// Separate Empty and Filled Symbols
+	const emptySymbol = emojiSets[selectedSet][0];
+	const filledSymbol = emojiSets[selectedSet][1];
+    console.log("filledSymbol, emptySymbol:", filledSymbol, emptySymbol);
+
     // Depending on the completion percentage, display a corresponding progress bar
     if (taskCompletedPercent < 10) {
-      taskProgress = `[⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${emptySymbol.repeat(10)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 10 && taskCompletedPercent < 20) {
-      taskProgress = `[🟩⬛⬛⬛⬛⬛⬛⬛⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol}${emptySymbol.repeat(9)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 20 && taskCompletedPercent < 30) {
-      taskProgress = `[🟩🟩⬛⬛⬛⬛⬛⬛⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol.repeat(2)}${emptySymbol.repeat(8)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 30 && taskCompletedPercent < 40) {
-      taskProgress = `[🟩🟩🟩⬛⬛⬛⬛⬛⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol.repeat(3)}${emptySymbol.repeat(7)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 40 && taskCompletedPercent < 50) {
-      taskProgress = `[🟩🟩🟩🟩⬛⬛⬛⬛⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol.repeat(4)}${emptySymbol.repeat(6)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 50 && taskCompletedPercent < 60) {
-      taskProgress = `[🟩🟩🟩🟩🟩⬛⬛⬛⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol.repeat(5)}${emptySymbol.repeat(5)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 60 && taskCompletedPercent < 70) {
-      taskProgress = `[🟩🟩🟩🟩🟩🟩⬛⬛⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol.repeat(6)}${emptySymbol.repeat(4)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 70 && taskCompletedPercent < 80) {
-      taskProgress = `[🟩🟩🟩🟩🟩🟩🟩⬛⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol.repeat(7)}${emptySymbol.repeat(3)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 80 && taskCompletedPercent < 90) {
-      taskProgress = `[🟩🟩🟩🟩🟩🟩🟩🟩⬛⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol.repeat(8)}${emptySymbol.repeat(2)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent >= 90 && taskCompletedPercent < 100) {
-      taskProgress = `[🟩🟩🟩🟩🟩🟩🟩🟩🟩⬛] ${taskCompletedPercent}%`;
+      taskProgress = `[${filledSymbol.repeat(9)}${emptySymbol.repeat(1)}] ${taskCompletedPercent}%`;
     }
     if (taskCompletedPercent === 100) {
-      taskProgress = `[🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩] ${taskCompletedPercent}% ‼`;
+      taskProgress = `[${filledSymbol.repeat(10)}] ${taskCompletedPercent}% ‼`;
     }
 
     // ----------- Section: Adding Categorized Task List to Output -----------
     const allTaskCategorizedz = `
-[Categorized Task List][^CTL]
+[Categorized Task: List View!][^CTL]
 [^CTL]: []()${allTaskCategorized}
 `;
 
