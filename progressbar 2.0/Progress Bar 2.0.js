@@ -24,13 +24,52 @@
      const taskAll = await app.getNoteTasks({ uuid: noteUUID }, {includeDone: true});
 	 console.log("taskAll:",taskAll);
 
-	 const Completed = taskAll.filter(task => task.completedAt);
-	 const Dismissed = taskAll.filter(task => task.dismissedAt);
-	 const Pending = taskAll.filter(task => !task.completedAt && !task.dismissedAt);
+	 // const Completed = taskAll.filter(task => task.completedAt);
+	 // const Dismissed = taskAll.filter(task => task.dismissedAt);
+	 // const Pending = taskAll.filter(task => !task.completedAt && !task.dismissedAt);
 
-	 console.log("Completed Tasks:", Completed);
-	 console.log("Dismissed Tasks:", Dismissed);
-	 console.log("Pending Tasks:", Pending);
+	 // console.log("Completed Tasks:", Completed);
+	 // console.log("Dismissed Tasks:", Dismissed);
+	 // console.log("Pending Tasks:", Pending);
+
+	 function formatUnixTimestamp(unixTimestamp) {
+	     const date = new Date(unixTimestamp * 1000); // Convert seconds to milliseconds
+	     return date.toISOString().slice(0, 19).replace('T', ' ');
+	 }
+	 
+	 function sortByTimestamp(a, b, key) {
+	     return (a[key] || 0) - (b[key] || 0);
+	 }
+
+	function formatPendingTask(task) {
+		const importantText = task.important ? `Important` : '';
+		const urgentText = task.urgent ? `Urgent` : '';
+		const additionalInfo = [importantText, urgentText].filter(Boolean).join(', ');
+		
+		return `Content: ${task.content}, Start At: ${formatUnixTimestamp(task.startAt)}` + (additionalInfo ? `, ${additionalInfo}` : '');
+	}
+
+     const Completed = taskAll
+     	.filter(task => task.completedAt)
+		.sort((a, b) => sortByTimestamp(a, b, 'completedAt'))
+     	.map(task => `Task: ${task.content}, Completed At: ${formatUnixTimestamp(task.completedAt)}`
+		);
+     
+     const Dismissed = taskAll
+     	.filter(task => task.dismissedAt)
+		.sort((a, b) => sortByTimestamp(a, b, 'dismissedAt'))
+     	.map(task => `Task: ${task.content}, Dismissed At: ${formatUnixTimestamp(task.dismissedAt)}`
+		);
+     
+     const Pending = taskAll
+     	.filter(task => !task.completedAt && !task.dismissedAt)
+		.sort((a, b) => sortByTimestamp(a, b, 'startAt'))
+     	.map(formatPendingTask);
+     
+     // Combine the text outputs into a single string or print them separately
+     const allTaskCategorized = `*Pending Tasks:*\n${Pending.join('\n')}\n*Completed Tasks:*\n${Completed.join('\n')}\n*Dismissed Tasks:*\n${Dismissed.join('\n')}`;
+
+	 console.log("allTaskCategorized:",allTaskCategorized);
 	 
      const taskAllN = taskAll.length;
      console.log(`Note has ${ taskPendingN } tasks pending and ${ taskAllN } in total`);
@@ -46,7 +85,7 @@
 
      let taskProgress;
 
-     if (taskCompletedPercent < 10){
+     if (taskCompletedPercent < 10) {
        taskProgress = `[⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛] ${taskCompletedPercent}%`;
      };
      if (taskCompletedPercent >= 10 && taskCompletedPercent < 20) {
@@ -80,7 +119,20 @@
        taskProgress = `[🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩] ${taskCompletedPercent}% ‼`;
      };
 
-     
-    app.replaceNoteContent({ uuid: app.context.noteUUID }, taskProgress, { section });
+     // if (app.settings["Task Categorized List (true/false)"] === "true") {
+		// return app.replaceNoteContent({ uuid: app.context.noteUUID }, `${taskProgress}\n\n${allTaskCategorized}`, { section });
+     // } else {
+		// return app.replaceNoteContent({ uuid: app.context.noteUUID }, taskProgress, { section });
+	 // };
+	 
+	 const allTaskCategorizedz = `
+[Categorized Task List][^CTL]
+[^CTL]: []()${allTaskCategorized}
+`;
+
+	 console.log("allTaskCategorizedz:",allTaskCategorizedz);
+
+     return app.replaceNoteContent({ uuid: app.context.noteUUID }, `${taskProgress}\n${allTaskCategorizedz}`, { section });
+
    }
- }
+}
