@@ -22,15 +22,15 @@
     // ----------- Section: Processing the Tasks -----------
     // Retrieve only pending tasks (tasks that are not completed or dismissed)
     const taskPending = await app.getNoteTasks({ uuid: noteUUID });
-    console.log("taskPending:", taskPending);
+    // console.log("taskPending:", taskPending);
 
     // Count the number of pending tasks
     const taskPendingN = taskPending.length;
-    console.log(`taskPendingN: ${taskPendingN}`);
+    // console.log(`taskPendingN: ${taskPendingN}`);
 
     // Retrieve all tasks, including completed and dismissed ones
     const taskAll = await app.getNoteTasks({ uuid: noteUUID }, { includeDone: true });
-    console.log("taskAll:", taskAll);
+    // console.log("taskAll:", taskAll);
 
     // ----------- Section: Helper Functions -----------
     // Convert a UNIX timestamp to a human-readable date format: 'YYYY-MM-DD HH:MM:SS'
@@ -74,24 +74,24 @@
     // Combine all categorized tasks into a single string output
     const allTaskCategorized = `*Pending Tasks: (#${Pending.length})*\n${Pending.join('\n')}\n*Completed Tasks: (#${Completed.length})*\n${Completed.join('\n')}\n*Dismissed Tasks: (#${Dismissed.length})*\n${Dismissed.join('\n')}`;
 
-    console.log("allTaskCategorized:", allTaskCategorized);
+    // console.log("allTaskCategorized:", allTaskCategorized);
 
     // ----------- Section: Task Progress Calculation -----------
     // Count the total number of tasks
     const taskAllN = taskAll.length;
-    console.log(`Note has ${taskPendingN} tasks pending and ${taskAllN} in total`);
+    // console.log(`Note has ${taskPendingN} tasks pending and ${taskAllN} in total`);
 
     // Calculate the ratio of pending tasks to all tasks
     const taskPendingRatio = (taskPendingN / taskAllN);
-    console.log(`taskPendingRatio is ${taskPendingRatio}`);
+    // console.log(`taskPendingRatio is ${taskPendingRatio}`);
 
     // Calculate the completion ratio as the inverse of the pending ratio
     const taskCompletedRatio = (1 - taskPendingRatio);
-    console.log(`taskCompletedRatio: ${taskCompletedRatio}`);
+    // console.log(`taskCompletedRatio: ${taskCompletedRatio}`);
 
     // Convert the completed ratio to a percentage for progress tracking
     const taskCompletedPercent = Math.round(taskCompletedRatio * 100);
-    console.log(`Tasks are ${taskCompletedPercent}% complete.`);
+    // console.log(`Tasks are ${taskCompletedPercent}% complete.`);
 
     // ----------- Section: Displaying Progress Bar -----------
     // Initialize a variable to hold the progress bar string
@@ -127,12 +127,12 @@
 
 	// Set this to the desired emoji set
 	const selectedSet = app.settings["Emoji"] || "default";
-    console.log("selectedSet:", selectedSet);
+    // console.log("selectedSet:", selectedSet);
 	
 	// Separate Empty and Filled Symbols
 	const emptySymbol = emojiSets[selectedSet][0];
 	const filledSymbol = emojiSets[selectedSet][1];
-    console.log("filledSymbol, emptySymbol:", filledSymbol, emptySymbol);
+    // console.log("filledSymbol, emptySymbol:", filledSymbol, emptySymbol);
 
     // Depending on the completion percentage, display a corresponding progress bar
     if (taskCompletedPercent < 10) {
@@ -171,11 +171,11 @@
 
     // ----------- Section: Adding Categorized Task List to Output -----------
     const allTaskCategorizedz = `
-[Categorized Task: List View!][^CTL]
-[^CTL]: []()${allTaskCategorized}
+[Categorized Task: List View!][^CTLV]
+[^CTLV]: []()${allTaskCategorized}
 `;
 
-    console.log("allTaskCategorizedz:", allTaskCategorizedz);
+    // console.log("allTaskCategorizedz:", allTaskCategorizedz);
 
     // Replace the note content in the 'Progress' section with the progress bar and categorized task list
     return app.replaceNoteContent({ uuid: app.context.noteUUID }, `${taskProgress}\n${allTaskCategorizedz}`, { section });
