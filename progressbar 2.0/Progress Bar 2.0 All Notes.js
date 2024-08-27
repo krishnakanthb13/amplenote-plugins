@@ -1,5 +1,7 @@
 {
-  async noteOption(app, noteUUID) {
+  noteOption: {
+// ************************************************************** //
+	"Note!": async function(app, noteUUID) {
 
     // ----------- Section: Getting the 'Progress' Section -----------
     const sections = await app.getNoteSections({ uuid: app.context.noteUUID });
@@ -48,8 +50,9 @@
     function formatPendingTask(task) {
       const importantText = task.important ? `Important` : '';  // Include 'Important' if true
       const urgentText = task.urgent ? `Urgent` : '';  // Include 'Urgent' if true
-      const additionalInfo = [importantText, urgentText].filter(Boolean).join(', ');  // Combine labels
-      return `Content: ${task.content}, Start At: ${formatUnixTimestamp(task.startAt)}` + (additionalInfo ? `, ${additionalInfo}` : '');
+	  const startAtText = task.startAt ? formatUnixTimestamp(task.startAt) : `Not Asigned`;
+      const additionalInfo = [startAtText, importantText, urgentText].filter(Boolean).join(', ');  // Combine labels
+      return `Task: ${task.content}, Start At: ` + (additionalInfo ? `${additionalInfo}` : '');
     }
 
     // ----------- Section: Categorizing and Formatting Tasks -----------
@@ -70,9 +73,14 @@
       .filter(task => !task.completedAt && !task.dismissedAt)
       .sort((a, b) => sortByTimestamp(a, b, 'startAt'))
       .map(formatPendingTask);
+	  
+	// Display them! Handling Empty
+	const CompletedTasksDisplay = Completed.length > 0 ? Completed.join('\n') : 'No tasks have been completed yet.';
+	const DismissedTasksDisplay = Dismissed.length > 0 ? Dismissed.join('\n') : 'No tasks have been dismissed yet.';
+	const PendingTasksDisplay = Pending.length > 0 ? Pending.join('\n') : 'No tasks is pending.';
 
     // Combine all categorized tasks into a single string output
-    const allTaskCategorized = `*Pending Tasks: (#${Pending.length})*\n${Pending.join('\n')}\n*Completed Tasks: (#${Completed.length})*\n${Completed.join('\n')}\n*Dismissed Tasks: (#${Dismissed.length})*\n${Dismissed.join('\n')}`;
+    const allTaskCategorized = `<mark>Task Summary:</mark>\n*<mark>Pending Tasks: #${Pending.length}</mark>*\n${PendingTasksDisplay}\n*<mark>Completed Tasks: #${Completed.length}</mark>*\n${CompletedTasksDisplay}\n*<mark>Dismissed Tasks: #${Dismissed.length}</mark>*\n${DismissedTasksDisplay}`.trim();
 
     // console.log("allTaskCategorized:", allTaskCategorized);
 
@@ -181,72 +189,150 @@
     return app.replaceNoteContent({ uuid: app.context.noteUUID }, `${taskProgress}\n${allTaskCategorizedz}`, { section });
 
   },
-  
+// ************************************************************** //
+	"Overall!": async function(app, noteUUID) {
 
-  async appOption (app, noteUUID) {
+	// Initialize a Set to hold the final results to ensure unique entries.
+	let results = new Set();
 
-// Initialize a Set to hold the final results to ensure unique entries.
-let results = new Set();
+	// Initialize a Set to hold the names of notes that belong to a specific group.
+	let notesGroupNames = new Set();
+	let notesGroup = "taskLists";
 
-// Initialize a Set to hold the names of notes that belong to a specific group.
-let notesGroupNames = new Set();
-let notesGroup = "taskLists";
+	// Filter notes based on the specified group.
+	let notesG = await app.filterNotes({ group: notesGroup });
+	console.log("notesG:", notesG);
 
-// Filter notes based on the specified group.
-let notesG = await app.filterNotes({ group: notesGroup });
-console.log("notesG:", notesG);
+	// Sort the filtered notes alphabetically by name. If a note's name is null or undefined,
+	// an empty string is used as a fallback to avoid errors.
+	notesG.sort((a, b) => {
+		const nameA = a.name || ""; 
+		const nameB = b.name || "";
+		return nameA.localeCompare(nameB);
+	});
+	console.log("notesG Sorted name:", notesG);
 
-// Sort the filtered notes alphabetically by name. If a note's name is null or undefined,
-// an empty string is used as a fallback to avoid errors.
-notesG.sort((a, b) => {
-    const nameA = a.name || ""; 
-    const nameB = b.name || "";
-    return nameA.localeCompare(nameB);
-});
-console.log("notesG Sorted:", notesG);
+	// Sort the list of results based on the tag
+	notesG.sort((a, b) => a.tags.join(", ").localeCompare(b.tags.join(", ")));
+	console.log("notesG Sorted tags:", notesG);
 
-// Loop through each note in the filtered and sorted list of notes.
-for (const noteHandleG of notesG) {
+	// ----------- Section: Displaying Progress Bar -----------
+	function getTaskProgressBar(taskCompletedPercent) {
+		// Set of desired emoji sets
+		const emojiSets = {
+			default: ['⬛', '🟩'],  // Default: Empty and Filled squares
+			stars: ['☆', '★'],  // Stars: Empty and Filled stars
+			circles: ['⚪', '🔵'],  // Circles: Empty and Filled circles
+			hearts: ['🖤', '❤️'],  // Hearts: Empty and Filled hearts
+			fire: ['🔥', '💥'],  // Fire: Fire and Explosion
+			custom: ['🍫', '🍬'],  // Custom: Chocolate and Candy
+			moons: ['🌑', '🌕'],  // Moons: New moon and Full moon
+			books: ['📖', '📚'],  // Books: Open book and Stack of books
+			faces: ['😐', '😁'],  // Faces: Neutral face and Grinning face
+			trees: ['🌱', '🌳'],  // Trees: Seedling and Mature tree
+			fruits: ['🍏', '🍎'],  // Fruits: Green apple and Red apple
+			paws: ['🐾', '🐾🐾'],  // Paws: Single paw and Double paw prints
+			fish: ['🐟', '🐠'],  // Fish: Blue fish and Tropical fish
+			sports: ['⚽', '🏆'],  // Sports: Soccer ball and Trophy
+			flowers: ['🌸', '🌹'],  // Flowers: Cherry blossom and Rose
+			diamonds: ['💎', '🔷'],  // Diamonds: Gem and Blue diamond
+			planes: ['🛫', '🛬'],  // Planes: Take-off and Landing
+			clouds: ['🌥️', '⛅'],  // Clouds: Cloudy and Partly sunny
+			arrows: ['➡️', '⬅️'],  // Arrows: Right arrow and Left arrow
+			clocks: ['🕰️', '⏰'],  // Clocks: Old clock and Alarm clock
+			notes: ['🎵', '🎶'],  // Notes: Single music note and Multiple notes
+			pencils: ['✏️', '🖊️'],  // Pencils: Pencil and Pen
+		};
+
+		// Select the desired emoji set
+		const selectedSet = app.settings["Emoji"] || "default";
+		const [emptySymbol, filledSymbol] = emojiSets[selectedSet];
+
+		// Calculate the number of filled and empty symbols
+		const filledCount = Math.floor(taskCompletedPercent / 10);
+		const emptyCount = 10 - filledCount;
+
+		// Construct the progress bar string
+		let taskProgress = `[${filledSymbol.repeat(filledCount)}${emptySymbol.repeat(emptyCount)}] ${taskCompletedPercent}%`;
+
+		// Add a special mark for 100% completion
+		if (taskCompletedPercent === 100) {
+			taskProgress += ` ‼`;
+		}
+
+		return taskProgress;
+	}
+
+
+	// Loop through each note in the filtered and sorted list of notes.
+	for (const noteHandleG of notesG) {
+		
+		// Retrieve all tasks, including completed and dismissed ones
+		const taskAll = await app.getNoteTasks({ uuid: noteHandleG.uuid }, { includeDone: true });
+		console.log("taskAll:", taskAll);
+		
+		// Filter tasks into three categories: Completed, Dismissed, and Pending.
+		const Completed = taskAll.filter(task => task.completedAt);
+		const Dismissed = taskAll.filter(task => task.dismissedAt);
+		const Pending = taskAll.filter(task => !task.completedAt && !task.dismissedAt);
+		console.log("Completed, Dismissed, Pending:", Completed, Dismissed, Pending);
+
+		// Generate a string representing the task statistics.
+		const TaskStats = `Pending Tasks: (#${Pending.length}), Completed Tasks: (#${Completed.length}), Dismissed Tasks: (#${Dismissed.length})`;
+		console.log("TaskStats:", TaskStats);
+
+		// Calculate the task progress as a percentage, ensuring that division by zero is avoided.
+		const totalTasks = Pending.length + Completed.length + Dismissed.length;
+		const taskCompletedPercent = totalTasks > 0 ? Math.round((1 - (Pending.length / totalTasks)) * 100) : 0;
+		console.log("totalTasks:", totalTasks);
+		console.log("taskCompletedPercent:", taskCompletedPercent);
+		
+		// Building the Progress Bar
+		const taskProgress = getTaskProgressBar(taskCompletedPercent);
+		console.log("taskCompletedPercent:", taskCompletedPercent);
+
+		// Add the note information to the Set, including the note's name, tags, task progress, and statistics.
+		// notesGroupNames.add(`| [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${noteHandleG.tags} | ${taskCompletedPercent}% | ${TaskStats} |`); // Format 1
+		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 2
+
+	}
+
+	// Convert the Set of note names to an array and join them into a single string.
+	results = Array.from(notesGroupNames);
+	console.log("results:", results);
+
+	// Readme Notes
+	const readmeNotes = `
+### Readme!
+- Above are list of Notes with respective Details, having atleast one Pending or Un-completed Task in the Note.
+- By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
+	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
+- You can add your Comments to this page for your reference!
+- <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organise your Task respectively.
+- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), ✒️ (Add your Comments).\`
+`;
 	
-	// Retrieve all tasks, including completed and dismissed ones
-	const taskAll = await app.getNoteTasks({ uuid: noteHandleG.uuid }, { includeDone: true });
-	console.log("taskAll:", taskAll);
-	
-    // Filter tasks into three categories: Completed, Dismissed, and Pending.
-    const Completed = taskAll.filter(task => task.completedAt);
-    const Dismissed = taskAll.filter(task => task.dismissedAt);
-    const Pending = taskAll.filter(task => !task.completedAt && !task.dismissedAt);
-	console.log("Completed, Dismissed, Pending:", Completed, Dismissed, Pending);
+	// Create the final result text as a markdown table, including headers and the joined note information.
+	let resultText;
+	// resultText = "| Note Name | Tags | Task completion % | Task Stats |\n|---|---|---|---|\n" + results.join("\n"); // Format 1
+	// resultText = "| Tags | Note Name | Progress Bar | Pending | Completed | Dismissed | Comments |\n|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 2a
+	resultText = "| Tags 🏷️ | Note Name 📝 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 2b
+	resultText += `\n\n${readmeNotes}`;
+	console.log("resultText:", resultText);
 
-    // Generate a string representing the task statistics.
-    const TaskStats = `Pending Tasks: (#${Pending.length}), Completed Tasks: (#${Completed.length}), Dismissed Tasks: (#${Dismissed.length})`;
-	console.log("TaskStats:", TaskStats);
+	// Define the filename for the new note.
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `Task_Manager_${YYMMDD}_${HHMMSS}`;
 
-    // Calculate the task progress as a percentage, ensuring that division by zero is avoided.
-    const totalTasks = Pending.length + Completed.length + Dismissed.length;
-    const TaskProgressz = totalTasks > 0 ? Math.round((1 - (Pending.length / totalTasks)) * 100) : 0;
-	console.log("totalTasks:", totalTasks);
-	console.log("TaskProgressz:", TaskProgressz);
 
-    // Add the note information to the Set, including the note's name, tags, task progress, and statistics.
-    notesGroupNames.add(`| [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${noteHandleG.tags} | ${TaskProgressz}% | ${TaskStats} |`);
+	// Create a new note with the specified filename and tag, then insert the result text into it.
+	let noteUUIDNew = await app.createNote(`${filename}`, ["-task-manager"]);
+	await app.insertContent({ uuid: noteUUIDNew }, resultText);
+	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 
-}
-
-// Convert the Set of note names to an array and join them into a single string.
-results = Array.from(notesGroupNames);
-console.log("results:", results);
-
-// Create the final result text as a markdown table, including headers and the joined note information.
-let resultText = "| Note Name | Tags | Progress | Task Stats |\n|---|---|---|---|\n" + results.join("\n");
-console.log("resultText:", resultText);
-
-// Define the filename for the new note.
-const filename = "Testing Progress Bar 2.0 - All";
-
-// Create a new note with the specified filename and tag, then insert the result text into it.
-let noteUUIDNew = await app.createNote(`${filename}`, ["-task-progress"]);
-await app.insertContent({ uuid: noteUUIDNew }, resultText);
-
+	 }
+// ************************************************************** //
   }
 }
