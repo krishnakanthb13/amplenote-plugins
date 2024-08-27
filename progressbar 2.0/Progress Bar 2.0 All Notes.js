@@ -188,7 +188,7 @@
     // Replace the note content in the 'Progress' section with the progress bar and categorized task list
     return app.replaceNoteContent({ uuid: app.context.noteUUID }, `${taskProgress}\n${allTaskCategorizedz}`, { section });
 
-  },
+},
 // ************************************************************** //
 	"Overall!": async function(app, noteUUID) {
 
@@ -199,10 +199,12 @@
 	let notesGroupNames = new Set();
 	let notesGroup = "taskLists";
 
+	// ----------- Section: Filtering Notes by Group -----------
 	// Filter notes based on the specified group.
 	let notesG = await app.filterNotes({ group: notesGroup });
 	console.log("notesG:", notesG);
 
+	// ----------- Section: Sorting Notes -----------
 	// Sort the filtered notes alphabetically by name. If a note's name is null or undefined,
 	// an empty string is used as a fallback to avoid errors.
 	notesG.sort((a, b) => {
@@ -217,6 +219,7 @@
 	console.log("notesG Sorted tags:", notesG);
 
 	// ----------- Section: Displaying Progress Bar -----------
+	// Function to generate a progress bar with dynamic emoji sets
 	function getTaskProgressBar(taskCompletedPercent) {
 		// Set of desired emoji sets
 		const emojiSets = {
@@ -263,7 +266,7 @@
 		return taskProgress;
 	}
 
-
+	// ----------- Section: Processing Each Note -----------
 	// Loop through each note in the filtered and sorted list of notes.
 	for (const noteHandleG of notesG) {
 		
@@ -297,6 +300,7 @@
 
 	}
 
+	// ----------- Section: Preparing the Final Output -----------
 	// Convert the Set of note names to an array and join them into a single string.
 	results = Array.from(notesGroupNames);
 	console.log("results:", results);
@@ -320,19 +324,18 @@
 	resultText += `\n\n${readmeNotes}`;
 	console.log("resultText:", resultText);
 
+	// ----------- Section: Creating a New Note -----------
 	// Define the filename for the new note.
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
     const filename = `Task_Manager_${YYMMDD}_${HHMMSS}`;
 
-
 	// Create a new note with the specified filename and tag, then insert the result text into it.
 	let noteUUIDNew = await app.createNote(`${filename}`, ["-task-manager"]);
 	await app.insertContent({ uuid: noteUUIDNew }, resultText);
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
-
-	 }
+}
 // ************************************************************** //
   }
 }
