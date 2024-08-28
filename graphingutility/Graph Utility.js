@@ -254,7 +254,7 @@ ${transposeContent}
     // Determine the format and trigger the appropriate download
     if (result === "3") {
 		const newNoteName = `Tables Copy ${YYMMDD}_${HHMMSS}`;
-		const newTagName = ['-tables-copy'];
+		const newTagName = ['-reports/-tables-copy'];
 		let noteUUIDz = await app.createNote(newNoteName, newTagName);
 		await app.replaceNoteContent({ uuid: noteUUIDz }, cleanedContentz);
 		await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
