@@ -332,7 +332,7 @@
     const filename = `Task_Manager_${YYMMDD}_${HHMMSS}`;
 
 	// Create a new note with the specified filename and tag, then insert the result text into it.
-	let noteUUIDNew = await app.createNote(`${filename}`, ["-task-manager"]);
+	let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
 	await app.insertContent({ uuid: noteUUIDNew }, resultText);
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 }

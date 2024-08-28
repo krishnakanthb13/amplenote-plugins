@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility
 uuid: 2d631ce2-6169-11ef-a048-22074e34eefe
-version: 780
+version: 788
 created: '2024-08-23T21:33:02+05:30'
 tags:
   - '-9-permanent'
@@ -370,7 +370,7 @@ ${transposeContent}
     // Determine the format and trigger the appropriate download
     if (result === "3") {
 		const newNoteName = `Tables Copy ${YYMMDD}_${HHMMSS}`;
-		const newTagName = ['-tables-copy'];
+		const newTagName = ['-reports/-tables-copy'];
 		let noteUUIDz = await app.createNote(newNoteName, newTagName);
 		await app.replaceNoteContent({ uuid: noteUUIDz }, cleanedContentz);
 		await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
@@ -2521,7 +2521,7 @@ return(htmlTemplate);
 
 ---
 
-Time Invested For this Plugin: 8h 9m + 11h 48m + 5h 49m + 3h 40m + 3h 2m = \~32h 30m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 8h 9m + 11h 48m + 5h 49m + 3h 40m + 4h 46m = \~34h 14m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
  
 

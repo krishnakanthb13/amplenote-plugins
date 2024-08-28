@@ -1,7 +1,7 @@
 ﻿---
-title: "\U0001F4F8 Gallery"
+title: Gallery
 uuid: 0e218580-5be7-11ef-b179-22074e34eefe
-version: 364
+version: 385
 created: '2024-08-16T21:15:38+05:30'
 tags:
   - '-9-permanent'
@@ -302,13 +302,13 @@ ${horizontalLine}`;
     // Generate a new note with the results
     const { YYMMDD, HHMMSS } = getCurrentDateTime();
     const newNoteName = `Image Gallery List ${YYMMDD}_${HHMMSS}`;
-    const newTagName = ['-image-gallery'];
+    const newTagName = ['-reports/-image-gallery'];
     let noteUUID = await app.createNote(newNoteName, newTagName);
     await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
 
     // Audit Report
     const auditNoteName = `Image Gallery Audit`;
-    const auditTagName = ['-image-gallery'];
+    const auditTagName = ['-reports/-image-gallery'];
     // let auditnoteUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
 	// if (!await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
 	const auditnoteUUID = await (async () => {
@@ -660,7 +660,8 @@ function populateGallery(data) {
         div.classList.add('uk-inline');
         div.innerHTML = \`
             <a href="\${item.href}" data-caption="\${item.caption}">
-               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;"
+               onerror="this.onerror=null; this.src='https://img.icons8.com/dusk/64/no-image.png';">
             </a>
         \`;
         gallery.appendChild(div);
@@ -767,7 +768,7 @@ populateGallery(jsonData);
 
     // Audit Report
     const auditNoteName = `Image Gallery Audit`;
-    const auditTagName = ['-image-gallery'];
+    const auditTagName = ['-reports/-image-gallery'];
     // let auditnoteUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
 	// if (!await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
 	const auditnoteUUID = await (async () => {
@@ -802,11 +803,11 @@ populateGallery(jsonData);
   
   // Create Save Retrive Save Note to View the Embeded Gallery
   const newNoteName = `Gallery: Image Viewer`;
-  const newTagName = ['-image-gallery'];
+  const newTagName = ['-reports/-image-gallery'];
   
   // Audit Report
   const auditNoteName = `Image Gallery Audit`;
-  const auditTagName = ['-image-gallery'];
+  const auditTagName = ['-reports/-image-gallery'];
 
   // noteUUID = await app.settings["Gallery_Image_Viewer_UUID [Do not Edit!]"] || await app.createNote(newNoteName, newTagName);
   // await app.setSetting("Gallery_Image_Viewer_UUID [Do not Edit!]", noteUUID);
@@ -1042,7 +1043,8 @@ function populateGallery(data) {
         div.classList.add('uk-inline');
         div.innerHTML = \`
             <a href="\${item.href}" data-caption="\${item.caption}">
-               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+               <img src="\${item.src}" alt="\${item.alt}" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;"
+               onerror="this.onerror=null; this.src='https://img.icons8.com/dusk/64/no-image.png';">
             </a>
         \`;
         gallery.appendChild(div);
@@ -1209,7 +1211,21 @@ populateGallery(jsonData);
 
 ---
 
-Time Invested For this Plugin: 8h 3m + 11h 5m + 10h 57m = \~30h+. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+> Time invested:
+>
+> August 14th, 2024 - 8h 3m
+>
+> August 15th, 2024 - 11h 5m
+>
+> August 16th, 2024 - 10h 57m
+>
+> August 17th, 2024 - 4h 44m
+>
+> August 18th, 2024 - 3h 26m
+>
+> Total: 36h 25m
+>
+> \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 ---
 

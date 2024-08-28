@@ -1,11 +1,11 @@
 ﻿---
 title: Metadata 1.0 (Note_Tag)
 uuid: af332c24-4064-11ef-b9a5-6ef34fa959ce
-version: 704
+version: 776
 created: '2024-07-12T21:07:43+05:30'
 tags:
   - '-9-permanent'
-  - '-loc/amp/mine'
+  - '-t/amplenote/mine'
 ---
 
 # <mark style="color:#9AD62A;">Welcome Note:<!-- {"cycleColor":"26"} --></mark>
@@ -273,31 +273,31 @@ Well having a Graph view is excellent, still having a good old view of the list 
                             // Format selection option
                             {
                                 label: "Select format (Mandatory)", type: "select", options: [
-                                    { label: "Both (Table format)", value: "both_table" },
-                                    { label: "Note Names", value: "names_only" },
-                                    { label: "Note Tags", value: "tags_only" },
-                                    { label: "Untitled Notes (Table format)", value: "empty_names_only" },
-                                    { label: "Untagged Notes (Table format)", value: "empty_tags_only" },
-                                    { label: "Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" },
-                                    { label: "Published Notes (Table format)", value: "published_only" },
-                                    { label: "Archived - Grouped-folders", value: "archived" },
-                                    { label: "Vault Notes - Grouped-folders", value: "vault" },
-                                    { label: "Deleted Notes - Grouped-folders", value: "deleted" },
-                                    { label: "Active plugin notes - Grouped-folders", value: "plugin" },
-                                    { label: "Task Lists - Notes-having-tasks", value: "taskLists" },
-                                    { label: "Un-tagged - Notes-untagged", value: "untagged" },
-                                    { label: "Created by me - Shared-notes", value: "created" },
-                                    { label: "Shared publicly - Shared-notes", value: "public" },
-                                    { label: "Shared notes - Shared-notes", value: "shared" },
-                                    { label: "Notes shared with me  - Shared-notes", value: "shareReceived" },
-                                    { label: "Notes not created by me - Shared-notes", value: "notCreated" },
-                                    { label: "Notes I shared with others - Shared-notes", value: "shareSent" },
-                                    { label: "This week - Created-date", value: "thisWeek" },
-                                    { label: "Today - Created-date", value: "today" },
-                                    { label: "Notes Saving - Low-level-queries", value: "saving" },
-                                    { label: "Notes Downloading - Low-level-queries", value: "stale" },
-                                    { label: "Notes Indexing - Low-level-queries", value: "indexing" },
-                                    { label: "Raw data", value: "raw_data" }
+                                    { label: "Both (Table format)", value: "both_table" }, // Method 1
+                                    { label: "Note Names", value: "names_only" }, // Method 1
+                                    { label: "Note Tags", value: "tags_only" }, // Method 1
+                                    { label: "Untitled Notes (Table format)", value: "empty_names_only" }, // Method 1
+                                    { label: "Untagged Notes (Table format)", value: "empty_tags_only" }, // Method 1
+                                    { label: "Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" }, // Method 2
+                                    { label: "Published Notes (Table format)", value: "published_only" }, // Method 1
+                                    { label: "Archived - Grouped-folders", value: "archived" }, // Method 3
+                                    { label: "Vault Notes - Grouped-folders", value: "vault" }, // Method 3
+                                    { label: "Deleted Notes - Grouped-folders", value: "deleted" }, // Method 3
+                                    { label: "Active plugin notes - Grouped-folders", value: "plugin" }, // Method 3
+                                    { label: "Task Lists - Notes-having-tasks", value: "taskLists" }, // Method 3
+                                    { label: "Un-tagged - Notes-untagged", value: "untagged" }, // Method 3
+                                    { label: "Created by me - Shared-notes", value: "created" }, // Method 3
+                                    { label: "Shared publicly - Shared-notes", value: "public" }, // Method 3
+                                    { label: "Shared notes - Shared-notes", value: "shared" }, // Method 3
+                                    { label: "Notes shared with me  - Shared-notes", value: "shareReceived" }, // Method 3
+                                    { label: "Notes not created by me - Shared-notes", value: "notCreated" }, // Method 3
+                                    { label: "Notes I shared with others - Shared-notes", value: "shareSent" }, // Method 3
+                                    { label: "This week - Created-date", value: "thisWeek" }, // Method 3
+                                    { label: "Today - Created-date", value: "today" }, // Method 3
+                                    { label: "Notes Saving - Low-level-queries", value: "saving" }, // Method 3
+                                    { label: "Notes Downloading - Low-level-queries", value: "stale" }, // Method 3
+                                    { label: "Notes Indexing - Low-level-queries", value: "indexing" }, // Method 3
+                                    { label: "Raw data", value: "raw_data" } // Method 1
                                 ]
                             }
                         ]
@@ -325,20 +325,28 @@ Well having a Graph view is excellent, still having a good old view of the list 
                         return;
                     }
                     app.alert("Working on it... This may take a few minutes for large notebooks. The app might seem unresponsive but we're working on it.");
+					// To avoid multiple repetition in for condition
+					const insertFormatz = insertFormat;
+					// console.log("insertFormatz:", insertFormatz);
                     // Split tags into an array
                     const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
-                    let notes = [];
+                    let results = new Set();
+                    let publicResults = [];
+					// To handle different Methods differently
+					// Method 1
+					if (insertFormatz === "both_table" || insertFormatz === "names_only" || insertFormatz === "tags_only" || insertFormatz === "published_only" || insertFormatz === "raw_data" || insertFormatz === "empty_names_only" || insertFormatz === "empty_tags_only") {
+					let notes = [];
                     // Filter notes based on tags
                     if (tagsArray.length > 0) {
                         for (let tag of tagsArray) {
                             let taggedNotes = await app.filterNotes({
-                                tag
+                                tag, group: "^vault", query: nameFilter
                             });
                             notes = notes.concat(taggedNotes);
                         }
                     }
                     else {
-                        notes = await app.filterNotes({});
+                        notes = await app.filterNotes({ group: "^vault", query: nameFilter });
                     }
                     // console.log("Filtered notes:", notes);
                     // Remove duplicate notes
@@ -359,19 +367,19 @@ Well having a Graph view is excellent, still having a good old view of the list 
                     else if (sortTagOption === "desc") {
                         notes.sort((a, b) => b.tags.join(", ").localeCompare(a.tags.join(", ")));
                     }
-                    // Further filter notes by name if a name filter is provided
+                    // Further filter notes by name if a name filter is provided (Handled in the Query)
                     // if (nameFilter) {
                         // notes = notes.filter(note => note.name.includes(nameFilter));
                     // }
-					if (nameFilter) {
+					// if (nameFilter) {
 						// Convert the filter term to lowercase
-						const lowerCaseFilter = nameFilter.toLowerCase();
+						// const lowerCaseFilter = nameFilter.toLowerCase();
 
 						// Filter notes with case-insensitive comparison
-						notes = notes.filter(note => 
-							note.name && note.name.toLowerCase().includes(lowerCaseFilter)
-						);
-					}
+						// notes = notes.filter(note => 
+							// note.name && note.name.toLowerCase().includes(lowerCaseFilter)
+						// );
+					// }
                     // Sort notes by name based on the user's selection
                     if (sortOption === "asc") {
                         notes.sort((a, b) => a.name.localeCompare(b.name));
@@ -380,11 +388,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
                         notes.sort((a, b) => b.name.localeCompare(a.name));
                     }
                     // console.log("Sorted notes:", notes);
-                    
                     // Fetch tags for each note and generate results
                     const self = this;
-                    let results = new Set();
-                    let publicResults = [];
                     for (let note of notes) {
                         let tags = note.tags;
                         // Sort tags within the note if the checkbox is checked
@@ -432,14 +437,17 @@ Well having a Graph view is excellent, still having a good old view of the list 
                                 results.add(`| ${noteLink} | ${tagString} |`);
                             }
                         }
-                        else if (insertFormat === "empty_content_only") {
-							
+                      }
+					  // console.log("Sorted notes:", notes);
+					} // Method 1 Close
+					// Method 2 - To handle Empty content Separately
+					else if (insertFormatz === "empty_content_only") {
 							// Filter notes based on empty notes + tags	
 							let notesEmptyNames = new Set();
 							let notesE = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
-								tag
+								tag, group: "^vault", query: nameFilter
 							})))).flat() : await app.filterNotes({
-								group: "^vault"
+								group: "^vault", query: nameFilter
 							});
 							//notesE.sort((a, b) => a.name.localeCompare(b.name));
 							if (nameFilter) {const lowerCaseFilter = nameFilter.toLowerCase(); notesE = notesE.filter(note => note.name && note.name.toLowerCase().includes(lowerCaseFilter) ); }
@@ -467,17 +475,19 @@ Well having a Graph view is excellent, still having a good old view of the list 
 							}
 							
                             results = new Set(notesEmptyNames);
-                        }
-                        else {
-							
+							// console.log("Sorted notesE:", notesE);
+							// console.log("Empty Notes Names", notesEmptyNames);
+					} // Method 2 Close
+					// Method 3 - To handle Groups Separately
+					else  {
 							// Filter notes based on Groups + tags
 							let notesGroupNames = new Set();
 							let notesGroup = insertFormat;
 							// Filter notes based on empty notes + tags
 							let notesG = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
-								tag
+								tag, group: notesGroup, query: nameFilter
 							})))).flat() : await app.filterNotes({
-								group: notesGroup
+								group: notesGroup, query: nameFilter
 							});
 							//notesG.sort((a, b) => a.name.localeCompare(b.name));
 							if (nameFilter) {const lowerCaseFilter = nameFilter.toLowerCase(); notesG = notesG.filter(note => note.name && note.name.toLowerCase().includes(lowerCaseFilter) ); }
@@ -492,14 +502,9 @@ Well having a Graph view is excellent, still having a good old view of the list 
 							}
 							
                             results = new Set(notesGroupNames);
-                        }
-                    }
-					// console.log("Sorted notes:", notes);
-                    // console.log("Sorted notesE:", notesE);
-                    // console.log("Sorted notesG:", notesG);
-                    // console.log("Sorted notesGroupNames:", notesGroupNames);
-                    // console.log("Empty Notes Names", notesEmptyNames);
-					
+							// console.log("Sorted notesG:", notesG);
+							// console.log("Sorted notesGroupNames:", notesGroupNames);
+					} // Method 3 Close
                     // Assert results is an array
                     // expect(results).toBeInstanceOf(Array);
                     // console.log("Generated results:", results);
@@ -568,7 +573,7 @@ Well having a Graph view is excellent, still having a good old view of the list 
                         // console.log("Inserted text into current note.");
                     }
                     else if (insertOption === "new_note") {
-                        let noteUUID = await app.createNote(`${filename}`, ["metadata-reports"]);
+                        let noteUUID = await app.createNote(`${filename}`, ["-reports/-metadata-reports"]);
                         await app.insertContent({
                             uuid: noteUUID
                         }, resultText);
@@ -658,6 +663,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
 - July 31st, 2024 - Tested all the Features, Options and also validated few of the Items. Works properly as expected.
 
+- August 28th, 2024 - Completed performance tuning and done testing. It generates the results quite fast now, at least I see a huge difference for me with 400+ notes. Well its all comparative, it should work much faster then before if you have used it. Enjoy the quick querying so that you can use your time else were. (I do understand waiting actually help our brain go on power saving mode! 😜
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -720,6 +727,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
 - ~~Testing July 31st, 2024 (13:03:09)~~ 
 
+- ~~Performance tuning completed - August 28th, 2024 (12:57:24)~~
+
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 
 - Metadata 2.0, Metadata 3.0, Metadata Ultimatum
@@ -732,7 +741,7 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
 ---
 
-Time Invested For this Plugin: 10h 45m + 5h 48m + 6h 10m +  = Totaling up to 22+h. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 10h 45m + 6h 36m + 5h 21m + 4h 41m + 4h 55m + 4h 24m + 6h 34m + 1h 32m = \~44h 48m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 ---
 

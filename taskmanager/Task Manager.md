@@ -1,7 +1,7 @@
 ﻿---
 title: Task Manager
 uuid: 6c5991b0-6457-11ef-b225-22074e34eefe
-version: 304
+version: 308
 created: '2024-08-27T15:03:32+05:30'
 tags:
   - '-9-permanent'
@@ -20,7 +20,7 @@ This plugin seamlessly integrates with your notes, providing you with an intuiti
 
 ## <mark style="color:#F8D616;">Demo:<!-- {"cycleColor":"25"} --></mark>
 
-![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/42d002aa-5bc8-41bb-a506-f366a831f6cf.gif)   ![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/ccd1aba5-207e-40e9-b179-a1628ec8dcd1.gif)
+![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/42d002aa-5bc8-41bb-a506-f366a831f6cf.gif)   ![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/ccd1aba5-207e-40e9-b179-a1628ec8dcd1.gif)  ![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/874c561f-1384-48fc-8283-4cb4b40d1965.gif)
 
 ---
 
@@ -474,7 +474,7 @@ Thank you for choosing the Task Progress Manager Plugin. We hope it brings clari
     const filename = `Task_Manager_${YYMMDD}_${HHMMSS}`;
 
 	// Create a new note with the specified filename and tag, then insert the result text into it.
-	let noteUUIDNew = await app.createNote(`${filename}`, ["-task-manager"]);
+	let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
 	await app.insertContent({ uuid: noteUUIDNew }, resultText);
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 }
