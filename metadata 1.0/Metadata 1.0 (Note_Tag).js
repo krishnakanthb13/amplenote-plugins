@@ -115,13 +115,13 @@
                     if (tagsArray.length > 0) {
                         for (let tag of tagsArray) {
                             let taggedNotes = await app.filterNotes({
-                                tag, group: "^vault"
+                                tag, group: "^vault", query: nameFilter
                             });
                             notes = notes.concat(taggedNotes);
                         }
                     }
                     else {
-                        notes = await app.filterNotes({ group: "^vault" });
+                        notes = await app.filterNotes({ group: "^vault", query: nameFilter });
                     }
                     // console.log("Filtered notes:", notes);
                     // Remove duplicate notes
@@ -142,19 +142,19 @@
                     else if (sortTagOption === "desc") {
                         notes.sort((a, b) => b.tags.join(", ").localeCompare(a.tags.join(", ")));
                     }
-                    // Further filter notes by name if a name filter is provided
+                    // Further filter notes by name if a name filter is provided (Handled in the Query)
                     // if (nameFilter) {
                         // notes = notes.filter(note => note.name.includes(nameFilter));
                     // }
-					if (nameFilter) {
+					// if (nameFilter) {
 						// Convert the filter term to lowercase
-						const lowerCaseFilter = nameFilter.toLowerCase();
+						// const lowerCaseFilter = nameFilter.toLowerCase();
 
 						// Filter notes with case-insensitive comparison
-						notes = notes.filter(note => 
-							note.name && note.name.toLowerCase().includes(lowerCaseFilter)
-						);
-					}
+						// notes = notes.filter(note => 
+							// note.name && note.name.toLowerCase().includes(lowerCaseFilter)
+						// );
+					// }
                     // Sort notes by name based on the user's selection
                     if (sortOption === "asc") {
                         notes.sort((a, b) => a.name.localeCompare(b.name));
@@ -222,7 +222,7 @@
 							let notesE = tagsArray.length > 0 ? (await Promise.all(tagsArray.map(tag => app.filterNotes({
 								tag, group: "^vault", query: nameFilter
 							})))).flat() : await app.filterNotes({
-								group: "^vault"
+								group: "^vault", query: nameFilter
 							});
 							//notesE.sort((a, b) => a.name.localeCompare(b.name));
 							if (nameFilter) {const lowerCaseFilter = nameFilter.toLowerCase(); notesE = notesE.filter(note => note.name && note.name.toLowerCase().includes(lowerCaseFilter) ); }
