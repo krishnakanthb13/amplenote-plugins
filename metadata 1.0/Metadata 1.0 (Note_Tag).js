@@ -348,7 +348,7 @@
                         // console.log("Inserted text into current note.");
                     }
                     else if (insertOption === "new_note") {
-                        let noteUUID = await app.createNote(`${filename}`, ["metadata-reports"]);
+                        let noteUUID = await app.createNote(`${filename}`, ["-reports/-metadata-reports"]);
                         await app.insertContent({
                             uuid: noteUUID
                         }, resultText);
