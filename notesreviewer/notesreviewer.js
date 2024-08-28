@@ -31,7 +31,7 @@
     const dateField = result;
 	
 	// First, filter by tag
-	let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer" });
+	let notesByTag = await app.filterNotes({ tag: "^-reports/-notes-reviewer" });
 	// console.log(notesByTag);
 
 	// Then, filter by groups
@@ -132,7 +132,7 @@ ${hLine}
 `;
     // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
 	const newNoteName = `Notes_Reviewer_${YYMMDD}_${HHMMSS}`;
-	const newTagName = ['-notes-reviewer/0-reports'];
+	const newTagName = ['-reports/-notes-reviewer/0-reports'];
 	// console.log(newNoteName);
 	// console.log(newTagName);
 
@@ -175,7 +175,7 @@ ${hLine}
     const dateField = result;
 	
 	// First, filter by tag
-	let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer" });
+	let notesByTag = await app.filterNotes({ tag: "^-reports/-notes-reviewer" });
 	// console.log(notesByTag);
 
 	// Then, filter by groups
@@ -276,7 +276,7 @@ ${hLine}
 `;
     // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
 	const newNoteName = `Notes_Reviewer_${YYMMDD}_${HHMMSS}`;
-	const newTagName = ['-notes-reviewer/0-reports'];
+	const newTagName = ['-reports/-notes-reviewer/0-reports'];
 	// console.log(newNoteName);
 	// console.log(newTagName);
 
@@ -355,11 +355,11 @@ ${hLine}
 		}
 
 		// Fetch notes based on filters
-		// notes = await app.filterNotes({ tag: "^-notes-reviewer,^deleted,^archived,^plugin" });
+		// notes = await app.filterNotes({ tag: "^-reports/-notes-reviewer,^deleted,^archived,^plugin" });
 		// console.log("All filtered notes:", notes);
 
 		// First, filter by tag
-		let notesByTag = await app.filterNotes({ tag: "^-notes-reviewer" });
+		let notesByTag = await app.filterNotes({ tag: "^-reports/-notes-reviewer" });
 		// console.log(notesByTag);
 
 		// Then, filter by groups
@@ -435,7 +435,7 @@ ${hLine}
 		// Adding Inbox Tag for all the final resulted notes
 		for (const note of notesz) {
 			if (note.uuid) {
-				await app.addNoteTag({ uuid: note.uuid }, "-notes-reviewer/1-inbox");
+				await app.addNoteTag({ uuid: note.uuid }, "-reports/-notes-reviewer/1-inbox");
 			}
 		}
 		
@@ -514,9 +514,9 @@ ${hLine}
                   label: "Select The Review Decision!",
                   type: "select",
                   options: [
-                      { label: "Keep - Review Completed!", value: "-notes-reviewer/2-keep" },
-                      { label: "Discard - Review Completed!", value: "-notes-reviewer/2-discard" },
-                      { label: "Review - Review Pending!", value: "-notes-reviewer/2-review" }
+                      { label: "Keep - Review Completed!", value: "-reports/-notes-reviewer/2-keep" },
+                      { label: "Discard - Review Completed!", value: "-reports/-notes-reviewer/2-discard" },
+                      { label: "Review - Review Pending!", value: "-reports/-notes-reviewer/2-review" }
                   ]
               },
               {
@@ -556,7 +556,7 @@ ${hLine}
       
       // ------- Predefined review tags -------
       // Defines and logs a set of predefined review tags.
-      const reviewTagz = '-notes-reviewer,-notes-reviewer/0-reports,-notes-reviewer/1-inbox,-notes-reviewer/2-discard,-notes-reviewer/2-keep,-notes-reviewer/2-review,-notes-reviewer/3-moved';
+      const reviewTagz = '-reports/-notes-reviewer,-reports/-notes-reviewer/0-reports,-reports/-notes-reviewer/1-inbox,-reports/-notes-reviewer/2-discard,-reports/-notes-reviewer/2-keep,-reports/-notes-reviewer/2-review,-reports/-notes-reviewer/3-moved';
       // console.log("reviewTagz:", reviewTagz);
   
       // ------- Destructuring user inputs -------
@@ -640,8 +640,8 @@ ${hLine}
                   fTags.add(tag);
               }
           }
-          await app.addNoteTag({ uuid: decideUUID }, "-notes-reviewer/3-moved");
-          fTags.add("-notes-reviewer/3-moved");
+          await app.addNoteTag({ uuid: decideUUID }, "-reports/-notes-reviewer/3-moved");
+          fTags.add("-reports/-notes-reviewer/3-moved");
       }
   
       // ------- Add single tag to the note if provided -------
@@ -649,8 +649,8 @@ ${hLine}
       if (singleTag) {
           await app.addNoteTag({ uuid: decideUUID }, singleTag);
           fTags.add(singleTag);
-          await app.addNoteTag({ uuid: decideUUID }, "-notes-reviewer/3-moved");
-          fTags.add("-notes-reviewer/3-moved");
+          await app.addNoteTag({ uuid: decideUUID }, "-reports/-notes-reviewer/3-moved");
+          fTags.add("-reports/-notes-reviewer/3-moved");
       }
   
       // ------- Audit Reporting -------
