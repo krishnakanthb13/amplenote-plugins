@@ -191,13 +191,13 @@ ${horizontalLine}`;
     // Generate a new note with the results
     const { YYMMDD, HHMMSS } = getCurrentDateTime();
     const newNoteName = `Image Gallery List ${YYMMDD}_${HHMMSS}`;
-    const newTagName = ['-image-gallery'];
+    const newTagName = ['-reports/-image-gallery'];
     let noteUUID = await app.createNote(newNoteName, newTagName);
     await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
 
     // Audit Report
     const auditNoteName = `Image Gallery Audit`;
-    const auditTagName = ['-image-gallery'];
+    const auditTagName = ['-reports/-image-gallery'];
     // let auditnoteUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
 	// if (!await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
 	const auditnoteUUID = await (async () => {
@@ -657,7 +657,7 @@ populateGallery(jsonData);
 
     // Audit Report
     const auditNoteName = `Image Gallery Audit`;
-    const auditTagName = ['-image-gallery'];
+    const auditTagName = ['-reports/-image-gallery'];
     // let auditnoteUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
 	// if (!await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"]) { await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID); }
 	const auditnoteUUID = await (async () => {
@@ -692,11 +692,11 @@ populateGallery(jsonData);
   
   // Create Save Retrive Save Note to View the Embeded Gallery
   const newNoteName = `Gallery: Image Viewer`;
-  const newTagName = ['-image-gallery'];
+  const newTagName = ['-reports/-image-gallery'];
   
   // Audit Report
   const auditNoteName = `Image Gallery Audit`;
-  const auditTagName = ['-image-gallery'];
+  const auditTagName = ['-reports/-image-gallery'];
 
   // noteUUID = await app.settings["Gallery_Image_Viewer_UUID [Do not Edit!]"] || await app.createNote(newNoteName, newTagName);
   // await app.setSetting("Gallery_Image_Viewer_UUID [Do not Edit!]", noteUUID);
