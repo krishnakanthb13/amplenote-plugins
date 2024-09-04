@@ -141,10 +141,21 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
         ((index + 1) % 7 === 0 ? "|\n" : ""); // If we have reached Sunday, start a new row
     };
 
-    const initialValue = "|S|M|T|W|T|F|S|\n|-|-|-|-|-|-|-|-|\n";
+    const initialValue = `${this._getMonthYearHeader(monthYear)}\n|-|-|-|-|-|-|-|\n|S|M|T|W|T|F|S|\n`;
 
     const calendar = daysToPrint.reduce(reducer, initialValue);
     return calendar;
+  },
+
+  // --------------------------------------------------------------------------
+  // Helper function to get the current month and year in "Month-Year" format.
+  _getMonthYearHeader(monthYear) {
+    const [month, year] = monthYear.split("-");
+    const monthNames = ["J|A|N", "F|E|B", "M|A|R", "A|P|R", "M|A|Y", "J|U|N", "J|U|L", "A|U|G", "S|E|P", "O|C|T", "N|O|V", "D|E|C"];
+    const lastTwoDigits = year.toString().slice(-2);
+    const [firstDigit, secondDigit] = lastTwoDigits;
+    const header = `|-|${monthNames[parseInt(month) - 1]}|${firstDigit}|${secondDigit}|-|`;
+    return header;
   },
 
   // --------------------------------------------------------------------------
