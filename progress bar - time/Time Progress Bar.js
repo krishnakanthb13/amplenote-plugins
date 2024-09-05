@@ -1,0 +1,234 @@
+{
+  async noteOption(app) {
+    // ----------------------------------------------------------------------
+	// Create Save Retrive Save Note to View the Monthly Note Calendar Option
+	const newNoteName = `Time/Goals: Progress Bar`;
+	const newTagName = ['-reports/-time-goal-progress'];
+    // Handle the insert note UUID.
+	const noteUUIDz = await (async () => {
+	  const existingUUID = await app.settings["Time Goal Progress Bar UUID [Do not Edit!]"];
+	  if (existingUUID)
+		  return existingUUID;
+	  const newUUIDx = await app.createNote(newNoteName, newTagName);
+	  await app.setSetting("Time Goal Progress Bar UUID [Do not Edit!]", newUUIDx);
+	  return newUUIDx;
+	})();
+    // `app.context.pluginUUID` is always supplied - it is the UUID of the plugin note
+    await app.replaceNoteContent({ uuid: noteUUIDz },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
+    const peekviewEnable = await app.settings["Peek Viewer (Yes / No)"] || "Yes";
+    if (peekviewEnable.toLowerCase() === "yes") {
+        // Do something if peekviewEnable is "yes"
+        // console.log("Peek View is enabled");
+        await app.openSidebarEmbed(1, 'sidebar', noteUUIDz);
+    } else {
+        // Do something if peekviewEnable is "no" or any other value
+        // console.log("Peek View is disabled");
+        await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
+    }
+    return null;
+  },
+  renderEmbed(app, ...args) {
+
+const htmlTimeProgress = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Progress & Goals</title>
+    <style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: flex-start; /* Start the content from the top */
+			align-items: center;
+			min-height: 100vh; /* Use min-height instead of height to allow scrolling */
+			background-color: #BEBEBE;
+			margin: 0;
+			flex-direction: column;
+			overflow-y: auto; /* Enable vertical scrolling */
+			padding: 15px; /* Add some padding to prevent the content from sticking to the edges */
+		}
+
+		.container {
+			text-align: center;
+			margin-bottom: 5px;
+			width: 100%;
+			max-width: 600px; /* Ensures the content doesn't stretch too wide */
+		}
+
+		h1 {
+			color: #333;
+			margin-bottom: 5px;
+			font-size: 22px;
+		}
+
+		h2 {
+			color: #333;
+			margin-bottom: 5px;
+			font-size: 18px;
+		}
+
+		.progress-container {
+			width: 100%;
+			max-width: 600px;
+			background-color: #e0e0e0;
+			border-radius: 20px;
+			box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+			overflow: hidden;
+			position: relative;
+			margin-bottom: 5px;
+		}
+
+		.progress-bar {
+			height: 30px;
+			background: linear-gradient(to bottom, #a3c0f9, #6a85d6);
+			width: 0%;
+			transition: width 0.5s ease;
+			position: relative; /* Ensure the progress bar is positioned relative to its container */
+		}
+
+		.progress-text {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-weight: bold;
+			font-size: 14px;
+			z-index: 1; /* Ensure text is above the progress bar */
+		}
+
+		.goal {
+			margin-bottom: 5px;
+			font-size: 14px;
+		}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Today's Time Progress</h1>
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar">
+            <div class="progress-text" id="progress-text">0%</div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Goal Days Progress</h1>
+    <div id="goal-list">0%</div> <!-- Container to hold multiple goals -->
+</div>
+
+<script>
+    // Time progress (for today)
+    const customDayTime = {
+        start: "06:00",  // You can set the start time here (e.g., 09:00 for 9 AM)
+        end: "21:00"     // You can set the end time here (e.g., 18:00 for 6 PM)
+    };
+
+    function updateProgressBar() {
+        const now = new Date();
+
+        const [startHour, startMinute] = customDayTime.start ? customDayTime.start.split(":").map(Number) : [0, 0];
+        const [endHour, endMinute] = customDayTime.end ? customDayTime.end.split(":").map(Number) : [23, 59];
+
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute, 0);
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute, 59);
+
+        const totalDayTime = endOfDay - startOfDay;
+        const currentTime = now - startOfDay;
+        const progressPercent = (currentTime / totalDayTime) * 100;
+
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        
+        if (progressPercent >= 0 && progressPercent <= 100) {
+            progressBar.style.width = progressPercent + '%';
+            progressText.textContent = progressPercent.toFixed(2) + '%';
+        } else if (progressPercent > 100) {
+            progressBar.style.width = '100%';
+            progressText.textContent = '100%';
+        } else {
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+        }
+    }
+
+    // Multiple goal progress bars // You can add how many ever Goals you need, by copy pasting the below lines and updating the details!
+    const goals = [
+        { name: "September 2024", startDate: "2024-09-01", endDate: "2024-09-30" }, // Currently used September Month
+        { name: "Quarter III 2024", startDate: "2024-07-01", endDate: "2024-09-30" }, // Currently used Quarter III
+        { name: "Year 2024", startDate: "2024-01-01", endDate: "2024-12-30" }, // Currenlty used Year
+    ];
+
+    function updateGoalProgressBar() {
+        const now = new Date();
+        const goalList = document.getElementById('goal-list');
+
+        // Clear the goal list container before updating
+        goalList.innerHTML = '';
+
+        goals.forEach((goal, index) => {
+            const startDate = new Date(goal.startDate);
+            const endDate = new Date(goal.endDate);
+
+            const totalGoalTime = endDate - startDate;
+            const currentGoalTime = now - startDate;
+            const goalProgressPercent = (currentGoalTime / totalGoalTime) * 100;
+
+            // Create goal progress container dynamically
+            const goalContainer = document.createElement('div');
+            goalContainer.classList.add('goal');
+            
+            // Create progress bar element
+            const progressContainer = document.createElement('div');
+            progressContainer.classList.add('progress-container');
+
+            const progressBar = document.createElement('div');
+            progressBar.classList.add('progress-bar');
+            progressBar.id = \`goal-progress-bar-\${index}\`;
+
+            const progressText = document.createElement('div');
+            progressText.classList.add('progress-text');
+            progressText.id = \`goal-progress-text-\${index}\`;
+            
+            if (goalProgressPercent >= 0 && goalProgressPercent <= 100) {
+                progressBar.style.width = goalProgressPercent + '%';
+                progressText.textContent = goalProgressPercent.toFixed(2) + '%';
+            } else if (goalProgressPercent > 100) {
+                progressBar.style.width = '100%';
+                progressText.textContent = '100%';
+            } else {
+                progressBar.style.width = '0%';
+                progressText.textContent = '0%';
+            }
+
+            // Append the elements to the DOM
+            progressContainer.appendChild(progressBar);
+            progressContainer.appendChild(progressText);
+            goalContainer.innerHTML = \`<h2>\${goal.name}</h2>\`;
+            goalContainer.appendChild(progressContainer);
+            goalList.appendChild(goalContainer);
+        });
+    }
+
+    // Initial updates
+    updateProgressBar();
+    updateGoalProgressBar();
+
+    // Update the progress bar every minute
+    setInterval(updateProgressBar, 60000);
+    setInterval(updateGoalProgressBar, 60000);
+</script>
+
+</body>
+</html>
+`;
+    
+    return htmlTimeProgress;
+  },
+}
