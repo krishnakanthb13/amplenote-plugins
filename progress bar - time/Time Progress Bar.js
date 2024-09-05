@@ -68,7 +68,7 @@
 					margin: 0;
 					flex-direction: column;
 					overflow-y: auto; /* Enable vertical scrolling */
-					padding: 15px; /* Add padding to prevent sticking to edges */
+					padding: 30px; /* Add padding to prevent sticking to edges */
 				}
 
 				/* Container for each progress section */
