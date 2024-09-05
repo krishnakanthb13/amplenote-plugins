@@ -5,61 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Progress & Goals</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f5f5;
-            margin: 0;
-            flex-direction: column;
-        }
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: flex-start; /* Start the content from the top */
+			align-items: center;
+			min-height: 100vh; /* Use min-height instead of height to allow scrolling */
+			background-color: #BEBEBE;
+			margin: 0;
+			flex-direction: column;
+			overflow-y: auto; /* Enable vertical scrolling */
+			padding: 15px; /* Add some padding to prevent the content from sticking to the edges */
+		}
 
-        .container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+		.container {
+			text-align: center;
+			margin-bottom: 5px;
+			width: 100%;
+			max-width: 600px; /* Ensures the content doesn't stretch too wide */
+		}
 
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
+		h1 {
+			color: #333;
+			margin-bottom: 5px;
+			font-size: 22px;
+		}
 
-        .progress-container {
-            width: 100%;
-            max-width: 500px;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 20px;
-        }
+		h2 {
+			color: #333;
+			margin-bottom: 5px;
+			font-size: 18px;
+		}
 
-        .progress-bar {
-            height: 30px;
-            background: linear-gradient(to bottom, #a3c0f9, #6a85d6);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
+		.progress-container {
+			width: 100%;
+			max-width: 600px;
+			background-color: #e0e0e0;
+			border-radius: 20px;
+			box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+			overflow: hidden;
+			position: relative;
+			margin-bottom: 5px;
+		}
 
-        .progress-text {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
+		.progress-bar {
+			height: 30px;
+			background: linear-gradient(to bottom, #a3c0f9, #6a85d6);
+			width: 0%;
+			transition: width 0.5s ease;
+			position: relative; /* Ensure the progress bar is positioned relative to its container */
+		}
 
-        .goal {
-            margin-bottom: 10px;
-        }
+		.progress-text {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-weight: bold;
+			font-size: 14px;
+			z-index: 1; /* Ensure text is above the progress bar */
+		}
 
+		.goal {
+			margin-bottom: 5px;
+			font-size: 14px;
+		}
     </style>
 </head>
 <body>
@@ -74,15 +87,15 @@
 </div>
 
 <div class="container">
-    <h1>Goal Progress</h1>
-    <div id="goal-list"></div> <!-- Container to hold multiple goals -->
+    <h1>Goal Days Progress</h1>
+    <div id="goal-list">0%</div> <!-- Container to hold multiple goals -->
 </div>
 
 <script>
     // Time progress (for today)
     const customDayTime = {
-        start: "09:00",  // You can set the start time here (e.g., 09:00 for 9 AM)
-        end: "18:00"     // You can set the end time here (e.g., 18:00 for 6 PM)
+        start: "06:00",  // You can set the start time here (e.g., 09:00 for 9 AM)
+        end: "21:00"     // You can set the end time here (e.g., 18:00 for 6 PM)
     };
 
     function updateProgressBar() {
@@ -113,11 +126,11 @@
         }
     }
 
-    // Multiple goal progress bars
+    // Multiple goal progress bars // You can add how many ever Goals you need, by copy pasting the below lines and updating the details!
     const goals = [
-        { name: "Project A", startDate: "2024-09-01", endDate: "2024-09-30" },
-        { name: "Project B", startDate: "2024-09-05", endDate: "2024-10-05" },
-        { name: "Project C", startDate: "2024-09-10", endDate: "2024-11-01" }
+        { name: "September 2024", startDate: "2024-09-01", endDate: "2024-09-30" }, // Currently used September Month
+        { name: "Quarter III 2024", startDate: "2024-07-01", endDate: "2024-09-30" }, // Currently used Quarter III
+        { name: "Year 2024", startDate: "2024-01-01", endDate: "2024-12-30" }, // Currenlty used Year
     ];
 
     function updateGoalProgressBar() {
@@ -165,7 +178,7 @@
             // Append the elements to the DOM
             progressContainer.appendChild(progressBar);
             progressContainer.appendChild(progressText);
-            goalContainer.innerHTML = `<h3>${goal.name}</h3>`;
+            goalContainer.innerHTML = `<h2>${goal.name}</h2>`;
             goalContainer.appendChild(progressContainer);
             goalList.appendChild(goalContainer);
         });
