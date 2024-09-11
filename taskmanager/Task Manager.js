@@ -279,6 +279,8 @@
 		const Completed = taskAll.filter(task => task.completedAt);
 		const Dismissed = taskAll.filter(task => task.dismissedAt);
 		const Pending = taskAll.filter(task => !task.completedAt && !task.dismissedAt);
+		// const totalScore = taskAll.reduce((sum, task) => sum + (task.score || 0), 0);
+		const totalScore = parseFloat(taskAll.reduce((sum, task) => sum + (task.score || 0), 0).toFixed(2));
 		console.log("Completed, Dismissed, Pending:", Completed, Dismissed, Pending);
 		
 	  if (Pending.length != 0) {
@@ -302,7 +304,7 @@
 		// notesGroupNames.add(`| [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${noteHandleG.tags} | ${taskCompletedPercent}% | ${TaskStats} |`); // Format 1
 		// notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 2
 		// notesGroupNames.add(`| ${noteHandleG.tags} | ${noteHandleG.name || "Untitled Note"} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 3
-		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 4
+		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | ${totalScore} | |`); // Format 4
 
 	  }
 	}
@@ -320,7 +322,7 @@
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organize your Task respectively.
-- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), ✒️ (Add your Comments).\`
+- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Task Score), ✒️ (Add your Comments).\`
 `;
 
 /* 	const readmeNotesX = `
@@ -343,7 +345,7 @@
 	// resultText = "| Tags 🏷️ | Note Name 📝 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 2b
 	// resultText = "| Tags 🏷️ | Note Name 📝 | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 3
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 4
-	resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n||| Total |=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n") + "\n||| Total |=sum(above)|=sum(above)|=sum(above)||\n| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n"; // Format 4b
+	resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | 🔢 | ✒️ |\n|---|---|---|---|---|---|---|---|---|\n||| Total |=sum(below)|=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n") + "\n||| Total |=sum(above)|=sum(above)|=sum(above)|=sum(above)||\n| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | 🔢 | ✒️ |\n"; // Format 4b
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n||| Total |=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n"); // Format 4b
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n") + "\n||| Total |=sum(above)|=sum(above)|=sum(above)||\n"; // Format 4a
 	resultText += `\n\n${readmeNotes}`;
@@ -451,6 +453,8 @@
 		const Completed = taskAll.filter(task => task.completedAt);
 		const Dismissed = taskAll.filter(task => task.dismissedAt);
 		const Pending = taskAll.filter(task => !task.completedAt && !task.dismissedAt);
+		// const totalScore = taskAll.reduce((sum, task) => sum + (task.score || 0), 0);
+		const totalScore = parseFloat(taskAll.reduce((sum, task) => sum + (task.score || 0), 0).toFixed(2));
 		console.log("Completed, Dismissed, Pending:", Completed, Dismissed, Pending);
 		
 	  if (Pending.length === 0 && (Completed.length !=0 || Dismissed.length !=0)) {
@@ -474,7 +478,7 @@
 		// notesGroupNames.add(`| [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${noteHandleG.tags} | ${taskCompletedPercent}% | ${TaskStats} |`); // Format 1
 		// notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 2
 		// notesGroupNames.add(`| ${noteHandleG.tags} | ${noteHandleG.name || "Untitled Note"} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 3
-		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 4
+		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | ${totalScore} | |`); // Format 4
 
 	  }
 	}
@@ -492,7 +496,7 @@
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organize your Task respectively.
-- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), ✒️ (Add your Comments).\`
+- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Task Score), ✒️ (Add your Comments).\`
 `;
 	
 	// Create the final result text as a markdown table, including headers and the joined note information.
@@ -502,7 +506,7 @@
 	// resultText = "| Tags 🏷️ | Note Name 📝 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 2b
 	// resultText = "| Tags 🏷️ | Note Name 📝 | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 3
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 4
-	resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n||| Total |=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n") + "\n||| Total |=sum(above)|=sum(above)|=sum(above)||\n| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n"; // Format 4b
+	resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | 🔢 | ✒️ |\n|---|---|---|---|---|---|---|---|---|\n||| Total |=sum(below)|=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n") + "\n||| Total |=sum(above)|=sum(above)|=sum(above)|=sum(above)||\n| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | 🔢 | ✒️ |\n"; // Format 4b
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n||| Total |=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n"); // Format 4b
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n") + "\n||| Total |=sum(above)|=sum(above)|=sum(above)||\n"; // Format 4a
 	resultText += `\n\n${readmeNotes}`;
