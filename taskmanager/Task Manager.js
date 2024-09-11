@@ -190,7 +190,7 @@
 
 },
 // ************************************************************** //
-	"Overall!": async function(app, noteUUID) {
+	"Overall Active!": async function(app, noteUUID) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -282,6 +282,7 @@
 		// const totalScore = taskAll.reduce((sum, task) => sum + (task.score || 0), 0);
 		const totalScore = parseFloat(taskAll.reduce((sum, task) => sum + (task.score || 0), 0).toFixed(2));
 		console.log("Completed, Dismissed, Pending:", Completed, Dismissed, Pending);
+		console.log("totalScore:", totalScore);
 		
 	  if (Pending.length != 0) {
 
@@ -316,13 +317,13 @@
 
 	// Readme Notes
 	const readmeNotes = `
-### Readme!
+### Readme! - Task Manager - Active Tasks!
 - Above are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organize your Task respectively.
-- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Task Score), ✒️ (Add your Comments).\`
+- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 `;
 
 /* 	const readmeNotesX = `
@@ -356,7 +357,7 @@
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `TM_Overall_${YYMMDD}_${HHMMSS}`;
+    const filename = `TM_Overall_Act_${YYMMDD}_${HHMMSS}`;
 
 	// Create a new note with the specified filename and tag, then insert the result text into it.
 	let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
@@ -364,7 +365,7 @@
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"Overall Fin.!": async function(app, noteUUID) {
+	"Overall Finished!": async function(app, noteUUID) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -456,6 +457,7 @@
 		// const totalScore = taskAll.reduce((sum, task) => sum + (task.score || 0), 0);
 		const totalScore = parseFloat(taskAll.reduce((sum, task) => sum + (task.score || 0), 0).toFixed(2));
 		console.log("Completed, Dismissed, Pending:", Completed, Dismissed, Pending);
+		console.log("totalScore:", totalScore);
 		
 	  if (Pending.length === 0 && (Completed.length !=0 || Dismissed.length !=0)) {
 
@@ -490,13 +492,13 @@
 
 	// Readme Notes
 	const readmeNotes = `
-### Readme!
+### Readme! - Task Manager - Finished Tasks!
 - Above are list of Notes with respective Details, having no Pending or Un-completed Task, but has at least one Completed or Dismissed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organize your Task respectively.
-- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Task Score), ✒️ (Add your Comments).\`
+- <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 `;
 	
 	// Create the final result text as a markdown table, including headers and the joined note information.
@@ -518,6 +520,172 @@
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
     const filename = `TM_Overall_Fin_${YYMMDD}_${HHMMSS}`;
+
+	// Create a new note with the specified filename and tag, then insert the result text into it.
+	let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
+	await app.insertContent({ uuid: noteUUIDNew }, resultText);
+	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+},
+// ************************************************************** //
+	"Overall E.M.!": async function(app, noteUUID) {
+
+	// Initialize a Set to hold the final results to ensure unique entries.
+	let results = new Set();
+
+	// Initialize a Set to hold the names of notes that belong to a specific group.
+	let notesGroupNames = new Set();
+	// let notesGroup = "^taskLists";
+
+	// ----------- Section: Filtering Notes by Group -----------
+	// Filter notes based on the specified group.
+	// let notesG = await app.filterNotes({ group: notesGroup });
+	let notesG = await app.filterNotes({ });
+	console.log("notesG:", notesG);
+
+	// ----------- Section: Sorting Notes -----------
+	// Sort the filtered notes alphabetically by name. If a note's name is null or undefined,
+	// an empty string is used as a fallback to avoid errors.
+	notesG.sort((a, b) => {
+		const nameA = a.name || ""; 
+		const nameB = b.name || "";
+		return nameA.localeCompare(nameB);
+	});
+	console.log("notesG Sorted name:", notesG);
+
+	// Sort the list of results based on the tag
+	notesG.sort((a, b) => a.tags.join(", ").localeCompare(b.tags.join(", ")));
+	console.log("notesG Sorted tags:", notesG);
+
+	// ----------- Section: Displaying Progress Bar -----------
+	// Function to generate a progress bar with dynamic emoji sets
+	function getTaskProgressBar(taskCompletedPercent) {
+		// Set of desired emoji sets
+		const emojiSets = {
+			default: ['⬛', '🟩'],  // Default: Empty and Filled squares
+			stars: ['☆', '★'],  // Stars: Empty and Filled stars
+			circles: ['⚪', '🔵'],  // Circles: Empty and Filled circles
+			hearts: ['🖤', '❤️'],  // Hearts: Empty and Filled hearts
+			fire: ['🔥', '💥'],  // Fire: Fire and Explosion
+			custom: ['🍫', '🍬'],  // Custom: Chocolate and Candy
+			moons: ['🌑', '🌕'],  // Moons: New moon and Full moon
+			books: ['📖', '📚'],  // Books: Open book and Stack of books
+			faces: ['😐', '😁'],  // Faces: Neutral face and Grinning face
+			trees: ['🌱', '🌳'],  // Trees: Seedling and Mature tree
+			fruits: ['🍏', '🍎'],  // Fruits: Green apple and Red apple
+			paws: ['🐾', '🐾🐾'],  // Paws: Single paw and Double paw prints
+			fish: ['🐟', '🐠'],  // Fish: Blue fish and Tropical fish
+			sports: ['⚽', '🏆'],  // Sports: Soccer ball and Trophy
+			flowers: ['🌸', '🌹'],  // Flowers: Cherry blossom and Rose
+			diamonds: ['💎', '🔷'],  // Diamonds: Gem and Blue diamond
+			planes: ['🛫', '🛬'],  // Planes: Take-off and Landing
+			clouds: ['🌥️', '⛅'],  // Clouds: Cloudy and Partly sunny
+			arrows: ['➡️', '⬅️'],  // Arrows: Right arrow and Left arrow
+			clocks: ['🕰️', '⏰'],  // Clocks: Old clock and Alarm clock
+			notes: ['🎵', '🎶'],  // Notes: Single music note and Multiple notes
+			pencils: ['✏️', '🖊️'],  // Pencils: Pencil and Pen
+		};
+
+		// Select the desired emoji set
+		const selectedSet = app.settings["Emoji"] || "default";
+		const [emptySymbol, filledSymbol] = emojiSets[selectedSet];
+
+		// Calculate the number of filled and empty symbols
+		const filledCount = Math.floor(taskCompletedPercent / 10);
+		const emptyCount = 10 - filledCount;
+
+		// Construct the progress bar string
+		let taskProgress = `[${filledSymbol.repeat(filledCount)}${emptySymbol.repeat(emptyCount)}] ${taskCompletedPercent}%`;
+
+		// Add a special mark for 100% completion
+		if (taskCompletedPercent === 100) {
+			taskProgress += ` ‼`;
+		}
+
+		return taskProgress;
+	}
+
+	// ----------- Section: Processing Each Note -----------
+	// Loop through each note in the filtered and sorted list of notes.
+	for (const noteHandleG of notesG) {
+		
+	  // Retrieve all tasks, including completed and dismissed ones
+	  const taskAll = await app.getNoteTasks({ uuid: noteHandleG.uuid }, { includeDone: false });
+	  console.log("taskAll:", taskAll);
+	  const tagz = `${noteHandleG.tags}`;
+	  console.log("tagz:", tagz);
+	  const noteLinkz = `[${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`;
+	  console.log("noteLinkz:", noteLinkz);
+	  const totalScore = parseFloat(taskAll.reduce((sum, task) => sum + (task.score || 0), 0).toFixed(2));
+	  console.log("totalScore:", totalScore);
+	  
+	  // Initialize arrays for Eisenhower matrix quadrants
+	  let importantAndUrgent = [];
+	  let importantNotUrgent = [];
+	  let notImportantButUrgent = [];
+	  let notImportantNotUrgent = [];
+		
+	  // Classify each task into the appropriate quadrant
+	  for (const task of taskAll) {
+		
+		if (task.important && task.urgent) {
+		  // Quadrant 1: Important and Urgent (Do first)
+		  importantAndUrgent.push(task);
+		
+		} else if (task.important && !task.urgent) {
+		  // Quadrant 2: Important but Not Urgent (Schedule it)
+		  importantNotUrgent.push(task);
+		
+		} else if (!task.important && task.urgent) {
+		  // Quadrant 3: Not Important but Urgent (Delegate)
+		  notImportantButUrgent.push(task);
+		
+		} else if (!task.important && !task.urgent) {
+		  // Quadrant 4: Not Important and Not Urgent (Eliminate)
+		  notImportantNotUrgent.push(task);
+		}
+	  }
+
+	  // Log the tasks categorized by the Eisenhower matrix
+	  console.log("Important and Urgent (Do first):", importantAndUrgent);
+	  console.log("Important but Not Urgent (Schedule it):", importantNotUrgent);
+	  console.log("Not Important but Urgent (Delegate):", notImportantButUrgent);
+	  console.log("Not Important and Not Urgent (Eliminate):", notImportantNotUrgent);
+	  
+	  if (importantAndUrgent.length || importantNotUrgent.length || notImportantButUrgent.length || notImportantNotUrgent.length) {
+
+		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${importantAndUrgent.length} | ${importantNotUrgent.length} | ${notImportantButUrgent.length} | ${notImportantNotUrgent.length} | ${totalScore} | |`);
+
+	  }
+	}
+
+	// ----------- Section: Preparing the Final Output -----------
+	// Convert the Set of note names to an array and join them into a single string.
+	results = Array.from(notesGroupNames);
+	console.log("results:", results);
+
+	// Readme Notes
+	const readmeNotes = `
+### Readme! - Task Manager - Eisenhower Matrix!
+- Above are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note, w/ tasks Important OR Urgent Options are selected.
+- By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
+	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
+- You can add your Comments to this page for your reference!
+- <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organize your Task respectively.
+- <mark>Legends:</mark> \`🔥 (Important and urgent), ⚡ (Important but not urgent), ⚾ (Not important but urgent), 🗑️ (Not important and not urgent), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
+`;
+	
+	// Create the final result text as a markdown table, including headers and the joined note information.
+	let resultText;
+	resultText = "| Tags 🏷️ | Note Link 🔗 | 🔥 | ⚡ | ⚾ | 🗑️ | 🔢 | ✒️ |\n|---|---|---|---|---|---|---|---|---|\n|| Total |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n") + "\n|| Total |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)||\n| Tags 🏷️ | Note Link 🔗 | 🔥 | ⚡ | ⚾ | 🗑️ | 🔢 | ✒️ |\n"; //
+	resultText += `\n\n${readmeNotes}`;
+	console.log("resultText:", resultText);
+
+	// ----------- Section: Creating a New Note -----------
+	// Define the filename for the new note.
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `TM_Overall_E_M_${YYMMDD}_${HHMMSS}`;
 
 	// Create a new note with the specified filename and tag, then insert the result text into it.
 	let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
