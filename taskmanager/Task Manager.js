@@ -52,7 +52,8 @@
       const urgentText = task.urgent ? `Urgent` : '';  // Include 'Urgent' if true
 	  const startAtText = task.startAt ? formatUnixTimestamp(task.startAt) : `Not Asigned`;
       const additionalInfo = [startAtText, importantText, urgentText].filter(Boolean).join(', ');  // Combine labels
-      return `Task: ${task.content}, Start At: ` + (additionalInfo ? `${additionalInfo}` : '');
+      return `Task: ${task.content.replace(/\n/g, '').replace(/\[\^?\d*\]:?\s?\[.*?\]\(\)/g, '').replace(/\s+/g, ' ')}, Start At: ` + (additionalInfo ? `${additionalInfo}` : ''); 
+	  // Remove newlines // Remove markdown links // Replace multiple spaces with a single space (As Amplenote does not handle Rich foot note inside a Rich foot note)
     }
 
     // ----------- Section: Categorizing and Formatting Tasks -----------
@@ -60,13 +61,15 @@
     const Completed = taskAll
       .filter(task => task.completedAt)
       .sort((a, b) => sortByTimestamp(a, b, 'completedAt'))
-      .map(task => `Task: ${task.content}, Completed At: ${formatUnixTimestamp(task.completedAt)}`);
+      .map(task => `Task: ${task.content.replace(/\n/g, '').replace(/\[\^?\d*\]:?\s?\[.*?\]\(\)/g, '').replace(/\s+/g, ' ')}, Completed At: ${formatUnixTimestamp(task.completedAt)}`); 
+	  // Remove newlines // Remove markdown links // Replace multiple spaces with a single space (As Amplenote does not handle Rich foot note inside a Rich foot note)
 
     // Filter and sort tasks that are dismissed, then format them
     const Dismissed = taskAll
       .filter(task => task.dismissedAt)
       .sort((a, b) => sortByTimestamp(a, b, 'dismissedAt'))
-      .map(task => `Task: ${task.content}, Dismissed At: ${formatUnixTimestamp(task.dismissedAt)}`);
+      .map(task => `Task: ${task.content.replace(/\n/g, '').replace(/\[\^?\d*\]:?\s?\[.*?\]\(\)/g, '').replace(/\s+/g, ' ')}, Dismissed At: ${formatUnixTimestamp(task.dismissedAt)}`); 
+	  // Remove newlines // Remove markdown links // Replace multiple spaces with a single space (As Amplenote does not handle Rich foot note inside a Rich foot note)
 
     // Filter and sort tasks that are pending (neither completed nor dismissed), then format them
     const Pending = taskAll
