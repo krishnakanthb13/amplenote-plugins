@@ -6,6 +6,7 @@ created: '2024-08-27T23:19:44+05:30'
 tags:
   - '-t/amplenote/mine'
   - '-9-permanent'
+  - '-2-literature'
 ---
 
 ## Task Manager Overview

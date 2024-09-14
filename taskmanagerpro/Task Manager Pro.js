@@ -563,54 +563,6 @@
 	notesG.sort((a, b) => a.tags.join(", ").localeCompare(b.tags.join(", ")));
 	// console.log("notesG Sorted tags:", notesG);
 
-	// ----------- Section: Displaying Progress Bar -----------
-	// Function to generate a progress bar with dynamic emoji sets
-	function getTaskProgressBar(taskCompletedPercent) {
-		// Set of desired emoji sets
-		const emojiSets = {
-			default: ['⬛', '🟩'],  // Default: Empty and Filled squares
-			stars: ['☆', '★'],  // Stars: Empty and Filled stars
-			circles: ['⚪', '🔵'],  // Circles: Empty and Filled circles
-			hearts: ['🖤', '❤️'],  // Hearts: Empty and Filled hearts
-			fire: ['🔥', '💥'],  // Fire: Fire and Explosion
-			custom: ['🍫', '🍬'],  // Custom: Chocolate and Candy
-			moons: ['🌑', '🌕'],  // Moons: New moon and Full moon
-			books: ['📖', '📚'],  // Books: Open book and Stack of books
-			faces: ['😐', '😁'],  // Faces: Neutral face and Grinning face
-			trees: ['🌱', '🌳'],  // Trees: Seedling and Mature tree
-			fruits: ['🍏', '🍎'],  // Fruits: Green apple and Red apple
-			paws: ['🐾', '🐾🐾'],  // Paws: Single paw and Double paw prints
-			fish: ['🐟', '🐠'],  // Fish: Blue fish and Tropical fish
-			sports: ['⚽', '🏆'],  // Sports: Soccer ball and Trophy
-			flowers: ['🌸', '🌹'],  // Flowers: Cherry blossom and Rose
-			diamonds: ['💎', '🔷'],  // Diamonds: Gem and Blue diamond
-			planes: ['🛫', '🛬'],  // Planes: Take-off and Landing
-			clouds: ['🌥️', '⛅'],  // Clouds: Cloudy and Partly sunny
-			arrows: ['➡️', '⬅️'],  // Arrows: Right arrow and Left arrow
-			clocks: ['🕰️', '⏰'],  // Clocks: Old clock and Alarm clock
-			notes: ['🎵', '🎶'],  // Notes: Single music note and Multiple notes
-			pencils: ['✏️', '🖊️'],  // Pencils: Pencil and Pen
-		};
-
-		// Select the desired emoji set
-		const selectedSet = app.settings["Emoji"] || "default";
-		const [emptySymbol, filledSymbol] = emojiSets[selectedSet];
-
-		// Calculate the number of filled and empty symbols
-		const filledCount = Math.floor(taskCompletedPercent / 10);
-		const emptyCount = 10 - filledCount;
-
-		// Construct the progress bar string
-		let taskProgress = `[${filledSymbol.repeat(filledCount)}${emptySymbol.repeat(emptyCount)}] ${taskCompletedPercent}%`;
-
-		// Add a special mark for 100% completion
-		if (taskCompletedPercent === 100) {
-			taskProgress += ` ‼`;
-		}
-
-		return taskProgress;
-	}
-
 	// ----------- Section: Processing Each Note -----------
 	// Loop through each note in the filtered and sorted list of notes.
 	for (const noteHandleG of notesG) {

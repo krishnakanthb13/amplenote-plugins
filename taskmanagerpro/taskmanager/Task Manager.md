@@ -1,11 +1,11 @@
 ﻿---
 title: Task Manager
-uuid: 6c5991b0-6457-11ef-b225-22074e34eefe
-version: 309
-created: '2024-08-27T15:03:32+05:30'
+uuid: 8563bcd8-72be-11ef-870a-eeba9115991d
+version: 4
+created: '2024-09-14T22:56:47+05:30'
 tags:
-  - '-9-permanent'
   - '-t/amplenote/mine'
+  - '-9-permanent'
 ---
 
 # <mark style="color:#9AD62A;">Welcome Note:<!-- {"cycleColor":"26"} --></mark>
@@ -130,7 +130,7 @@ Thank you for choosing the Task Progress Manager Plugin. We hope it brings clari
 
 | | |
 |-|-|
-|name|Task Manager|
+|name|Task Manager Pro|
 |icon|waterfall_chart|
 |description|Have a Clear Idea of `ALL `your Tasks Progress in Amplenote.<br />Inspired from: [Progress Bar (Plugin)](https://public.amplenote.com/hJyajoiWxUJUVCxQQcgjk2i3) |
 |instructions|[Task Manager Note! Docs](https://www.amplenote.com/notes/c5843cea-6457-11ef-b225-22074e34eefe) <br />[Task Manager Overall! Docs](https://www.amplenote.com/notes/bed28484-649c-11ef-ab69-22074e34eefe) |
@@ -536,6 +536,8 @@ Thank you for choosing the Task Progress Manager Plugin. We hope it brings clari
 ---
 
 Time Invested For this Plugin: 8h 38m = \~8h 34m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+
+\
 
 [^1]: [High-Level Explanation of the Code]()
 

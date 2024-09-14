@@ -6,6 +6,7 @@ created: '2024-08-27T15:06:02+05:30'
 tags:
   - '-9-permanent'
   - '-t/amplenote/mine'
+  - '-2-literature'
 ---
 
 # Documentation: Task Progress Management and Task Categorization Plugin Script (Progress Bar 2.0)
