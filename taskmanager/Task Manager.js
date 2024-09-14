@@ -290,7 +290,7 @@
 	  if (Pending.length != 0) {
 
 		// Generate a string representing the task statistics.
-		const TaskStats = `Pending Tasks: (#${Pending.length}), Completed Tasks: (#${Completed.length}), Dismissed Tasks: (#${Dismissed.length})`;
+		// const TaskStats = `Pending Tasks: (#${Pending.length}), Completed Tasks: (#${Completed.length}), Dismissed Tasks: (#${Dismissed.length})`;
 		// console.log("TaskStats:", TaskStats);
 
 		// Calculate the task progress as a percentage, ensuring that division by zero is avoided.
@@ -308,7 +308,8 @@
 		// notesGroupNames.add(`| [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${noteHandleG.tags} | ${taskCompletedPercent}% | ${TaskStats} |`); // Format 1
 		// notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 2
 		// notesGroupNames.add(`| ${noteHandleG.tags} | ${noteHandleG.name || "Untitled Note"} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 3
-		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | ${totalScore} | |`); // Format 4
+		// notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | ${totalScore} | |`); // Format 4
+		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${(Pending.length === 0 ? ' - ' : Pending.length)} | ${(Completed.length === 0 ? ' - ' : Completed.length)} | ${(Dismissed.length === 0 ? ' - ' : Dismissed.length)} | ${totalScore} | |`); // Format 4+
 
 	  }
 	}
@@ -466,7 +467,7 @@
 	  if (Pending.length === 0 && (Completed.length !=0 || Dismissed.length !=0)) {
 
 		// Generate a string representing the task statistics.
-		const TaskStats = `Pending Tasks: (#${Pending.length}), Completed Tasks: (#${Completed.length}), Dismissed Tasks: (#${Dismissed.length})`;
+		// const TaskStats = `Pending Tasks: (#${Pending.length}), Completed Tasks: (#${Completed.length}), Dismissed Tasks: (#${Dismissed.length})`;
 		// console.log("TaskStats:", TaskStats);
 
 		// Calculate the task progress as a percentage, ensuring that division by zero is avoided.
@@ -484,7 +485,8 @@
 		// notesGroupNames.add(`| [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${noteHandleG.tags} | ${taskCompletedPercent}% | ${TaskStats} |`); // Format 1
 		// notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 2
 		// notesGroupNames.add(`| ${noteHandleG.tags} | ${noteHandleG.name || "Untitled Note"} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | |`); // Format 3
-		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | ${totalScore} | |`); // Format 4
+		// notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${Pending.length} | ${Completed.length} | ${Dismissed.length} | ${totalScore} | |`); // Format 4
+		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${taskProgress} | ${(Pending.length === 0 ? ' - ' : Pending.length)} | ${(Completed.length === 0 ? ' - ' : Completed.length)} | ${(Dismissed.length === 0 ? ' - ' : Dismissed.length)} | ${totalScore} | |`); // Format 4+
 
 	  }
 	}
@@ -513,7 +515,7 @@
 	// resultText = "| Tags 🏷️ | Note Name 📝 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 2b
 	// resultText = "| Tags 🏷️ | Note Name 📝 | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 3
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n"); // Format 4
-	resultText += "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | 🔢 | ✒️ |\n|---|---|---|---|---|---|---|---|---|\n||| Total |=sum(below)|=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n") + "\n||| Total |=sum(above)|=sum(above)|=sum(above)|=sum(above)||\n| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | 🔢 | ✒️ |\n"; // Format 4b
+	resultText += "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | 🔢 | ✒️ |\n|---|---|---|---|---|---|---|---|---|\n||| Total |0|=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n") + "\n||| Total |0|=sum(above)|=sum(above)|=sum(above)||\n| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | 🔢 | ✒️ |\n"; // Format 4b
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n||| Total |=sum(below)|=sum(below)|=sum(below)||\n" + results.join("\n"); // Format 4b
 	// resultText = "| Tags 🏷️ | Note Link 🔗 | Progress Bar 📊 | ❗ | ✔️ | ✖️ | ✒️ |\n|---|---|---|---|---|---|---|---|\n" + results.join("\n") + "\n||| Total |=sum(above)|=sum(above)|=sum(above)||\n"; // Format 4a
 	// resultText += `\n\n${readmeNotes}`;
@@ -658,7 +660,8 @@
 	  
 	  if (importantAndUrgent.length || importantNotUrgent.length || notImportantButUrgent.length || notImportantNotUrgent.length) {
 
-		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${importantAndUrgent.length} | ${importantNotUrgent.length} | ${notImportantButUrgent.length} | ${notImportantNotUrgent.length} | ${totalScore} | |`);
+		// notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${importantAndUrgent.length} | ${importantNotUrgent.length} | ${notImportantButUrgent.length} | ${notImportantNotUrgent.length} | ${totalScore} | |`);
+		notesGroupNames.add(`| ${noteHandleG.tags} | [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}) | ${(importantAndUrgent.length === 0 ? ' - ' : importantAndUrgent.length)} | ${(importantNotUrgent.length === 0 ? ' - ' : importantNotUrgent.length)} | ${(notImportantButUrgent.length === 0 ? ' - ' : notImportantButUrgent.length)} | ${(notImportantNotUrgent.length === 0 ? ' - ' : notImportantNotUrgent.length)} | ${totalScore} | |`);
 
 	  }
 	}
