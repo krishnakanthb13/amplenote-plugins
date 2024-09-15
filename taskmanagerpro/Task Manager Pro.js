@@ -193,7 +193,7 @@
 
 },
 // ************************************************************** //
-	"Overall Active!": async function(app, noteUUID) {
+	"R-Active!": async function(app, noteUUID) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -326,7 +326,7 @@
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
-- <mark>Tip:</mark> You can generate, \`Task Manager: Overall Active!\` once in a week/month and organize your Task respectively.
+- <mark>Tip:</mark> You can generate, \`Task Manager Pro: R-Active!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 `;
 
@@ -370,7 +370,7 @@
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"Overall Finished!": async function(app, noteUUID) {
+	"R-Finished!": async function(app, noteUUID) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -503,7 +503,7 @@
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
-- <mark>Tip:</mark> You can generate, \`Task Manager: Overall Finished!\` once in a week/month and organize your Task respectively.
+- <mark>Tip:</mark> You can generate, \`Task Manager Pro: R-Finished!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 `;
 	
@@ -534,7 +534,7 @@
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"Overall Finished 2.0!": async function(app, noteUUID) {
+	"Trend!": async function(app, noteUUID) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -632,10 +632,10 @@
 
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Finished 2.0 Tasks!</mark>
+### Readme! - <mark>Task Manager - Tasks Trend!</mark>
 - Below are list of Task Metrics based on Date, having at least one Completed or Dismissed Task in the Note. Sorted and Pivoted by Date + Status.
 - You can add your Comments to this page for your reference!
-- <mark>Tip:</mark> You can generate, \`Task Manager: Overall Finished 2.0!\` once in a week/month and organize your Task respectively.
+- <mark>Tip:</mark> You can generate, \`Task Manager Pro: Trend!\` once in a week/month and organize your Task respectively.
 - <mark>Visualization:</mark> Using my [Graph Utility Plugin](https://www.amplenote.com/plugins/sDBcbBrdEhAuerZ5HzLyaTn5) - **Viewer!** Option, You can Visualize the Trend over the period of time, for task count and task score gained on a particular day.
 `;
 	
@@ -650,7 +650,7 @@
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `TM_Overall_Fin_2_${YYMMDD}_${HHMMSS}`;
+    const filename = `TM_Overall_Trend_${YYMMDD}_${HHMMSS}`;
 
 	// Create a new note with the specified filename and tag, then insert the result text into it.
 	let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
@@ -658,7 +658,7 @@
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"Overall E.M.!": async function(app, noteUUID) {
+	"E.M.!": async function(app, noteUUID) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -754,7 +754,7 @@
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
-- <mark>Tip:</mark> You can generate, \`Task Manager: Overall E.M.!\` once in a week/month and organize your Task respectively.
+- <mark>Tip:</mark> You can generate, \`Task Manager Pro: E.M.!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`🔥 (Important and urgent), ⚡ (Important but not urgent), ⚾ (Not important but urgent), 🗑️ (Not important and not urgent), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 	- Learn more on [Eisenhower Method](https://public.amplenote.com/Eu8Azcoih6NaU2r4pebHHaP3).
 `;
