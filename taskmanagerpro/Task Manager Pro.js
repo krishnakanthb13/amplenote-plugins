@@ -626,9 +626,9 @@
 	// ----------- Section: Preparing the Final Output -----------
 	// Convert the Set of note names to an array and join them into a single string.
 	results = Array.from(notesGroupNames);
-	console.log("notesGroupNamesA:", notesGroupNamesA);
-	console.log("notesGroupNames:", notesGroupNames);
-	console.log("results:", results);
+	// console.log("notesGroupNamesA:", notesGroupNamesA);
+	// console.log("notesGroupNames:", notesGroupNames);
+	// console.log("results:", results);
 
 	// Readme Notes
 	const readmeNotes = `
