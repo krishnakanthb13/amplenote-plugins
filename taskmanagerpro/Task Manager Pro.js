@@ -322,11 +322,11 @@
 	// Readme Notes
 	const readmeNotes = `
 ### Readme! - <mark>Task Manager - Active Tasks!</mark>
-- Above are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note.
+- Below are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
-- <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organize your Task respectively.
+- <mark>Tip:</mark> You can generate, \`Task Manager: Overall Active!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 `;
 
@@ -499,11 +499,11 @@
 	// Readme Notes
 	const readmeNotes = `
 ### Readme! - <mark>Task Manager - Finished Tasks!</mark>
-- Above are list of Notes with respective Details, having no Pending or Un-completed Task, but has at least one Completed or Dismissed Task in the Note.
+- Below are list of Notes with respective Details, having no Pending or Un-completed Task, but has at least one Completed or Dismissed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
-- <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organize your Task respectively.
+- <mark>Tip:</mark> You can generate, \`Task Manager: Overall Finished!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 `;
 	
@@ -527,6 +527,130 @@
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
     const filename = `TM_Overall_Fin_${YYMMDD}_${HHMMSS}`;
+
+	// Create a new note with the specified filename and tag, then insert the result text into it.
+	let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
+	await app.insertContent({ uuid: noteUUIDNew }, resultText);
+	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+},
+// ************************************************************** //
+	"Overall Finished 2.0!": async function(app, noteUUID) {
+
+	// Initialize a Set to hold the final results to ensure unique entries.
+	let results = new Set();
+
+	// Initialize a Set to hold the names of notes that belong to a specific group.
+	let notesGroupNamesA = [];
+	let notesGroupNames = new Set();
+	// let notesGroup = "^taskLists";
+
+	// ----------- Section: Filtering Notes by Group -----------
+	// Filter notes based on the specified group.
+	// let notesG = await app.filterNotes({ group: notesGroup });
+	let notesG = await app.filterNotes({ });
+	// console.log("notesG:", notesG);
+
+	// ----------- Section: Processing Each Note -----------
+	// Loop through each note in the filtered and sorted list of notes.
+	for (const noteHandleG of notesG) {
+		
+		// Retrieve all tasks, including completed and dismissed ones
+		const taskAll = await app.getNoteTasks({ uuid: noteHandleG.uuid }, { includeDone: true });
+		console.log("taskAll:", taskAll);
+		
+		// Filter tasks into three categories: Completed, Dismissed, and Pending.
+		const Completed = taskAll.filter(task => task.completedAt);
+		const Dismissed = taskAll.filter(task => task.dismissedAt);
+		const Pending = taskAll.filter(task => !task.completedAt && !task.dismissedAt);
+		// const totalScore = taskAll.reduce((sum, task) => sum + (task.score || 0), 0);
+		// const totalScore = parseFloat(taskAll.reduce((sum, task) => sum + (task.score || 0), 0).toFixed(2));
+		// console.log("Completed, Dismissed, Pending:", Completed, Dismissed, Pending);
+		// console.log("totalScore:", totalScore);
+		
+	  // if (Pending.length === 0 && (Completed.length !=0 || Dismissed.length !=0)) {
+	  if (Completed.length !=0 || Dismissed.length !=0) {
+
+		  // Classify each task into the appropriate quadrant
+		  for (const task of taskAll) {
+			
+			if (task.completedAt) {
+			  // Completed Tasks
+			  const formattedDate = new Date(task.completedAt * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/\./g, '');
+			  notesGroupNamesA.push(`${formattedDate},${task.score},Completed`);
+			} 
+			if (task.dismissedAt) {
+			  // Dismissed Tasks
+			  const formattedDate = new Date(task.dismissedAt * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/\./g, '');
+			  notesGroupNamesA.push(`${formattedDate},${task.score},Dismissed`);
+			}
+			
+		  }
+	  }
+	}
+
+		// Add the note information to the Set, including the note's name, tags, task progress, and statistics.
+		// Step 1: Sort notesGroupNamesA by date (no need for notesGroupMap)
+		const sortedEntries = [...notesGroupNamesA].sort((entryA, entryB) => {
+		  const [dateA] = entryA.split(',');
+		  const [dateB] = entryB.split(',');
+		  return new Date(dateA) - new Date(dateB);
+		});
+
+		// Step 2: Create a map to group tasks by date and status
+		const notesGroupMap = new Map();
+
+		for (const entry of sortedEntries) {
+		  const [date, score, status] = entry.split(',');
+		  const scoreValue = parseFloat(score);
+
+		  // Create a unique key by combining date and status
+		  const key = `${date}-${status}`;
+
+		  // If the combination of date and status already exists in the map, update its count and score
+		  if (notesGroupMap.has(key)) {
+			const existingEntry = notesGroupMap.get(key);
+			existingEntry.count += 1;
+			existingEntry.totalScore += scoreValue;
+		  } else {
+			// If the combination of date and status doesn't exist, create a new entry
+			notesGroupMap.set(key, { count: 1, totalScore: scoreValue, status });
+		  }
+		}
+
+		// Step 3: Prepare the result for notesGroupNames
+		for (const [key, data] of notesGroupMap) {
+		  const [date, status] = key.split('-'); // Split the key back into date and status
+		  notesGroupNames.add(`|${date}|${data.count}|${data.totalScore.toFixed(2)}|${status}| |`);
+		}
+
+	// ----------- Section: Preparing the Final Output -----------
+	// Convert the Set of note names to an array and join them into a single string.
+	results = Array.from(notesGroupNames);
+	console.log("notesGroupNamesA:", notesGroupNamesA);
+	console.log("notesGroupNames:", notesGroupNames);
+	console.log("results:", results);
+
+	// Readme Notes
+	const readmeNotes = `
+### Readme! - <mark>Task Manager - Finished 2.0 Tasks!</mark>
+- Below are list of Task Metrics based on Date, having at least one Completed or Dismissed Task in the Note. Sorted and Pivoted by Date + Status.
+- You can add your Comments to this page for your reference!
+- <mark>Tip:</mark> You can generate, \`Task Manager: Overall Finished 2.0!\` once in a week/month and organize your Task respectively.
+- <mark>Visualization:</mark> Using my [Graph Utility Plugin](https://www.amplenote.com/plugins/sDBcbBrdEhAuerZ5HzLyaTn5) - **Viewer!** Option, You can Visualize the Trend over the period of time, for task count and task score gained on a particular day.
+`;
+	
+	// Create the final result text as a markdown table, including headers and the joined note information.
+	let resultText;
+	resultText = `${readmeNotes}\n`;
+	resultText += "| Date 📅 | Task Count 🔢 | Total Score 🔢 | Status ✔️✖️ | ✒️ |\n|---|---|---|---|---|\n| Total |=sum(below)|=sum(below)|||\n" + results.join("\n") + "\n| Total |=sum(above)|=sum(above)|||\n| Date 📅 | Task Count 🔢 | Total Score 🔢 | Status ✔️✖️ | ✒️ |\n";
+	// console.log("resultText:", resultText);
+
+	// ----------- Section: Creating a New Note -----------
+	// Define the filename for the new note.
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `TM_Overall_Fin_2_${YYMMDD}_${HHMMSS}`;
 
 	// Create a new note with the specified filename and tag, then insert the result text into it.
 	let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
@@ -626,11 +750,11 @@
 	// Readme Notes
 	const readmeNotes = `
 ### Readme! - <mark>Task Manager - Eisenhower Matrix!</mark>
-- Above are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note, w/ tasks Important OR Urgent Options are selected.
+- Below are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note, w/ tasks Important OR Urgent Options are selected.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
-- <mark>Tip:</mark> You can generate, \`Task Manager: All Notes\` once in a week/month and organize your Task respectively.
+- <mark>Tip:</mark> You can generate, \`Task Manager: Overall E.M.!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`🔥 (Important and urgent), ⚡ (Important but not urgent), ⚾ (Not important but urgent), 🗑️ (Not important and not urgent), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 	- Learn more on [Eisenhower Method](https://public.amplenote.com/Eu8Azcoih6NaU2r4pebHHaP3).
 `;
