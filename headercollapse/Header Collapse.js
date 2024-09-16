@@ -3,8 +3,8 @@
     
     // Fetch the markdown content of the note using its UUID
     const markdown = await app.getNoteContent({ uuid: noteUUID });
-    console.log("noteUUID:", noteUUID);
-    console.log("markdown:", markdown);
+    // console.log("noteUUID:", noteUUID);
+    // console.log("markdown:", markdown);
 
     // Prompt user to select if they want to collapse or expand all headers
     const result = await app.prompt("Select if you want to Expand or Collapse all Headers.", {
@@ -25,11 +25,11 @@
       app.alert("Please select either Collapse or Expand!");
       return;
     }
-	console.log("result:", result);
+	// console.log("result:", result);
 
     // Set shouldCollapse to true if the user selects 'Collapse', otherwise false
     let shouldCollapse = result === 1 ? true : false;
-	console.log("shouldCollapse:", shouldCollapse);
+	// console.log("shouldCollapse:", shouldCollapse);
 
     // Function to process the markdown content and add/remove collapse comments
     function processMarkdown(markdown, shouldCollapse) {
@@ -70,10 +70,10 @@
 
     // Process the markdown content based on user input (collapse or expand headers)
     let modifiedMarkdown = processMarkdown(markdown, shouldCollapse);
-    console.log("modifiedMarkdown:", modifiedMarkdown);
+    // console.log("modifiedMarkdown:", modifiedMarkdown);
 
     // Replace the note's content with the modified markdown
     await app.replaceNoteContent({ uuid: noteUUID }, modifiedMarkdown);
-	console.log("Success!");
+	// console.log("Success!");
   }
 }
