@@ -11,16 +11,13 @@
 		  ] 
 		
 		});
-	 
-		if (result) {
-		  const [shouldCollapseX] = result;
-	 
-		} else {
+
+		if (!result) {
 		  app.alert("Please select either Collapse or Expand!");
 		  return;
-		}
+		} 
 
-	let shouldCollapse = shouldCollapseX === 1 ? true : false;
+	let shouldCollapse = result === 1 ? true : false;
 
 	function processMarkdown(markdown, shouldCollapse) {
 	  // Split markdown by lines
@@ -56,8 +53,10 @@
 	  return lines.join('\n');
 	}
 	
-	let modifiedMarkdown = processMarkdown(markdownData, shouldCollapse);
+	let modifiedMarkdown = processMarkdown(markdown, shouldCollapse);
 	console.log("modifiedMarkdown:",modifiedMarkdown);
+	
+	await app.replaceNoteContent({ uuid: noteUUID }, modifiedMarkdown);
 
   }
 }
