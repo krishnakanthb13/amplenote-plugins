@@ -1,8 +1,8 @@
 {
   async noteOption(app, noteUUID) {
     const markdown = await app.getNoteContent({ uuid: noteUUID });
-    // console.log("noteUUID:",noteUUID);
-    // console.log("markdown:",markdown);
+    console.log("noteUUID:",noteUUID);
+    console.log("markdown:",markdown);
 
 	const result = await app.prompt("Select if you want to Expand or Collapse all Headers.", {
 		  inputs: 
@@ -16,7 +16,7 @@
 		  const [shouldCollapseX] = result;
 	 
 		} else {
-		  app.alert("Please select either Collapse or Expand!"));
+		  app.alert("Please select either Collapse or Expand!");
 		  return;
 		}
 
@@ -57,7 +57,7 @@
 	}
 	
 	let modifiedMarkdown = processMarkdown(markdownData, shouldCollapse);
-	console.log(modifiedMarkdown);	
+	console.log("modifiedMarkdown:",modifiedMarkdown);
 
   }
 }
