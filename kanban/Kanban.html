@@ -140,13 +140,14 @@
     <div id="kanban-board"></div>
 
     <script>
-        const tasks = [
+        let tasks = [];
+        tasks = [
   {
     "content": "Review task - Fixed Schedule",
     "hideUntil": null,
     "important": true,
     "noteUUID": "0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "score": 14.3,
+    "score": 14.999999999999998,
     "startAt": 1726932266,
     "urgent": false,
     "uuid": "13cd6120-d57a-4761-8520-d556ec7358ed",
@@ -154,33 +155,48 @@
     "repeat": "DTSTART:20240920T205426\nRRULE:FREQ=DAILY",
     "notename": "Review",
     "noteurl": "https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "09/21/2024 at 20:54:26",
+    "hideUntilz": "Not Set!",
+    "endAtz": "09/21/2024 at 21:09:26",
+    "repeatz": "=daily <b>Starts At:</b> 09/20/2024 at T2:05:42",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> false<br><b>Score:</b> 15.00<br><hr><b>Start At:</b> 09/21/2024 at 20:54:26<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> 09/21/2024 at 21:09:26<br><b>Repeat:</b> =daily <b>Starts At:</b> 09/20/2024 at T2:05:42<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task - When Tasks is completed",
     "hideUntil": null,
     "important": true,
     "noteUUID": "0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "score": 8.3,
+    "score": 10,
     "startAt": null,
     "urgent": true,
     "uuid": "3365680f-f67a-4c8b-84a1-2c5dc8988c87",
     "notename": "Review",
     "noteurl": "https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> true<br><b>Score:</b> 10.00<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task",
     "hideUntil": null,
     "important": false,
     "noteUUID": "0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "score": 1.1,
+    "score": 1.2,
     "startAt": null,
     "urgent": false,
     "uuid": "4a784a37-2b1e-41f2-98cb-b290c41eaeca",
     "notename": "Review",
     "noteurl": "https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.20<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "review dismissed task ",
@@ -194,7 +210,12 @@
     "dismissedAt": 1726844327,
     "notename": "Review",
     "noteurl": "https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 0.50<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task - When Tasks is completed - Finished",
@@ -208,21 +229,31 @@
     "completedAt": 1726845969,
     "notename": "Review",
     "noteurl": "https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> true<br><b>Score:</b> 6.60<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task - When Tasks is completed - Finished",
     "hideUntil": 1726857000,
     "important": true,
     "noteUUID": "0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "score": 18.3,
+    "score": 20,
     "startAt": 1726889400,
     "urgent": true,
     "uuid": "cf9b62ad-1a9a-514d-1382-060d9188892a",
     "endAt": 1726890300,
     "notename": "Review",
     "noteurl": "https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "09/21/2024 at 09:00:00",
+    "hideUntilz": "09/21/2024 at 00:00:00",
+    "endAtz": "09/21/2024 at 09:15:00",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> true<br><b>Score:</b> 20.00<br><hr><b>Start At:</b> 09/21/2024 at 09:00:00<br><b>Hide Until:</b> 09/21/2024 at 00:00:00<br><b>End At:</b> 09/21/2024 at 09:15:00<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review completed task",
@@ -236,27 +267,127 @@
     "completedAt": 1726844322,
     "notename": "Review",
     "noteurl": "https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.00<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a0496aa-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">Review</a><br><b>Tags:</b> -reports/-kanban"
+  },
+  {
+    "content": "to do",
+    "hideUntil": null,
+    "important": false,
+    "noteUUID": "099c1f30-775c-11ef-89b8-eeba9115991d",
+    "score": 1.1,
+    "startAt": null,
+    "urgent": false,
+    "uuid": "90627b76-e2f1-44bb-a2df-2edace2c3393",
+    "notename": "To Do",
+    "noteurl": "https://www.amplenote.com/notes/099c1f30-775c-11ef-89b8-eeba9115991d",
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.10<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/099c1f30-775c-11ef-89b8-eeba9115991d\" target=\"_blank\">To Do</a><br><b>Tags:</b> -reports/-kanban"
+  },
+  {
+    "content": "ip",
+    "hideUntil": null,
+    "important": false,
+    "noteUUID": "09cde0f6-775c-11ef-89b8-eeba9115991d",
+    "score": 1.1,
+    "startAt": null,
+    "urgent": false,
+    "uuid": "e955bb69-e9fa-41c3-9879-ca708cc3d3d2",
+    "notename": "In Progress",
+    "noteurl": "https://www.amplenote.com/notes/09cde0f6-775c-11ef-89b8-eeba9115991d",
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.10<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/09cde0f6-775c-11ef-89b8-eeba9115991d\" target=\"_blank\">In Progress</a><br><b>Tags:</b> -reports/-kanban"
+  },
+  {
+    "content": "completed",
+    "hideUntil": null,
+    "important": false,
+    "noteUUID": "0a3cb378-775c-11ef-89b8-eeba9115991d",
+    "score": 1.1,
+    "startAt": null,
+    "urgent": false,
+    "uuid": "2eaab04d-2868-4d24-be9f-94c8a008c8d3",
+    "notename": "Completed",
+    "noteurl": "https://www.amplenote.com/notes/0a3cb378-775c-11ef-89b8-eeba9115991d",
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.10<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a3cb378-775c-11ef-89b8-eeba9115991d\" target=\"_blank\">Completed</a><br><b>Tags:</b> -reports/-kanban"
+  },
+  {
+    "content": "backlog",
+    "hideUntil": null,
+    "important": false,
+    "noteUUID": "0a7b77b6-775c-11ef-bfb2-f222b153c6e3",
+    "score": 1,
+    "startAt": null,
+    "urgent": false,
+    "uuid": "426aa783-bb0e-4846-bb03-0c64777b5e3c",
+    "notename": "Backlog",
+    "noteurl": "https://www.amplenote.com/notes/0a7b77b6-775c-11ef-bfb2-f222b153c6e3",
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.00<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0a7b77b6-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">Backlog</a><br><b>Tags:</b> -reports/-kanban"
+  },
+  {
+    "content": "on hold",
+    "hideUntil": null,
+    "important": false,
+    "noteUUID": "0ab83052-775c-11ef-bfb2-f222b153c6e3",
+    "score": 1,
+    "startAt": null,
+    "urgent": false,
+    "uuid": "48e73092-8699-4d12-a12a-9df717b50e93",
+    "notename": "On Hold",
+    "noteurl": "https://www.amplenote.com/notes/0ab83052-775c-11ef-bfb2-f222b153c6e3",
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.00<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/0ab83052-775c-11ef-bfb2-f222b153c6e3\" target=\"_blank\">On Hold</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "asdf",
     "hideUntil": null,
     "important": false,
     "noteUUID": "84881f96-782e-11ef-8173-f222b153c6e3",
-    "score": 1,
+    "score": 1.1,
     "startAt": null,
     "urgent": false,
     "uuid": "59e7f2f0-4315-4573-a0c1-3b4e4fc4fae5",
     "notename": "Copy of Review",
     "noteurl": "https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.10<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3\" target=\"_blank\">Copy of Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task - Fixed Schedule",
     "hideUntil": 1726943400,
     "important": true,
     "noteUUID": "84881f96-782e-11ef-8173-f222b153c6e3",
-    "score": 5.6,
+    "score": 14.3,
     "startAt": 1727018666,
     "urgent": false,
     "uuid": "5a5f4a4d-3a43-fc44-1bab-d718c79d5727",
@@ -264,7 +395,12 @@
     "repeat": "DTSTART:20240920T205426\nRRULE:FREQ=DAILY",
     "notename": "Copy of Review",
     "noteurl": "https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "09/22/2024 at 20:54:26",
+    "hideUntilz": "09/22/2024 at 00:00:00",
+    "endAtz": "09/22/2024 at 21:09:26",
+    "repeatz": "=daily <b>Starts At:</b> 09/20/2024 at T2:05:42",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> false<br><b>Score:</b> 14.30<br><hr><b>Start At:</b> 09/22/2024 at 20:54:26<br><b>Hide Until:</b> 09/22/2024 at 00:00:00<br><b>End At:</b> 09/22/2024 at 21:09:26<br><b>Repeat:</b> =daily <b>Starts At:</b> 09/20/2024 at T2:05:42<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3\" target=\"_blank\">Copy of Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task - Fixed Schedule",
@@ -280,40 +416,55 @@
     "completedAt": 1726932676,
     "notename": "Copy of Review",
     "noteurl": "https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "09/21/2024 at 20:54:26",
+    "hideUntilz": "Not Set!",
+    "endAtz": "09/21/2024 at 21:09:26",
+    "repeatz": "=daily <b>Starts At:</b> 09/20/2024 at T2:05:42",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> false<br><b>Score:</b> 14.30<br><hr><b>Start At:</b> 09/21/2024 at 20:54:26<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> 09/21/2024 at 21:09:26<br><b>Repeat:</b> =daily <b>Starts At:</b> 09/20/2024 at T2:05:42<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3\" target=\"_blank\">Copy of Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task - When Tasks is completed - Finished",
     "hideUntil": 1726943400,
     "important": true,
     "noteUUID": "84881f96-782e-11ef-8173-f222b153c6e3",
-    "score": 8.6,
+    "score": 18.3,
     "startAt": 1726975800,
     "urgent": true,
     "uuid": "769b992d-e513-7f45-6580-5e505f96cee6",
     "endAt": 1726976700,
     "notename": "Copy of Review",
     "noteurl": "https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "09/22/2024 at 09:00:00",
+    "hideUntilz": "09/22/2024 at 00:00:00",
+    "endAtz": "09/22/2024 at 09:15:00",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> true<br><b>Score:</b> 18.30<br><hr><b>Start At:</b> 09/22/2024 at 09:00:00<br><b>Hide Until:</b> 09/22/2024 at 00:00:00<br><b>End At:</b> 09/22/2024 at 09:15:00<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3\" target=\"_blank\">Copy of Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task - When Tasks is completed",
     "hideUntil": 1726943400,
     "important": true,
     "noteUUID": "84881f96-782e-11ef-8173-f222b153c6e3",
-    "score": 8.6,
+    "score": 18.3,
     "startAt": 1726975800,
     "urgent": true,
     "uuid": "7de08630-eb63-3b48-0f8c-e3a2f645de99",
     "endAt": 1726976700,
     "notename": "Copy of Review",
     "noteurl": "https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "09/22/2024 at 09:00:00",
+    "hideUntilz": "09/22/2024 at 00:00:00",
+    "endAtz": "09/22/2024 at 09:15:00",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> true<br><b>Score:</b> 18.30<br><hr><b>Start At:</b> 09/22/2024 at 09:00:00<br><b>Hide Until:</b> 09/22/2024 at 00:00:00<br><b>End At:</b> 09/22/2024 at 09:15:00<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3\" target=\"_blank\">Copy of Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
-    "content": "Review task - When Tasks is completed - FinishedReview task - When Tasks is completed - FinishedReview task - When Tasks is completed - FinishedReview task - When Tasks is completed - FinishedReview task - When Tasks is completed - FinishedReview task - When Tasks is completed - FinishedReview task - When Tasks is completed - Finished",
+    "content": "Review task - When Tasks is completed - Finished",
     "hideUntil": 1726857000,
-    "important": false,
+    "important": true,
     "noteUUID": "84881f96-782e-11ef-8173-f222b153c6e3",
     "score": 18.3,
     "startAt": 1726889400,
@@ -323,7 +474,12 @@
     "completedAt": 1726932681,
     "notename": "Copy of Review",
     "noteurl": "https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "09/21/2024 at 09:00:00",
+    "hideUntilz": "09/21/2024 at 00:00:00",
+    "endAtz": "09/21/2024 at 09:15:00",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> true<br><b>Score:</b> 18.30<br><hr><b>Start At:</b> 09/21/2024 at 09:00:00<br><b>Hide Until:</b> 09/21/2024 at 00:00:00<br><b>End At:</b> 09/21/2024 at 09:15:00<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3\" target=\"_blank\">Copy of Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task",
@@ -337,7 +493,12 @@
     "completedAt": 1726932679,
     "notename": "Copy of Review",
     "noteurl": "https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> false<br><b>Urgent:</b> false<br><b>Score:</b> 1.10<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3\" target=\"_blank\">Copy of Review</a><br><b>Tags:</b> -reports/-kanban"
   },
   {
     "content": "Review task - When Tasks is completed",
@@ -351,335 +512,184 @@
     "completedAt": 1726932680,
     "notename": "Copy of Review",
     "noteurl": "https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3",
-    "tags": "-reports/-kanban"
-  },
-  {
-    "content": "to do",
-    "hideUntil": null,
-    "important": false,
-    "noteUUID": "099c1f30-775c-11ef-89b8-eeba9115991d",
-    "score": 1,
-    "startAt": null,
-    "urgent": false,
-    "uuid": "90627b76-e2f1-44bb-a2df-2edace2c3393",
-    "notename": "To Do",
-    "noteurl": "https://www.amplenote.com/notes/099c1f30-775c-11ef-89b8-eeba9115991d",
-    "tags": "-reports/-kanban"
-  },
-  {
-    "content": "ip",
-    "hideUntil": null,
-    "important": false,
-    "noteUUID": "09cde0f6-775c-11ef-89b8-eeba9115991d",
-    "score": 1,
-    "startAt": null,
-    "urgent": false,
-    "uuid": "e955bb69-e9fa-41c3-9879-ca708cc3d3d2",
-    "notename": "In Progress",
-    "noteurl": "https://www.amplenote.com/notes/09cde0f6-775c-11ef-89b8-eeba9115991d",
-    "tags": "-reports/-kanban"
-  },
-  {
-    "content": "completed",
-    "hideUntil": null,
-    "important": false,
-    "noteUUID": "0a3cb378-775c-11ef-89b8-eeba9115991d",
-    "score": 1,
-    "startAt": null,
-    "urgent": false,
-    "uuid": "2eaab04d-2868-4d24-be9f-94c8a008c8d3",
-    "notename": "Completed",
-    "noteurl": "https://www.amplenote.com/notes/0a3cb378-775c-11ef-89b8-eeba9115991d",
-    "tags": "-reports/-kanban"
-  },
-  {
-    "content": "backlog",
-    "hideUntil": null,
-    "important": false,
-    "noteUUID": "0a7b77b6-775c-11ef-bfb2-f222b153c6e3",
-    "score": 1,
-    "startAt": null,
-    "urgent": false,
-    "uuid": "426aa783-bb0e-4846-bb03-0c64777b5e3c",
-    "notename": "Backlog",
-    "noteurl": "https://www.amplenote.com/notes/0a7b77b6-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
-  },
-  {
-    "content": "on hold",
-    "hideUntil": null,
-    "important": false,
-    "noteUUID": "0ab83052-775c-11ef-bfb2-f222b153c6e3",
-    "score": 1,
-    "startAt": null,
-    "urgent": false,
-    "uuid": "48e73092-8699-4d12-a12a-9df717b50e93",
-    "notename": "On Hold",
-    "noteurl": "https://www.amplenote.com/notes/0ab83052-775c-11ef-bfb2-f222b153c6e3",
-    "tags": "-reports/-kanban"
+    "tags": "-reports/-kanban",
+    "startAtz": "Not Set!",
+    "hideUntilz": "Not Set!",
+    "endAtz": "Not Set!",
+    "repeatz": "Not Available",
+    "taskInfo": "<b>Important:</b> true<br><b>Urgent:</b> true<br><b>Score:</b> 8.30<br><hr><b>Start At:</b> Not Set!<br><b>Hide Until:</b> Not Set!<br><b>End At:</b> Not Set!<br><b>Repeat:</b> Not Available<br><hr><b>Note Link:</b> <a href=\"https://www.amplenote.com/notes/84881f96-782e-11ef-8173-f222b153c6e3\" target=\"_blank\">Copy of Review</a><br><b>Tags:</b> -reports/-kanban"
   }
 ];
 
 try {
+    // Your existing code goes inside this try block
 
-        // Function to determine the CSS class based on task urgency and importance
-        function getColor(task) {
-            if (task.urgent && task.important) return 'high-urgent high-important';
-            if (task.urgent) return 'high-urgent low-important';
-            if (task.important) return 'low-urgent high-important';
-            return 'low-urgent low-important';
-        }
+    // Function to determine the CSS class based on task urgency and importance
+    function getColor(task) {
+        if (task.urgent && task.important) return 'high-urgent high-important';
+        if (task.urgent) return 'high-urgent low-important';
+        if (task.important) return 'low-urgent high-important';
+        return 'low-urgent low-important';
+    }
 
-        const values = ['Start Date', 'Score', 'Important', 'Urgent'];
-        let currentIndex = 0;
-        const valueDisplay = document.getElementById('valueDisplay');
-        const cycleButton = document.getElementById('cycleButton');
+    const values = ['Start Date', 'Score', 'Important', 'Urgent'];
+    let currentIndex = 0;
+    const valueDisplay = document.getElementById('valueDisplay');
+    const cycleButton = document.getElementById('cycleButton');
 
-        function updateValue() {
-            valueDisplay.textContent = values[currentIndex]; // Update display with current value
-            currentIndex = (currentIndex + 1) % values.length; // Cycle through indices
-            renderKanbanBoard();
-        }
+    function updateValue() {
+        valueDisplay.textContent = values[currentIndex]; // Update display with current value
+        currentIndex = (currentIndex + 1) % values.length; // Cycle through indices
+        renderKanbanBoard();
+    }
 
-        cycleButton.addEventListener('click', updateValue);
+    cycleButton.addEventListener('click', updateValue);
 
-        // document.getElementById('cycleButton').addEventListener('click', updateValue);
-
-		function formatTaskRepeat(repeatInfo) {
-			// Check if repeatInfo is provided and is a string
-			if (!repeatInfo || typeof repeatInfo !== 'string') {
-				return "Not Available<br>";
-			}
-
-			// Split the repeatInfo into lines
-			const lines = repeatInfo.split('\n').map(line => line.trim());
-
-			// Extract date and time from DTSTART
-			const dtstartLine = lines[0];
-			const rruleLine = lines[1];
-			
-			const dtstart = dtstartLine.substring(8); // Remove 'DTSTART:'
-			const year = dtstart.substring(0, 4);
-			const month = dtstart.substring(4, 6);
-			const day = dtstart.substring(6, 8);
-			const hours = dtstart.substring(8, 10);
-			const minutes = dtstart.substring(10, 12);
-			const seconds = dtstart.substring(12, 14);
-
-			// Format date and time
-			const formattedDate = `${month}/${day}/${year}`;
-			const formattedTime = `${hours}:${minutes}:${seconds}`;
-
-			// Parse RRULE
-			const rrule = rruleLine.substring(10); // Remove 'RRULE:FREQ='
-			const repeatFrequency = rrule.toUpperCase(); // Extract frequency part
-
-			// Format output
-			return `${repeatFrequency.charAt(0).toUpperCase() + repeatFrequency.slice(1).toLowerCase()} <b>Starts At:</b> ${formattedDate} at ${formattedTime}`;
-		}
-
-		function formatTimestamp(timestamp) {
-			if (!timestamp) {
-				return 'Not Set!'; // Return 'Not Set' if timestamp is null or undefined
-			}
-
-			// Create a new Date object with the Unix timestamp (in milliseconds)
-			const date = new Date(timestamp * 1000);
-
-			// Extract date and time components
-			const year = date.getFullYear();
-			const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
-			const day = String(date.getDate()).padStart(2, '0');
-			const hours = String(date.getHours()).padStart(2, '0');
-			const minutes = String(date.getMinutes()).padStart(2, '0');
-			const seconds = String(date.getSeconds()).padStart(2, '0');
-
-			// Format date and time
-			const formattedDate = `${month}/${day}/${year}`;
-			const formattedTime = `${hours}:${minutes}:${seconds}`;
-
-			return `${formattedDate} at ${formattedTime}`;
-		}
-
-		function showTaskInfo(task, element) {
-			let infoDiv = element.querySelector('.task-info');
-			if (!infoDiv) {
-				infoDiv = document.createElement('div');
-				infoDiv.className = 'task-info';
-				if (document.body.classList.contains('dark-mode')) {
-					infoDiv.classList.add('dark-mode');
-				}
-				infoDiv.innerHTML = `
-					<!-- <strong>Content:</strong> ${task.content}<br> -->
-					<!-- <strong>Note UUID:</strong> ${task.noteUUID}<br> -->
-					<!-- <strong>UUID:</strong> ${task.uuid}<br> -->
-					<!-- <strong>Note Name:</strong> ${task.notename}<br> -->
-					<strong>Important:</strong> ${task.important}<br>
-					<strong>Urgent:</strong> ${task.urgent}<br>
-					<strong>Score:</strong> ${task.score}<br>
-					<hr>
-					<strong>Start At:</strong> ${formatTimestamp(task.startAt)}<br>
-					<strong>Hide Until:</strong> ${formatTimestamp(task.hideUntil)}<br>
-					<strong>End At:</strong> ${formatTimestamp(task.endAt)}<br>
-					<strong>Repeat:</strong> ${formatTaskRepeat(task.repeat)}<br>
-					<hr>
-					<strong>Note Link:</strong> <a href="${task.noteurl}" target="_blank">${task.notename}</a><br>
-					<strong>Tags:</strong> ${task.tags}
-				`;
-				element.appendChild(infoDiv);
-			}
-			infoDiv.style.display = 'block';
-		}
-
-        function hideTaskInfo(element) {
-            const infoDiv = element.querySelector('.task-info');
-            if (infoDiv) {
-                infoDiv.style.display = 'none';
+    function showTaskInfo(task, element) {
+        let infoDiv = element.querySelector('.task-info');
+        if (!infoDiv) {
+            infoDiv = document.createElement('div');
+            infoDiv.className = 'task-info';
+            if (document.body.classList.contains('dark-mode')) {
+                infoDiv.classList.add('dark-mode');
             }
+            infoDiv.innerHTML = task.taskInfo;
+            element.appendChild(infoDiv);
         }
+        infoDiv.style.display = 'block';
+    }
 
-        // Function to render the Kanban board
-        function renderKanbanBoard() {
-            const board = document.getElementById('kanban-board');
-            const columns = {};
-
-            tasks.forEach(task => {
-                const note = task.notename;
-                if (!columns[note]) {
-                    columns[note] = { pending: [], completed: [], dismissed: [] };
-                }
-                if (task.completedAt) {
-                    columns[note].completed.push(task);
-                } else if (task.dismissedAt) {
-                    columns[note].dismissed.push(task);
-                } else {
-                    columns[note].pending.push(task);
-                }
-            });
-
-            board.innerHTML = '';
-
-            Object.keys(columns).forEach(note => {
-                const column = document.createElement('div');
-                column.className = 'column';
-
-                const header = document.createElement('h3');
-                header.textContent = note;
-                header.className = 'task-category';
-                column.appendChild(header);
-
-                const pendingList = document.createElement('div');
-                pendingList.innerHTML = '<strong>Pending:</strong>';
-
-                // Sorting logic based on current valueDisplay text content
-                const sortBy = valueDisplay.textContent;
-                if (sortBy === 'Start Date') {
-                    columns[note].pending.sort((a, b) => new Date(b.startAt) - new Date(a.startAt));
-                } else if (sortBy === 'Score') {
-                    columns[note].pending.sort((b, a) => a.score - b.score);
-                } else if (sortBy === 'Important') {
-                    columns[note].pending.sort((b, a) => (a.important ? 1 : 0) - (b.important ? 1 : 0));
-                } else if (sortBy === 'Urgent') {
-                    columns[note].pending.sort((b, a) => (a.urgent ? 1 : 0) - (b.urgent ? 1 : 0));
-                }
-
-                columns[note].pending.forEach(task => {
-                    const taskItem = document.createElement('div');
-                    taskItem.className = `task ${getColor(task)}`;
-                    taskItem.textContent = task.content;
-
-					const infoButton = document.createElement('button');
-					infoButton.textContent = 'ℹ';
-					infoButton.className = 'task-button';
-					infoButton.onclick = () => showTaskInfo(task, taskItem);
-					taskItem.appendChild(infoButton);
-					taskItem.onmouseleave = () => hideTaskInfo(taskItem);
-
-					const infoButton2 = document.createElement('button');
-					infoButton2.textContent = '⚙';
-					infoButton2.className = 'task-button2';
-					infoButton2.addEventListener('click', () => window.callAmplenotePlugin("taskEdit",task.uuid));
-					taskItem.appendChild(infoButton2);
-								
-					// On Hover
-					// const infoButton = document.createElement('button');
-					// infoButton.textContent = 'ℹ';
-					// infoButton.className = 'task-button';
-					// taskItem.appendChild(infoButton);
-					// taskItem.onmouseover = () => showTaskInfo(task, taskItem);
-					// taskItem.onmouseout = () => hideTaskInfo(taskItem);
-					
-					// On Click i
-					// const infoButton = document.createElement('button');
-					// infoButton.textContent = 'ℹ';
-					// infoButton.className = 'task-button';
-					// infoButton.onclick = () => showTaskInfo(task, taskItem);
-					// taskItem.appendChild(infoButton);
-					// taskItem.onmouseleave = () => hideTaskInfo(taskItem);
-					
-                    pendingList.appendChild(taskItem);
-
-                });
-                column.appendChild(pendingList);
-
-                const completedList = document.createElement('div');
-                completedList.innerHTML = '<strong>Completed:</strong>';
-                columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
-                columns[note].completed.forEach(task => {
-                    const taskItem = document.createElement('div');
-                    taskItem.className = `task ${getColor(task)}`;
-                    taskItem.textContent = task.content;
-					
-					const infoButton = document.createElement('button');
-					infoButton.textContent = 'ℹ';
-					infoButton.className = 'task-button';
-					infoButton.onclick = () => showTaskInfo(task, taskItem);
-					taskItem.appendChild(infoButton);
-					taskItem.onmouseleave = () => hideTaskInfo(taskItem);
-					
-                    completedList.appendChild(taskItem);
-                });
-                column.appendChild(completedList);
-
-                const dismissedList = document.createElement('div');
-                dismissedList.innerHTML = '<strong>Dismissed:</strong>';
-                columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt));
-                columns[note].dismissed.forEach(task => {
-                    const taskItem = document.createElement('div');
-                    taskItem.className = `task ${getColor(task)}`;
-                    taskItem.textContent = task.content;
-					
-					const infoButton = document.createElement('button');
-					infoButton.textContent = 'ℹ';
-					infoButton.className = 'task-button';
-					infoButton.onclick = () => showTaskInfo(task, taskItem);
-					taskItem.appendChild(infoButton);
-					taskItem.onmouseleave = () => hideTaskInfo(taskItem);
-					
-                    dismissedList.appendChild(taskItem);
-                });
-                column.appendChild(dismissedList);
-
-                board.appendChild(column);
-            });
+    function hideTaskInfo(element) {
+        const infoDiv = element.querySelector('.task-info');
+        if (infoDiv) {
+            infoDiv.style.display = 'none';
         }
+    }
 
-        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            document.querySelectorAll('.column').forEach(column => {
-                column.classList.toggle('dark-mode');
-            });
-            document.querySelectorAll('.task-category h3').forEach(header => {
-                header.classList.toggle('dark-mode');
-            });
+    // Function to render the Kanban board
+    function renderKanbanBoard() {
+        const board = document.getElementById('kanban-board');
+        const columns = {};
+
+        tasks.forEach(task => {
+            const note = task.notename;
+            if (!columns[note]) {
+                columns[note] = { pending: [], completed: [], dismissed: [] };
+            }
+            if (task.completedAt) {
+                columns[note].completed.push(task);
+            } else if (task.dismissedAt) {
+                columns[note].dismissed.push(task);
+            } else {
+                columns[note].pending.push(task);
+            }
         });
 
-        renderKanbanBoard();
+        board.innerHTML = '';
+
+        Object.keys(columns).forEach(note => {
+            const column = document.createElement('div');
+            column.className = 'column';
+
+            const header = document.createElement('h3');
+            header.textContent = note;
+            header.className = 'task-category';
+            column.appendChild(header);
+
+            const pendingList = document.createElement('div');
+            pendingList.innerHTML = '<strong>Pending:</strong>';
+
+            // Sorting logic based on current valueDisplay text content
+            const sortBy = valueDisplay.textContent;
+            if (sortBy === 'Start Date') {
+                columns[note].pending.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
+            } else if (sortBy === 'Score') {
+                columns[note].pending.sort((b, a) => a.score - b.score);
+            } else if (sortBy === 'Important') {
+                columns[note].pending.sort((b, a) => (a.important ? 1 : 0) - (b.important ? 1 : 0));
+            } else if (sortBy === 'Urgent') {
+                columns[note].pending.sort((b, a) => (a.urgent ? 1 : 0) - (b.urgent ? 1 : 0));
+            }
+
+            columns[note].pending.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task ' + getColor(task);
+                taskItem.textContent = task.content;
+
+                const infoButton = document.createElement('button');
+                infoButton.textContent = 'ℹ';
+                infoButton.className = 'task-button';
+                infoButton.onclick = () => showTaskInfo(task, taskItem);
+                taskItem.appendChild(infoButton);
+                taskItem.onmouseleave = () => hideTaskInfo(taskItem);
+
+                const infoButton2 = document.createElement('button');
+                infoButton2.textContent = '⚙';
+                infoButton2.className = 'task-button2';
+                infoButton2.addEventListener('click', () => window.callAmplenotePlugin("taskEdit", task.uuid));
+                taskItem.appendChild(infoButton2);
+
+                pendingList.appendChild(taskItem);
+            });
+            column.appendChild(pendingList);
+
+            const completedList = document.createElement('div');
+            completedList.innerHTML = '<strong>Completed:</strong>';
+            columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+            columns[note].completed.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task ' + getColor(task);
+                taskItem.textContent = task.content;
+
+                const infoButton = document.createElement('button');
+                infoButton.textContent = 'ℹ';
+                infoButton.className = 'task-button';
+                infoButton.onclick = () => showTaskInfo(task, taskItem);
+                taskItem.appendChild(infoButton);
+                taskItem.onmouseleave = () => hideTaskInfo(taskItem);
+
+                completedList.appendChild(taskItem);
+            });
+            column.appendChild(completedList);
+
+            const dismissedList = document.createElement('div');
+            dismissedList.innerHTML = '<strong>Dismissed:</strong>';
+            columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt));
+            columns[note].dismissed.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task ' + getColor(task);
+                taskItem.textContent = task.content;
+
+                const infoButton = document.createElement('button');
+                infoButton.textContent = 'ℹ';
+                infoButton.className = 'task-button';
+                infoButton.onclick = () => showTaskInfo(task, taskItem);
+                taskItem.appendChild(infoButton);
+                taskItem.onmouseleave = () => hideTaskInfo(taskItem);
+
+                dismissedList.appendChild(taskItem);
+            });
+            column.appendChild(dismissedList);
+
+            board.appendChild(column);
+        });
+    }
+
+    document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        document.querySelectorAll('.column').forEach(column => {
+            column.classList.toggle('dark-mode');
+        });
+        document.querySelectorAll('.task-category h3').forEach(header => {
+            header.classList.toggle('dark-mode');
+        });
+    });
+
+    renderKanbanBoard();
 
 } catch (error) {
     console.error("Error processing scripts:", error);
 }
-
     </script>
 </body>
 </html>
