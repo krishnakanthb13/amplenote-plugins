@@ -29,8 +29,8 @@ async onEmbedCall(app, ...args) {
     },
 /* ----------------------------------- */
 async renderEmbed(app, ...args) {
-	let _args = JSON.stringify(args[0]);
-	console.log(_args);
+	// let _args = JSON.stringify(args[0]);
+	// console.log(_args);
 
     let htmlTemplate = "";
     let allTasksText = "";
@@ -108,11 +108,37 @@ async renderEmbed(app, ...args) {
         const tasks = await app.getNoteTasks({ uuid: noteUUID }, { includeDone: true });
         console.log("tasks:", tasks);
         
-        tasks.forEach(task => {
-          allTasks.push({ ...task, notename: note.name, noteurl: `https://www.amplenote.com/notes/${note.uuid}`, tags: noteTags , startAtz: `${formatTimestamp(task.startAt)}` , hideUntilz: `${formatTimestamp(task.hideUntil)}` , endAtz: `${formatTimestamp(task.endAt)}` , repeatz: `${formatTaskRepeat(task.repeat)}` , taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${task.startAtz}<br><b>Hide Until:</b> ${task.hideUntilz}<br><b>End At:</b> ${task.endAtz}<br><b>Repeat:</b> ${task.repeatz}<br><hr><b>Note Link:</b> <a href="${task.noteurl}" target="_blank">${task.notename}</a><br><b>Tags:</b> ${task.tags}` });
-        });
+		for (let i = 0; i < tasks.length; i++) {
+			const task = tasks[i];
+			allTasks.push({
+				...task,
+				notename: note.name,
+				noteurl: `https://www.amplenote.com/notes/${note.uuid}`,
+				tags: noteTags,
+				startAtz: `${formatTimestamp(task.startAt)}`,
+				hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+				endAtz: `${formatTimestamp(task.endAt)}`,
+				repeatz: `${formatTaskRepeat(task.repeat)}`,
+				taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${formatTimestamp(task.startAt)}<br><b>Hide Until:</b> ${formatTimestamp(task.hideUntil)}<br><b>End At:</b> ${formatTimestamp(task.endAt)}<br><b>Repeat:</b> ${formatTaskRepeat(task.repeat)}<br><hr><b>Note Link:</b> <a href="https://www.amplenote.com/notes/${note.uuid}" target="_blank">${note.name}</a><br><b>Tags:</b> ${noteTags}`
+			});
+		}
+
       }
       console.log("allTasks:", allTasks);
+		let taskSorting = '';
+		taskSorting = taskSorting || 'startDate';
+		if (taskSorting === 'startDate') {
+			allTasks.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
+		}
+		if (taskSorting === 'taskScore') {
+			allTasks.sort((a, b) => b.score - a.score);
+		}
+		if (taskSorting === 'important') {
+			allTasks.sort((a, b) => (b.important ? 1 : 0) - (a.important ? 1 : 0));
+		}
+		if (taskSorting === 'urgent') {
+			allTasks.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+		}
       const allTasksText = JSON.stringify(allTasks, null, 2);
       console.log("allTasksText:", allTasksText);
      
@@ -147,12 +173,7 @@ async renderEmbed(app, ...args) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        body.dark-mode {
-            background-color: #222;
-            color: #f4f4f4;
+            background: transparent;
         }
         #kanban-board {
             display: flex;
@@ -165,13 +186,9 @@ async renderEmbed(app, ...args) {
             min-width: 300px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            background-color: #fff;
+            background: transparent;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             padding: 10px;
-        }
-        .column.dark-mode {
-            background-color: #444;
-            border-color: #555;
         }
         .task-category {
             margin-bottom: 10px;
@@ -180,11 +197,8 @@ async renderEmbed(app, ...args) {
         .task-category h3 {
             margin: 0;
             padding: 10px;
-            background-color: #e0e0e0;
+            background: transparent;
             border-radius: 10px;
-        }
-        .task-category h3.dark-mode {
-            background-color: #555;
         }
         .task {
             padding: 5px;
@@ -241,16 +255,6 @@ async renderEmbed(app, ...args) {
 		.low-urgent.low-important {
 			background: linear-gradient(to right, #b3b3b3, #e6e6e6); /* Light gray to lighter gray */
 		}
-        .dark-mode .task {
-            color: #fff;
-        }
-        .dark-mode .task-details {
-            background-color: #555;
-            color: #fff;
-        }
-        #dark-mode-toggle:hover {
-            background-color: #444;
-        }
         .task-info {
             display: none;
             position: relative;
@@ -264,188 +268,123 @@ async renderEmbed(app, ...args) {
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             z-index: 1000;
         }
-        .task-info.dark-mode {
-            background-color: #333;
-            color: #fff;
-            border-color: #444;
-        }
     </style>
 </head>
 <body>
-    <button id="dark-mode-toggle">Toggle Dark Mode</button>
-    <button id="cycleButton">Toggle Sort: <div id="valueDisplay">None</div></button>
-    <br><br>
     <div id="kanban-board"></div>
 
     <script>
         let tasks = [];
-        tasks = ${allTasksText};
+        tasks = 
+${allTasksText}
+;
 
 console.log("tasks:", tasks);
 
 try {
-    // Your existing code goes inside this try block
 
     // Function to determine the CSS class based on task urgency and importance
-    function getColor(task) {
-        if (task.urgent && task.important) return 'high-urgent high-important';
-        if (task.urgent) return 'high-urgent low-important';
-        if (task.important) return 'low-urgent high-important';
-        return 'low-urgent low-important';
-    }
+	function getColor(task) {
+		return task.urgent ? (task.important ? 'high-urgent high-important' : 'high-urgent low-important') : (task.important ? 'low-urgent high-important' : 'low-urgent low-important');
+	}
 
-    const values = ['Start Date', 'Score', 'Important', 'Urgent'];
-    let currentIndex = 0;
-    const valueDisplay = document.getElementById('valueDisplay');
-    const cycleButton = document.getElementById('cycleButton');
+	function showTaskInfo(task, element) {
+		let infoDiv = element.querySelector('.task-info');
+		if (!infoDiv) {
+			infoDiv = document.createElement('div');
+			infoDiv.className = 'task-info';
+			infoDiv.innerHTML = task.taskInfo;
+			element.appendChild(infoDiv);
+		}
+		infoDiv.style.display = 'block';
+	}
 
-    function updateValue() {
-        valueDisplay.textContent = values[currentIndex]; // Update display with current value
-        currentIndex = (currentIndex + 1) % values.length; // Cycle through indices
-        renderKanbanBoard();
-    }
+	function hideTaskInfo(element) {
+		const infoDiv = element.querySelector('.task-info');
+		if (infoDiv) infoDiv.style.display = 'none';
+	}
 
-    cycleButton.addEventListener('click', updateValue);
+	function createTaskItem(task, actionHandlers = {}) {
+		const taskItem = document.createElement('div');
+		taskItem.className = 'task ' + getColor(task);
+		taskItem.textContent = task.content;
 
-    function showTaskInfo(task, element) {
-        let infoDiv = element.querySelector('.task-info');
-        if (!infoDiv) {
-            infoDiv = document.createElement('div');
-            infoDiv.className = 'task-info';
-            if (document.body.classList.contains('dark-mode')) {
-                infoDiv.classList.add('dark-mode');
-            }
-            infoDiv.innerHTML = task.taskInfo;
-            element.appendChild(infoDiv);
-        }
-        infoDiv.style.display = 'block';
-    }
+		const infoButton = document.createElement('button');
+		infoButton.textContent = 'ℹ';
+		infoButton.className = 'task-button';
+		infoButton.onclick = () => showTaskInfo(task, taskItem);
+		taskItem.appendChild(infoButton);
+		taskItem.onmouseleave = () => hideTaskInfo(taskItem);
 
-    function hideTaskInfo(element) {
-        const infoDiv = element.querySelector('.task-info');
-        if (infoDiv) {
-            infoDiv.style.display = 'none';
-        }
-    }
+		if (actionHandlers.infoButton2) {
+			const infoButton2 = document.createElement('button');
+			infoButton2.textContent = '⚙';
+			infoButton2.className = 'task-button2';
+			infoButton2.onclick = actionHandlers.infoButton2;
+			taskItem.appendChild(infoButton2);
+		}
 
-    // Function to render the Kanban board
-    function renderKanbanBoard() {
-        const board = document.getElementById('kanban-board');
-        const columns = {};
+		return taskItem;
+	}
 
-        tasks.forEach(task => {
-            const note = task.notename;
-            if (!columns[note]) {
-                columns[note] = { pending: [], completed: [], dismissed: [] };
-            }
-            if (task.completedAt) {
-                columns[note].completed.push(task);
-            } else if (task.dismissedAt) {
-                columns[note].dismissed.push(task);
-            } else {
-                columns[note].pending.push(task);
-            }
-        });
+	function renderKanbanBoard() {
+		const board = document.getElementById('kanban-board');
+		const columns = {};
 
-        board.innerHTML = '';
+		for (let i = 0; i < tasks.length; i++) {
+			const task = tasks[i];
+			const note = task.notename;
+			if (!columns[note]) {
+				columns[note] = { pending: [], completed: [], dismissed: [] };
+			}
+			if (task.completedAt) {
+				columns[note].completed.push(task);
+			} else if (task.dismissedAt) {
+				columns[note].dismissed.push(task);
+			} else {
+				columns[note].pending.push(task);
+			}
+		}
 
-        Object.keys(columns).forEach(note => {
-            const column = document.createElement('div');
-            column.className = 'column';
+		board.innerHTML = '';
 
-            const header = document.createElement('h3');
-            header.textContent = note;
-            header.className = 'task-category';
-            column.appendChild(header);
+		for (const note in columns) {
+			if (columns.hasOwnProperty(note)) {
+				const column = document.createElement('div');
+				column.className = 'column';
 
-            const pendingList = document.createElement('div');
-            pendingList.innerHTML = '<strong>Pending:</strong>';
+				const header = document.createElement('h3');
+				header.textContent = note;
+				header.className = 'task-category';
+				column.appendChild(header);
 
-            // Sorting logic based on current valueDisplay text content
-            const sortBy = valueDisplay.textContent;
-            if (sortBy === 'Start Date') {
-                columns[note].pending.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
-            } else if (sortBy === 'Score') {
-                columns[note].pending.sort((b, a) => a.score - b.score);
-            } else if (sortBy === 'Important') {
-                columns[note].pending.sort((b, a) => (a.important ? 1 : 0) - (b.important ? 1 : 0));
-            } else if (sortBy === 'Urgent') {
-                columns[note].pending.sort((b, a) => (a.urgent ? 1 : 0) - (b.urgent ? 1 : 0));
-            }
+				const taskLists = {
+					pending: 'Pending',
+					completed: 'Completed',
+					dismissed: 'Dismissed'
+				};
 
-            columns[note].pending.forEach(task => {
-                const taskItem = document.createElement('div');
-                taskItem.className = 'task ' + getColor(task);
-                taskItem.textContent = task.content;
+				for (const key in taskLists) {
+					if (taskLists.hasOwnProperty(key)) {
+						const listDiv = document.createElement('div');
+						listDiv.innerHTML = '<strong>' + taskLists[key] + ':</strong>';
 
-                const infoButton = document.createElement('button');
-                infoButton.textContent = 'ℹ';
-                infoButton.className = 'task-button';
-                infoButton.onclick = () => showTaskInfo(task, taskItem);
-                taskItem.appendChild(infoButton);
-                taskItem.onmouseleave = () => hideTaskInfo(taskItem);
+						for (let j = 0; j < columns[note][key].length; j++) {
+							const task = columns[note][key][j];
+							const taskItem = createTaskItem(task, {
+								// infoButton2: () => window.callAmplenotePlugin("taskEdit", task.uuid)
+							});
+							listDiv.appendChild(taskItem);
+						}
 
-                const infoButton2 = document.createElement('button');
-                infoButton2.textContent = '⚙';
-                infoButton2.className = 'task-button2';
-                infoButton2.addEventListener('click', () => window.callAmplenotePlugin("taskEdit", task.uuid));
-                taskItem.appendChild(infoButton2);
+						column.appendChild(listDiv);
+					}
+				}
 
-                pendingList.appendChild(taskItem);
-            });
-            column.appendChild(pendingList);
-
-            const completedList = document.createElement('div');
-            completedList.innerHTML = '<strong>Completed:</strong>';
-            columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
-            columns[note].completed.forEach(task => {
-                const taskItem = document.createElement('div');
-                taskItem.className = 'task ' + getColor(task);
-                taskItem.textContent = task.content;
-
-                const infoButton = document.createElement('button');
-                infoButton.textContent = 'ℹ';
-                infoButton.className = 'task-button';
-                infoButton.onclick = () => showTaskInfo(task, taskItem);
-                taskItem.appendChild(infoButton);
-                taskItem.onmouseleave = () => hideTaskInfo(taskItem);
-
-                completedList.appendChild(taskItem);
-            });
-            column.appendChild(completedList);
-
-            const dismissedList = document.createElement('div');
-            dismissedList.innerHTML = '<strong>Dismissed:</strong>';
-            columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt));
-            columns[note].dismissed.forEach(task => {
-                const taskItem = document.createElement('div');
-                taskItem.className = 'task ' + getColor(task);
-                taskItem.textContent = task.content;
-
-                const infoButton = document.createElement('button');
-                infoButton.textContent = 'ℹ';
-                infoButton.className = 'task-button';
-                infoButton.onclick = () => showTaskInfo(task, taskItem);
-                taskItem.appendChild(infoButton);
-                taskItem.onmouseleave = () => hideTaskInfo(taskItem);
-
-                dismissedList.appendChild(taskItem);
-            });
-            column.appendChild(dismissedList);
-
-            board.appendChild(column);
-        });
-    }
-
-    document.getElementById('dark-mode-toggle').addEventListener('click', function() {
-        document.body.classList.toggle('dark-mode');
-        document.querySelectorAll('.column').forEach(column => {
-            column.classList.toggle('dark-mode');
-        });
-        document.querySelectorAll('.task-category h3').forEach(header => {
-            header.classList.toggle('dark-mode');
-        });
-    });
+				board.appendChild(column);
+			}
+		}
+	}
 
     renderKanbanBoard();
 
@@ -457,7 +396,7 @@ try {
 </html>
 `;
  
-      return(htmlTemplate);
+      return (htmlTemplate);
 	  console.log(htmlTemplate);
-}
+},
 }
