@@ -127,7 +127,7 @@ ${markdownTable}
 
 ${hLine}
 
-{Notes_Reviewer: Report!
+{Notes Reviewer: Report!
  
 `;
     // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
@@ -271,7 +271,7 @@ ${markdownTable}
 
 ${hLine}
 
-{Notes_Reviewer: Report!
+{Notes Reviewer: Report!
  
 `;
     // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
@@ -392,7 +392,7 @@ ${hLine}
 
 			// Filter notes based on month-year combo
 			notes = notes.filter(note => {
-				const dateField = overrideModified ? new Date(note.updated) : new Date(note.created);
+				const dateField = overrideModified ? new Date(note.created) : new Date(note.updated);
 				const noteMonth = dateField.getMonth() + 1; // getMonth() is zero-based
 				const noteYear = dateField.getFullYear();
 				return noteMonth === inputMonth && noteYear === inputYear;
@@ -479,7 +479,7 @@ ${inputSummary}
 
 - <mark style="color:#9AD62A;">**Step 3:**<!-- {"cycleColor":"26"} --></mark> **Review and Categorize Notes <mark style="color:#9AD62A;">\[Review: Decide!\]<!-- {"cycleColor":"26"} --></mark>**
     1. **Review Each Note:** Click on each note link to access its content. Evaluate its importance and relevance.<!-- {"indent":2} -->
-        1. **Make a Decision:** Once reviewed, use the "Notes_Reviewer: Decide!" button to select one of the following options:
+        1. **Make a Decision:** Once reviewed, use the "Notes Reviewer: Decide!" button to select one of the following options:
             1. **Keep:** Preserve the note for future reference.
             1. **Discard:** Delete the note permanently.
             1. **Review:** Flag the note for another review later.
