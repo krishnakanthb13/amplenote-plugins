@@ -26,13 +26,17 @@ appOption: {
                 {
                     label: "Get the details in a Table Format! (Default: Document Format!)",
                     type: "checkbox"
+                },
+                {
+                    label: "Get finer filtering, by Header Segregation! (Default: Note Segregation!)",
+                    type: "checkbox"
                 }
             ]
         }
     );
 
       // Extract user inputs
-      const [tagNamesOr, tagNamesAnd, allImages, mdTable] = result;
+      const [tagNamesOr, tagNamesAnd, allImages, mdTable, headerSeg] = result;
       // console.log("tagNames:", tagNames);
 
     // Initialize arrays for notes and filtered notes
@@ -98,6 +102,180 @@ ${horizontalLine}
     // Initialize markdown document format
     let markdownDocs = `${introLines}`;
 
+    // Header or Note Seg
+	if (headerSeg) {
+
+	// Process each note to extract images and group them by headers
+	for (let note of notes) {
+		try {
+			// console.log(`Processing note: ${note.name} (${note.uuid})`);
+			// Retrieve the content of the current note by its UUID
+			const noteContent = await app.getNoteContent({ uuid: note.uuid });
+			// console.log(`Note content retrieved for: ${note.name}`);
+
+			// Define regex patterns to match image URLs and headers (H1, H2, H3)
+			const markdownImagePattern = allImages
+				? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
+				: /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
+
+			// const headerPattern = /^(#{1,3})\s+(.*)$/gm;
+			// const headerPattern = /^(#{1,3})\s+([^\[\]\(\)\!\*]*(?:\[\s*([^\]]*)\]\([^\)]+\))?[^\[\]\(\)\!\*]*)$/gm;
+			const headerPattern = /^(#{1,3})\s+([^\[\n]+)(?:\[[^\]]*\]\([^\)]*\))?(?:\s*(.*))?$/gm; // To Handle Links in Headers, It does not work as expected!!!
+			
+			// Function to clean up additional Markdown formatting if necessary
+			function cleanMarkdown(text) {
+				return text.replace(/[\*\_\~\`\!\[\]\(\)\+\-\.\#\@\!\`\_\*\+\=\{\}\[\]\(\)\^\~]/g, '').trim();
+			}
+
+			let matches;
+			let headers = [];
+			let headerImages = { defaultHeader: [] };  // Initialize default section for images
+			let lastProcessedImageIndex = -1;  // Track the index of the last processed image
+
+			// Extract headers from note content and handle duplicates
+			let match;
+			let headerCounts = {};
+			// console.log(`Extracting headers from note: ${note.name}`);
+			headers.push({ text: "defaultHeader", position: 0 }); // Add defaultHeader initially
+			while ((match = headerPattern.exec(noteContent)) !== null) {
+				let headerText = match[2].trim();
+				headerText = cleanMarkdown(headerText);
+				headerText = headerText.trim();
+
+				// Handle duplicate headers by appending a count to make them unique
+				if (headerCounts[headerText]) {
+					headerCounts[headerText] += 1;
+					const uniqueHeaderText = `${headerText}_${headerCounts[headerText]}`;
+					headers.push({ text: uniqueHeaderText, position: match.index });
+					headerImages[uniqueHeaderText] = [];  // Initialize array for images under this header
+					// console.log(`Found duplicate header: ${headerText}, renamed to ${uniqueHeaderText}`);
+				} else {
+					headerCounts[headerText] = 1;
+					headers.push({ text: headerText, position: match.index });
+					headerImages[headerText] = [];  // Initialize array for images under this header
+					// console.log(`Found header: ${headerText}`);
+				}
+			}
+
+			// Extract images and categorize them based on their position relative to headers
+			let currentIndex = 0;
+			let currentHeaderName = "defaultHeader";  // Start with defaultHeader
+			let firstHeaderPosition = headers.length > 0 ? headers[0].position : Infinity;  // Position of the first header
+
+			// console.log(`Extracting images from note: ${note.name}`);
+			while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
+				const url = matches[1];  // Extract the image URL
+				const caption = matches[2] ? matches[2].trim() : '';  // Extract the caption if present
+				const imagePosition = matches.index;
+
+				// Check if image is before any header
+				if (imagePosition < firstHeaderPosition) {
+					if (lastProcessedImageIndex < imagePosition) {
+						// console.log(`Associating early image to defaultHeader: ${url}`);
+						headerImages["defaultHeader"].push({ url, caption });
+						lastProcessedImageIndex = imagePosition; // Update the last processed image index
+					}
+				} 
+				if (imagePosition > firstHeaderPosition) {
+					// Identify which header the image belongs to by comparing positions
+					while (currentIndex < headers.length && imagePosition > headers[currentIndex].position) {
+						currentHeaderName = headers[currentIndex].text;  // Move to the next header
+						currentIndex++;
+					}
+					if (lastProcessedImageIndex < imagePosition) {
+						// console.log(`Associating image to header: ${currentHeaderName}`);
+						headerImages[currentHeaderName] = headerImages[currentHeaderName] || [];
+						headerImages[currentHeaderName].push({ url, caption });
+						lastProcessedImageIndex = imagePosition; // Update the last processed image index
+					}
+				}
+			}
+
+			// If no headers were found, ensure all images are in defaultHeader
+			if (headers.length === 0) {
+				// console.log(`No headers found, assigning all images to defaultHeader`);
+				while ((matches = markdownImagePattern.exec(noteContent)) !== null) {
+					const url = matches[1];
+					const caption = matches[2] ? matches[2].trim() : '';
+					if (lastProcessedImageIndex < matches.index) {
+						headerImages["defaultHeader"].push({ url, caption });
+						lastProcessedImageIndex = matches.index;
+						// console.log(`Associating early image to defaultHeader: ${url}`);
+					}
+				}
+			}
+
+			// console.log(`Formatting images for note: ${note.name}`);
+			// console.log("headerImages:",headerImages)
+			// Determine headers to process (include defaultHeader if no headers are found)
+			const headersToProcess = headers.length ? headers : [{ text: "defaultHeader" }];
+			// console.log("headersToProcess:",headersToProcess)
+			// console.log("headers:",headers)
+
+			// Process each header (or defaultHeader) and its associated images
+			for (const header of headersToProcess) {
+				let headerText = header.text === "defaultHeader" ? note.name : header.text;
+				let imagesUnderHeader = headerImages[header.text] || headerImages["defaultHeader"];
+
+				// console.log(`Processing header: ${headerText}, images count: ${imagesUnderHeader.length}`);
+
+				if (imagesUnderHeader.length > 0) {
+					const headerLink = header.text === "defaultHeader"
+						? `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`
+						: `[${note.name}#${headerText}](https://www.amplenote.com/notes/${note.uuid}#${encodeURIComponent(headerText)})`;
+
+					// console.log(`Formatting header: ${headerText}`);
+
+					// Format images for markdownTable or markdownDocs
+					if (mdTable) {
+						const imageLinks = imagesUnderHeader.map(image => {
+							const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : '';  // Extract identifier from URL
+							return image.caption
+								? `![${imageIdentifier}\\|${imageResolution}](${image.url})<br>> ${image.caption}`
+								: `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
+						}).join("<br>");
+
+						// console.log(`Adding images to markdownTable under header: ${headerText}`);
+						markdownTable += `| ${headerLink} | ${note.tags} | ${formatDateTime(note.created)} | ${formatDateTime(note.updated)} | ${imageLinks} |\n`;
+					} else {
+						const imageLinks = imagesUnderHeader.map(image => {
+							const imageIdentifier = image.url.match(regex2) ? image.url.match(regex2)[1] : '';  // Extract identifier from URL
+							return image.caption
+								? `![${imageIdentifier}\\|${imageResolution}](${image.url})\n> ${image.caption}\n\n`
+								: `![${imageIdentifier}\\|${imageResolution}](${image.url})`;
+						}).join(" ");
+
+						// console.log(`Adding images to markdownDocs under header: ${headerText}`);
+						// Add images to markdownDocs under header
+						markdownDocs += `
+### Header: ${headerLink}
+> Tags: ${note.tags}
+> Created: ${formatDateTime(note.created)}
+> Updated: ${formatDateTime(note.updated)}
+
+${imageLinks}
+
+${horizontalLine}
+						`;
+					}
+				} else {
+					// Log if no images are found under the current header
+					// console.log(`No images found under header: ${headerText}`);
+				}
+			}
+
+			// console.log(`Finished processing note: ${note.name}`);
+		} catch (err) {
+			// Handle errors during note processing
+			console.error(`Error processing note: ${note.name}`, err);
+			if (err instanceof TypeError) {
+				continue;  // Skip notes with errors
+			}
+		}
+	}
+	
+	} else {
+
     // Process each note to extract images
     for (let note of notes) {
         try {
@@ -161,6 +339,8 @@ ${horizontalLine}
             }
         }
     }
+
+	} // Ending If Else for headerSeg
 
     // Store the results based on the selected format
     if (mdTable) {

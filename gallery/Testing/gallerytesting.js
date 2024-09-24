@@ -102,6 +102,7 @@ ${horizontalLine}
     // Initialize markdown document format
     let markdownDocs = `${introLines}`;
 
+    // Header or Note Seg
 	if (headerSeg) {
 
 	// Process each note to extract images and group them by headers
@@ -117,7 +118,14 @@ ${horizontalLine}
 				? /!\[.*?\]\((.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g
 				: /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)\)(?:\s*\[\^.*?\])?(?:\n>\s*(.*))?/g;
 
-			const headerPattern = /^(#{1,3})\s+(.*)$/gm;
+			// const headerPattern = /^(#{1,3})\s+(.*)$/gm;
+			// const headerPattern = /^(#{1,3})\s+([^\[\]\(\)\!\*]*(?:\[\s*([^\]]*)\]\([^\)]+\))?[^\[\]\(\)\!\*]*)$/gm;
+			const headerPattern = /^(#{1,3})\s+([^\[\n]+)(?:\[[^\]]*\]\([^\)]*\))?(?:\s*(.*))?$/gm; // To Handle Links in Headers, It does not work as expected!!!
+			
+			// Function to clean up additional Markdown formatting if necessary
+			function cleanMarkdown(text) {
+				return text.replace(/[\*\_\~\`\!\[\]\(\)\+\-\.\#\@\!\`\_\*\+\=\{\}\[\]\(\)\^\~]/g, '').trim();
+			}
 
 			let matches;
 			let headers = [];
@@ -130,7 +138,9 @@ ${horizontalLine}
 			// console.log(`Extracting headers from note: ${note.name}`);
 			headers.push({ text: "defaultHeader", position: 0 }); // Add defaultHeader initially
 			while ((match = headerPattern.exec(noteContent)) !== null) {
-				const headerText = match[2].trim();
+				let headerText = match[2].trim();
+				headerText = cleanMarkdown(headerText);
+				headerText = headerText.trim();
 
 				// Handle duplicate headers by appending a count to make them unique
 				if (headerCounts[headerText]) {
