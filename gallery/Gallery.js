@@ -38,6 +38,11 @@ appOption: {
       // Extract user inputs
       const [tagNamesOr, tagNamesAnd, allImages, mdTable, headerSeg] = result;
       // console.log("tagNames:", tagNames);
+	  // if (!result) { return null; }
+      if (!tagNamesOr && !tagNamesAnd) {
+          app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+          return;
+      }
 
     // Initialize arrays for notes and filtered notes
     let notes = [];
@@ -433,6 +438,10 @@ ${horizontalLine}`;
     // Extract user inputs from the prompt
     const [tagNamesOr, tagNamesAnd, allImages, dwFormat] = result;
     // console.log("tagNames:", tagNames);
+	if ((!tagNamesOr && !tagNamesAnd) || !dwFormat) {
+		app.alert("Note: At least one of Optional Items ('Tag OR', 'Tag AND') must be selected and 'Format' must be provided.");
+		return;
+	}
 
     // Initialize variables
     let notes = [];
@@ -740,6 +749,19 @@ function populateGallery(data) {
 // Function to create and update tag buttons
 function updateTagButtons(data) {
     const tagsSet = new Set();
+	const tagsSetD = new Set();
+    
+    // Collect all unique tag strings
+    data.forEach(item => {
+        tagsSetD.add(item.tags.trim());
+    });
+
+    // If there's only one unique tag string, skip creating the buttons
+    if (tagsSetD.size <= 1) {
+        return;
+    }
+
+    // Collect all unique tags
     data.forEach(item => {
         item.tags.split(',').map(tag => tag.trim()).forEach(tag => tagsSet.add(tag));
     });
@@ -860,6 +882,26 @@ populateGallery(jsonData);
 },
 /* ----------------------------------- */
 "Viewer!": async function (app) {
+    // Prompt the user to select tags and choose options
+    const result = await app.prompt(
+        "Select one option, (If you are selecting Single Note, select the specific note with images.)",
+        {
+            inputs: [
+                { label: "Select any one of the Collection Option", type: "radio", options: [ { label: "All the Notes", value: 1 }, { label: "Single Note", value: 2 } ] },
+                { label: "Select the Note", type: "note" }
+            ]
+        }
+    );
+
+      // Extract user inputs
+      const [noteOrAll, noteDetails] = result;
+      // console.log("result:", result);
+	  // if (!result) { return null; }
+	if (!noteOrAll === 1 || (noteOrAll === 2 && !noteDetails)) {
+		app.alert("Note: 'Collection Option' is mandatory, and if 'Collection Option' is 'Single Note', 'Note' must also be provided.");
+		return;
+	}
+
   // Function to get current date and time formatted as YYMMDD_HHMMSS
   function getCurrentDateTime() {
     const now = new Date();
@@ -881,48 +923,121 @@ populateGallery(jsonData);
   // noteUUID = await app.settings["Gallery_Image_Viewer_UUID [Do not Edit!]"] || await app.createNote(newNoteName, newTagName);
   // await app.setSetting("Gallery_Image_Viewer_UUID [Do not Edit!]", noteUUID);
 
+	// Main logic for setting up and navigating to the gallery viewer note
+	// Retrieve or create the "Gallery Image Viewer" note
 	const noteUUID = await (async () => {
+	  // Try to get the UUID from the app's settings
 	  const existingUUID = await app.settings["Gallery_Image_Viewer_UUID [Do not Edit!]"];
-	  if (existingUUID)
-		  return existingUUID;
+	  
+	  // If the UUID exists, return it
+	  if (existingUUID) 
+		return existingUUID;
+	  
+	  // If it doesn't exist, create a new note with the specified name and tag
 	  const newUUID = await app.createNote(newNoteName, newTagName);
+	  
+	  // Store the newly created note's UUID in app settings for future use
 	  await app.setSetting("Gallery_Image_Viewer_UUID [Do not Edit!]", newUUID);
+	  
+	  // Return the new UUID
 	  return newUUID;
 	})();
 
   // auditnoteUUID= await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"] || await app.createNote(auditNoteName, auditTagName);
   // await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", auditnoteUUID);
 
+	// Retrieve or create the "Gallery Image Audit" note
 	const auditnoteUUID = await (async () => {
+	  // Try to get the UUID from the app's settings
 	  const existingUUID = await app.settings["Gallery_Image_Audit_UUID [Do not Edit!]"];
+	  
+	  // If the UUID exists, return it
 	  if (existingUUID) 
-		  return existingUUID;
+		return existingUUID;
+	  
+	  // If it doesn't exist, create a new note with the specified audit note name and tag
 	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  
+	  // Store the newly created note's UUID in app settings for future use
 	  await app.setSetting("Gallery_Image_Audit_UUID [Do not Edit!]", newUUID);
+	  
+	  // Return the new UUID
 	  return newUUID;
 	})();
 
-  const auditReport = `
-- **Gallery Option:** Viewer!, **Inputs:** All Images: *true*, **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
+	// Scenario 1: If the user wants to view all notes
+	if (noteOrAll === 1) {
+	  // Set a placeholder UUID for the case where all notes are displayed
+	  const ranUUID = '00000000-0000-0000-0000-000000000000';
+	  
+	  // Save the option (viewing all notes) and the placeholder UUID in the app's settings
+	  await app.setSetting("Gallery_Image_Viewer_AllImgs [Do not Edit!]", `${noteOrAll},${ranUUID}`);
 
-`;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+	  // Audit report logging the gallery option for "All Notes"
+	  const auditReport = `
+- **Gallery Option:** Viewer!, **Inputs:** All Notes Images:, **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
+	`;
 
-  await app.replaceNoteContent({ uuid: noteUUID },`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`);
-  await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
-  
-}
+	  // Insert the audit report into the "Gallery Image Audit" note
+	  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+
+	  // Replace the content of the gallery note with the plugin's embed code for the viewer
+	  await app.replaceNoteContent({ uuid: noteUUID }, `<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`);
+
+	  // Navigate to the newly created or retrieved note in the app
+	  await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+	}
+
+	// Scenario 2: If the user wants to view a single specific note
+	if (noteOrAll === 2) {
+	  // Save the option (viewing a single note) and the specific note's UUID in the app's settings
+	  await app.setSetting("Gallery_Image_Viewer_AllImgs [Do not Edit!]", `${noteOrAll},${noteDetails.uuid}`);
+
+	  // Audit report logging the gallery option for a single note
+	  const auditReport = `
+- **Gallery Option:** Viewer!, **Inputs:** Single Note Images:, **Note:** [${noteDetails.name}](https://www.amplenote.com/notes/${noteDetails.uuid}), **At:** ${YYMMDD}_${HHMMSS}.
+	`;  
+	
+	  // Insert the audit report into the "Gallery Image Audit" note
+	  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+
+	  // Insert the plugin's embed code into the specific note
+	  await app.insertNoteContent({ uuid: noteDetails.uuid }, `<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`);
+
+	  // Navigate to the specific note in the app
+	  await app.navigate(`https://www.amplenote.com/notes/${noteDetails.uuid}`);
+	}
+	
+  }
 },
 /* ----------------------------------- */
 async renderEmbed(app, ...args) {
   // Initialize variables
   let notes = [];
   let resultsArray2 = [];
-  let htmlTemplate = "";
+  let htmlTemplate = [];
   const regex2 = /\/([^\/]+)$/; // Regex pattern to extract image identifier from URL
+  const storedValue = app.settings["Gallery_Image_Viewer_AllImgs [Do not Edit!]"];
+  const [noteOrAll, singleNoteuuid] = storedValue.split(',');
+  // const noteOrAllz = noteOrAll === 1 ? true : false;
+  // const notesByGroup = "";
+  // console.log("storedValue:", storedValue);
+  // console.log("noteOrAll:", noteOrAll);
+  // console.log("singleNoteuuid:", singleNoteuuid);
+   // let notesByGroup1 = [];
+   // let notesByGroup2 = "";
   
-  // Fetch notes from the specified group
-  const notesByGroup = await app.filterNotes({ group: "^vault" });
-  notes = notesByGroup;
+	// const notesByGroup = noteOrAll === 1 ? await app.filterNotes({ group: "^vault" }) : await app.findNote({ uuid: singleNoteuuid });
+	// const notesByGroup = await app.filterNotes({ group: "^vault" });
+	// const notesByGroup1 = await app.filterNotes({ group: "^vault" });
+	const notesByGroup2 = await app.findNote({ uuid: singleNoteuuid });
+
+	// Ensure that notes is always an array, even if it's a single note
+	notes = notesByGroup2 ? [notesByGroup2] : await app.filterNotes({ group: "^vault" });
+	// notes = notesByGroup;
+	// console.log("notesByGroup1:", notesByGroup1);
+	// console.log("notesByGroup2:", notesByGroup2);
+	// console.log("notes:", notes);
   
   // Process each note to extract image details
   for (let note of notes) {
@@ -1123,6 +1238,19 @@ function populateGallery(data) {
 // Function to create and update tag buttons
 function updateTagButtons(data) {
     const tagsSet = new Set();
+	const tagsSetD = new Set();
+    
+    // Collect all unique tag strings
+    data.forEach(item => {
+        tagsSetD.add(item.tags.trim());
+    });
+
+    // If there's only one unique tag string, skip creating the buttons
+    if (tagsSetD.size <= 1) {
+        return;
+    }
+
+    // Collect all unique tags
     data.forEach(item => {
         item.tags.split(',').map(tag => tag.trim()).forEach(tag => tagsSet.add(tag));
     });
@@ -1214,5 +1342,6 @@ populateGallery(jsonData);
 `;
 
       return(htmlTemplate);
-}
+
+  }
 }

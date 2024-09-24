@@ -1340,7 +1340,7 @@ populateGallery(jsonData);
 </body>
 </html>
 `;
-	
+
       return(htmlTemplate);
 
   }
