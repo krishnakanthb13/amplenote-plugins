@@ -155,11 +155,11 @@ async renderEmbed(app, ...args) {
       }
     }
 
-    /* const changez = true;
-    if (changez) {
-      await app.updateTask("4a784a37-2b1e-41f2-98cb-b290c41eaeca", {noteUUID: "0a0496aa-775c-11ef-bfb2-f222b153c6e3"});
-      console.log("Success"); 
-    } */
+    // const changez = true;
+    // if (changez) {
+      // await app.updateTask("4a784a37-2b1e-41f2-98cb-b290c41eaeca", {noteUUID: "0a0496aa-775c-11ef-bfb2-f222b153c6e3"});
+      // console.log("Success"); 
+    // } 
  
       htmlTemplate = `
 <!DOCTYPE html>
@@ -272,7 +272,7 @@ async renderEmbed(app, ...args) {
 </head>
 <body>
     <div id="kanban-board"></div>
-
+</body>
     <script>
         let tasks = [];
         tasks = 
@@ -392,11 +392,10 @@ try {
     console.error("Error processing scripts:", error);
 }
     </script>
-</body>
 </html>
 `;
  
-      return (htmlTemplate);
+      return(htmlTemplate);
 	  console.log(htmlTemplate);
 },
 }
