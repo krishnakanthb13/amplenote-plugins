@@ -394,7 +394,7 @@ ${horizontalLine}`;
 	  return newUUID;
 	})();
     const auditReport = `
-- **Gallery Option:** List!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; All-Images: ${allImages}; Table: ${mdTable};], **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
+- **Gallery Option:** List!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; All-Images: ${allImages}; Table: ${mdTable}; HeaderSeg: ${headerSeg}], **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
 
 `;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
     
