@@ -4,6 +4,7 @@ uuid: 356bc1ea-5be8-11ef-8800-22074e34eefe
 version: 7
 created: '2024-08-16T21:27:15+05:30'
 tags:
+  - '-2-literature'
   - '-9-permanent'
   - '-t/amplenote/mine'
 ---
