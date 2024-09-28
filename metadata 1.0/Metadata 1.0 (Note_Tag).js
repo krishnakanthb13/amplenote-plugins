@@ -37,7 +37,7 @@
                             },
                             // Insert / Export options
                             {
-                                label: "Insert / Export options (Mandatory)", type: "select", options: [
+                                label: "Insert / Export Options (Mandatory)", type: "select", options: [
                                     { label: "Insert into current note", value: "current_note" },
                                     { label: "Insert into new note", value: "new_note" },
                                     { label: "Download as markdown", value: "download_md" },
@@ -47,14 +47,14 @@
                             },
                             // Format selection option
                             {
-                                label: "Select format (Mandatory)", type: "select", options: [
-                                    { label: "Both (Table format)", value: "both_table" }, // Method 1
-                                    { label: "Note Names", value: "names_only" }, // Method 1
-                                    { label: "Note Tags", value: "tags_only" }, // Method 1
-                                    { label: "Untitled Notes (Table format)", value: "empty_names_only" }, // Method 1
-                                    { label: "Untagged Notes (Table format)", value: "empty_tags_only" }, // Method 1
+                                label: "Select Report Type (Mandatory)", type: "select", options: [
+                                    { label: "Note Name & Tags (Table)", value: "both_table" }, // Method 1
+                                    { label: "Note Names Only", value: "names_only" }, // Method 1
+                                    { label: "Note Tags Only", value: "tags_only" }, // Method 1
+                                    { label: "Untitled Notes (Table)", value: "empty_names_only" }, // Method 1
+                                    { label: "Untagged Notes (Table)", value: "empty_tags_only" }, // Method 1
                                     { label: "Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" }, // Method 2
-                                    { label: "Published Notes (Table format)", value: "published_only" }, // Method 1
+                                    { label: "Published Notes (Table)", value: "published_only" }, // Method 1
                                     { label: "Archived - Grouped-folders", value: "archived" }, // Method 3
                                     { label: "Vault Notes - Grouped-folders", value: "vault" }, // Method 3
                                     { label: "Deleted Notes - Grouped-folders", value: "deleted" }, // Method 3
@@ -274,6 +274,13 @@
 							});
 							for (const noteHandleG of notesG) {
 								notesGroupNames.add(`- [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
+								// It takes longer than usual time.
+								// if (insertFormatz === "public") {
+									// const publicURL = await app.getNotePublicURL({ uuid: noteHandleG.uuid });
+									// notesGroupNames.add(`- [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}), [${publicURL}](${publicURL})`);
+								// } else {
+									// notesGroupNames.add(`- [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
+								// }
 							}
 							
                             results = new Set(notesGroupNames);
@@ -324,9 +331,14 @@
                     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
                     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
                     const filename = `Metadata_1.0_Report_${YYMMDD}_${HHMMSS}`;
+					// Bring in count of records, for reference and additional feature
+					let lineCount = insertOption === "download_csv" ? resultCSV.split('\n').length : resultText.split('\n').length;
+					lineCount = insertFormat === "both_table" || insertFormat === "empty_names_only" || insertFormat === "empty_tags_only" || insertFormat === "published_only" ? lineCount-2 : lineCount;
+					// const lineCountC = resultCSV.split('\n').length;
                     // Generate the summary of input selections
                     const inputSummary = `
 ### Input Selections:
+- Number of notes: ${lineCount || "None"}
 - Tags to filter: ${tagNames || "None"}
 - Note name filter: ${nameFilter || "None"}
 - Sort by name: ${sortOption || "None"}

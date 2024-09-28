@@ -1,7 +1,7 @@
 ﻿---
 title: Metadata 1.0 (Note_Tag)
 uuid: af332c24-4064-11ef-b9a5-6ef34fa959ce
-version: 776
+version: 824
 created: '2024-07-12T21:07:43+05:30'
 tags:
   - '-9-permanent'
@@ -214,7 +214,7 @@ Well having a Graph view is excellent, still having a good old view of the list 
 
 | | |
 |-|-|
-|name<!-- {"cell":{"colwidth":116}} -->|Meta_1<!-- {"cell":{"colwidth":572}} -->|
+|name<!-- {"cell":{"colwidth":116}} -->|Metadata<!-- {"cell":{"colwidth":572}} -->|
 |icon<!-- {"cell":{"colwidth":116}} -->|account_tree<!-- {"cell":{"colwidth":572}} -->|
 |description<!-- {"cell":{"colwidth":116}} -->|Get a dump of your <mark style="color:#F8D616;">Note Names<!-- {"cycleColor":"25"} --></mark>, and their <mark style="color:#F8D616;">Tags.<!-- {"cycleColor":"25"} --></mark> <mark style="color:#FFFFFF;">In various Formats and Methods, to cater best of your requirements. With extensive ways to choose and filter the data that you are looking for.<!-- {"cycleColor":"55"} --></mark><!-- {"cell":{"colwidth":572}} -->|
 |instructions|Please fine the Instructions here =  [Metadata 1.0 Docs](https://www.amplenote.com/notes/c46c5e60-4066-11ef-832f-26e37c279344) |
@@ -262,7 +262,7 @@ Well having a Graph view is excellent, still having a good old view of the list 
                             },
                             // Insert / Export options
                             {
-                                label: "Insert / Export options (Mandatory)", type: "select", options: [
+                                label: "Insert / Export Options (Mandatory)", type: "select", options: [
                                     { label: "Insert into current note", value: "current_note" },
                                     { label: "Insert into new note", value: "new_note" },
                                     { label: "Download as markdown", value: "download_md" },
@@ -272,14 +272,14 @@ Well having a Graph view is excellent, still having a good old view of the list 
                             },
                             // Format selection option
                             {
-                                label: "Select format (Mandatory)", type: "select", options: [
-                                    { label: "Both (Table format)", value: "both_table" }, // Method 1
-                                    { label: "Note Names", value: "names_only" }, // Method 1
-                                    { label: "Note Tags", value: "tags_only" }, // Method 1
-                                    { label: "Untitled Notes (Table format)", value: "empty_names_only" }, // Method 1
-                                    { label: "Untagged Notes (Table format)", value: "empty_tags_only" }, // Method 1
+                                label: "Select Report Type (Mandatory)", type: "select", options: [
+                                    { label: "Note Name & Tags (Table)", value: "both_table" }, // Method 1
+                                    { label: "Note Names Only", value: "names_only" }, // Method 1
+                                    { label: "Note Tags Only", value: "tags_only" }, // Method 1
+                                    { label: "Untitled Notes (Table)", value: "empty_names_only" }, // Method 1
+                                    { label: "Untagged Notes (Table)", value: "empty_tags_only" }, // Method 1
                                     { label: "Undocumented Notes (w/Hidden-task/s)", value: "empty_content_only" }, // Method 2
-                                    { label: "Published Notes (Table format)", value: "published_only" }, // Method 1
+                                    { label: "Published Notes (Table)", value: "published_only" }, // Method 1
                                     { label: "Archived - Grouped-folders", value: "archived" }, // Method 3
                                     { label: "Vault Notes - Grouped-folders", value: "vault" }, // Method 3
                                     { label: "Deleted Notes - Grouped-folders", value: "deleted" }, // Method 3
@@ -499,6 +499,13 @@ Well having a Graph view is excellent, still having a good old view of the list 
 							});
 							for (const noteHandleG of notesG) {
 								notesGroupNames.add(`- [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
+								// It takes longer than usual time.
+								// if (insertFormatz === "public") {
+									// const publicURL = await app.getNotePublicURL({ uuid: noteHandleG.uuid });
+									// notesGroupNames.add(`- [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid}), [${publicURL}](${publicURL})`);
+								// } else {
+									// notesGroupNames.add(`- [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
+								// }
 							}
 							
                             results = new Set(notesGroupNames);
@@ -549,9 +556,14 @@ Well having a Graph view is excellent, still having a good old view of the list 
                     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
                     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
                     const filename = `Metadata_1.0_Report_${YYMMDD}_${HHMMSS}`;
+					// Bring in count of records, for reference and additional feature
+					let lineCount = insertOption === "download_csv" ? resultCSV.split('\n').length : resultText.split('\n').length;
+					lineCount = insertFormat === "both_table" || insertFormat === "empty_names_only" || insertFormat === "empty_tags_only" || insertFormat === "published_only" ? lineCount-2 : lineCount;
+					// const lineCountC = resultCSV.split('\n').length;
                     // Generate the summary of input selections
                     const inputSummary = `
 ### Input Selections:
+- Number of notes: ${lineCount || "None"}
 - Tags to filter: ${tagNames || "None"}
 - Note name filter: ${nameFilter || "None"}
 - Sort by name: ${sortOption || "None"}
@@ -664,6 +676,8 @@ Well having a Graph view is excellent, still having a good old view of the list 
 - July 31st, 2024 - Tested all the Features, Options and also validated few of the Items. Works properly as expected.
 
 - August 28th, 2024 - Completed performance tuning and done testing. It generates the results quite fast now, at least I see a huge difference for me with 400+ notes. Well its all comparative, it should work much faster then before if you have used it. Enjoy the quick querying so that you can use your time else were. (I do understand waiting actually help our brain go on power saving mode! 😜
+
+- September 28th, 2024 - Based on the feedback received from the review of this plugin, updated the format type to report type, clean up of report selection names, commented off the published notes report using brut force checking of available public link, added public link after filtering mechanism using group function, added count - number of items in the export report. And also updated the call name from Meta_1 to Metadata (as it iterations are manifested through different plugins). & Rolling back the published options, as one gives you the public link, one give you just the note, it's much quicker.
 
 ---
 
