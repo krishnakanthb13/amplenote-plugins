@@ -509,29 +509,6 @@ ${hLine}
   
  linkOption: {
 
-    check(app, link) {
-      return new Promise(async function(resolve) {
-        const url = link.href;
-        let noteX;
-        if (url.startsWith("https://www.amplenote.com/notes/")) {
-          let uuid = url.split("/").pop();
-          console.log(uuid);
-          noteX = await app.findNote({ uuid });
-        }
-
-        const tags = noteX.tag.split(",").map(tag => tag.trim());
-        const matchingTags = ["-reports/-notes-reviewer/0-reports", "daily-jots", "-0-planner"];
-        
-        if (tags.some(tag => matchingTags.includes(tag))) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-    },
-
-    run(app) {
-
 	  "Decide": async function (app, link) {
 
       // ------- Prompting the user to enter filter criteria -------
@@ -717,7 +694,7 @@ ${hLine}
           uuid: reportNoteUUID
       }, textFinal);
 
-     }  
-   }
+
+  }
  }
 }
