@@ -158,8 +158,10 @@ ${hLine}
 		app.alert("Working on it... This may take a few minutes for large notebooks. The app might seem unresponsive but we're working on it.");
 
 		// Handling Manually (numberOfNotes can be left blank!)
-		const jotNumberNotes = app.settings["Jot Option [Number of Notes]"];
+		const jotNumberNotes = app.settings["Jot Option [Number of Notes, Default: 5]"];
 		let numberOfNotesz = (jotNumberNotes || "5");
+		const getLucky = true; // Modify if required to "false"
+		const sortUntagged = true; // Modify if required to "false"
 
 		// First, filter by tag
 		let notesByTag = await app.filterNotes({ tag: "^-reports/-notes-reviewer" });
@@ -189,13 +191,18 @@ ${hLine}
 			return array;
 		}
 		
-		// Randomly shuffle the notes
-		notes = shuffleArray(notes);
-		// console.log("Notes after 'Get Lucky!' shuffle:", notes);
+		// Inside your conditional block
+		if (getLucky === true) {
+			// Randomly shuffle the notes
+			notes = shuffleArray(notes);
+			// console.log("Notes after 'Get Lucky!' shuffle:", notes);
+		}
 
-		// Sort notes by whether they are untagged
-		notes = notes.sort((a, b) => (a.tags.length === 0 ? -1 : 1));
-		// console.log("Notes after sorting by untagged:", notes);
+		if (sortUntagged === true) {
+			// Sort notes by whether they are untagged
+			notes = notes.sort((a, b) => (a.tags.length === 0 ? -1 : 1));
+			// console.log("Notes after sorting by untagged:", notes);
+		}
 
 		if (numberOfNotesz) {
 			// Limit the number of notes
@@ -500,8 +507,32 @@ ${hLine}
   
   
   
-  linkOption: {
-      "Decide": async function (app, link) {
+ linkOption: {
+
+    check(app, link) {
+      return new Promise(async function(resolve) {
+        const url = link.href;
+        let noteX;
+        if (url.startsWith("https://www.amplenote.com/notes/")) {
+          let uuid = url.split("/").pop();
+          console.log(uuid);
+          noteX = await app.findNote({ uuid });
+        }
+
+        const tags = noteX.tag.split(",").map(tag => tag.trim());
+        const matchingTags = ["-reports/-notes-reviewer/0-reports", "daily-jots", "-0-planner"];
+        
+        if (tags.some(tag => matchingTags.includes(tag))) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    },
+
+    run(app) {
+
+	  "Decide": async function (app, link) {
 
       // ------- Prompting the user to enter filter criteria -------
       // Displays a prompt to the user to select review decision, tags, and enter a custom tag.
@@ -686,6 +717,7 @@ ${hLine}
           uuid: reportNoteUUID
       }, textFinal);
 
-  }
- }  
+     }  
+   }
+ }
 }
