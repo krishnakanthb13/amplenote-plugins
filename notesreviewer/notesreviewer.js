@@ -2,8 +2,8 @@
 
     
   
-  noteOption: { 
-    "Analyze!": async function (app, noteHandle) {
+  appOption: { 
+    "Analyze": async function (app) {
 
     // Prompt the user for how they want to proceed with the analysis
     const result = await app.prompt("Step 1 - Review: Analyze. >> Get a glimpse of your whole bunch of notes", {
@@ -35,7 +35,7 @@
 	// console.log(notesByTag);
 
 	// Then, filter by groups
-	let notesByGroup = await app.filterNotes({ group: "^deleted,^plugin" });
+	let notesByGroup = await app.filterNotes({ group: "^plugin" });
 	// console.log(notesByGroup);
 
 	// Create a Set of note IDs from the group filtered results for quick lookup
@@ -107,6 +107,9 @@
     const fDate = new Date();
     const resultText = `
 ${hLine}
+
+### *<mark>Expand to Read more: Details on [Analysis Report: Count of Notes (Table)]</mark>* <!-- {"collapsed":true} -->
+
 > **Review: Analyze** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**<!-- {"cycleColor":"25"} --></mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**<!-- {"cycleColor":"25"} --></mark>.
 - <mark style="color:#9AD62A;">**Step 1:**<!-- {"cycleColor":"26"} --></mark> **Identify Note Trends <mark style="color:#9AD62A;">\[Review: Analyze!\]<!-- {"cycleColor":"26"} --></mark>**
     1. To understand your note-taking patterns, analyze the provided Pivot Table. <!-- {"indent":2} -->
@@ -115,6 +118,9 @@ ${hLine}
         1. If you prefer a broader overview, proceed to Step 2 without selecting a specific timeframe.
 
 ${markdownTable}
+
+### *<mark>Expand to Read more: Details on [How to Get: List of Notes]</mark>* <!-- {"collapsed":true} -->
+
 - <mark style="color:#9AD62A;">**Step 2:**<!-- {"cycleColor":"26"} --></mark> **Generate Note Report <mark style="color:#9AD62A;">\[Review: Report!\]<!-- {"cycleColor":"26"} --></mark>**
     1. To generate the report, hover your mouse pointer at the end of this line and select the desired option from the pop-up menu.
         1. To create a list of notes for review, use the following options:
@@ -127,7 +133,7 @@ ${markdownTable}
 
 ${hLine}
 
-{Notes Reviewer: Report!
+{Notes Reviewer: Report
  
 `;
     // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
@@ -146,145 +152,132 @@ ${hLine}
   
   
   
-  dailyJotOption: { 
-    async "Analyze!" (app, noteHandle) {
+  dailyJotOption: {
+		"Report": async function (app, noteHandle) {
 
-    // Prompt the user for how they want to proceed with the analysis
-    const result = await app.prompt("Step 1 - Review: Analyze. >> Get a glimpse of your whole bunch of notes", {
-        inputs: [
-            {
-                label: "How do you want to proceed with building the Analysis By?",
-                type: "radio",
-                options: [
-                    { label: "Note Created Date", value: "created" },
-                    { label: "Note Last Modified Date (Suggested)", value: "updated" }
-                ]
-            }
-        ]
-    });
-    // console.log("result:", result);
+		app.alert("Working on it... This may take a few minutes for large notebooks. The app might seem unresponsive but we're working on it.");
 
-    // If the result is falsy, the user has canceled the operation
-    if (!result) {
-        app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
-        return;
-    }
-    app.alert("Working on it... This may take a few minutes for large notebooks. The app might seem unresponsive but we're working on it.");
-    // Initialize variables
-    let notes = [];
-    const dateField = result;
-	
-	// First, filter by tag
-	let notesByTag = await app.filterNotes({ tag: "^-reports/-notes-reviewer" });
-	// console.log(notesByTag);
+		// Handling Manually (numberOfNotes can be left blank!)
+		const jotNumberNotes = app.settings["Jot Option [Number of Notes]"];
+		let numberOfNotesz = (jotNumberNotes || "5");
 
-	// Then, filter by groups
-	let notesByGroup = await app.filterNotes({ group: "^deleted,^plugin" });
-	// console.log(notesByGroup);
+		// First, filter by tag
+		let notesByTag = await app.filterNotes({ tag: "^-reports/-notes-reviewer" });
+		// console.log(notesByTag);
 
-	// Create a Set of note IDs from the group filtered results for quick lookup
-	let notesByGroupSet = new Set(notesByGroup.map(note => note.uuid));
+		// Then, filter by groups
+		let notesByGroup = await app.filterNotes({ group: "^plugin" });
+		// console.log(notesByGroup);
 
-	// Find the intersection of the two sets
-	let filteredNotes = notesByTag.filter(note => notesByGroupSet.has(note.uuid));
-	// `filteredNotes` now contains the notes that match both the tag and the groups
-	// console.log(filteredNotes);
+		// Create a Set of note IDs from the group filtered results for quick lookup
+		let notesByGroupSet = new Set(notesByGroup.map(note => note.uuid));
 
-	notes = filteredNotes;
-    // console.log("noteHandles:", notes);
+		// Find the intersection of the two sets
+		let filteredNotes = notesByTag.filter(note => notesByGroupSet.has(note.uuid));
 
-    // Month names array for better readability
-    const monthNames = ["Jan_1", "Feb_2", "Mar_3", "Apr_4", "May_5", "Jun_6", "Jul_7", "Aug_8", "Sep_9", "Oct_10", "Nov_11", "Dec_12"];
+		// `filteredNotes` now contains the notes that match both the tag and the groups
+		// console.log(filteredNotes);
 
-    // Function to create a pivot table
-    const pivot = (notes, dateField) => {
-        const matrix = {};
+		let notes = filteredNotes;
+		// console.log("noteHandles:", notes);
 
-        notes.forEach(note => {
-            const date = new Date(note[dateField]);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1; // months are 0-based in JavaScript
+		function shuffleArray(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]]; // Swap elements
+			}
+			return array;
+		}
+		
+		// Randomly shuffle the notes
+		notes = shuffleArray(notes);
+		// console.log("Notes after 'Get Lucky!' shuffle:", notes);
 
-            if (!matrix[month]) {
-                matrix[month] = {};
-            }
-            if (!matrix[month][year]) {
-                matrix[month][year] = 0;
-            }
-            matrix[month][year]++;
-        });
+		// Sort notes by whether they are untagged
+		notes = notes.sort((a, b) => (a.tags.length === 0 ? -1 : 1));
+		// console.log("Notes after sorting by untagged:", notes);
 
-        return matrix;
-    };
+		if (numberOfNotesz) {
+			// Limit the number of notes
+			const notesCount = parseInt(numberOfNotesz, 10);
+			notes = notes.slice(0, notesCount);
+			// console.log(`Notes after limiting to ${notesCount} notes:`, notes);
+		}
 
-    // Function to generate a Markdown table from the pivot table
-    const generateMarkdownTable = (pivotTable) => {
-        const allYears = new Set();
-        Object.values(pivotTable).forEach(years => Object.keys(years).forEach(year => allYears.add(year)));
-        const sortedYears = Array.from(allYears).sort();
+		// console.log("Final filtered Notes:", notes);
+		
+		// console.log("Type of notes:", typeof notes);
+		// console.log("Is notes an array?:", Array.isArray(notes));
+		// console.log("Content of notes:", notes);
+		
+		// Ensure notes is an array
+		let notesz = Array.from(notes);
+		
+		// Adding Inbox Tag for all the final resulted notes
+		for (const note of notesz) {
+			if (note.uuid) {
+				await app.addNoteTag({ uuid: note.uuid }, "-reports/-notes-reviewer/1-inbox");
+			}
+		}
+		
+		// Function to format date-time string
+		function formatDateTime(dateTimeStr) {
+		  const date = new Date(dateTimeStr);
+		  return date.toLocaleString(); // Or use another format like date.toISOString() for ISO format
+		}
+		
+		// Create the markdown table header
+		const tableHeader = "| Notes | Created_On | Updated_On | Tags |\n|---|---|---|---|";
 
-        let markdownTable = '| Month | ' + sortedYears.join(' | ') + ' |\n';
-        markdownTable += '|-------|' + sortedYears.map(() => '---').join('|') + '|\n';
+		// Create the note rows
+		const noteRows = notes.map(note => 
+		  `|[${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid})|${formatDateTime(note.created)}|${formatDateTime(note.updated)}|${note.tags}|`
+		);
 
-        for (let month = 1; month <= 12; month++) {
-            markdownTable += '| ' + monthNames[month - 1] + ' | ';
-            const row = sortedYears.map(year => (pivotTable[month] && pivotTable[month][year]) ? pivotTable[month][year] : 0);
-            markdownTable += row.join(' | ') + ' |\n';
-        }
+		// Join note rows with newlines
+		const noteRowsString = noteRows.join("\n");
 
-        return markdownTable;
-    };
+		// Combine header and rows into the final markdown table
+		const markdownTable = `${tableHeader}\n${noteRowsString}`;
 
-    // Create the pivot table and generate the Markdown table
-    const pivotTable = pivot(notes, dateField);
-    const markdownTable = generateMarkdownTable(pivotTable);
-
-    // Output the final Markdown table
-    // console.log(markdownTable);
+		// console.log(markdownTable);
 
     // Generate the filename based on the current date and time
-    const now = new Date();
-    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
-    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `Notes_Reviewer_${YYMMDD}_${HHMMSS}`;
     const hLine = `---`;
     const fDate = new Date();
     const resultText = `
-${hLine}
-> **Review: Analyze** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**<!-- {"cycleColor":"25"} --></mark>, with Selected option: <mark data-text-color="25" style="color: #F8D616;">**${dateField} date**<!-- {"cycleColor":"25"} --></mark>.
-- <mark style="color:#9AD62A;">**Step 1:**<!-- {"cycleColor":"26"} --></mark> **Identify Note Trends <mark style="color:#9AD62A;">\[Review: Analyze!\]<!-- {"cycleColor":"26"} --></mark>**
-    1. To understand your note-taking patterns, analyze the provided Pivot Table. <!-- {"indent":2} -->
-        1. This table summarizes your notes (excluding standard review tags) by year and month, showing the number of notes created or modified.
-        1. **Focus on High-Activity Periods:** Start by identifying the year and month with the highest number of notes. This will help you pinpoint your most active note-taking periods for deeper analysis.
-        1. If you prefer a broader overview, proceed to Step 2 without selecting a specific timeframe.
+### *<mark>Expand to Read more: Details on [How to Use: List of Notes]</mark>* <!-- {"collapsed":true} -->
+
+> **Review: Report** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**<!-- {"cycleColor":"25"} --></mark>,
+
+- <mark style="color:#9AD62A;">**Next Step:**<!-- {"cycleColor":"26"} --></mark> **Review and Categorize Notes <mark style="color:#9AD62A;">\[Review: Decide!\]<!-- {"cycleColor":"26"} --></mark>**
+    1. **Review Each Note:** Click on each note link to access its content. Evaluate its importance and relevance.<!-- {"indent":2} -->
+        1. **Make a Decision:** Once reviewed, use the "Notes Reviewer: Decide!" button to select one of the following options:
+            1. **Keep:** Preserve the note for future reference.
+            1. **Discard:** Delete the note permanently.
+            1. **Review:** Flag the note for another review later.
+            1. **Add Tags (Optional):** If necessary, manually add tags to the note for better organization.
+            1. **Provide Context:** Briefly explain your decision to help you remember the reasoning behind it in the future.
+        1. **Start with an Audit:** Begin by reviewing the audit log at the top of the page to track your progress.
+
+${hLine} 
 
 ${markdownTable}
-- <mark style="color:#9AD62A;">**Step 2:**<!-- {"cycleColor":"26"} --></mark> **Generate Note Report <mark style="color:#9AD62A;">\[Review: Report!\]<!-- {"cycleColor":"26"} --></mark>**
-    1. To generate the report, hover your mouse pointer at the end of this line and select the desired option from the pop-up menu.
-        1. To create a list of notes for review, use the following options:
-            1. **Quick Start:** Click "I am feeling lucky!" for a random selection of 5 notes.
-            1. **Custom Report:**
-                1. Specify the desired number of notes (between 5 and 25).
-                1. Check "Sort by Untagged Notes" to prioritize untagged items.
-                1. Filter by month and year using the format from the Pivot Table.
-                1. Check "Override to Created Date" to view notes based on creation date instead of last modified date.
 
-${hLine}
-
-{Notes Reviewer: Report!
- 
+${hLine} 
 `;
-    // Jot Logic - If Today's Review is already made, Then the dailyJotOption will be disabled! - Not working!
-	const newNoteName = `Notes_Reviewer_${YYMMDD}_${HHMMSS}`;
-	const newTagName = ['-reports/-notes-reviewer/0-reports'];
-	// console.log(newNoteName);
-	// console.log(newTagName);
-
-    // Create a new note - to hold the Analysis report and also the To be Reviewed Notes!!!
-    let noteUUID = await app.createNote(filename, newTagName);
-    await app.insertContent({ uuid: noteUUID }, resultText);
-      
-  }
+		// console.log("inputSummary:", inputSummary);
+		// console.log("resultText:", resultText);
+		// await app.context.replaceSelection(resultText);
+		let noteX = await app.findNote({ name: noteHandle.name, tags: noteHandle.tags });
+          if (!noteX) {
+            const uuid = await app.createNote(noteHandle.name, noteHandle.tags);
+            noteX = await app.findNote({ uuid });
+          }
+		// console.log("noteX:", noteX);
+		await app.insertNoteContent({ uuid: noteX.uuid }, resultText);
+		
+		}
   },
     
   
@@ -292,7 +285,7 @@ ${hLine}
   
   
 	insertText: {
-		"Report!": async function (app) {
+		"Report": async function (app) {
 
 		// Prompt the user for how they want to proceed with the report
 		const result = await app.prompt("Step 2 - Review: Report. >> Select based on your Today's Availability!", {
@@ -363,7 +356,7 @@ ${hLine}
 		// console.log(notesByTag);
 
 		// Then, filter by groups
-		let notesByGroup = await app.filterNotes({ group: "^deleted,^plugin" });
+		let notesByGroup = await app.filterNotes({ group: "^plugin" });
 		// console.log(notesByGroup);
 
 		// Create a Set of note IDs from the group filtered results for quick lookup
@@ -473,6 +466,8 @@ ${hLine}
 > - Sort by Created Date: ${overrideModified || "None"}.
 `;
     const resultText = `
+### *<mark>Expand to Read more: Details on [How to Use: List of Notes]</mark>* <!-- {"collapsed":true} -->
+
 > **Review: Report** - Run on <mark data-text-color="25" style="color: #F8D616;">**${fDate}**<!-- {"cycleColor":"25"} --></mark>, with Selected options:
 
 ${inputSummary}
@@ -486,6 +481,8 @@ ${inputSummary}
             1. **Add Tags (Optional):** If necessary, manually add tags to the note for better organization.
             1. **Provide Context:** Briefly explain your decision to help you remember the reasoning behind it in the future.
         1. **Start with an Audit:** Begin by reviewing the audit log at the top of the page to track your progress.
+
+${hLine} 
 
 ${markdownTable}
 
@@ -504,7 +501,7 @@ ${hLine}
   
   
   linkOption: {
-      "Decide!": async function (app, link) {
+      "Decide": async function (app, link) {
 
       // ------- Prompting the user to enter filter criteria -------
       // Displays a prompt to the user to select review decision, tags, and enter a custom tag.
