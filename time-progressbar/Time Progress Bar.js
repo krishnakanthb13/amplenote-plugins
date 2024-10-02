@@ -187,8 +187,8 @@
 
 			// List of goals with start and end dates
 			const goals = [
-				{ name: "September 2024", startDate: "2024-09-01", endDate: "2024-09-30" },  // Goal for September
-				{ name: "Quarter III 2024", startDate: "2024-07-01", endDate: "2024-09-30" },  // Goal for Q3
+				{ name: "October 2024", startDate: "2024-10-01", endDate: "2024-10-31" },  // Goal for October
+				{ name: "Quarter IV 2024", startDate: "2024-10-01", endDate: "2024-12-31" },  // Goal for Q4
 				{ name: "Year 2024", startDate: "2024-01-01", endDate: "2024-12-30" },  // Goal for the entire year
 			];
 
