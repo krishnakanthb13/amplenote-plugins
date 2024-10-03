@@ -4,9 +4,9 @@
     /**
      * "Reports" function: Prompts the user to select tags and object type, then filters notes based on those selections.
      * Inputs: tags (OR and AND), object type (Attachments, Links, Images)
-     * Output: Filtered notes based on the selected criteria.
+     * Output: Filtered notes + objects based on the selected criteria.
      */
-    "Reports": async function (app) {
+    "Report": async function (app) {
       // Prompt the user for tags and object type input
       const result = await app.prompt(
         "Select Details on which you want to Report on.",
@@ -39,6 +39,11 @@
 
       // Destructure the user input from the result
       const [tagNamesOr, tagNamesAnd, objectType] = result;
+
+      if (!result) {
+          app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+          return;
+      }
 
       // Ensure at least one tag and an object type is selected
       if (!tagNamesOr && !tagNamesAnd) {
@@ -88,7 +93,7 @@
     /**
      * "List" function: Similar to "Reports", but adds formatting options for displaying the filtered notes in document or table format.
      * Inputs: tags (OR and AND), object type, list formatting (document or table)
-     * Output: Filtered and formatted notes.
+     * Output: Filtered and formatted notes + objects.
      */
     "List": async function (app) {
       const result = await app.prompt(
@@ -130,6 +135,11 @@
 
       // Destructure the input for OR/AND tags, object type, and list format
       const [tagNamesOr, tagNamesAnd, objectType, listFormat] = result;
+
+      if (!result) {
+          app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+          return;
+      }
 
       // Ensure tags and formatting are selected
       if (!tagNamesOr && !tagNamesAnd) {
@@ -176,7 +186,7 @@
     /**
      * "Download" function: Provides an option to download filtered notes in different formats like markdown, CSV, TXT, or JSON.
      * Inputs: tags (OR and AND), object type, download format
-     * Output: Downloadable file in the selected format containing filtered notes.
+     * Output: Downloadable file in the selected format containing filtered notes + objects.
      */
     "Download": async function (app) {
       const result = await app.prompt(
@@ -220,6 +230,11 @@
 
       // Destructure the inputs for OR/AND tags, object type, and download format
       const [tagNamesOr, tagNamesAnd, objectType, dwFormat] = result;
+
+      if (!result) {
+          app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+          return;
+      }
 
       // Validate input
       if (!tagNamesOr && !tagNamesAnd) {
