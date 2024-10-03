@@ -39,6 +39,7 @@
 
       // Destructure the user input from the result
       const [tagNamesOr, tagNamesAnd, objectType] = result;
+	  console.log("result:", result);
 
       if (!result) {
           app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
@@ -83,10 +84,54 @@
       // Remove duplicate notes
       filteredNotes = [...new Set(filteredNotes)];
       notes = filteredNotes;
+	  console.log("notes:", notes);
 
       // Initialize variables for processing results
       let results = [];
       let finalResults = "";
+
+		// Loop through each note and extract content
+		for (const note of notes) {
+		  const noteUUID = note.uuid;
+		  const markdown = await app.getNoteContent({ uuid: noteUUID });
+		  // console.log(`Markdown content for note ${noteUUID}:`, markdown);
+
+		  // Extract attachments using regex
+		  const attachmentRegex = /\[.*?\]\((attachment:\/\/.*?)\)/g;
+		  const attachments = [...markdown.matchAll(attachmentRegex)];
+		  console.log(`Attachments for note ${noteUUID}:`, attachments);
+
+		  // Extract AmpleNote image links
+		  // const ampleNoteImageRegex = /!\[.*?\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
+		  const ampleNoteImageRegex = /!\[\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
+		  const ampleNoteImages = [...markdown.matchAll(ampleNoteImageRegex)];
+		  console.log(`AmpleNote images for note ${noteUUID}:`, ampleNoteImages);
+
+		  // Extract non-AmpleNote image links
+		  const nonAmpleNoteImageRegex = /!\[.*?\]\((?!https:\/\/images\.amplenote\.com\/)(.*?)\)/g;
+		  const nonAmpleNoteImages = [...markdown.matchAll(nonAmpleNoteImageRegex)];
+		  console.log(`Non-AmpleNote images for note ${noteUUID}:`, nonAmpleNoteImages);
+
+		  // Extract AmpleNote video links
+		  const ampleNoteVideosRegex = /!\[[^\]]+\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
+		  const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)];
+		  console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+
+		  // Extract links excluding AmpleNote links, attachments, and images
+		  // const linkRegex = /\[.*?\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
+		  const linkRegex = /\[[^\]]+\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
+		  const links = [...markdown.matchAll(linkRegex)];
+		  console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+
+		  const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
+		  console.log("attachmentsAPI:", attachmentsAPI);
+		  const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
+		  console.log("imagesAPI:", imagesAPI);
+
+
+		}
+
+
     },
 
     // ********************************************************************************************************************* //
