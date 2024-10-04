@@ -28,9 +28,13 @@
               label: "Select the Object Type",
               type: "select",
               options: [
-                { label: "Attachments", value: "attachments" },
-                { label: "Links", value: "links" },
-                { label: "Images", value: "images" }
+                { label: "Basic - All Attachments", value: "all-attachments" },
+                { label: "Basic - All Images", value: "all-images" },
+                { label: "Advanced - All Attachments", value: "attachments" },
+                { label: "Advanced - Amplenote Hosted Images", value: "amplenote-images" },
+                { label: "Advanced - Non-Amplenote Hosted Images", value: "nonamplenote-images" },
+                { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
+                { label: "Advanced - Links", value: "links" }
               ]
             }
           ]
@@ -47,10 +51,10 @@
       }
 
       // Ensure at least one tag and an object type is selected
-      if (!tagNamesOr && !tagNamesAnd) {
-        app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
-        return;
-      }
+      // if (!tagNamesOr && !tagNamesAnd) {
+        // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+        // return;
+      // }
       if (!objectType) {
         app.alert("Note: Select any one of the Object type");
         return;
@@ -96,62 +100,68 @@
 		  const markdown = await app.getNoteContent({ uuid: noteUUID });
 		  // console.log(`Markdown content for note ${noteUUID}:`, markdown);
 
-		// Extract attachments using regex
-		const attachmentRegex = /\[([^\]]+)\]\((attachment:\/\/.*?)\)/g;
-		const attachments = [...markdown.matchAll(attachmentRegex)].map(match => {
-			const name = match[1]; // The document name extracted from the brackets
-			const url = match[2];  // The attachment URL
-			const format = name.split('.').pop().replace(/[^a-zA-Z0-9]/g, ''); // Remove symbols from the file format
+			// Extract attachments using regex
+			const attachmentRegex = /\[([^\]]+)\]\((attachment:\/\/.*?)\)/g;
+			const attachments = [...markdown.matchAll(attachmentRegex)].map(match => ({
+				// note: `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`,
+				// tags: note.tags,
+				name: match[1], // The document name extracted from the brackets
+				url: match[2],  // The attachment URL
+				format: match[1].split('.').pop().replace(/[^a-zA-Z0-9]/g, '') // Remove symbols from the file format
+			}));
 
-			return {
-				name: name,
-				url: url,
-				format: format
-			};
-		});
+			console.log(`Attachments for note ${noteUUID}:`, attachments);
 
-		console.log(`Attachments for note ${noteUUID}:`, attachments);
+			// Extract AmpleNote image links
+			const ampleNoteImageRegex = /!\[\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
+			const ampleNoteImages = [...markdown.matchAll(ampleNoteImageRegex)].map(match => ({
+				// note: `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`,
+				// tags: note.tags,
+				url: match[1], // The image URL
+				format: match[1].split('.').pop() // The file format after the last dot
+			}));
+			console.log(`AmpleNote images for note ${noteUUID}:`, ampleNoteImages);
 
-		// Extract AmpleNote image links
-		const ampleNoteImageRegex = /!\[\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
-		const ampleNoteImages = [...markdown.matchAll(ampleNoteImageRegex)].map(match => ({
-			url: match[1], // The image URL
-			format: match[1].split('.').pop() // The file format after the last dot
-		}));
-		console.log(`AmpleNote images for note ${noteUUID}:`, ampleNoteImages);
+			// Extract non-AmpleNote image links
+			const nonAmpleNoteImageRegex = /!\[.*?\]\((?!https:\/\/images\.amplenote\.com\/)(.*?)\)/g;
+			const nonAmpleNoteImages = [...markdown.matchAll(nonAmpleNoteImageRegex)].map(match => ({
+				// note: `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`,
+				// tags: note.tags,
+				url: match[1], // The image URL
+				format: match[1].split('.').pop() // The file format after the last dot
+			}));
+			console.log(`Non-AmpleNote images for note ${noteUUID}:`, nonAmpleNoteImages);
 
-		// Extract non-AmpleNote image links
-		const nonAmpleNoteImageRegex = /!\[.*?\]\((?!https:\/\/images\.amplenote\.com\/)(.*?)\)/g;
-		const nonAmpleNoteImages = [...markdown.matchAll(nonAmpleNoteImageRegex)].map(match => ({
-			url: match[1], // The image URL
-			format: match[1].split('.').pop() // The file format after the last dot
-		}));
-		console.log(`Non-AmpleNote images for note ${noteUUID}:`, nonAmpleNoteImages);
+			// Extract AmpleNote video links
+			const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
+			const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
+				// note: `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`,
+				// tags: note.tags,
+				name: match[1], // The name inside the brackets
+				url: match[2],  // The video URL
+				format: match[2].split('.').pop() // The file format after the last dot
+			}));
 
-		// Extract AmpleNote video links
-		const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
-		const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
-			name: match[1], // The name inside the brackets
-			url: match[2],  // The video URL
-			format: match[2].split('.').pop() // The file format after the last dot
-		}));
+			console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
 
-		console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+			// Extract links excluding AmpleNote links, attachments, and images
+			const linkRegex = /\[([^\]]+)\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
+			const links = [...markdown.matchAll(linkRegex)].map(match => ({
+				// note: `[${note.name}](https://www.amplenote.com/notes/${note.uuid})`,
+				// tags: note.tags,
+				name: match[1], // The text inside the brackets
+				url: match[2]   // The URL inside the parentheses
+			}));
 
-		// Extract links excluding AmpleNote links, attachments, and images
-		const linkRegex = /\[([^\]]+)\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
-		const links = [...markdown.matchAll(linkRegex)].map(match => ({
-			name: match[1], // The text inside the brackets
-			url: match[2]   // The URL inside the parentheses
-		}));
+			console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
 
-		console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+			// Extract Attachments details
+			const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
+			console.log("attachmentsAPI:", attachmentsAPI);
 
-		  // const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
-		  // console.log("attachmentsAPI:", attachmentsAPI);
-		  // const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
-		  // console.log("imagesAPI:", imagesAPI);
-
+			// Extract AmpleNote image links
+			const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
+			console.log("imagesAPI:", imagesAPI);
 
 		}
 
@@ -211,10 +221,10 @@
       }
 
       // Ensure tags and formatting are selected
-      if (!tagNamesOr && !tagNamesAnd) {
-        app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
-        return;
-      }
+      // if (!tagNamesOr && !tagNamesAnd) {
+        // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+        // return;
+      // }
       if (!objectType || !listFormat) {
         app.alert("Note: Select any one of the Object type and Formatting");
         return;
@@ -306,10 +316,10 @@
       }
 
       // Validate input
-      if (!tagNamesOr && !tagNamesAnd) {
-        app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
-        return;
-      }
+      // if (!tagNamesOr && !tagNamesAnd) {
+        // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+        // return;
+      // }
       if (!objectType || !dwFormat) {
         app.alert("Note: Select any one of the Object type and Download Format");
         return;
