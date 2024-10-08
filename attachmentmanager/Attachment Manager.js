@@ -110,15 +110,15 @@
 
 	const introLines = `
 # Welcome to your Attachment Manager: Report.
-Here you can find the count of \`(1) All Attachments [Through API], (2) Attachments [Through MD Format], (3) All Images [Through API], (4) Amplenote Images [Images hosted by Amplenote], (5) Non-Amplenote Hosted Images [Images hosted in the Web], (6) Amplenote Videos [Videos hosted by Amplenote], (7) Links [Normal Non-Amplenote links].\`
+Here you can find the count of \`(1) Attachments [Through API], (2) All Images [Through API], (3) Amplenote Images [Images hosted by Amplenote], (4) Non-Amplenote Hosted Images [Images hosted in the Web], (5) Amplenote Videos [Videos hosted by Amplenote], (6) Links [Normal Non-Amplenote links].\`
 ${horizontalLine}
 `;
 
 	// Initialize the markdown table format
 	let markdownReport = `${introLines}`;
-	markdownReport += "| Note 🔗 | Tags 🏷️ | All Attachments 📃 | Attachments 📄 | All Images 🖼️ | Amplenote Images ☁️ | Non-Amplenote Images 🌐 | Amplenote Videos 🎞️ | Links 🔗 |\n";
+	markdownReport += "| Note 🔗 | Tags 🏷️ | Attachments 📃 | Images 🖼️ | Amplenote Images ☁️ | Non-Amplenote Images 🌐 | Amplenote Videos 🎞️ | Links 🔗 |\n";
 	markdownReport += "|------|------|-----------------|-------------|------------|------------------|----------------------|------------------|-------|\n";
-	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
+	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
 	// console.log("Initial markdownReport:", markdownReport);
 
@@ -136,36 +136,21 @@ ${horizontalLine}
 		const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
 		// console.log("attachmentsAPI:", attachmentsAPI);
 
-		// Extract attachments using regex
-		const attachmentRegex = /\[([^\]]+)\]\((attachment:\/\/.*?)\)/g;
-		const attachments = [...markdown.matchAll(attachmentRegex)].map(match => ({
-		  name: match[1],  // Document name
-		  url: match[2],   // Attachment URL
-		  format: match[1].split('.').pop().replace(/[^a-zA-Z0-9]/g, '')  // File format
-		}));
-		// console.log(`Attachments for note ${noteUUID}:`, attachments);
-
 		// Extract AmpleNote image links via API and regex
 		const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
 		// console.log("imagesAPI:", imagesAPI);
 
-		const ampleNoteImageRegex = /!\[\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
-		const ampleNoteImages = [...markdown.matchAll(ampleNoteImageRegex)].map(match => ({
-		  url: match[1],  // Image URL
-		  format: match[1].split('.').pop()  // File format
-		}));
-		// console.log(`AmpleNote images for note ${noteUUID}:`, ampleNoteImages);
+		// Filter images that are hosted on AmpleNote
+		const ampleNoteImages = imagesAPI.filter(image => image.src.startsWith("https://images.amplenote.com/"));
+		// console.log("Images hosted on AmpleNote:", ampleNoteImages);
 
-		// Extract non-AmpleNote image links using regex
-		const nonAmpleNoteImageRegex = /!\[.*?\]\((?!https:\/\/images\.amplenote\.com\/)(.*?)\)/g;
-		const nonAmpleNoteImages = [...markdown.matchAll(nonAmpleNoteImageRegex)].map(match => ({
-		  url: match[1],  // Image URL
-		  format: match[1].split('.').pop()  // File format
-		}));
-		// console.log(`Non-AmpleNote images for note ${noteUUID}:`, nonAmpleNoteImages);
+		// Filter images that are not hosted on AmpleNote
+		const nonAmpleNoteImages = imagesAPI.filter(image => !image.src.startsWith("https://images.amplenote.com/"));
+		// console.log("Images not hosted on AmpleNote:", nonAmpleNoteImages);
 
 		// Extract AmpleNote video links
-		const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
+		// const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
+		const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
 		const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
 		  name: match[1],  // Video name
 		  url: match[2],   // Video URL
@@ -182,8 +167,8 @@ ${horizontalLine}
 		// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
 
 		// Add extracted data to the markdown report
-		if (attachmentsAPI.length > 0 || attachments.length > 0 || imagesAPI.length > 0 || ampleNoteImages.length > 0 || nonAmpleNoteImages.length > 0 || ampleNoteVideos.length > 0 || links.length > 0) {
-		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(attachmentsAPI.length === 0 ? ' - ' : attachmentsAPI.length)} | ${(attachments.length === 0 ? ' - ' : attachments.length)} | ${(imagesAPI.length === 0 ? ' - ' : imagesAPI.length)} | ${(ampleNoteImages.length === 0 ? ' - ' : ampleNoteImages.length)} | ${(nonAmpleNoteImages.length === 0 ? ' - ' : nonAmpleNoteImages.length)} | ${(ampleNoteVideos.length === 0 ? ' - ' : ampleNoteVideos.length)} | ${(links.length === 0 ? ' - ' : links.length)} |\n`;
+		if (attachmentsAPI.length > 0 || imagesAPI.length > 0 || ampleNoteImages.length > 0 || nonAmpleNoteImages.length > 0 || ampleNoteVideos.length > 0 || links.length > 0) {
+		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(attachmentsAPI.length === 0 ? ' - ' : attachmentsAPI.length)} | ${(imagesAPI.length === 0 ? ' - ' : imagesAPI.length)} | ${(ampleNoteImages.length === 0 ? ' - ' : ampleNoteImages.length)} | ${(nonAmpleNoteImages.length === 0 ? ' - ' : nonAmpleNoteImages.length)} | ${(ampleNoteVideos.length === 0 ? ' - ' : ampleNoteVideos.length)} | ${(links.length === 0 ? ' - ' : links.length)} |\n`;
 		  // console.log("Updated markdownReport:", markdownReport);
 		}
 	  } catch (err) {
@@ -195,7 +180,7 @@ ${horizontalLine}
 	}
 
 	// Add final total sums to the markdown report
-	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
+	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
 	// console.log("Final markdownReport with total sums:", markdownReport);
 
 	// Initialize variables for processing results
