@@ -23,26 +23,13 @@
               type: "tags",
               limit: 10,
               placeholder: "Enter tag/'s' (Max 10)"
-            },
-            {
-              label: "Select the Object Type",
-              type: "select",
-              options: [
-                { label: "Basic - All Attachments", value: "all-attachments" },
-                { label: "Basic - All Images", value: "all-images" },
-                { label: "Advanced - All Attachments", value: "attachments" },
-                { label: "Advanced - Amplenote Hosted Images", value: "amplenote-images" },
-                { label: "Advanced - Non-Amplenote Hosted Images", value: "nonamplenote-images" },
-                { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
-                { label: "Advanced - Links", value: "links" }
-              ]
             }
           ]
         }
       );
 
       // Destructure the user input from the result
-      const [tagNamesOr, tagNamesAnd, objectType] = result;
+      const [tagNamesOr, tagNamesAnd] = result;
 	  console.log("result:", result);
 
       if (!result) {
@@ -55,10 +42,6 @@
         // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
         // return;
       // }
-      if (!objectType) {
-        app.alert("Note: Select any one of the Object type");
-        return;
-      }
 
       // Initialize empty arrays for storing notes and filtered notes
       let notes = [];
@@ -90,15 +73,36 @@
       notes = filteredNotes;
 	  console.log("notes:", notes);
 
-      // Initialize variables for processing results
-      let results = [];
-      let finalResults = "";
+    // Define horizontal line and introductory text for the markdown document
+    const horizontalLine = `
+
+---
+
+`;
+
+    const introLines = `
+# Welcome to your Attachment Manager: Report.
+Here you can find the count of \`(1) All Attachments [Through API], (2) Attachments [Through MD Format], (3) All Images [Through API], (4) Amplenote Images [Images hosted by Amplenote], (5) Non Amplenote Hosted Images [Images hosted in the Web], (6) Amplenote Videos [Videos hosted by Amplenote], (7) Links [Normal Non-Amplenote links].\`
+${horizontalLine}
+`;
+
+    // Initialize the markdown table format
+    let markdownReport = `${introLines}`;
+    markdownReport += "| Note 🔗 | Tags 🏷️ | All Attachments 📃 | Attachments 📄 | All Images 🖼️ | Amplenote Images ☁️ | Non-Amplenote Images 🌐 | Amplenote Videos 🎞️ | Links 🔗 |\n";
+    markdownReport += "|------|------|-----------------|-------------|------------|------------------|----------------------|------------------|-------|\n";
+	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";;
+
 
 		// Loop through each note and extract content
 		for (const note of notes) {
+        try {
 		  const noteUUID = note.uuid;
 		  const markdown = await app.getNoteContent({ uuid: noteUUID });
-		  // console.log(`Markdown content for note ${noteUUID}:`, markdown);
+		  console.log(`Markdown content for note ${noteUUID}:`, markdown);
+
+			// Extract Attachments details
+			const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
+			console.log("attachmentsAPI:", attachmentsAPI);
 
 			// Extract attachments using regex
 			const attachmentRegex = /\[([^\]]+)\]\((attachment:\/\/.*?)\)/g;
@@ -111,6 +115,10 @@
 			}));
 
 			console.log(`Attachments for note ${noteUUID}:`, attachments);
+
+			// Extract AmpleNote image links
+			const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
+			console.log("imagesAPI:", imagesAPI);
 
 			// Extract AmpleNote image links
 			const ampleNoteImageRegex = /!\[\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
@@ -154,17 +162,43 @@
 			}));
 
 			console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+		
+			if (attachmentsAPI.length > 0 || attachments.length > 0 || imagesAPI.length > 0 || ampleNoteImages.length > 0 || nonAmpleNoteImages.length > 0 || ampleNoteVideos.length > 0 || links.length > 0) {
+				markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(attachmentsAPI.length === 0 ? ' - ' : attachmentsAPI.length)} | ${(attachments.length === 0 ? ' - ' : attachments.length)} | ${(imagesAPI.length === 0 ? ' - ' : imagesAPI.length)} | ${(ampleNoteImages.length === 0 ? ' - ' : ampleNoteImages.length)} | ${(nonAmpleNoteImages.length === 0 ? ' - ' : nonAmpleNoteImages.length)} | ${(ampleNoteVideos.length === 0 ? ' - ' : ampleNoteVideos.length)} | ${(links.length === 0 ? ' - ' : links.length)} |\n`;
+			}
 
-			// Extract Attachments details
-			const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
-			console.log("attachmentsAPI:", attachmentsAPI);
-
-			// Extract AmpleNote image links
-			const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
-			console.log("imagesAPI:", imagesAPI);
+        } catch (err) {
+            if (err instanceof TypeError) {
+                continue; // Skip notes with errors
+            }
+        }
 
 		}
 
+		// Add counts
+		markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";;
+
+      // Initialize variables for processing results
+      let finalResults = markdownReport;
+
+    // Function to get current date and time formatted as YYMMDD_HHMMSS
+    function getCurrentDateTime() {
+        const now = new Date();
+
+        // Format the date and time as per requirement
+        const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+        const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+
+        return { YYMMDD, HHMMSS };
+    }
+
+    // Generate a new note with the results
+    const { YYMMDD, HHMMSS } = getCurrentDateTime();
+    const newNoteName = `Attachment Manager: Report ${YYMMDD}_${HHMMSS}`;
+    const newTagName = ['-reports/-attachment-manager'];
+    let noteUUID = await app.createNote(newNoteName, newTagName);
+    await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
+	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
 
     },
 
@@ -195,9 +229,13 @@
               label: "Select the Object Type",
               type: "select",
               options: [
-                { label: "Attachments", value: "attachments" },
-                { label: "Links", value: "links" },
-                { label: "Images", value: "images" }
+                { label: "Basic - All Attachments", value: "all-attachments" },
+                { label: "Basic - All Images", value: "all-images" },
+                { label: "Advanced - All Attachments", value: "attachments" },
+                { label: "Advanced - Amplenote Hosted Images", value: "amplenote-images" },
+                { label: "Advanced - Non-Amplenote Hosted Images", value: "nonamplenote-images" },
+                { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
+                { label: "Advanced - Links", value: "links" }
               ]
             },
             {
@@ -288,9 +326,13 @@
               label: "Select the Object Type",
               type: "select",
               options: [
-                { label: "Attachments", value: "attachments" },
-                { label: "Links", value: "links" },
-                { label: "Images", value: "images" }
+                { label: "Basic - All Attachments", value: "all-attachments" },
+                { label: "Basic - All Images", value: "all-images" },
+                { label: "Advanced - All Attachments", value: "attachments" },
+                { label: "Advanced - Amplenote Hosted Images", value: "amplenote-images" },
+                { label: "Advanced - Non-Amplenote Hosted Images", value: "nonamplenote-images" },
+                { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
+                { label: "Advanced - Links", value: "links" }
               ]
             },
             {
