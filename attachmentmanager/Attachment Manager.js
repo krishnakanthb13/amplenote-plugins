@@ -23,7 +23,17 @@
 			type: "tags",
 			limit: 10,
 			placeholder: "Enter tag/'s' (Max 10)"
-		  }
+		  },
+            {
+              label: "Select the Object Type (Mandatory)",
+              type: "select",
+              options: [
+                { label: "Basic - All MD []() Formats", value: "basic" },
+                { label: "Advanced - Attachments", value: "attachments" },
+                { label: "Advanced - Images", value: "amplenote-images" },
+                { label: "Advanced - Videos", value: "amplenote-videos" }
+              ]
+            }
 		]
 	  }
 	);
@@ -32,7 +42,7 @@
 	// console.log("User input result:", result);
 
 	// Destructure the user input from the result array
-	const [tagNamesOr, tagNamesAnd] = result;
+	const [tagNamesOr, tagNamesAnd, objectType] = result;
 	// console.log("tagNamesOr:", tagNamesOr);
 	// console.log("tagNamesAnd:", tagNamesAnd);
 
@@ -41,6 +51,12 @@
 	  app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
 	  return;
 	}
+
+    // Ensure tags and formatting are selected
+    if (!objectType) {
+      app.alert("Note: Select any one of the Object type and Formatting");
+      return;
+    }
 
 	// Initialize empty arrays for storing notes and filtered notes
 	let notes = [];
@@ -102,22 +118,31 @@
 	// console.log("Final notes array:", notes);
 
 	// Define horizontal line and introductory text for the markdown document
+	let markdownReport;
 	const horizontalLine = `
 
 ---
 
 `;
 
+	// ---------------------------------------------------------- //
+
+	if (objectType === "basic") {
+
 	const introLines = `
-# Welcome to your Attachment Manager: Report.
-Here you can find the count of \`(1) Attachments [Through API], (2) All Images [Through API], (3) Amplenote Images [Images hosted by Amplenote], (4) Non-Amplenote Hosted Images [Images hosted in the Web], (5) Amplenote Videos [Videos hosted by Amplenote], (6) Links [Normal Non-Amplenote links].\`
+# Welcome to your Attachment Manager: Report (Basic). <!-- {"collapsed":true} -->
+Here you can find the count of 
+- (1) \`Attachments [Through API]\`, 
+- (2) \`All Images [Through API]\`, (3) \`Amplenote Images [Images hosted by Amplenote]\`, (4) \`Non-Amplenote Hosted Images [Images hosted in the Web]\`, 
+- (5) \`Amplenote Videos [Videos hosted by Amplenote]\`, 
+- (6) \`Links [Normal Non-Amplenote links].\`
 ${horizontalLine}
 `;
 
 	// Initialize the markdown table format
-	let markdownReport = `${introLines}`;
+	markdownReport = `${introLines}`;
 	markdownReport += "| Note 🔗 | Tags 🏷️ | Attachments 📃 | Images 🖼️ | Amplenote Images ☁️ | Non-Amplenote Images 🌐 | Amplenote Videos 🎞️ | Links 🔗 |\n";
-	markdownReport += "|------|------|-----------------|-------------|------------|------------------|----------------------|------------------|-------|\n";
+	markdownReport += "|---------|---------|---------------|-----------|---------------------|------------------------|---------------------|----------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
 	// console.log("Initial markdownReport:", markdownReport);
@@ -182,6 +207,149 @@ ${horizontalLine}
 	// Add final total sums to the markdown report
 	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
 	// console.log("Final markdownReport with total sums:", markdownReport);
+	
+	} // End for if - basic
+
+	// ---------------------------------------------------------- //
+
+	if (objectType === "attachments") {
+
+	const introLines = `
+# Welcome to your Attachment Manager: Report (Advanced - Attachments). <!-- {"collapsed":true} -->
+Here you can find the count of:
+- **\`.xlsx\`** 🟩 | **\`.xls\`** 🟩 — Excel Spreadsheet files, commonly used for storing data in tabular form, calculations, charts, and pivot tables.
+- **\`.docx\`** 🟦 | **\`.doc\`** 🟦 — Microsoft Word documents, frequently used for creating text documents with formatting, images, and other media.
+- **\`.pptx\`** 🟧 | **\`.ppt\`** 🟧 — PowerPoint presentations, used for creating slide shows with text, images, and multimedia elements.
+- **\`.pdf\`** 🟠 — Portable Document Format, a widely-used format for presenting documents that appear the same across different devices.
+${horizontalLine}
+`;
+
+	// Initialize the markdown table format
+	markdownReport = `${introLines}`;
+	markdownReport += "| Note 🔗 | Tags 🏷️ | .xlsx 🟩 | .xls 🟩 | .docx 🟦 | .doc 🟦 | .pptx 🟧 | .ppt 🟧 | .pdf 🟠 |\n";
+	markdownReport += "|---------|---------|----------|---------|----------|--------|----------|---------|---------|\n";
+	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
+
+	// console.log("Initial markdownReport:", markdownReport);
+
+	// Loop through each note and extract content
+	for (const note of notes) {
+	  try {
+		const noteUUID = note.uuid;
+		// console.log(`Processing note with UUID: ${noteUUID}`);
+
+		// Extract attachments via API
+		const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
+		// console.log("attachmentsAPI:", attachmentsAPI);
+		
+		// Filter attachments based on their file extensions
+		const attachmentsAPIxlsx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".xlsx"));
+		const attachmentsAPIxls = attachmentsAPI.filter(attachment => attachment.name.endsWith(".xls"));
+		const attachmentsAPIdocx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".docx"));
+		const attachmentsAPIdoc = attachmentsAPI.filter(attachment => attachment.name.endsWith(".doc"));
+		const attachmentsAPIpptx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".pptx"));
+		const attachmentsAPIppt = attachmentsAPI.filter(attachment => attachment.name.endsWith(".ppt"));
+		const attachmentsAPIpdf = attachmentsAPI.filter(attachment => attachment.name.endsWith(".pdf"));
+
+		// Add extracted data to the markdown report
+		if (attachmentsAPIxlsx.length > 0 || attachmentsAPIxls.length > 0 || attachmentsAPIdocx.length > 0 || attachmentsAPIdoc.length > 0 || attachmentsAPIpptx.length > 0 || attachmentsAPIppt.length > 0 || attachmentsAPIpdf.length > 0) {
+		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(attachmentsAPIxlsx.length === 0 ? ' - ' : attachmentsAPIxlsx.length)} | ${(attachmentsAPIxls.length === 0 ? ' - ' : attachmentsAPIxls.length)} | ${(attachmentsAPIdocx.length === 0 ? ' - ' : attachmentsAPIdocx.length)} | ${(attachmentsAPIdoc.length === 0 ? ' - ' : attachmentsAPIdoc.length)} | ${(attachmentsAPIpptx.length === 0 ? ' - ' : attachmentsAPIpptx.length)} | ${(attachmentsAPIppt.length === 0 ? ' - ' : attachmentsAPIppt.length)} | ${(attachmentsAPIpdf.length === 0 ? ' - ' : attachmentsAPIpdf.length)} |\n`;
+		  // console.log("Updated markdownReport:", markdownReport);
+		}
+	  } catch (err) {
+		if (err instanceof TypeError) {
+		  console.warn(`Error processing note ${note.uuid}. Skipping this note.`);
+		  continue;  // Skip notes with errors
+		}
+	  }
+	}
+
+	// Add final total sums to the markdown report
+	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
+	// console.log("Final markdownReport with total sums:", markdownReport);
+	
+	} // End for if - attachments
+
+	// ---------------------------------------------------------- //
+
+	if (objectType === "amplenote-images") {
+
+	const introLines = `
+# Welcome to your Attachment Manager: Report (Advanced - Images). <!-- {"collapsed":true} -->
+Here you can find the most common image extensions:
+- **\`.jpg\`** 🖼️ | **\`.jpeg\`** 🖼️ — JPEG image files, commonly used for photographs and web images, providing good compression with decent quality.
+- **\`.png\`** 🖼️ — PNG image files, often used for web graphics and images requiring transparency, with lossless compression.
+- **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
+- **\`.bmp\`** 🖼️ — BMP files, uncompressed and typically large, used for storing high-quality images in older systems.
+- **\`.tiff\`** 🖼️ | **\`.tif\`** 🖼️ — TIFF files, used for high-quality graphics and photography, supporting lossless compression.
+- **\`.webp\`** 🖼️ — WEBP files, a modern format for web images, offering smaller file sizes with both lossy and lossless compression.
+- **\`.svg\`** 🖌️ — SVG files, vector-based images used for logos, icons, and scalable illustrations.
+- **\`.ico\`** 🖼️ — ICO files, used for icons, especially in applications and website favicons.
+${horizontalLine}
+`;
+
+	// Initialize the markdown table format
+	markdownReport = `${introLines}`;
+	markdownReport += "| Note 🔗 | Tags 🏷️ | .jpg/.jpeg | .png | .gif | .bmp | .tiff/.tif | .webp | .svg | .ico | Others |\n";
+	markdownReport += "|---------|---------|------------|------|------|------|------------|-------|------|------|--------|\n";
+	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
+
+	// console.log("Initial markdownReport:", markdownReport);
+
+	// Loop through each note and extract content
+	for (const note of notes) {
+	  try {
+		const noteUUID = note.uuid;
+		// console.log(`Processing note with UUID: ${noteUUID}`);
+
+		// Extract AmpleNote image links via API and regex
+		const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
+		// console.log("imagesAPI:", imagesAPI);
+		
+		// Filter for common image extensions
+		const imagesAPIjpg = imagesAPI.filter(image => image.src.endsWith(".jpg") || image.src.endsWith(".jpeg"));
+		const imagesAPIpng = imagesAPI.filter(image => image.src.endsWith(".png"));
+		const imagesAPIgif = imagesAPI.filter(image => image.src.endsWith(".gif"));
+		const imagesAPIbmp = imagesAPI.filter(image => image.src.endsWith(".bmp"));
+		const imagesAPItiff = imagesAPI.filter(image => image.src.endsWith(".tiff") || image.src.endsWith(".tif"));
+		const imagesAPIwebp = imagesAPI.filter(image => image.src.endsWith(".webp"));
+		const imagesAPIsvg = imagesAPI.filter(image => image.src.endsWith(".svg"));
+		const imagesAPIico = imagesAPI.filter(image => image.src.endsWith(".ico"));
+
+		// Filter for unmatched records (images with extensions that don't match any of the above)
+		const imagesAPINonMatched = imagesAPI.filter(image => {
+			return !image.src.endsWith(".jpg") &&
+				   !image.src.endsWith(".jpeg") &&
+				   !image.src.endsWith(".png") &&
+				   !image.src.endsWith(".gif") &&
+				   !image.src.endsWith(".bmp") &&
+				   !image.src.endsWith(".tiff") &&
+				   !image.src.endsWith(".tif") &&
+				   !image.src.endsWith(".webp") &&
+				   !image.src.endsWith(".svg") &&
+				   !image.src.endsWith(".ico");
+		});
+
+		// Add extracted data to the markdown report
+		if (imagesAPIjpg.length > 0 || imagesAPIpng.length > 0 || imagesAPIgif.length > 0 || imagesAPIbmp.length > 0 || imagesAPItiff.length > 0 || imagesAPIwebp.length > 0 || imagesAPIsvg.length > 0 || imagesAPIico.length > 0 || imagesAPINonMatched.length > 0) {
+		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(imagesAPIjpg.length === 0 ? ' - ' : imagesAPIjpg.length)} | ${(imagesAPIpng.length === 0 ? ' - ' : imagesAPIpng.length)} | ${(imagesAPIgif.length === 0 ? ' - ' : imagesAPIgif.length)} | ${(imagesAPIbmp.length === 0 ? ' - ' : imagesAPIbmp.length)} | ${(imagesAPItiff.length === 0 ? ' - ' : imagesAPItiff.length)} | ${(imagesAPIwebp.length === 0 ? ' - ' : imagesAPIwebp.length)} | ${(imagesAPIsvg.length === 0 ? ' - ' : imagesAPIsvg.length)} | ${(imagesAPIico.length === 0 ? ' - ' : imagesAPIico.length)} | ${(imagesAPINonMatched.length === 0 ? ' - ' : imagesAPINonMatched.length)} |\n`;
+		  // console.log("Updated markdownReport:", markdownReport);
+		}
+	  } catch (err) {
+		if (err instanceof TypeError) {
+		  console.warn(`Error processing note ${note.uuid}. Skipping this note.`);
+		  continue;  // Skip notes with errors
+		}
+	  }
+	}
+
+	// Add final total sums to the markdown report
+	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
+	// console.log("Final markdownReport with total sums:", markdownReport);
+	
+	} // End for if - amplenote-images
+
+	// ---------------------------------------------------------- //
 
 	// Initialize variables for processing results
 	let finalResults = markdownReport;
