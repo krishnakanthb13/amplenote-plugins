@@ -24,16 +24,16 @@
 			limit: 10,
 			placeholder: "Enter tag/'s' (Max 10)"
 		  },
-            {
-              label: "Select the Object Type (Mandatory)",
-              type: "select",
-              options: [
-                { label: "Basic - All MD []() Formats", value: "basic" },
-                { label: "Advanced - Attachments", value: "attachments" },
-                { label: "Advanced - Images", value: "amplenote-images" },
-                { label: "Advanced - Videos", value: "amplenote-videos" }
-              ]
-            }
+          {
+            label: "Select the Object Type (Mandatory)",
+            type: "select",
+            options: [
+              { label: "Basic - All MD []() Formats", value: "basic" },
+              { label: "Advanced - Attachments", value: "attachments" },
+              { label: "Advanced - Images", value: "amplenote-images" },
+              { label: "Advanced - Videos", value: "amplenote-videos" }
+            ]
+          }
 		]
 	  }
 	);
@@ -461,7 +461,8 @@ ${horizontalLine}
      * Output: Filtered and formatted notes + objects.
      */
     "List": async function (app) {
-      const result = await app.prompt(
+	// Prompt the user for tags and object type input
+    const result = await app.prompt(
         "Select Details on which you want to Report on.",
         {
           inputs: [
@@ -502,53 +503,133 @@ ${horizontalLine}
         }
       );
 
-      // Destructure the input for OR/AND tags, object type, and list format
-      const [tagNamesOr, tagNamesAnd, objectType, listFormat] = result;
+	// Log the user input (result)
+	// console.log("User input result:", result);
 
-      if (!result) {
-          app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
-          return;
-      }
+    // Destructure the input for OR/AND tags, object type, and list format
+    const [tagNamesOr, tagNamesAnd, objectType, listFormat] = result;
+	// console.log("tagNamesOr:", tagNamesOr);
+	// console.log("tagNamesAnd:", tagNamesAnd);
 
-      // Ensure tags and formatting are selected
-      // if (!tagNamesOr && !tagNamesAnd) {
-        // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
-        // return;
-      // }
-      if (!objectType || !listFormat) {
-        app.alert("Note: Select any one of the Object type and Formatting");
-        return;
-      }
+	// Handle cancellation scenario
+	if (!result) {
+	  app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+	  return;
+	}
 
-      // Initialize notes and filteredNotes arrays
-      let notes = [];
-      const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
-      let filteredNotes = [];
+    // Ensure tags and formatting are selected
+    // if (!tagNamesOr && !tagNamesAnd) {
+      // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+      // return;
+    // }
+    if (!objectType || !listFormat) {
+      app.alert("Note: Select any one of the Object type and Formatting");
+      return;
+    }
 
-      // Filter logic for OR and AND tags
-      if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
-        if (Array.isArray(tagsArray) && tagsArray.length > 0) {
-          for (const tag of tagsArray) {
-            const notesByTag = await app.filterNotes({ tag: tag });
-            filteredNotes = [...filteredNotes, ...notesByTag];
-          }
-        }
-        if (tagNamesAnd) {
-          const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
-          filteredNotes = [...filteredNotes, ...notesByGroup];
-        }
-      } else {
-        const notesByGroup = await app.filterNotes({ group: "^vault" });
-        filteredNotes = [...filteredNotes, ...notesByGroup];
-      }
+	// Initialize empty arrays for storing notes and filtered notes
+	let notes = [];
+	// console.log("Initial notes array:", notes);
 
-      // Remove duplicate notes and assign to final array
-      filteredNotes = [...new Set(filteredNotes)];
-      notes = filteredNotes;
+	const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
+	// console.log("tagsArray (from tagNamesOr):", tagsArray);
 
-      // Placeholder for further processing
-      let results = [];
-      let finalResults = "";
+	let filteredNotes = [];
+	// console.log("Initial filteredNotes array:", filteredNotes);
+
+	// Filtering logic based on tags [OR] and [AND]
+	if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+	  // Filter notes by OR tags (separate search for each tag)
+	  if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+		for (const tag of tagsArray) {
+		  const notesByTag = await app.filterNotes({ tag: tag });
+		  // console.log(`Notes filtered by tag "${tag}":`, notesByTag);
+		  filteredNotes = [...filteredNotes, ...notesByTag];
+		  // console.log("filteredNotes after OR filter:", filteredNotes);
+		}
+	  }
+
+	  // Filter notes by AND tags (combined search for all tags)
+	  if (tagNamesAnd) {
+		const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+		// console.log("Notes filtered by AND tags:", notesByGroup);
+		filteredNotes = [...filteredNotes, ...notesByGroup];
+		// console.log("filteredNotes after AND filter:", filteredNotes);
+	  }
+	} else {
+	  // Default filter if no tags are provided
+	  const notesByGroup = await app.filterNotes({ group: "^vault" });
+	  // console.log("Notes filtered by default group (^vault):", notesByGroup);
+	  filteredNotes = [...filteredNotes, ...notesByGroup];
+	  // console.log("filteredNotes after default group filter:", filteredNotes);
+	}
+
+	// Remove duplicate notes
+	filteredNotes = [...new Set(filteredNotes)];
+	// console.log("filteredNotes after removing duplicates:", filteredNotes);
+
+	// Sort the filtered notes by note name in ascending order
+	filteredNotes.sort((a, b) => {
+	  const nameA = (a.name || "").toUpperCase(); // Convert to uppercase to ensure case-insensitive sorting
+	  const nameB = (b.name || "").toUpperCase();
+	  if (nameA < nameB) {
+		return -1;
+	  }
+	  if (nameA > nameB) {
+		return 1;
+	  }
+	  return 0; // Names are equal
+	});
+
+	// console.log("filteredNotes after sorting by name:", filteredNotes);
+
+	notes = filteredNotes;
+	// console.log("Final notes array:", notes);
+
+	// Define horizontal line and introductory text for the markdown document
+	let markdownReport;
+	const horizontalLine = `
+
+---
+
+`;
+	// ---------------------------------------------------------- //
+	// ---------------------------------------------------------- //
+
+	// Initialize variables for processing results
+	let finalResults = markdownReport;
+	// console.log("Final results for the report:", finalResults);
+
+	// Function to get current date and time formatted as YYMMDD_HHMMSS
+	function getCurrentDateTime() {
+	  const now = new Date();
+
+	  // Format the date and time
+	  const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+	  const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+
+	  return { YYMMDD, HHMMSS };
+	}
+
+	// Generate a new note with the report results
+	const { YYMMDD, HHMMSS } = getCurrentDateTime();
+	// console.log("Generated date and time:", YYMMDD, HHMMSS);
+
+	const newNoteName = `Attachment Manager: List ${YYMMDD}_${HHMMSS}`;
+	// console.log("New note name:", newNoteName);
+
+	const newTagName = ['-reports/-attachment-manager'];
+	// console.log("New note tags:", newTagName);
+
+	let noteUUID = await app.createNote(newNoteName, newTagName);
+	// console.log("Created note UUID:", noteUUID);
+
+	await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
+	// console.log("Replaced note content with final results");
+
+	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+	// console.log("Navigated to the new note:", noteUUID);
+
     },
 
     // ********************************************************************************************************************* //
@@ -558,7 +639,8 @@ ${horizontalLine}
      * Output: Downloadable file in the selected format containing filtered notes + objects.
      */
     "Download": async function (app) {
-      const result = await app.prompt(
+	// Prompt the user for tags and object type input
+    const result = await app.prompt(
         "Select Details on which you want to Report on.",
         {
           inputs: [
@@ -584,7 +666,8 @@ ${horizontalLine}
                 { label: "Advanced - Amplenote Hosted Images", value: "amplenote-images" },
                 { label: "Advanced - Non-Amplenote Hosted Images", value: "nonamplenote-images" },
                 { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
-                { label: "Advanced - Links", value: "links" }
+                { label: "Advanced - Links", value: "links" },
+				{ label: "Raw Data - All the above Details", value: "everything" }
               ]
             },
             {
@@ -601,53 +684,133 @@ ${horizontalLine}
         }
       );
 
-      // Destructure the inputs for OR/AND tags, object type, and download format
-      const [tagNamesOr, tagNamesAnd, objectType, dwFormat] = result;
+	// Log the user input (result)
+	// console.log("User input result:", result);
 
-      if (!result) {
-          app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
-          return;
-      }
+    // Destructure the inputs for OR/AND tags, object type, and download format
+    const [tagNamesOr, tagNamesAnd, objectType, dwFormat] = result;
+	// console.log("tagNamesOr:", tagNamesOr);
+	// console.log("tagNamesAnd:", tagNamesAnd);
 
-      // Validate input
-      // if (!tagNamesOr && !tagNamesAnd) {
-        // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
-        // return;
-      // }
-      if (!objectType || !dwFormat) {
-        app.alert("Note: Select any one of the Object type and Download Format");
-        return;
-      }
+	// Handle cancellation scenario
+	if (!result) {
+	  app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+	  return;
+	}
 
-      // Initialize arrays for notes
-      let notes = [];
-      const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
-      let filteredNotes = [];
+    // Ensure tags and formatting are selected
+    // if (!tagNamesOr && !tagNamesAnd) {
+      // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+      // return;
+    // }
+    if (!objectType || !listFormat) {
+      app.alert("Note: Select any one of the Object type and Formatting");
+      return;
+    }
 
-      // Filter logic for OR and AND tags
-      if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
-        if (Array.isArray(tagsArray) && tagsArray.length > 0) {
-          for (const tag of tagsArray) {
-            const notesByTag = await app.filterNotes({ tag: tag });
-            filteredNotes = [...filteredNotes, ...notesByTag];
-          }
-        }
-        if (tagNamesAnd) {
-          const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
-          filteredNotes = [...filteredNotes, ...notesByGroup];
-        }
-      } else {
-        const notesByGroup = await app.filterNotes({ group: "^vault" });
-        filteredNotes = [...filteredNotes, ...notesByGroup];
-      }
+	// Initialize empty arrays for storing notes and filtered notes
+	let notes = [];
+	// console.log("Initial notes array:", notes);
 
-      // Remove duplicate notes and assign to final array
-      filteredNotes = [...new Set(filteredNotes)];
-      notes = filteredNotes;
+	const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
+	// console.log("tagsArray (from tagNamesOr):", tagsArray);
 
-      // Placeholder for further processing
-      let results = [];
-      let finalResults = "";
+	let filteredNotes = [];
+	// console.log("Initial filteredNotes array:", filteredNotes);
+
+	// Filtering logic based on tags [OR] and [AND]
+	if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+	  // Filter notes by OR tags (separate search for each tag)
+	  if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+		for (const tag of tagsArray) {
+		  const notesByTag = await app.filterNotes({ tag: tag });
+		  // console.log(`Notes filtered by tag "${tag}":`, notesByTag);
+		  filteredNotes = [...filteredNotes, ...notesByTag];
+		  // console.log("filteredNotes after OR filter:", filteredNotes);
+		}
+	  }
+
+	  // Filter notes by AND tags (combined search for all tags)
+	  if (tagNamesAnd) {
+		const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+		// console.log("Notes filtered by AND tags:", notesByGroup);
+		filteredNotes = [...filteredNotes, ...notesByGroup];
+		// console.log("filteredNotes after AND filter:", filteredNotes);
+	  }
+	} else {
+	  // Default filter if no tags are provided
+	  const notesByGroup = await app.filterNotes({ group: "^vault" });
+	  // console.log("Notes filtered by default group (^vault):", notesByGroup);
+	  filteredNotes = [...filteredNotes, ...notesByGroup];
+	  // console.log("filteredNotes after default group filter:", filteredNotes);
+	}
+
+	// Remove duplicate notes
+	filteredNotes = [...new Set(filteredNotes)];
+	// console.log("filteredNotes after removing duplicates:", filteredNotes);
+
+	// Sort the filtered notes by note name in ascending order
+	filteredNotes.sort((a, b) => {
+	  const nameA = (a.name || "").toUpperCase(); // Convert to uppercase to ensure case-insensitive sorting
+	  const nameB = (b.name || "").toUpperCase();
+	  if (nameA < nameB) {
+		return -1;
+	  }
+	  if (nameA > nameB) {
+		return 1;
+	  }
+	  return 0; // Names are equal
+	});
+
+	// console.log("filteredNotes after sorting by name:", filteredNotes);
+
+	notes = filteredNotes;
+	// console.log("Final notes array:", notes);
+
+	// Define horizontal line and introductory text for the markdown document
+	let markdownReport;
+	const horizontalLine = `
+
+---
+
+`;
+	// ---------------------------------------------------------- //
+	// ---------------------------------------------------------- //
+
+	// Initialize variables for processing results
+	let finalResults = markdownReport;
+	// console.log("Final results for the report:", finalResults);
+
+	// Function to get current date and time formatted as YYMMDD_HHMMSS
+	function getCurrentDateTime() {
+	  const now = new Date();
+
+	  // Format the date and time
+	  const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+	  const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+
+	  return { YYMMDD, HHMMSS };
+	}
+
+	// Generate a new note with the report results
+	const { YYMMDD, HHMMSS } = getCurrentDateTime();
+	// console.log("Generated date and time:", YYMMDD, HHMMSS);
+
+	const newNoteName = `Attachment Manager: List ${YYMMDD}_${HHMMSS}`;
+	// console.log("New note name:", newNoteName);
+
+	const newTagName = ['-reports/-attachment-manager'];
+	// console.log("New note tags:", newTagName);
+
+	let noteUUID = await app.createNote(newNoteName, newTagName);
+	// console.log("Created note UUID:", noteUUID);
+
+	await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
+	// console.log("Replaced note content with final results");
+
+	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+	// console.log("Navigated to the new note:", noteUUID);
+
     },
 
     // ********************************************************************************************************************* //
