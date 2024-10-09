@@ -281,18 +281,14 @@ Here you can find the most common image extensions:
 - **\`.png\`** 🖼️ — PNG image files, often used for web graphics and images requiring transparency, with lossless compression.
 - **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
 - **\`.bmp\`** 🖼️ — BMP files, uncompressed and typically large, used for storing high-quality images in older systems.
-- **\`.tiff\`** 🖼️ | **\`.tif\`** 🖼️ — TIFF files, used for high-quality graphics and photography, supporting lossless compression.
-- **\`.webp\`** 🖼️ — WEBP files, a modern format for web images, offering smaller file sizes with both lossy and lossless compression.
-- **\`.svg\`** 🖌️ — SVG files, vector-based images used for logos, icons, and scalable illustrations.
-- **\`.ico\`** 🖼️ — ICO files, used for icons, especially in applications and website favicons.
 ${horizontalLine}
 `;
 
 	// Initialize the markdown table format
 	markdownReport = `${introLines}`;
-	markdownReport += "| Note 🔗 | Tags 🏷️ | .jpg/.jpeg | .png | .gif | .bmp | .tiff/.tif | .webp | .svg | .ico | Others |\n";
-	markdownReport += "|---------|---------|------------|------|------|------|------------|-------|------|------|--------|\n";
-	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
+	markdownReport += "| Note 🔗 | Tags 🏷️ | .jpg/.jpeg 🖼️ | .png 🖼️ | .gif 🎞️ | .bmp 🖼️ | Others 🖼️ |\n";
+	markdownReport += "|---------|---------|------------|------|------|------|--------|\n";
+	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
 	// console.log("Initial markdownReport:", markdownReport);
 
@@ -311,10 +307,10 @@ ${horizontalLine}
 		const imagesAPIpng = imagesAPI.filter(image => image.src.endsWith(".png"));
 		const imagesAPIgif = imagesAPI.filter(image => image.src.endsWith(".gif"));
 		const imagesAPIbmp = imagesAPI.filter(image => image.src.endsWith(".bmp"));
-		const imagesAPItiff = imagesAPI.filter(image => image.src.endsWith(".tiff") || image.src.endsWith(".tif"));
-		const imagesAPIwebp = imagesAPI.filter(image => image.src.endsWith(".webp"));
-		const imagesAPIsvg = imagesAPI.filter(image => image.src.endsWith(".svg"));
-		const imagesAPIico = imagesAPI.filter(image => image.src.endsWith(".ico"));
+		// const imagesAPItiff = imagesAPI.filter(image => image.src.endsWith(".tiff") || image.src.endsWith(".tif"));
+		// const imagesAPIwebp = imagesAPI.filter(image => image.src.endsWith(".webp"));
+		// const imagesAPIsvg = imagesAPI.filter(image => image.src.endsWith(".svg"));
+		// const imagesAPIico = imagesAPI.filter(image => image.src.endsWith(".ico"));
 
 		// Filter for unmatched records (images with extensions that don't match any of the above)
 		const imagesAPINonMatched = imagesAPI.filter(image => {
@@ -322,17 +318,19 @@ ${horizontalLine}
 				   !image.src.endsWith(".jpeg") &&
 				   !image.src.endsWith(".png") &&
 				   !image.src.endsWith(".gif") &&
-				   !image.src.endsWith(".bmp") &&
-				   !image.src.endsWith(".tiff") &&
-				   !image.src.endsWith(".tif") &&
-				   !image.src.endsWith(".webp") &&
-				   !image.src.endsWith(".svg") &&
-				   !image.src.endsWith(".ico");
+				   !image.src.endsWith(".bmp") 
+				   // &&
+				   // !image.src.endsWith(".tiff") &&
+				   // !image.src.endsWith(".tif") &&
+				   // !image.src.endsWith(".webp") &&
+				   // !image.src.endsWith(".svg") &&
+				   // !image.src.endsWith(".ico")
+				   ;
 		});
 
 		// Add extracted data to the markdown report
-		if (imagesAPIjpg.length > 0 || imagesAPIpng.length > 0 || imagesAPIgif.length > 0 || imagesAPIbmp.length > 0 || imagesAPItiff.length > 0 || imagesAPIwebp.length > 0 || imagesAPIsvg.length > 0 || imagesAPIico.length > 0 || imagesAPINonMatched.length > 0) {
-		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(imagesAPIjpg.length === 0 ? ' - ' : imagesAPIjpg.length)} | ${(imagesAPIpng.length === 0 ? ' - ' : imagesAPIpng.length)} | ${(imagesAPIgif.length === 0 ? ' - ' : imagesAPIgif.length)} | ${(imagesAPIbmp.length === 0 ? ' - ' : imagesAPIbmp.length)} | ${(imagesAPItiff.length === 0 ? ' - ' : imagesAPItiff.length)} | ${(imagesAPIwebp.length === 0 ? ' - ' : imagesAPIwebp.length)} | ${(imagesAPIsvg.length === 0 ? ' - ' : imagesAPIsvg.length)} | ${(imagesAPIico.length === 0 ? ' - ' : imagesAPIico.length)} | ${(imagesAPINonMatched.length === 0 ? ' - ' : imagesAPINonMatched.length)} |\n`;
+		if (imagesAPIjpg.length > 0 || imagesAPIpng.length > 0 || imagesAPIgif.length > 0 || imagesAPIbmp.length > 0 || imagesAPINonMatched.length > 0) {
+		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(imagesAPIjpg.length === 0 ? ' - ' : imagesAPIjpg.length)} | ${(imagesAPIpng.length === 0 ? ' - ' : imagesAPIpng.length)} | ${(imagesAPIgif.length === 0 ? ' - ' : imagesAPIgif.length)} | ${(imagesAPIbmp.length === 0 ? ' - ' : imagesAPIbmp.length)} | ${(imagesAPINonMatched.length === 0 ? ' - ' : imagesAPINonMatched.length)} |\n`;
 		  // console.log("Updated markdownReport:", markdownReport);
 		}
 	  } catch (err) {
@@ -344,10 +342,74 @@ ${horizontalLine}
 	}
 
 	// Add final total sums to the markdown report
-	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
+	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
 	// console.log("Final markdownReport with total sums:", markdownReport);
 	
 	} // End for if - amplenote-images
+
+	// ---------------------------------------------------------- //
+
+	if (objectType === "amplenote-videos") {
+
+	const introLines = `
+# Welcome to your Attachment Manager: Report (Advanced - Videos). <!-- {"collapsed":true} -->
+Here you can find the count of:
+- **.mp4 🎥** — Video file formats commonly used for storing digital video. MP4 is widely supported across platforms.
+- **.mov 🎥** — MOV is primarily used by Apple's QuickTime.
+- **.mpg 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
+- **.webm 🎬** — An open-source, royalty-free format designed for delivering high-quality video through web browsers.
+${horizontalLine}
+`;
+
+	// Initialize the markdown table format
+	markdownReport = `${introLines}`;
+	markdownReport += "| Note 🔗 | Tags 🏷️ | .mp4 🎥 | .mov 🎥 | .mpg 🎞️ | .webm 🎬 |\n";
+	markdownReport += "|---------|---------|---------|--------|---------|----------|\n";
+	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
+
+	// console.log("Initial markdownReport:", markdownReport);
+
+	// Loop through each note and extract content
+	for (const note of notes) {
+	  try {
+		const noteUUID = note.uuid;
+		// console.log(`Processing note with UUID: ${noteUUID}`);
+
+		// Regex to match AmpleNote videos with specific formats (mp4, mov, mpg, webm)
+		const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
+
+		// Extracting ampleNoteVideos that match the regex
+		const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
+		  name: match[1],  // Video name from the first capture group
+		  url: match[2],   // Video URL from the second capture group
+		  format: match[2].split('.').pop()  // Extract the file format from the URL
+		}));
+		// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+
+		// Further filtering for specific video formats (though already filtered by regex)
+		const ampleNoteVideosMP4 = ampleNoteVideos.filter(video => video.format === "mp4");
+		const ampleNoteVideosMOV = ampleNoteVideos.filter(video => video.format === "mov");
+		const ampleNoteVideosMPG = ampleNoteVideos.filter(video => video.format === "mpg");
+		const ampleNoteVideosWEBM = ampleNoteVideos.filter(video => video.format === "webm");
+		
+		// Add extracted data to the markdown report
+		if (ampleNoteVideosMP4.length > 0 || ampleNoteVideosMOV.length > 0 || ampleNoteVideosMPG.length > 0 || ampleNoteVideosWEBM.length > 0) {
+		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(ampleNoteVideosMP4.length === 0 ? ' - ' : ampleNoteVideosMP4.length)} | ${(ampleNoteVideosMOV.length === 0 ? ' - ' : ampleNoteVideosMOV.length)} | ${(ampleNoteVideosMPG.length === 0 ? ' - ' : ampleNoteVideosMPG.length)} | ${(ampleNoteVideosWEBM.length === 0 ? ' - ' : ampleNoteVideosWEBM.length)} |\n`;
+		  // console.log("Updated markdownReport:", markdownReport);
+		}
+	  } catch (err) {
+		if (err instanceof TypeError) {
+		  console.warn(`Error processing note ${note.uuid}. Skipping this note.`);
+		  continue;  // Skip notes with errors
+		}
+	  }
+	}
+
+	// Add final total sums to the markdown report
+	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
+	// console.log("Final markdownReport with total sums:", markdownReport);
+	
+	} // End for if - amplenote-videos
 
 	// ---------------------------------------------------------- //
 
