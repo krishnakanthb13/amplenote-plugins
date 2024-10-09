@@ -375,6 +375,10 @@ ${horizontalLine}
 		const noteUUID = note.uuid;
 		// console.log(`Processing note with UUID: ${noteUUID}`);
 
+		// Get note content in markdown format
+		const markdown = await app.getNoteContent({ uuid: noteUUID });
+		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
+
 		// Regex to match AmpleNote videos with specific formats (mp4, mov, mpg, webm)
 		const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
 
