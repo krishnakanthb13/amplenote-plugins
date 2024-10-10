@@ -484,7 +484,7 @@ ${horizontalLine}
               options: [
                 { label: "Basic - All Attachments", value: "all-attachments" },
                 { label: "Basic - All Images", value: "all-images" },
-                { label: "Advanced - All Attachments", value: "attachments" },
+                // { label: "Advanced - All Attachments", value: "attachments" },
                 { label: "Advanced - Amplenote Hosted Images", value: "amplenote-images" },
                 { label: "Advanced - Non-Amplenote Hosted Images", value: "nonamplenote-images" },
                 { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
@@ -615,22 +615,23 @@ Here you can find the List of Attachments in \`${listFormat}\` format. For the s
 - **\`.pptx\`** 🟧 | **\`.ppt\`** 🟧 — PowerPoint presentations, used for creating slide shows with text, images, and multimedia elements.
 - **\`.pdf\`** 🟠 — Portable Document Format, a widely-used format for presenting documents that appear the same across different devices.
 > Object Type Selection: Basic - All Attachments.
+> Note: Using the Link Option, you can download the Attachment.
 ${horizontalLine}
 `;
 
 	  // Initialize the Markdown report with the introductory text
 	  markdownReport = `${introLines}`;
-	  console.log("Initial markdownReport:", markdownReport); // Log the initial report
+	  // console.log("Initial markdownReport:", markdownReport); // Log the initial report
 
 	  // Iterate over each note and extract the content
 	  for (const note of notes) {
 		try {
 		  const noteUUID = note.uuid;
-		  console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  // console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
 		  
 		  // Extract attachments via the API
 		  const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
-		  console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
+		  // console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
 
 		  // If the note contains attachments, generate the report section for this note
 		  if (attachmentsAPI.length > 0) {
@@ -654,7 +655,7 @@ ${horizontalLine}
 			// Loop through each file type and filter attachments based on their extension
 			fileTypes.forEach(({ type, ext }) => {
 			  const filteredAttachments = attachmentsAPI.filter(attachment => attachment.name.endsWith(ext));
-			  console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
+			  // console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
 			  
 			  // If there are attachments for the current file type, add them to the report
 			  if (filteredAttachments.length > 0) {
@@ -663,13 +664,93 @@ ${horizontalLine}
 				// Create clickable links for each filtered attachment and add them to the report
 				const clickableLinks = filteredAttachments.map(link => `[${link.name}](${link.uuid})`).join("\n");
 				markdownReport += `\n${clickableLinks}\n`;
-				console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
+				// console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 			  }
 			});
 
 			// Add a horizontal line separator after each note's attachment list
 			markdownReport += `\n${horizontalLine}\n`;
-			console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+			// console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+		  }
+
+		} catch (err) {
+		  // Handle any errors that occur during note processing
+		  if (err instanceof TypeError) {
+			console.warn(`Error processing note ${note.uuid}. Skipping this note.`); // Warn about the error
+			continue;  // Skip notes with errors
+		  }
+		}
+	  }
+
+	} // End of if condition for "all-attachments"
+
+	// ---------------------------------------------------------- //
+
+	// If the objectType is "all-images", this block of code will be executed
+	if (objectType === "all-images") {
+
+	  // Introductory text for the Markdown report
+	  const introLines = `
+# Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
+Here you can find the List of Images in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
+- **\`.jpg\`** 🖼️ | **\`.jpeg\`** 🖼️ — JPEG image files, commonly used for photographs and web images, providing good compression with decent quality.
+- **\`.png\`** 🖼️ — PNG image files, often used for web graphics and images requiring transparency, with lossless compression.
+- **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
+- **\`.bmp\`** 🖼️ — BMP files, uncompressed and typically large, used for storing high-quality images in older systems.
+> Object Type Selection: Basic - All Images.
+${horizontalLine}
+`;
+
+	  // Initialize the Markdown report with the introductory text
+	  markdownReport = `${introLines}`;
+	  // console.log("Initial markdownReport:", markdownReport); // Log the initial report
+
+	  // Iterate over each note and extract the content
+	  for (const note of notes) {
+		try {
+		  const noteUUID = note.uuid;
+		  // console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  
+		  // Extract attachments via the API
+		  const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
+		  // console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
+
+		  // If the note contains attachments, generate the report section for this note
+		  if (attachmentsAPI.length > 0) {
+			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
+			markdownReport += `\nTags: ${note.tags}\n`;
+			markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
+			markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
+			markdownReport += `\n${horizontalLine}\n`;
+
+			// Define an array of file types and their corresponding file extensions
+			const fileTypes = [
+			  { type: "JPG", ext: ".jpg" },
+			  { type: "JPEG", ext: ".jpeg" },
+			  { type: "PNG", ext: ".png" },
+			  { type: "GIF", ext: ".gif" },
+			  { type: "BMP", ext: ".bmp" }
+			];
+
+			// Loop through each file type and filter attachments based on their extension
+			fileTypes.forEach(({ type, ext }) => {
+			  const filteredAttachments = attachmentsAPI.filter(attachment => attachment.src.endsWith(ext));
+			  // console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
+			  
+			  // If there are attachments for the current file type, add them to the report
+			  if (filteredAttachments.length > 0) {
+				markdownReport += `### File Type: ${type}\n`;
+
+				// Create clickable links for each filtered attachment and add them to the report
+				const clickableLinks = filteredAttachments.map(link => `[Image](${link.src})`).join("\n");
+				markdownReport += `\n${clickableLinks}\n`;
+				// console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
+			  }
+			});
+
+			// Add a horizontal line separator after each note's attachment list
+			markdownReport += `\n${horizontalLine}\n`;
+			// console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
 		  }
 
 		} catch (err) {
@@ -908,7 +989,7 @@ ${horizontalLine}
 	"Open": async function (app, link) {
 		// Define the regex to match UUID format
 		const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-		console.log("link", link);
+		// console.log("link", link);
 		
 		// Opens the link if the link contains a valid attachment UUID
 		if (uuidRegex.test(link.href)) {
@@ -922,7 +1003,7 @@ ${horizontalLine}
 			a.click();  // Programmatically trigger a click event to start the download
 			document.body.removeChild(a);  // Clean up after the click
 
-			console.log("attachmentURL", attachmentURL);
+			// console.log("attachmentURL", attachmentURL);
 			await app.alert("Your file has been downloaded.");
 		} else {
 			await app.alert("Note doesn't have any valid UUID attachments Link");
