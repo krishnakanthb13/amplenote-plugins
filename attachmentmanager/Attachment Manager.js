@@ -1005,8 +1005,8 @@ ${horizontalLine}
 				{ label: "Attachments", value: "all-attachments" },
 				{ label: "Images", value: "all-images" },
 				{ label: "Videos", value: "all-videos" },
-				{ label: "Links", value: "all-links" } // ,
-				// { label: "Raw Data - All the above Details", value: "everything" }
+				{ label: "Links", value: "all-links" }
+				// , { label: "All the above", value: "everything" }
 			  ]
 			},
 			{
