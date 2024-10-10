@@ -6,7 +6,7 @@
      * Inputs: tags (OR and AND), object type (Attachments, Links, Images)
      * Output: Filtered notes + objects based on the selected criteria.
      */
-    "Report": async function (app) {
+    "Report!": async function (app) {
 	// Prompt the user for tags and object type input
 	const result = await app.prompt(
 	  "Select Details on which you want to Report on.",
@@ -131,7 +131,7 @@
 
 	const introLines = `
 # Welcome to your Attachment Manager: Report (Basic). <!-- {"collapsed":true} -->
-Here you can find the count of 
+Here you can find the count of All Basic Attachments in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - (1) \`Attachments [Through API]\`, 
 - (2) \`All Images [Through API]\`, (3) \`Amplenote Images [Images hosted by Amplenote]\`, (4) \`Non-Amplenote Hosted Images [Images hosted in the Web]\`, 
 - (5) \`Amplenote Videos [Videos hosted by Amplenote]\`, 
@@ -216,7 +216,7 @@ ${horizontalLine}
 
 	const introLines = `
 # Welcome to your Attachment Manager: Report (Advanced - Attachments). <!-- {"collapsed":true} -->
-Here you can find the count of:
+Here you can find the count of All Attachments in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - **\`.xlsx\`** 🟩 | **\`.xls\`** 🟩 — Excel Spreadsheet files, commonly used for storing data in tabular form, calculations, charts, and pivot tables.
 - **\`.docx\`** 🟦 | **\`.doc\`** 🟦 — Microsoft Word documents, frequently used for creating text documents with formatting, images, and other media.
 - **\`.pptx\`** 🟧 | **\`.ppt\`** 🟧 — PowerPoint presentations, used for creating slide shows with text, images, and multimedia elements.
@@ -276,7 +276,7 @@ ${horizontalLine}
 
 	const introLines = `
 # Welcome to your Attachment Manager: Report (Advanced - Images). <!-- {"collapsed":true} -->
-Here you can find the most common image extensions:
+Here you can find the count of most common image extensions in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - **\`.jpg\`** 🖼️ | **\`.jpeg\`** 🖼️ — JPEG image files, commonly used for photographs and web images, providing good compression with decent quality.
 - **\`.png\`** 🖼️ — PNG image files, often used for web graphics and images requiring transparency, with lossless compression.
 - **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
@@ -353,7 +353,7 @@ ${horizontalLine}
 
 	const introLines = `
 # Welcome to your Attachment Manager: Report (Advanced - Videos). <!-- {"collapsed":true} -->
-Here you can find the count of:
+Here you can find the count of most common video extensions in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - **.mp4 🎥** — Video file formats commonly used for storing digital video. MP4 is widely supported across platforms.
 - **.mov 🎥** — MOV is primarily used by Apple's QuickTime.
 - **.mpg 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
@@ -460,7 +460,7 @@ ${horizontalLine}
      * Inputs: tags (OR and AND), object type, list formatting (document or table)
      * Output: Filtered and formatted notes + objects.
      */
-    "List": async function (app) {
+    "Lists!": async function (app) {
 	// Prompt the user for tags and object type input
     const result = await app.prompt(
         "Select Details on which you want to Report on.",
@@ -490,7 +490,7 @@ ${horizontalLine}
                 { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
                 { label: "Advanced - Links", value: "links" }
               ]
-            },
+            } /*, // May be some other day!!
             {
               label: "Select the List Formatting",
               type: "select",
@@ -498,7 +498,7 @@ ${horizontalLine}
                 { label: "Document", value: "document" },
                 { label: "Table", value: "table" }
               ]
-            }
+            } */
           ]
         }
       );
@@ -507,7 +507,9 @@ ${horizontalLine}
 	// console.log("User input result:", result);
 
     // Destructure the input for OR/AND tags, object type, and list format
-    const [tagNamesOr, tagNamesAnd, objectType, listFormat] = result;
+	// const [tagNamesOr, tagNamesAnd, objectType, listFormat] = result;
+    const [tagNamesOr, tagNamesAnd, objectType] = result;
+	const listFormat = "document";
 	// console.log("tagNamesOr:", tagNamesOr);
 	// console.log("tagNamesAnd:", tagNamesAnd);
 
@@ -586,6 +588,12 @@ ${horizontalLine}
 	notes = filteredNotes;
 	// console.log("Final notes array:", notes);
 
+    // Helper function to format date-time strings
+    function formatDateTime(dateTimeStr) {
+        const date = new Date(dateTimeStr);
+        return date.toLocaleString();
+    }
+
 	// Define horizontal line and introductory text for the markdown document
 	let markdownReport;
 	const horizontalLine = `
@@ -594,6 +602,74 @@ ${horizontalLine}
 
 `;
 	// ---------------------------------------------------------- //
+
+	if (objectType === "all-attachments") {
+
+	const introLines = `
+# Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
+Here you can find the List of Attachments in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
+- **\`.xlsx\`** 🟩 | **\`.xls\`** 🟩 — Excel Spreadsheet files, commonly used for storing data in tabular form, calculations, charts, and pivot tables.
+- **\`.docx\`** 🟦 | **\`.doc\`** 🟦 — Microsoft Word documents, frequently used for creating text documents with formatting, images, and other media.
+- **\`.pptx\`** 🟧 | **\`.ppt\`** 🟧 — PowerPoint presentations, used for creating slide shows with text, images, and multimedia elements.
+- **\`.pdf\`** 🟠 — Portable Document Format, a widely-used format for presenting documents that appear the same across different devices.
+> Object Type Selection: Basic - All Attachments.
+${horizontalLine}
+`;
+
+	// Initialize the markdown table format
+	markdownReport = `${introLines}`;
+	// console.log("Initial markdownReport:", markdownReport);
+
+	// Loop through each note and extract content
+	for (const note of notes) {
+	  try {
+		const noteUUID = note.uuid;
+		// console.log(`Processing note with UUID: ${noteUUID}`);
+		
+		// Extract attachments via API
+		const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
+		// console.log("attachmentsAPI:", attachmentsAPI);
+		
+		// Filter attachments based on their file extensions
+		const attachmentsAPIxlsx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".xlsx"));
+		const attachmentsAPIxls = attachmentsAPI.filter(attachment => attachment.name.endsWith(".xls"));
+		const attachmentsAPIdocx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".docx"));
+		const attachmentsAPIdoc = attachmentsAPI.filter(attachment => attachment.name.endsWith(".doc"));
+		const attachmentsAPIpptx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".pptx"));
+		const attachmentsAPIppt = attachmentsAPI.filter(attachment => attachment.name.endsWith(".ppt"));
+		const attachmentsAPIpdf = attachmentsAPI.filter(attachment => attachment.name.endsWith(".pdf"));
+
+		// Add extracted data to the markdown report
+		if (attachmentsAPI.length > 0 || imagesAPI.length > 0 || ampleNoteImages.length > 0 || nonAmpleNoteImages.length > 0 || ampleNoteVideos.length > 0 || links.length > 0) {
+
+		markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->`;
+		markdownReport += `\nTags: ${note.tags}`;
+		markdownReport += `\nCreated: ${formatDateTime(note.created)}`;
+		markdownReport += `\nUpdated: ${formatDateTime(note.updated)}`;
+		markdownReport += `\n${horizontalLine}`;
+
+			if (attachmentsAPIxlsx.length > 0) {
+				markdownReport += `### File Type: XLSX`;
+				const clickableLinks = attachmentsAPIxlsx.map(link => {
+					return `[${link.name}](${link.uuid})`;
+				}).join("\n");
+				markdownReport += `\n${clickableLinks}`;
+			}
+
+		}
+
+		markdownReport += `\n${horizontalLine}`;
+
+	  } catch (err) {
+		if (err instanceof TypeError) {
+		  console.warn(`Error processing note ${note.uuid}. Skipping this note.`);
+		  continue;  // Skip notes with errors
+		}
+	  }
+	}
+	
+	} // End for if - all-attachments
+
 	// ---------------------------------------------------------- //
 
 	// Initialize variables for processing results
@@ -638,7 +714,7 @@ ${horizontalLine}
      * Inputs: tags (OR and AND), object type, download format
      * Output: Downloadable file in the selected format containing filtered notes + objects.
      */
-    "Download": async function (app) {
+    "Download!": async function (app) {
 	// Prompt the user for tags and object type input
     const result = await app.prompt(
         "Select Details on which you want to Report on.",
@@ -814,5 +890,30 @@ ${horizontalLine}
     },
 
     // ********************************************************************************************************************* //
-  }
+  },
+  linkOption: {
+	"Open": async function (app, link) {
+		// Define the regex to match UUID format
+		const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+		console.log("link", link);
+		
+		// Opens the link if the link contains a valid attachment UUID
+		if (uuidRegex.test(link.href)) {
+			const attachmentURL = await app.getAttachmentURL(link.href);
+			
+			// Create an anchor element and set the download attribute
+			const a = document.createElement('a');
+			a.href = attachmentURL;
+			a.download = '';  // The 'download' attribute triggers the download
+			document.body.appendChild(a);
+			a.click();  // Programmatically trigger a click event to start the download
+			document.body.removeChild(a);  // Clean up after the click
+
+			console.log("attachmentURL", attachmentURL);
+			await app.alert("Your file has been downloaded.");
+		} else {
+			await app.alert("Note doesn't have any valid UUID attachments Link");
+		}
+	}
+  },
 }
