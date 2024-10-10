@@ -1002,13 +1002,10 @@ ${horizontalLine}
               label: "Select the Object Type",
               type: "select",
               options: [
-                { label: "Basic - All Attachments", value: "all-attachments" },
-                { label: "Basic - All Images", value: "all-images" },
-                { label: "Advanced - All Attachments", value: "attachments" },
-                { label: "Advanced - Amplenote Hosted Images", value: "amplenote-images" },
-                { label: "Advanced - Non-Amplenote Hosted Images", value: "nonamplenote-images" },
-                { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
-                { label: "Advanced - Links", value: "links" },
+                { label: "Attachments", value: "all-attachments" },
+                { label: "Images", value: "all-images" },
+                { label: "Videos", value: "all-videos" },
+                { label: "Links", value: "all-links" },
 				{ label: "Raw Data - All the above Details", value: "everything" }
               ]
             },
@@ -1016,7 +1013,7 @@ ${horizontalLine}
               label: "Select the Download Format",
               type: "select",
               options: [
-                { label: "Download as markdown", value: "download_md" },
+                { label: "Download as markdown Table", value: "download_md" },
                 { label: "Download as CSV", value: "download_csv" },
                 { label: "Download as TXT", value: "download_txt" },
                 { label: "Download as JSON", value: "download_json" }
