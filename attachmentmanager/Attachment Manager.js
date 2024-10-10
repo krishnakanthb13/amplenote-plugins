@@ -39,12 +39,12 @@
 	);
 
 	// Log the user input (result)
-	console.log("User input result:", result);
+	// console.log("User input result:", result);
 
 	// Destructure the user input from the result array
 	const [tagNamesOr, tagNamesAnd, objectType] = result;
-	console.log("tagNamesOr:", tagNamesOr);
-	console.log("tagNamesAnd:", tagNamesAnd);
+	// console.log("tagNamesOr:", tagNamesOr);
+	// console.log("tagNamesAnd:", tagNamesAnd);
 
 	// Handle cancellation scenario
 	if (!result) {
@@ -60,13 +60,13 @@
 
 	// Initialize empty arrays for storing notes and filtered notes
 	let notes = [];
-	console.log("Initial notes array:", notes);
+	// console.log("Initial notes array:", notes);
 
 	const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
-	console.log("tagsArray (from tagNamesOr):", tagsArray);
+	// console.log("tagsArray (from tagNamesOr):", tagsArray);
 
 	let filteredNotes = [];
-	console.log("Initial filteredNotes array:", filteredNotes);
+	// console.log("Initial filteredNotes array:", filteredNotes);
 
 	// Filtering logic based on tags [OR] and [AND]
 	if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
@@ -74,30 +74,30 @@
 	  if (Array.isArray(tagsArray) && tagsArray.length > 0) {
 		for (const tag of tagsArray) {
 		  const notesByTag = await app.filterNotes({ tag: tag });
-		  console.log(`Notes filtered by tag "${tag}":`, notesByTag);
+		  // console.log(`Notes filtered by tag "${tag}":`, notesByTag);
 		  filteredNotes = [...filteredNotes, ...notesByTag];
-		  console.log("filteredNotes after OR filter:", filteredNotes);
+		  // console.log("filteredNotes after OR filter:", filteredNotes);
 		}
 	  }
 
 	  // Filter notes by AND tags (combined search for all tags)
 	  if (tagNamesAnd) {
 		const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
-		console.log("Notes filtered by AND tags:", notesByGroup);
+		// console.log("Notes filtered by AND tags:", notesByGroup);
 		filteredNotes = [...filteredNotes, ...notesByGroup];
-		console.log("filteredNotes after AND filter:", filteredNotes);
+		// console.log("filteredNotes after AND filter:", filteredNotes);
 	  }
 	} else {
 	  // Default filter if no tags are provided
 	  const notesByGroup = await app.filterNotes({ group: "^vault" });
-	  console.log("Notes filtered by default group (^vault):", notesByGroup);
+	  // console.log("Notes filtered by default group (^vault):", notesByGroup);
 	  filteredNotes = [...filteredNotes, ...notesByGroup];
-	  console.log("filteredNotes after default group filter:", filteredNotes);
+	  // console.log("filteredNotes after default group filter:", filteredNotes);
 	}
 
 	// Remove duplicate notes
 	filteredNotes = [...new Set(filteredNotes)];
-	console.log("filteredNotes after removing duplicates:", filteredNotes);
+	// console.log("filteredNotes after removing duplicates:", filteredNotes);
 
 	// Sort the filtered notes by note name in ascending order
 	filteredNotes.sort((a, b) => {
@@ -112,10 +112,10 @@
 	  return 0; // Names are equal
 	});
 
-	console.log("filteredNotes after sorting by name:", filteredNotes);
+	// console.log("filteredNotes after sorting by name:", filteredNotes);
 
 	notes = filteredNotes;
-	console.log("Final notes array:", notes);
+	// console.log("Final notes array:", notes);
 
 	// Define horizontal line and introductory text for the markdown document
 	let markdownReport;
@@ -145,33 +145,33 @@ ${horizontalLine}
 	markdownReport += "|---------|---------|---------------|-----------|---------------------|------------------------|---------------------|----------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
-	console.log("Initial markdownReport:", markdownReport);
+	// console.log("Initial markdownReport:", markdownReport);
 
 	// Loop through each note and extract content
 	for (const note of notes) {
 	  try {
 		const noteUUID = note.uuid;
-		console.log(`Processing note with UUID: ${noteUUID}`);
+		// console.log(`Processing note with UUID: ${noteUUID}`);
 
 		// Get note content in markdown format
 		const markdown = await app.getNoteContent({ uuid: noteUUID });
-		console.log(`Markdown content for note ${noteUUID}:`, markdown);
+		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
 
 		// Extract attachments via API
 		const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
-		console.log("attachmentsAPI:", attachmentsAPI);
+		// console.log("attachmentsAPI:", attachmentsAPI);
 
 		// Extract AmpleNote image links via API and regex
 		const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
-		console.log("imagesAPI:", imagesAPI);
+		// console.log("imagesAPI:", imagesAPI);
 
 		// Filter images that are hosted on AmpleNote
 		const ampleNoteImages = imagesAPI.filter(image => image.src.startsWith("https://images.amplenote.com/"));
-		console.log("Images hosted on AmpleNote:", ampleNoteImages);
+		// console.log("Images hosted on AmpleNote:", ampleNoteImages);
 
 		// Filter images that are not hosted on AmpleNote
 		const nonAmpleNoteImages = imagesAPI.filter(image => !image.src.startsWith("https://images.amplenote.com/"));
-		console.log("Images not hosted on AmpleNote:", nonAmpleNoteImages);
+		// console.log("Images not hosted on AmpleNote:", nonAmpleNoteImages);
 
 		// Extract AmpleNote video links
 		// const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
@@ -181,7 +181,7 @@ ${horizontalLine}
 		  url: match[2],   // Video URL
 		  format: match[2].split('.').pop()  // File format
 		}));
-		console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+		// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
 
 		// Extract non-AmpleNote links excluding images and attachments
 		const linkRegex = /\[([^\]]+)\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
@@ -189,12 +189,12 @@ ${horizontalLine}
 		  name: match[1],  // Link text
 		  url: match[2]    // URL
 		}));
-		console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+		// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
 
 		// Add extracted data to the markdown report
 		if (attachmentsAPI.length > 0 || imagesAPI.length > 0 || ampleNoteImages.length > 0 || nonAmpleNoteImages.length > 0 || ampleNoteVideos.length > 0 || links.length > 0) {
 		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(attachmentsAPI.length === 0 ? ' - ' : attachmentsAPI.length)} | ${(imagesAPI.length === 0 ? ' - ' : imagesAPI.length)} | ${(ampleNoteImages.length === 0 ? ' - ' : ampleNoteImages.length)} | ${(nonAmpleNoteImages.length === 0 ? ' - ' : nonAmpleNoteImages.length)} | ${(ampleNoteVideos.length === 0 ? ' - ' : ampleNoteVideos.length)} | ${(links.length === 0 ? ' - ' : links.length)} |\n`;
-		  console.log("Updated markdownReport:", markdownReport);
+		  // console.log("Updated markdownReport:", markdownReport);
 		}
 	  } catch (err) {
 		if (err instanceof TypeError) {
@@ -206,7 +206,7 @@ ${horizontalLine}
 
 	// Add final total sums to the markdown report
 	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
-	console.log("Final markdownReport with total sums:", markdownReport);
+	// console.log("Final markdownReport with total sums:", markdownReport);
 	
 	} // End for if - basic
 
@@ -230,17 +230,17 @@ ${horizontalLine}
 	markdownReport += "|---------|---------|----------|---------|----------|--------|----------|---------|---------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
-	console.log("Initial markdownReport:", markdownReport);
+	// console.log("Initial markdownReport:", markdownReport);
 
 	// Loop through each note and extract content
 	for (const note of notes) {
 	  try {
 		const noteUUID = note.uuid;
-		console.log(`Processing note with UUID: ${noteUUID}`);
+		// console.log(`Processing note with UUID: ${noteUUID}`);
 
 		// Extract attachments via API
 		const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
-		console.log("attachmentsAPI:", attachmentsAPI);
+		// console.log("attachmentsAPI:", attachmentsAPI);
 		
 		// Filter attachments based on their file extensions
 		const attachmentsAPIxlsx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".xlsx"));
@@ -254,7 +254,7 @@ ${horizontalLine}
 		// Add extracted data to the markdown report
 		if (attachmentsAPIxlsx.length > 0 || attachmentsAPIxls.length > 0 || attachmentsAPIdocx.length > 0 || attachmentsAPIdoc.length > 0 || attachmentsAPIpptx.length > 0 || attachmentsAPIppt.length > 0 || attachmentsAPIpdf.length > 0) {
 		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(attachmentsAPIxlsx.length === 0 ? ' - ' : attachmentsAPIxlsx.length)} | ${(attachmentsAPIxls.length === 0 ? ' - ' : attachmentsAPIxls.length)} | ${(attachmentsAPIdocx.length === 0 ? ' - ' : attachmentsAPIdocx.length)} | ${(attachmentsAPIdoc.length === 0 ? ' - ' : attachmentsAPIdoc.length)} | ${(attachmentsAPIpptx.length === 0 ? ' - ' : attachmentsAPIpptx.length)} | ${(attachmentsAPIppt.length === 0 ? ' - ' : attachmentsAPIppt.length)} | ${(attachmentsAPIpdf.length === 0 ? ' - ' : attachmentsAPIpdf.length)} |\n`;
-		  console.log("Updated markdownReport:", markdownReport);
+		  // console.log("Updated markdownReport:", markdownReport);
 		}
 	  } catch (err) {
 		if (err instanceof TypeError) {
@@ -266,7 +266,7 @@ ${horizontalLine}
 
 	// Add final total sums to the markdown report
 	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
-	console.log("Final markdownReport with total sums:", markdownReport);
+	// console.log("Final markdownReport with total sums:", markdownReport);
 	
 	} // End for if - attachments
 
@@ -290,17 +290,17 @@ ${horizontalLine}
 	markdownReport += "|---------|---------|------------|------|------|------|--------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
-	console.log("Initial markdownReport:", markdownReport);
+	// console.log("Initial markdownReport:", markdownReport);
 
 	// Loop through each note and extract content
 	for (const note of notes) {
 	  try {
 		const noteUUID = note.uuid;
-		console.log(`Processing note with UUID: ${noteUUID}`);
+		// console.log(`Processing note with UUID: ${noteUUID}`);
 
 		// Extract AmpleNote image links via API and regex
 		const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
-		console.log("imagesAPI:", imagesAPI);
+		// console.log("imagesAPI:", imagesAPI);
 		
 		// Filter for common image extensions
 		const imagesAPIjpg = imagesAPI.filter(image => image.src.endsWith(".jpg") || image.src.endsWith(".jpeg"));
@@ -331,7 +331,7 @@ ${horizontalLine}
 		// Add extracted data to the markdown report
 		if (imagesAPIjpg.length > 0 || imagesAPIpng.length > 0 || imagesAPIgif.length > 0 || imagesAPIbmp.length > 0 || imagesAPINonMatched.length > 0) {
 		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(imagesAPIjpg.length === 0 ? ' - ' : imagesAPIjpg.length)} | ${(imagesAPIpng.length === 0 ? ' - ' : imagesAPIpng.length)} | ${(imagesAPIgif.length === 0 ? ' - ' : imagesAPIgif.length)} | ${(imagesAPIbmp.length === 0 ? ' - ' : imagesAPIbmp.length)} | ${(imagesAPINonMatched.length === 0 ? ' - ' : imagesAPINonMatched.length)} |\n`;
-		  console.log("Updated markdownReport:", markdownReport);
+		  // console.log("Updated markdownReport:", markdownReport);
 		}
 	  } catch (err) {
 		if (err instanceof TypeError) {
@@ -343,7 +343,7 @@ ${horizontalLine}
 
 	// Add final total sums to the markdown report
 	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
-	console.log("Final markdownReport with total sums:", markdownReport);
+	// console.log("Final markdownReport with total sums:", markdownReport);
 	
 	} // End for if - amplenote-images
 
@@ -367,17 +367,17 @@ ${horizontalLine}
 	markdownReport += "|---------|---------|---------|--------|---------|----------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
-	console.log("Initial markdownReport:", markdownReport);
+	// console.log("Initial markdownReport:", markdownReport);
 
 	// Loop through each note and extract content
 	for (const note of notes) {
 	  try {
 		const noteUUID = note.uuid;
-		console.log(`Processing note with UUID: ${noteUUID}`);
+		// console.log(`Processing note with UUID: ${noteUUID}`);
 
 		// Get note content in markdown format
 		const markdown = await app.getNoteContent({ uuid: noteUUID });
-		console.log(`Markdown content for note ${noteUUID}:`, markdown);
+		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
 
 		// Regex to match AmpleNote videos with specific formats (mp4, mov, mpg, webm)
 		const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
@@ -388,7 +388,7 @@ ${horizontalLine}
 		  url: match[2],   // Video URL from the second capture group
 		  format: match[2].split('.').pop()  // Extract the file format from the URL
 		}));
-		console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+		// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
 
 		// Further filtering for specific video formats (though already filtered by regex)
 		const ampleNoteVideosMP4 = ampleNoteVideos.filter(video => video.format === "mp4");
@@ -399,7 +399,7 @@ ${horizontalLine}
 		// Add extracted data to the markdown report
 		if (ampleNoteVideosMP4.length > 0 || ampleNoteVideosMOV.length > 0 || ampleNoteVideosMPG.length > 0 || ampleNoteVideosWEBM.length > 0) {
 		  markdownReport += `| [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) | ${note.tags} | ${(ampleNoteVideosMP4.length === 0 ? ' - ' : ampleNoteVideosMP4.length)} | ${(ampleNoteVideosMOV.length === 0 ? ' - ' : ampleNoteVideosMOV.length)} | ${(ampleNoteVideosMPG.length === 0 ? ' - ' : ampleNoteVideosMPG.length)} | ${(ampleNoteVideosWEBM.length === 0 ? ' - ' : ampleNoteVideosWEBM.length)} |\n`;
-		  console.log("Updated markdownReport:", markdownReport);
+		  // console.log("Updated markdownReport:", markdownReport);
 		}
 	  } catch (err) {
 		if (err instanceof TypeError) {
@@ -411,7 +411,7 @@ ${horizontalLine}
 
 	// Add final total sums to the markdown report
 	markdownReport += "|| **Total Sum** |=sum(above)|=sum(above)|=sum(above)|=sum(above)|\n";
-	console.log("Final markdownReport with total sums:", markdownReport);
+	// console.log("Final markdownReport with total sums:", markdownReport);
 	
 	} // End for if - amplenote-videos
 
@@ -419,7 +419,7 @@ ${horizontalLine}
 
 	// Initialize variables for processing results
 	let finalResults = markdownReport;
-	console.log("Final results for the report:", finalResults);
+	// console.log("Final results for the report:", finalResults);
 
 	// Function to get current date and time formatted as YYMMDD_HHMMSS
 	function getCurrentDateTime() {
@@ -434,22 +434,22 @@ ${horizontalLine}
 
 	// Generate a new note with the report results
 	const { YYMMDD, HHMMSS } = getCurrentDateTime();
-	console.log("Generated date and time:", YYMMDD, HHMMSS);
+	// console.log("Generated date and time:", YYMMDD, HHMMSS);
 
 	const newNoteName = `Attachment Manager: Report ${YYMMDD}_${HHMMSS}`;
-	console.log("New note name:", newNoteName);
+	// console.log("New note name:", newNoteName);
 
 	const newTagName = ['-reports/-attachment-manager'];
-	console.log("New note tags:", newTagName);
+	// console.log("New note tags:", newTagName);
 
 	let noteUUID = await app.createNote(newNoteName, newTagName);
-	console.log("Created note UUID:", noteUUID);
+	// console.log("Created note UUID:", noteUUID);
 
 	await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
-	console.log("Replaced note content with final results");
+	// console.log("Replaced note content with final results");
 
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
-	console.log("Navigated to the new note:", noteUUID);
+	// console.log("Navigated to the new note:", noteUUID);
 
 
 	},
@@ -501,14 +501,14 @@ ${horizontalLine}
 	  );
 
 	// Log the user input (result)
-	console.log("User input result:", result);
+	// console.log("User input result:", result);
 
 	// Destructure the input for OR/AND tags, object type, and list format
 	// const [tagNamesOr, tagNamesAnd, objectType, listFormat] = result;
 	const [tagNamesOr, tagNamesAnd, objectType] = result;
 	const listFormat = "document";
-	console.log("tagNamesOr:", tagNamesOr);
-	console.log("tagNamesAnd:", tagNamesAnd);
+	// console.log("tagNamesOr:", tagNamesOr);
+	// console.log("tagNamesAnd:", tagNamesAnd);
 
 	// Handle cancellation scenario
 	if (!result) {
@@ -528,13 +528,13 @@ ${horizontalLine}
 
 	// Initialize empty arrays for storing notes and filtered notes
 	let notes = [];
-	console.log("Initial notes array:", notes);
+	// console.log("Initial notes array:", notes);
 
 	const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
-	console.log("tagsArray (from tagNamesOr):", tagsArray);
+	// console.log("tagsArray (from tagNamesOr):", tagsArray);
 
 	let filteredNotes = [];
-	console.log("Initial filteredNotes array:", filteredNotes);
+	// console.log("Initial filteredNotes array:", filteredNotes);
 
 	// Filtering logic based on tags [OR] and [AND]
 	if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
@@ -542,30 +542,30 @@ ${horizontalLine}
 	  if (Array.isArray(tagsArray) && tagsArray.length > 0) {
 		for (const tag of tagsArray) {
 		  const notesByTag = await app.filterNotes({ tag: tag });
-		  console.log(`Notes filtered by tag "${tag}":`, notesByTag);
+		  // console.log(`Notes filtered by tag "${tag}":`, notesByTag);
 		  filteredNotes = [...filteredNotes, ...notesByTag];
-		  console.log("filteredNotes after OR filter:", filteredNotes);
+		  // console.log("filteredNotes after OR filter:", filteredNotes);
 		}
 	  }
 
 	  // Filter notes by AND tags (combined search for all tags)
 	  if (tagNamesAnd) {
 		const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
-		console.log("Notes filtered by AND tags:", notesByGroup);
+		// console.log("Notes filtered by AND tags:", notesByGroup);
 		filteredNotes = [...filteredNotes, ...notesByGroup];
-		console.log("filteredNotes after AND filter:", filteredNotes);
+		// console.log("filteredNotes after AND filter:", filteredNotes);
 	  }
 	} else {
 	  // Default filter if no tags are provided
 	  const notesByGroup = await app.filterNotes({ group: "^vault" });
-	  console.log("Notes filtered by default group (^vault):", notesByGroup);
+	  // console.log("Notes filtered by default group (^vault):", notesByGroup);
 	  filteredNotes = [...filteredNotes, ...notesByGroup];
-	  console.log("filteredNotes after default group filter:", filteredNotes);
+	  // console.log("filteredNotes after default group filter:", filteredNotes);
 	}
 
 	// Remove duplicate notes
 	filteredNotes = [...new Set(filteredNotes)];
-	console.log("filteredNotes after removing duplicates:", filteredNotes);
+	// console.log("filteredNotes after removing duplicates:", filteredNotes);
 
 	// Sort the filtered notes by note name in ascending order
 	filteredNotes.sort((a, b) => {
@@ -580,10 +580,10 @@ ${horizontalLine}
 	  return 0; // Names are equal
 	});
 
-	console.log("filteredNotes after sorting by name:", filteredNotes);
+	// console.log("filteredNotes after sorting by name:", filteredNotes);
 
 	notes = filteredNotes;
-	console.log("Final notes array:", notes);
+	// console.log("Final notes array:", notes);
 
 	// Helper function to format date-time strings
 	function formatDateTime(dateTimeStr) {
@@ -618,17 +618,17 @@ ${horizontalLine}
 
 	  // Initialize the Markdown report with the introductory text
 	  markdownReport = `${introLines}`;
-	  console.log("Initial markdownReport:", markdownReport); // Log the initial report
+	  // console.log("Initial markdownReport:", markdownReport); // Log the initial report
 
 	  // Iterate over each note and extract the content
 	  for (const note of notes) {
 		try {
 		  const noteUUID = note.uuid;
-		  console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  // console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
 		  
 		  // Extract attachments via the API
 		  const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
-		  console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
+		  // console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
 
 		  // If the note contains attachments, generate the report section for this note
 		  if (attachmentsAPI.length > 0) {
@@ -652,7 +652,7 @@ ${horizontalLine}
 			// Loop through each file type and filter attachments based on their extension
 			fileTypes.forEach(({ type, ext }) => {
 			  const filteredAttachments = attachmentsAPI.filter(attachment => attachment.name.endsWith(ext));
-			  console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
+			  // console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
 			  
 			  // If there are attachments for the current file type, add them to the report
 			  if (filteredAttachments.length > 0) {
@@ -661,13 +661,13 @@ ${horizontalLine}
 				// Create clickable links for each filtered attachment and add them to the report
 				const clickableLinks = filteredAttachments.map(link => `[${link.name}](${link.uuid})`).join("\n");
 				markdownReport += `\n${clickableLinks}\n`;
-				console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
+				// console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 			  }
 			});
 
 			// Add a horizontal line separator after each note's attachment list
 			markdownReport += `\n${horizontalLine}\n`;
-			console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+			// console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
 		  }
 
 		} catch (err) {
@@ -700,17 +700,17 @@ ${horizontalLine}
 
 	  // Initialize the Markdown report with the introductory text
 	  markdownReport = `${introLines}`;
-	  console.log("Initial markdownReport:", markdownReport); // Log the initial report
+	  // console.log("Initial markdownReport:", markdownReport); // Log the initial report
 
 	  // Iterate over each note and extract the content
 	  for (const note of notes) {
 		try {
 		  const noteUUID = note.uuid;
-		  console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  // console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
 		  
 		  // Extract attachments via the API
 		  const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
-		  console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
+		  // console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
 
 		// If the note contains attachments, generate the report section for this note
 		if (imagesAPI.length > 0) {
@@ -735,7 +735,7 @@ ${horizontalLine}
 		  // Loop through each file type and filter attachments based on their extension
 		  fileTypes.forEach(({ type, ext }) => {
 			const filteredAttachments = imagesAPI.filter(attachment => attachment.src.endsWith(ext));
-			console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
+			// console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
 			
 			// If there are attachments for the current file type, add them to the report
 			if (filteredAttachments.length > 0) {
@@ -744,7 +744,7 @@ ${horizontalLine}
 			  // Create clickable links for each filtered attachment and add them to the report
 			  const clickableLinks = filteredAttachments.map(link => `[${link.src.split('/').pop()}](${link.src})`).join("\n");
 			  markdownReport += `\n${clickableLinks}\n`;
-			  console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
+			  // console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 			}
 		  });
 
@@ -764,7 +764,7 @@ ${horizontalLine}
 
 		  // Add a horizontal line separator after each note's attachment list
 		  markdownReport += `\n${horizontalLine}\n`;
-		  console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+		  // console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
 		}
 
 		} catch (err) {
@@ -797,17 +797,17 @@ ${horizontalLine}
 
 	  // Initialize the Markdown report with the introductory text
 	  markdownReport = `${introLines}`;
-	  console.log("Initial markdownReport:", markdownReport); // Log the initial report
+	  // console.log("Initial markdownReport:", markdownReport); // Log the initial report
 
 	  // Iterate over each note and extract the content
 	  for (const note of notes) {
 		try {
 		  const noteUUID = note.uuid;
-		  console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  // console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
 		  
 		// Get note content in markdown format
 		const markdown = await app.getNoteContent({ uuid: noteUUID });
-		console.log(`Markdown content for note ${noteUUID}:`, markdown);
+		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
 
 		// Regex to match AmpleNote videos with specific formats (mp4, mov, mpg, webm)
 		const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
@@ -818,7 +818,7 @@ ${horizontalLine}
 		  url: match[2],   // Video URL from the second capture group
 		  format: match[2].split('.').pop()  // Extract the file format from the URL
 		}));
-		console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+		// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
 
 		// If the note contains attachments, generate the report section for this note
 		if (ampleNoteVideos.length > 0) {
@@ -842,7 +842,7 @@ ${horizontalLine}
 		  // Loop through each file type and filter attachments based on their extension
 		  fileTypes.forEach(({ type, ext }) => {
 			const filteredAttachments = ampleNoteVideos.filter(attachment => attachment.url.endsWith(ext));
-			console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
+			// console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
 			
 			// If there are attachments for the current file type, add them to the report
 			if (filteredAttachments.length > 0) {
@@ -851,13 +851,13 @@ ${horizontalLine}
 			  // Create clickable links for each filtered attachment and add them to the report
 			  const clickableLinks = filteredAttachments.map(link => `[${link.name}](${link.url})`).join("\n");
 			  markdownReport += `\n${clickableLinks}\n`;
-			  console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
+			  // console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 			}
 		  });
 
 		  // Add a horizontal line separator after each note's attachment list
 		  markdownReport += `\n${horizontalLine}\n`;
-		  console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+		  // console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
 		}
 
 		} catch (err) {
@@ -886,17 +886,17 @@ ${horizontalLine}
 
 	  // Initialize the Markdown report with the introductory text
 	  markdownReport = `${introLines}`;
-	  console.log("Initial markdownReport:", markdownReport); // Log the initial report
+	  // console.log("Initial markdownReport:", markdownReport); // Log the initial report
 
 	  // Iterate over each note and extract the content
 	  for (const note of notes) {
 		try {
 		  const noteUUID = note.uuid;
-		  console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  // console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
 		  
 		// Get note content in markdown format
 		const markdown = await app.getNoteContent({ uuid: noteUUID });
-		console.log(`Markdown content for note ${noteUUID}:`, markdown);
+		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
 
 		// Extract non-AmpleNote links excluding images and attachments
 		const linkRegex = /\[([^\]]+)\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
@@ -904,7 +904,7 @@ ${horizontalLine}
 		  name: match[1],  // Link text
 		  url: match[2]    // URL
 		}));
-		console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+		// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
 
 		// If the note contains attachments, generate the report section for this note
 		if (links.length > 0) {
@@ -918,11 +918,11 @@ ${horizontalLine}
 			// Create clickable links for each filtered attachment and add them to the report
 			const clickableLinks = links.map(link => `[${link.name}](${link.url})`).join("\n");
 			markdownReport += `\n${clickableLinks}\n`;
-			console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
+			// console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 
 		  // Add a horizontal line separator after each note's attachment list
 		  markdownReport += `\n${horizontalLine}\n`;
-		  console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+		  // console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
 		}
 
 		} catch (err) {
@@ -940,7 +940,7 @@ ${horizontalLine}
 
 	// Initialize variables for processing results
 	let finalResults = markdownReport;
-	console.log("Final results for the report:", finalResults);
+	// console.log("Final results for the report:", finalResults);
 
 	// Function to get current date and time formatted as YYMMDD_HHMMSS
 	function getCurrentDateTime() {
@@ -955,22 +955,22 @@ ${horizontalLine}
 
 	// Generate a new note with the report results
 	const { YYMMDD, HHMMSS } = getCurrentDateTime();
-	console.log("Generated date and time:", YYMMDD, HHMMSS);
+	// console.log("Generated date and time:", YYMMDD, HHMMSS);
 
 	const newNoteName = `Attachment Manager: List ${YYMMDD}_${HHMMSS}`;
-	console.log("New note name:", newNoteName);
+	// console.log("New note name:", newNoteName);
 
 	const newTagName = ['-reports/-attachment-manager'];
-	console.log("New note tags:", newTagName);
+	// console.log("New note tags:", newTagName);
 
 	let noteUUID = await app.createNote(newNoteName, newTagName);
-	console.log("Created note UUID:", noteUUID);
+	// console.log("Created note UUID:", noteUUID);
 
 	await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
-	console.log("Replaced note content with final results");
+	// console.log("Replaced note content with final results");
 
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
-	console.log("Navigated to the new note:", noteUUID);
+	// console.log("Navigated to the new note:", noteUUID);
 
 	},
 
@@ -1024,12 +1024,12 @@ ${horizontalLine}
 	  );
 
 	// Log the user input (result)
-	console.log("User input result:", result);
+	// console.log("User input result:", result);
 
 	// Destructure the inputs for OR/AND tags, object type, and download format
 	const [tagNamesOr, tagNamesAnd, objectType, dwFormat] = result;
-	console.log("tagNamesOr:", tagNamesOr);
-	console.log("tagNamesAnd:", tagNamesAnd);
+	// console.log("tagNamesOr:", tagNamesOr);
+	// console.log("tagNamesAnd:", tagNamesAnd);
 
 	// Handle cancellation scenario
 	if (!result) {
@@ -1049,13 +1049,13 @@ ${horizontalLine}
 
 	// Initialize empty arrays for storing notes and filtered notes
 	let notes = [];
-	console.log("Initial notes array:", notes);
+	// console.log("Initial notes array:", notes);
 
 	const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
-	console.log("tagsArray (from tagNamesOr):", tagsArray);
+	// console.log("tagsArray (from tagNamesOr):", tagsArray);
 
 	let filteredNotes = [];
-	console.log("Initial filteredNotes array:", filteredNotes);
+	// console.log("Initial filteredNotes array:", filteredNotes);
 
 	// Filtering logic based on tags [OR] and [AND]
 	if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
@@ -1063,30 +1063,30 @@ ${horizontalLine}
 	  if (Array.isArray(tagsArray) && tagsArray.length > 0) {
 		for (const tag of tagsArray) {
 		  const notesByTag = await app.filterNotes({ tag: tag });
-		  console.log(`Notes filtered by tag "${tag}":`, notesByTag);
+		  // console.log(`Notes filtered by tag "${tag}":`, notesByTag);
 		  filteredNotes = [...filteredNotes, ...notesByTag];
-		  console.log("filteredNotes after OR filter:", filteredNotes);
+		  // console.log("filteredNotes after OR filter:", filteredNotes);
 		}
 	  }
 
 	  // Filter notes by AND tags (combined search for all tags)
 	  if (tagNamesAnd) {
 		const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
-		console.log("Notes filtered by AND tags:", notesByGroup);
+		// console.log("Notes filtered by AND tags:", notesByGroup);
 		filteredNotes = [...filteredNotes, ...notesByGroup];
-		console.log("filteredNotes after AND filter:", filteredNotes);
+		// console.log("filteredNotes after AND filter:", filteredNotes);
 	  }
 	} else {
 	  // Default filter if no tags are provided
 	  const notesByGroup = await app.filterNotes({ group: "^vault" });
-	  console.log("Notes filtered by default group (^vault):", notesByGroup);
+	  // console.log("Notes filtered by default group (^vault):", notesByGroup);
 	  filteredNotes = [...filteredNotes, ...notesByGroup];
-	  console.log("filteredNotes after default group filter:", filteredNotes);
+	  // console.log("filteredNotes after default group filter:", filteredNotes);
 	}
 
 	// Remove duplicate notes
 	filteredNotes = [...new Set(filteredNotes)];
-	console.log("filteredNotes after removing duplicates:", filteredNotes);
+	// console.log("filteredNotes after removing duplicates:", filteredNotes);
 
 	// Sort the filtered notes by note name in ascending order
 	filteredNotes.sort((a, b) => {
@@ -1101,10 +1101,10 @@ ${horizontalLine}
 	  return 0; // Names are equal
 	});
 
-	console.log("filteredNotes after sorting by name:", filteredNotes);
+	// console.log("filteredNotes after sorting by name:", filteredNotes);
 
 	notes = filteredNotes;
-	console.log("Final notes array:", notes);
+	// console.log("Final notes array:", notes);
 
 	// Define horizontal line and introductory text for the markdown document
 	let markdownReportz = ``;
@@ -1116,40 +1116,40 @@ ${horizontalLine}
 	try {
 
 		const noteUUID = note.uuid;
-		console.log(`Processing note with UUID: ${noteUUID}`);
+		// console.log(`Processing note with UUID: ${noteUUID}`);
 
 		// Get note content in markdown format
 		const markdown = await app.getNoteContent({ uuid: noteUUID });
-		console.log(`Markdown content for note ${noteUUID}:`, markdown);
+		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
 		
 		let markdownReport = [];
 		
 		if (objectType === "all-attachments" || objectType === "everything") {
 			// Extract attachments via API
 			const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
-			console.log("attachmentsAPI:", attachmentsAPI);
+			// console.log("attachmentsAPI:", attachmentsAPI);
 			const clickableLinks = attachmentsAPI.map(link => ({
 			  name: link.name,  // Link text
 			  url: `attachment://${link.uuid}`,  // URL
 			  format: link.name.split('.').pop()  // File format
 			}));
-			console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, clickableLinks);
+			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, clickableLinks);
 			markdownReport = clickableLinks;
-			console.log("markdownReport:", markdownReport);
+			// console.log("markdownReport:", markdownReport);
 		}
 		
 		if (objectType === "all-images" || objectType === "everything") {
 			// Extract AmpleNote image links via API and regex
 			const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
-			console.log("imagesAPI:", imagesAPI);
+			// console.log("imagesAPI:", imagesAPI);
 			const clickableLinks = imagesAPI.map(link => ({
 			  name: link.src.split('/').pop(),  // Link text
 			  url: link.src,    // URL
 			  format: link.src.split('.').pop()  // File format
 			}));
-			console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, clickableLinks);
+			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, clickableLinks);
 			markdownReport = clickableLinks;
-			console.log("markdownReport:", markdownReport);
+			// console.log("markdownReport:", markdownReport);
 		}
 		
 		if (objectType === "all-videos" || objectType === "everything") {
@@ -1161,9 +1161,9 @@ ${horizontalLine}
 			  url: match[2],   // Video URL
 			  format: match[2].split('.').pop()  // File format
 			}));
-			console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+			// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
 			markdownReport = ampleNoteVideos;
-			console.log("markdownReport:", markdownReport);
+			// console.log("markdownReport:", markdownReport);
 		}
 		
 		if (objectType === "all-links" || objectType === "everything") {
@@ -1174,9 +1174,9 @@ ${horizontalLine}
 			  url: match[2],    // URL
 			  format: match[2].split('/').pop() || null  // File format
 			}));
-			console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
 			markdownReport = links;
-			console.log("markdownReport:", markdownReport);
+			// console.log("markdownReport:", markdownReport);
 		}
 
 		// Handle different download formats
@@ -1232,8 +1232,8 @@ Object Type: ${objectType}
 
 	// Initialize variables for processing results
 	let finalResults = markdownReportz;
-	console.log("markdownReportz:", markdownReportz);
-	console.log("Final results for the report:", finalResults);
+	// console.log("markdownReportz:", markdownReportz);
+	// console.log("Final results for the report:", finalResults);
 
     // Function to get the current date and time in YYMMDD and HHMMSS format
     function getCurrentDateTime() {
@@ -1258,16 +1258,16 @@ Object Type: ${objectType}
 	// Handle different download formats
 		if (dwFormat === "download_md" && finalResults.length > 0) {
 			downloadTextFile(finalResults, "Media_Manager_MD.md");
-			console.log("finalResults:", finalResults);
+			// console.log("finalResults:", finalResults);
 		} else if (dwFormat === "download_csv" && finalResults.length > 0) {
 			downloadTextFile(finalResults, "Media_Manager_CSV.csv");
-			console.log("finalResults:", finalResults);
+			// console.log("finalResults:", finalResults);
 		} else if (dwFormat === "download_txt" && finalResults.length > 0) {
 			downloadTextFile(finalResults, "Media_Manager_TXT.txt");
-			console.log("finalResults:", finalResults);
+			// console.log("finalResults:", finalResults);
 		} else if (dwFormat === "download_json" && finalResults.length > 0) {
 			downloadTextFile(finalResults, "Media_Manager_JSON.json");
-			console.log("finalResults:", finalResults);
+			// console.log("finalResults:", finalResults);
 		}
 
 	},
@@ -1279,7 +1279,7 @@ Object Type: ${objectType}
 	"Download": async function (app, link) {
 		// Define the regex to match UUID format
 		const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-		console.log("link", link);
+		// console.log("link", link);
 		
 		// Opens the link if the link contains a valid attachment UUID
 		if (uuidRegex.test(link.href)) {
@@ -1293,7 +1293,7 @@ Object Type: ${objectType}
 			a.click();  // Programmatically trigger a click event to start the download
 			document.body.removeChild(a);  // Clean up after the click
 
-			console.log("attachmentURL", attachmentURL);
+			// console.log("attachmentURL", attachmentURL);
 			await app.alert("Your file has been downloaded.");
 		} else {
 			await app.alert("Note doesn't have any valid UUID attachments Link");
