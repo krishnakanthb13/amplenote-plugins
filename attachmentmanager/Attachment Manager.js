@@ -1,12 +1,12 @@
 {
   appOption: {
-    // ********************************************************************************************************************* //
-    /**
-     * "Reports" function: Prompts the user to select tags and object type, then filters notes based on those selections.
-     * Inputs: tags (OR and AND), object type (Attachments, Links, Images)
-     * Output: Filtered notes + objects based on the selected criteria.
-     */
-    "Report!": async function (app) {
+	// ********************************************************************************************************************* //
+	/**
+	 * "Reports" function: Prompts the user to select tags and object type, then filters notes based on those selections.
+	 * Inputs: tags (OR and AND), object type (Attachments, Links, Images)
+	 * Output: Filtered notes + objects based on the selected criteria.
+	 */
+	"Report!": async function (app) {
 	// Prompt the user for tags and object type input
 	const result = await app.prompt(
 	  "Select Details on which you want to Report on.",
@@ -24,16 +24,16 @@
 			limit: 10,
 			placeholder: "Enter tag/'s' (Max 10)"
 		  },
-          {
-            label: "Select the Object Type (Mandatory)",
-            type: "select",
-            options: [
-              { label: "Basic - All MD []() Formats", value: "basic" },
-              { label: "Advanced - Attachments", value: "attachments" },
-              { label: "Advanced - Images", value: "amplenote-images" },
-              { label: "Advanced - Videos", value: "amplenote-videos" }
-            ]
-          }
+		  {
+			label: "Select the Object Type (Mandatory)",
+			type: "select",
+			options: [
+			  { label: "Basic - All MD []() Formats", value: "basic" },
+			  { label: "Advanced - Attachments", value: "attachments" },
+			  { label: "Advanced - Images", value: "amplenote-images" },
+			  { label: "Advanced - Videos", value: "amplenote-videos" }
+			]
+		  }
 		]
 	  }
 	);
@@ -52,11 +52,11 @@
 	  return;
 	}
 
-    // Ensure tags and formatting are selected
-    if (!objectType) {
-      app.alert("Note: Select any one of the Object type and Formatting");
-      return;
-    }
+	// Ensure tags and formatting are selected
+	if (!objectType) {
+	  app.alert("Note: Select any one of the Object type and Formatting");
+	  return;
+	}
 
 	// Initialize empty arrays for storing notes and filtered notes
 	let notes = [];
@@ -452,60 +452,60 @@ ${horizontalLine}
 	// console.log("Navigated to the new note:", noteUUID);
 
 
-    },
+	},
 
-    // ********************************************************************************************************************* //
-    /**
-     * "List" function: Similar to "Reports", but adds formatting options for displaying the filtered notes in document or table format.
-     * Inputs: tags (OR and AND), object type, list formatting (document or table)
-     * Output: Filtered and formatted notes + objects.
-     */
-    "Lists!": async function (app) {
+	// ********************************************************************************************************************* //
+	/**
+	 * "List" function: Similar to "Reports", but adds formatting options for displaying the filtered notes in document or table format.
+	 * Inputs: tags (OR and AND), object type, list formatting (document or table)
+	 * Output: Filtered and formatted notes + objects.
+	 */
+	"Lists!": async function (app) {
 	// Prompt the user for tags and object type input
-    const result = await app.prompt(
-        "Select Details on which you want to Report on.",
-        {
-          inputs: [
-            {
-              label: "Select Tags [OR] (Each tag is searched separately)",
-              type: "tags",
-              limit: 10,
-              placeholder: "Enter tag/'s' (Max 10)"
-            },
-            {
-              label: "Select Tags [AND] (Combined tag is searched)",
-              type: "tags",
-              limit: 10,
-              placeholder: "Enter tag/'s' (Max 10)"
-            },
-            {
-              label: "Select the Object Type",
-              type: "select",
-              options: [
-                { label: "Attachments", value: "all-attachments" },
-                { label: "Images", value: "all-images" },
-                { label: "Videos", value: "all-videos" },
-                { label: "Links", value: "all-links" }
-              ]
-            } /*, // May be some other day!!
-            {
-              label: "Select the List Formatting",
-              type: "select",
-              options: [
-                { label: "Document", value: "document" },
-                { label: "Table", value: "table" }
-              ]
-            } */
-          ]
-        }
-      );
+	const result = await app.prompt(
+		"Select Details on which you want to Report on.",
+		{
+		  inputs: [
+			{
+			  label: "Select Tags [OR] (Each tag is searched separately)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select Tags [AND] (Combined tag is searched)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select the Object Type",
+			  type: "select",
+			  options: [
+				{ label: "Attachments", value: "all-attachments" },
+				{ label: "Images", value: "all-images" },
+				{ label: "Videos", value: "all-videos" },
+				{ label: "Links", value: "all-links" }
+			  ]
+			} /*, // May be some other day!!
+			{
+			  label: "Select the List Formatting",
+			  type: "select",
+			  options: [
+				{ label: "Document", value: "document" },
+				{ label: "Table", value: "table" }
+			  ]
+			} */
+		  ]
+		}
+	  );
 
 	// Log the user input (result)
 	// console.log("User input result:", result);
 
-    // Destructure the input for OR/AND tags, object type, and list format
+	// Destructure the input for OR/AND tags, object type, and list format
 	// const [tagNamesOr, tagNamesAnd, objectType, listFormat] = result;
-    const [tagNamesOr, tagNamesAnd, objectType] = result;
+	const [tagNamesOr, tagNamesAnd, objectType] = result;
 	const listFormat = "document";
 	// console.log("tagNamesOr:", tagNamesOr);
 	// console.log("tagNamesAnd:", tagNamesAnd);
@@ -516,15 +516,15 @@ ${horizontalLine}
 	  return;
 	}
 
-    // Ensure tags and formatting are selected
-    // if (!tagNamesOr && !tagNamesAnd) {
-      // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
-      // return;
-    // }
-    if (!objectType || !listFormat) {
-      app.alert("Note: Select any one of the Object type and Formatting");
-      return;
-    }
+	// Ensure tags and formatting are selected
+	// if (!tagNamesOr && !tagNamesAnd) {
+	  // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+	  // return;
+	// }
+	if (!objectType || !listFormat) {
+	  app.alert("Note: Select any one of the Object type and Formatting");
+	  return;
+	}
 
 	// Initialize empty arrays for storing notes and filtered notes
 	let notes = [];
@@ -585,11 +585,11 @@ ${horizontalLine}
 	notes = filteredNotes;
 	// console.log("Final notes array:", notes);
 
-    // Helper function to format date-time strings
-    function formatDateTime(dateTimeStr) {
-        const date = new Date(dateTimeStr);
-        return date.toLocaleString();
-    }
+	// Helper function to format date-time strings
+	function formatDateTime(dateTimeStr) {
+		const date = new Date(dateTimeStr);
+		return date.toLocaleString();
+	}
 
 	// Define horizontal line and introductory text for the markdown document
 	let markdownReport;
@@ -972,62 +972,62 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
 	// console.log("Navigated to the new note:", noteUUID);
 
-    },
+	},
 
-    // ********************************************************************************************************************* //
-    /**
-     * "Download" function: Provides an option to download filtered notes in different formats like markdown, CSV, TXT, or JSON.
-     * Inputs: tags (OR and AND), object type, download format
-     * Output: Downloadable file in the selected format containing filtered notes + objects.
-     */
-    "Download!": async function (app) {
+	// ********************************************************************************************************************* //
+	/**
+	 * "Download" function: Provides an option to download filtered notes in different formats like markdown, CSV, TXT, or JSON.
+	 * Inputs: tags (OR and AND), object type, download format
+	 * Output: Downloadable file in the selected format containing filtered notes + objects.
+	 */
+	"Download!": async function (app) {
 	// Prompt the user for tags and object type input
-    const result = await app.prompt(
-        "Select Details on which you want to Report on.",
-        {
-          inputs: [
-            {
-              label: "Select Tags [OR] (Each tag is searched separately)",
-              type: "tags",
-              limit: 10,
-              placeholder: "Enter tag/'s' (Max 10)"
-            },
-            {
-              label: "Select Tags [AND] (Combined tag is searched)",
-              type: "tags",
-              limit: 10,
-              placeholder: "Enter tag/'s' (Max 10)"
-            },
-            {
-              label: "Select the Object Type",
-              type: "select",
-              options: [
-                { label: "Attachments", value: "all-attachments" },
-                { label: "Images", value: "all-images" },
-                { label: "Videos", value: "all-videos" },
-                { label: "Links", value: "all-links" },
+	const result = await app.prompt(
+		"Select Details on which you want to Report on.",
+		{
+		  inputs: [
+			{
+			  label: "Select Tags [OR] (Each tag is searched separately)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select Tags [AND] (Combined tag is searched)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select the Object Type",
+			  type: "select",
+			  options: [
+				{ label: "Attachments", value: "all-attachments" },
+				{ label: "Images", value: "all-images" },
+				{ label: "Videos", value: "all-videos" },
+				{ label: "Links", value: "all-links" },
 				{ label: "Raw Data - All the above Details", value: "everything" }
-              ]
-            },
-            {
-              label: "Select the Download Format",
-              type: "select",
-              options: [
-                { label: "Download as markdown Table", value: "download_md" },
-                { label: "Download as CSV", value: "download_csv" },
-                { label: "Download as TXT", value: "download_txt" },
-                { label: "Download as JSON", value: "download_json" }
-              ]
-            }
-          ]
-        }
-      );
+			  ]
+			},
+			{
+			  label: "Select the Download Format",
+			  type: "select",
+			  options: [
+				{ label: "Download as markdown Table", value: "download_md" },
+				{ label: "Download as CSV", value: "download_csv" },
+				{ label: "Download as TXT", value: "download_txt" },
+				{ label: "Download as JSON", value: "download_json" }
+			  ]
+			}
+		  ]
+		}
+	  );
 
 	// Log the user input (result)
 	// console.log("User input result:", result);
 
-    // Destructure the inputs for OR/AND tags, object type, and download format
-    const [tagNamesOr, tagNamesAnd, objectType, dwFormat] = result;
+	// Destructure the inputs for OR/AND tags, object type, and download format
+	const [tagNamesOr, tagNamesAnd, objectType, dwFormat] = result;
 	// console.log("tagNamesOr:", tagNamesOr);
 	// console.log("tagNamesAnd:", tagNamesAnd);
 
@@ -1037,15 +1037,15 @@ ${horizontalLine}
 	  return;
 	}
 
-    // Ensure tags and formatting are selected
-    // if (!tagNamesOr && !tagNamesAnd) {
-      // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
-      // return;
-    // }
-    if (!objectType || !listFormat) {
-      app.alert("Note: Select any one of the Object type and Formatting");
-      return;
-    }
+	// Ensure tags and formatting are selected
+	// if (!tagNamesOr && !tagNamesAnd) {
+	  // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+	  // return;
+	// }
+	if (!objectType || !dwFormat) {
+	  app.alert("Note: Select any one of the Object type and Formatting");
+	  return;
+	}
 
 	// Initialize empty arrays for storing notes and filtered notes
 	let notes = [];
@@ -1108,12 +1108,76 @@ ${horizontalLine}
 
 	// Define horizontal line and introductory text for the markdown document
 	let markdownReport;
-	const horizontalLine = `
 
----
-
-`;
 	// ---------------------------------------------------------- //
+
+	  // Iterate over each note and extract the content
+	  for (const note of notes) {
+		try {
+		
+			const noteUUID = note.uuid;
+			// console.log(`Processing note with UUID: ${noteUUID}`);
+
+			// Get note content in markdown format
+			const markdown = await app.getNoteContent({ uuid: noteUUID });
+			// console.log(`Markdown content for note ${noteUUID}:`, markdown);
+			
+			if (objectType === "all-attachments" || objectType === "everything") {
+				// Extract attachments via API
+				const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
+				// console.log("attachmentsAPI:", attachmentsAPI);
+				const clickableLinks = attachmentsAPI.map(link => ({
+				  name: link.name,  // Link text
+				  url: `attachment://${link.uuid}`,  // URL
+				  format: link.name.split('.').pop()  // File format
+				}));
+				console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, clickableLinks);
+			}
+
+			if (objectType === "all-images" || objectType === "everything") {
+				// Extract AmpleNote image links via API and regex
+				const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
+				// console.log("imagesAPI:", imagesAPI);
+				const clickableLinks = attachmentsAPI.map(link => ({
+				  name: link.name,  // Link text
+				  url: link.src,    // URL
+				  format: link.src.split('.').pop()  // File format
+				}));
+				console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, clickableLinks);
+			}
+
+			if (objectType === "all-videos" || objectType === "everything") {
+				// Extract AmpleNote video links
+				// const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
+				const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
+				const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
+				  name: match[1],  // Video name
+				  url: match[2],   // Video URL
+				  format: match[2].split('.').pop()  // File format
+				}));
+				console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+			}
+
+			if (objectType === "all-links" || objectType === "everything") {
+				// Extract non-AmpleNote links excluding images and attachments
+				const linkRegex = /\[([^\]]+)\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
+				const links = [...markdown.matchAll(linkRegex)].map(match => ({
+				  name: match[1],  // Link text
+				  url: match[2],    // URL
+				  format: match[2].split('.').pop() || null  // File format
+				}));
+				console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+			}
+
+		} catch (err) {
+		  // Handle any errors that occur during note processing
+		  if (err instanceof TypeError) {
+			console.warn(`Error processing note ${note.uuid}. Skipping this note.`); // Warn about the error
+			continue;  // Skip notes with errors
+		  }
+		}
+	  }
+
 	// ---------------------------------------------------------- //
 
 	// Initialize variables for processing results
@@ -1150,11 +1214,11 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
 	// console.log("Navigated to the new note:", noteUUID);
 
-    },
+	},
 
-    // ********************************************************************************************************************* //
+	// ********************************************************************************************************************* //
   },
-    // ********************************************************************************************************************* //
+	// ********************************************************************************************************************* //
   linkOption: {
 	"Download": async function (app, link) {
 		// Define the regex to match UUID format
@@ -1180,5 +1244,5 @@ ${horizontalLine}
 		}
 	}
   },
-    // ********************************************************************************************************************* //
+	// ********************************************************************************************************************* //
 }
