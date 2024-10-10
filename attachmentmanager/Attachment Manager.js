@@ -629,36 +629,42 @@ ${horizontalLine}
 		// Extract attachments via API
 		const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
 		// console.log("attachmentsAPI:", attachmentsAPI);
+
+		if (attachmentsAPI.length > 0) {
+			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->`;
+			markdownReport += `\nTags: ${note.tags}`;
+			markdownReport += `\nCreated: ${formatDateTime(note.created)}`;
+			markdownReport += `\nUpdated: ${formatDateTime(note.updated)}`;
+			markdownReport += `\n${horizontalLine}`;
 		
-		// Filter attachments based on their file extensions
-		const attachmentsAPIxlsx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".xlsx"));
-		const attachmentsAPIxls = attachmentsAPI.filter(attachment => attachment.name.endsWith(".xls"));
-		const attachmentsAPIdocx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".docx"));
-		const attachmentsAPIdoc = attachmentsAPI.filter(attachment => attachment.name.endsWith(".doc"));
-		const attachmentsAPIpptx = attachmentsAPI.filter(attachment => attachment.name.endsWith(".pptx"));
-		const attachmentsAPIppt = attachmentsAPI.filter(attachment => attachment.name.endsWith(".ppt"));
-		const attachmentsAPIpdf = attachmentsAPI.filter(attachment => attachment.name.endsWith(".pdf"));
+			// Define an array of file types and their respective extensions
+			const fileTypes = [
+			  { type: "XLSX", ext: ".xlsx" },
+			  { type: "XLS", ext: ".xls" },
+			  { type: "DOCX", ext: ".docx" },
+			  { type: "DOC", ext: ".doc" },
+			  { type: "PPTX", ext: ".pptx" },
+			  { type: "PPT", ext: ".ppt" },
+			  { type: "PDF", ext: ".pdf" }
+			];
 
-		// Add extracted data to the markdown report
-		if (attachmentsAPI.length > 0 || imagesAPI.length > 0 || ampleNoteImages.length > 0 || nonAmpleNoteImages.length > 0 || ampleNoteVideos.length > 0 || links.length > 0) {
-
-		markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->`;
-		markdownReport += `\nTags: ${note.tags}`;
-		markdownReport += `\nCreated: ${formatDateTime(note.created)}`;
-		markdownReport += `\nUpdated: ${formatDateTime(note.updated)}`;
-		markdownReport += `\n${horizontalLine}`;
-
-			if (attachmentsAPIxlsx.length > 0) {
-				markdownReport += `### File Type: XLSX`;
-				const clickableLinks = attachmentsAPIxlsx.map(link => {
-					return `[${link.name}](${link.uuid})`;
-				}).join("\n");
-				markdownReport += `\n${clickableLinks}`;
-			}
-
+			// Loop through each file type and filter attachments dynamically
+			fileTypes.forEach(({ type, ext }) => {
+			  const filteredAttachments = attachmentsAPI.filter(attachment => attachment.name.endsWith(ext));
+			  
+			  // If there are any attachments of this file type, add them to the markdown report
+			  if (filteredAttachments.length > 0) {
+				markdownReport += `### File Type: ${type}\n`;
+				
+				// Create clickable links for each filtered attachment
+				const clickableLinks = filteredAttachments.map(link => `[${link.name}](${link.uuid})`).join("\n");
+				markdownReport += `\n${clickableLinks}\n`;
+			  }
+			});
+			
+			markdownReport += `\n${horizontalLine}`;
+		
 		}
-
-		markdownReport += `\n${horizontalLine}`;
 
 	  } catch (err) {
 		if (err instanceof TypeError) {
