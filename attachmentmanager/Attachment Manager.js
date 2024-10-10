@@ -1204,8 +1204,8 @@ Object Type: ${objectType}
 `).join("\n");
 			markdownReportz += `${clickableLinks}\n`;
 		} else if (dwFormat === "download_json" && markdownReport.length > 0) {
-			// Append to json
-		// Assuming markdownReport is an array of links
+		// Append to json
+		// markdownReport is an array of links
 		const jsonLinks = markdownReport.map(link => ({
 		  noteName: note.name,
 		  noteUUID: note.uuid,
