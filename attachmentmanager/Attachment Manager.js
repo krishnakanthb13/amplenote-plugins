@@ -9,7 +9,7 @@
 	"Report!": async function (app) {
 	// Prompt the user for tags and object type input
 	const result = await app.prompt(
-	  "Select Details on which you want to Report on.",
+	  "Select Details on which you want to your Report on.",
 	  {
 		inputs: [
 		  {
@@ -130,10 +130,10 @@
 	if (objectType === "basic") {
 
 	const introLines = `
-# Welcome to your Attachment Manager: Report (Basic). <!-- {"collapsed":true} -->
-Here you can find the count of All Basic Attachments in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
+# Welcome to your Markdown Media Manager: Report (Basic). <!-- {"collapsed":true} -->
+Here you can find the count of All Basic Media in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - (1) \`Attachments [Through API]\`, 
-- (2) \`All Images [Through API]\`, (3) \`Amplenote Images [Images hosted by Amplenote]\`, (4) \`Non-Amplenote Hosted Images [Images hosted in the Web]\`, 
+- (2) \`All Images [Through API]\`, (3) \`Amplenote Images [Images hosted by Amplenote]\`, (4) \`Non-Amplenote Hosted Images [Images hosted on the Web]\`, 
 - (5) \`Amplenote Videos [Videos hosted by Amplenote]\`, 
 - (6) \`Links [Normal Non-Amplenote links].\`
 ${horizontalLine}
@@ -141,7 +141,7 @@ ${horizontalLine}
 
 	// Initialize the markdown table format
 	markdownReport = `${introLines}`;
-	markdownReport += "| Note 🔗 | Tags 🏷️ | Attachments 📃 | Images 🖼️ | Amplenote Images ☁️ | Non-Amplenote Images 🌐 | Amplenote Videos 🎞️ | Links 🔗 |\n";
+	markdownReport += "| `Note` 🔗 | `Tags` 🏷️ | `Attachments` 📃 | `Images` 🖼️ | `Amplenote Images` ☁️ | `Non-Amplenote Images` 🌐 | `Amplenote Videos` 🎞️ | `Links` 🔗 |\n";
 	markdownReport += "|---------|---------|---------------|-----------|---------------------|------------------------|---------------------|----------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
@@ -215,7 +215,7 @@ ${horizontalLine}
 	if (objectType === "attachments") {
 
 	const introLines = `
-# Welcome to your Attachment Manager: Report (Advanced - Attachments). <!-- {"collapsed":true} -->
+# Welcome to your Markdown Media Manager: Report (Advanced - Attachments). <!-- {"collapsed":true} -->
 Here you can find the count of All Attachments in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - **\`.xlsx\`** 🟩 | **\`.xls\`** 🟩 — Excel Spreadsheet files, commonly used for storing data in tabular form, calculations, charts, and pivot tables.
 - **\`.docx\`** 🟦 | **\`.doc\`** 🟦 — Microsoft Word documents, frequently used for creating text documents with formatting, images, and other media.
@@ -226,7 +226,7 @@ ${horizontalLine}
 
 	// Initialize the markdown table format
 	markdownReport = `${introLines}`;
-	markdownReport += "| Note 🔗 | Tags 🏷️ | .xlsx 🟩 | .xls 🟩 | .docx 🟦 | .doc 🟦 | .pptx 🟧 | .ppt 🟧 | .pdf 🟠 |\n";
+	markdownReport += "| `Note` 🔗 | `Tags` 🏷️ | `.xlsx` 🟩 | `.xls` 🟩 | `.docx` 🟦 | `.doc` 🟦 | `.pptx` 🟧 | `.ppt` 🟧 | `.pdf` 🟠 |\n";
 	markdownReport += "|---------|---------|----------|---------|----------|--------|----------|---------|---------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
@@ -275,8 +275,8 @@ ${horizontalLine}
 	if (objectType === "amplenote-images") {
 
 	const introLines = `
-# Welcome to your Attachment Manager: Report (Advanced - Images). <!-- {"collapsed":true} -->
-Here you can find the count of most common image extensions in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
+# Welcome to your Markdown Media Manager: Report (Advanced - Images). <!-- {"collapsed":true} -->
+Here you can find the count of most common Image extensions in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - **\`.jpg\`** 🖼️ | **\`.jpeg\`** 🖼️ — JPEG image files, commonly used for photographs and web images, providing good compression with decent quality.
 - **\`.png\`** 🖼️ — PNG image files, often used for web graphics and images requiring transparency, with lossless compression.
 - **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
@@ -286,7 +286,7 @@ ${horizontalLine}
 
 	// Initialize the markdown table format
 	markdownReport = `${introLines}`;
-	markdownReport += "| Note 🔗 | Tags 🏷️ | .jpg/.jpeg 🖼️ | .png 🖼️ | .gif 🎞️ | .bmp 🖼️ | Others 🖼️ |\n";
+	markdownReport += "| `Note` 🔗 | `Tags` 🏷️ | `.jpg/.jpeg` 🖼️ | `.png` 🖼️ | `.gif` 🎞️ | `.bmp` 🖼️ | `Others` 🖼️ |\n";
 	markdownReport += "|---------|---------|------------|------|------|------|--------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
@@ -352,18 +352,18 @@ ${horizontalLine}
 	if (objectType === "amplenote-videos") {
 
 	const introLines = `
-# Welcome to your Attachment Manager: Report (Advanced - Videos). <!-- {"collapsed":true} -->
-Here you can find the count of most common video extensions in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
-- **.mp4 🎥** — Video file formats commonly used for storing digital video. MP4 is widely supported across platforms.
-- **.mov 🎥** — MOV is primarily used by Apple's QuickTime.
-- **.mpg 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
-- **.webm 🎬** — An open-source, royalty-free format designed for delivering high-quality video through web browsers.
+# Welcome to your Markdown Media Manager: Report (Advanced - Videos). <!-- {"collapsed":true} -->
+Here you can find the count of most common Video extensions in Table format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
+- **\`.mp4\` 🎥** — Video file formats commonly used for storing digital video. MP4 is widely supported across platforms.
+- **\`.mov\` 🎥** — MOV is primarily used by Apple's QuickTime.
+- **\`.mpg\` 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
+- **\`.webm\` 🎬** — An open-source, royalty-free format designed for delivering high-quality video through web browsers.
 ${horizontalLine}
 `;
 
 	// Initialize the markdown table format
 	markdownReport = `${introLines}`;
-	markdownReport += "| Note 🔗 | Tags 🏷️ | .mp4 🎥 | .mov 🎥 | .mpg 🎞️ | .webm 🎬 |\n";
+	markdownReport += "| `Note` 🔗 | `Tags` 🏷️ | `.mp4` 🎥 | `.mov` 🎥 | `.mpg` 🎞️ | `.webm` 🎬 |\n";
 	markdownReport += "|---------|---------|---------|--------|---------|----------|\n";
 	markdownReport += "|| **Total Sum** |=sum(below)|=sum(below)|=sum(below)|=sum(below)|\n";
 
@@ -436,10 +436,10 @@ ${horizontalLine}
 	const { YYMMDD, HHMMSS } = getCurrentDateTime();
 	// console.log("Generated date and time:", YYMMDD, HHMMSS);
 
-	const newNoteName = `Attachment Manager: Report ${YYMMDD}_${HHMMSS}`;
+	const newNoteName = `MD Media Manager: Report ${YYMMDD}_${HHMMSS}`;
 	// console.log("New note name:", newNoteName);
 
-	const newTagName = ['-reports/-attachment-manager'];
+	const newTagName = ['-reports/-media-manager'];
 	// console.log("New note tags:", newTagName);
 
 	let noteUUID = await app.createNote(newNoteName, newTagName);
@@ -605,14 +605,14 @@ ${horizontalLine}
 
 	  // Introductory text for the Markdown report
 	  const introLines = `
-# Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
+# Welcome to your Markdown Media Manager. <!-- {"collapsed":true} -->
 Here you can find the List of Attachments in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - **\`.xlsx\`** 🟩 | **\`.xls\`** 🟩 — Excel Spreadsheet files, commonly used for storing data in tabular form, calculations, charts, and pivot tables.
 - **\`.docx\`** 🟦 | **\`.doc\`** 🟦 — Microsoft Word documents, frequently used for creating text documents with formatting, images, and other media.
 - **\`.pptx\`** 🟧 | **\`.ppt\`** 🟧 — PowerPoint presentations, used for creating slide shows with text, images, and multimedia elements.
 - **\`.pdf\`** 🟠 — Portable Document Format, a widely-used format for presenting documents that appear the same across different devices.
-> Object Type Selection: Attachments.
-> Note: Using the Link Option, you can download the Attachment.
+> **Object Type Selection:** Attachments.
+> **Note:** Using the Link Option, you can \`download\` the Attachment.
 ${horizontalLine}
 `;
 
@@ -633,9 +633,9 @@ ${horizontalLine}
 		  // If the note contains attachments, generate the report section for this note
 		  if (attachmentsAPI.length > 0) {
 			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
-			markdownReport += `\nTags: ${note.tags}\n`;
-			markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
-			markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
+			markdownReport += `\n<mark>Tags:</mark> ${note.tags}\n`;
+			markdownReport += `\n<mark>Created:</mark> ${formatDateTime(note.created)}\n`;
+			markdownReport += `\n<mark>Updated:</mark> ${formatDateTime(note.updated)}\n`;
 			markdownReport += `\n${horizontalLine}\n`;
 
 			// Define an array of file types and their corresponding file extensions
@@ -688,13 +688,13 @@ ${horizontalLine}
 
 	  // Introductory text for the Markdown report
 	  const introLines = `
-# Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
+# Welcome to your Markdown Media Manager. <!-- {"collapsed":true} -->
 Here you can find the List of Images in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - **\`.jpg\`** 🖼️ | **\`.jpeg\`** 🖼️ — JPEG image files, commonly used for photographs and web images, providing good compression with decent quality.
 - **\`.png\`** 🖼️ — PNG image files, often used for web graphics and images requiring transparency, with lossless compression.
 - **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
 - **\`.bmp\`** 🖼️ — BMP files, uncompressed and typically large, used for storing high-quality images in older systems.
-> Object Type Selection: Images.
+> **Object Type Selection:** Images.
 ${horizontalLine}
 `;
 
@@ -712,13 +712,13 @@ ${horizontalLine}
 		  const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
 		  // console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
 
-		// If the note contains attachments, generate the report section for this note
+		// If the note contains images, generate the report section for this note
 		if (imagesAPI.length > 0) {
-		  markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
-		  markdownReport += `\nTags: ${note.tags}\n`;
-		  markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
-		  markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
-		  markdownReport += `\n${horizontalLine}\n`;
+			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
+			markdownReport += `\n<mark>Tags:</mark> ${note.tags}\n`;
+			markdownReport += `\n<mark>Created:</mark> ${formatDateTime(note.created)}\n`;
+			markdownReport += `\n<mark>Updated:</mark> ${formatDateTime(note.updated)}\n`;
+			markdownReport += `\n${horizontalLine}\n`;
 
 		  // Define an array of file types and their corresponding file extensions
 		  const fileTypes = [
@@ -785,13 +785,13 @@ ${horizontalLine}
 
 	  // Introductory text for the Markdown report
 	  const introLines = `
-# Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
+# Welcome to your Markdown Media Manager. <!-- {"collapsed":true} -->
 Here you can find the List of Videos in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
-- **.mp4 🎥** — Video file formats commonly used for storing digital video. MP4 is widely supported across platforms.
-- **.mov 🎥** — MOV is primarily used by Apple's QuickTime.
-- **.mpg 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
-- **.webm 🎬** — An open-source, royalty-free format designed for delivering high-quality video through web browsers.
-> Object Type Selection: Videos.
+- **\`.mp4\` 🎥** — Video file formats commonly used for storing digital video. MP4 is widely supported across platforms.
+- **\`.mov\` 🎥** — MOV is primarily used by Apple's QuickTime.
+- **\`.mpg\` 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
+- **\`.webm\` 🎬** — An open-source, royalty-free format designed for delivering high-quality video through web browsers.
+> **Object Type Selection:** Videos.
 ${horizontalLine}
 `;
 
@@ -822,11 +822,11 @@ ${horizontalLine}
 
 		// If the note contains attachments, generate the report section for this note
 		if (ampleNoteVideos.length > 0) {
-		  markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
-		  markdownReport += `\nTags: ${note.tags}\n`;
-		  markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
-		  markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
-		  markdownReport += `\n${horizontalLine}\n`;
+			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
+			markdownReport += `\n<mark>Tags:</mark> ${note.tags}\n`;
+			markdownReport += `\n<mark>Created:</mark> ${formatDateTime(note.created)}\n`;
+			markdownReport += `\n<mark>Updated:</mark> ${formatDateTime(note.updated)}\n`;
+			markdownReport += `\n${horizontalLine}\n`;
 
 		  // Define an array of file types and their corresponding file extensions
 		  const fileTypes = [
@@ -878,9 +878,9 @@ ${horizontalLine}
 
 	  // Introductory text for the Markdown report
 	  const introLines = `
-# Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
+# Welcome to your Markdown Media Manager. <!-- {"collapsed":true} -->
 Here you can find the List of Links in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`).
-> Object Type Selection: Links.
+> **Object Type Selection:** Links.
 ${horizontalLine}
 `;
 
@@ -908,11 +908,11 @@ ${horizontalLine}
 
 		// If the note contains attachments, generate the report section for this note
 		if (links.length > 0) {
-		  markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
-		  markdownReport += `\nTags: ${note.tags}\n`;
-		  markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
-		  markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
-		  markdownReport += `\n${horizontalLine}\n`;
+			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
+			markdownReport += `\n<mark>Tags:</mark> ${note.tags}\n`;
+			markdownReport += `\n<mark>Created:</mark> ${formatDateTime(note.created)}\n`;
+			markdownReport += `\n<mark>Updated:</mark> ${formatDateTime(note.updated)}\n`;
+			markdownReport += `\n${horizontalLine}\n`;
 
 			markdownReport += `### File Type: Links\n`;
 			// Create clickable links for each filtered attachment and add them to the report
@@ -957,10 +957,10 @@ ${horizontalLine}
 	const { YYMMDD, HHMMSS } = getCurrentDateTime();
 	// console.log("Generated date and time:", YYMMDD, HHMMSS);
 
-	const newNoteName = `Attachment Manager: List ${YYMMDD}_${HHMMSS}`;
+	const newNoteName = `MD Media Manager: List ${YYMMDD}_${HHMMSS}`;
 	// console.log("New note name:", newNoteName);
 
-	const newTagName = ['-reports/-attachment-manager'];
+	const newTagName = ['-reports/-media-manager'];
 	// console.log("New note tags:", newTagName);
 
 	let noteUUID = await app.createNote(newNoteName, newTagName);
@@ -1109,6 +1109,18 @@ ${horizontalLine}
 	// Define horizontal line and introductory text for the markdown document
 	let markdownReportz = ``;
 
+	if (objectType) {
+		// Handle different download formats
+		if (dwFormat === "download_md") {
+		  // Create markdown table headers
+		  markdownReportz += `|Note Name|Note UUID|Note Tags|Media Name|Media URL|Media Format|Media Type|Media Type Selection|\n`;
+		  markdownReportz += `|---|---|---|---|---|---|---|---|\n`;
+		} else if (dwFormat === "download_csv") {
+		  // Create CSV headers
+		  markdownReportz += `Note Name,Note UUID,Note Tags,Media Name,Media URL,Media Format,Media Type,Media Type Selection\n`;
+		}		
+	}
+
 	// ---------------------------------------------------------- //
 
 	// Iterate over each note and extract the content
@@ -1134,7 +1146,8 @@ ${horizontalLine}
 			const attachmentLinks = attachmentsAPI.map(link => ({
 				name: link.name,  // Link text
 				url: `attachment://${link.uuid}`,  // URL
-				format: link.name.split('.').pop()  // File format
+				format: link.name.split('.').pop(),  // File format
+				type: `Attachment`
 			}));
 			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, attachmentLinks);
 			// Append attachment links to markdownReport
@@ -1151,7 +1164,8 @@ ${horizontalLine}
 			const imageLinks = imagesAPI.map(link => ({
 				name: link.src.split('/').pop(),  // Link text
 				url: link.src,  // URL
-				format: link.src.split('.').pop()  // File format
+				format: link.src.split('.').pop(),  // File format
+				type: `Image`
 			}));
 			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, imageLinks);
 			// Append image links to markdownReport
@@ -1166,7 +1180,8 @@ ${horizontalLine}
 			const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
 				name: match[1],  // Video name
 				url: match[2],  // Video URL
-				format: match[2].split('.').pop()  // File format
+				format: match[2].split('.').pop(),  // File format
+				type: `Video`
 			}));
 			// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
 			// Append video links to markdownReport
@@ -1181,7 +1196,8 @@ ${horizontalLine}
 			const links = [...markdown.matchAll(linkRegex)].map(match => ({
 				name: match[1],  // Link text
 				url: match[2],  // URL
-				format: match[2].split('/').pop() || null  // File format
+				format: match[2].split('/').pop() || null,  // File format
+				type: `Link`
 			}));
 			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
 			// Append links to markdownReport
@@ -1198,14 +1214,10 @@ ${horizontalLine}
 
 		  // Map `markdownReport` to create markdown table rows
 		  const clickableLinks = markdownReport.map(link => {
-			const result = `|${note.name}|${note.uuid}|${note.tags}|${link.name}|${link.url}|${link.format}|${objectType}|`;
+			const result = `|${note.name}|${note.uuid}|${note.tags}|${link.name}|${link.url}|${link.format}|${link.type}|${objectType}|`;
 			// console.log("Markdown clickableLink entry:", result);
 			return result;
 		  }).join("\n");
-
-		  // Create markdown table headers
-		  markdownReportz += `|Note Name|Note UUID|Note Tags|Media Name|Media URL|Media Format|Media Type|\n`;
-		  markdownReportz += `|---|---|---|---|---|---|---|\n`;
 
 		  // Append clickable links to the markdown report
 		  markdownReportz += `${clickableLinks}\n`;
@@ -1217,13 +1229,10 @@ ${horizontalLine}
 
 		  // Map `markdownReport` to create CSV rows
 		  const clickableLinks = markdownReport.map(link => {
-			const result = `"${note.name}","${note.uuid}","${note.tags}","${link.name}","${link.url}","${link.format}","${objectType}"`;
+			const result = `"${note.name}","${note.uuid}","${note.tags}","${link.name}","${link.url}","${link.format}","${link.type}","${objectType}"`;
 			// console.log("CSV clickableLink entry:", result);
 			return result;
 		  }).join("\n");
-
-		  // Create CSV headers
-		  markdownReportz += `Note Name,Note UUID,Note Tags,Media Name,Media URL,Media Format,Media Type\n`;
 
 		  // Append clickable links to the CSV report
 		  markdownReportz += `${clickableLinks}\n`;
@@ -1242,6 +1251,7 @@ Note Tags: ${note.tags},
 Link Name: ${link.name},
 Link URL: ${link.url},
 Link Format: ${link.format},
+Link Type: ${link.type},
 Object Type: ${objectType}
 `;
 			// console.log("Text clickableLink entry:", result);
@@ -1265,6 +1275,7 @@ Object Type: ${objectType}
 			  linkName: link.name,
 			  linkURL: link.url,
 			  linkFormat: link.format,
+			  linkType: link.type,
 			  objectType: objectType
 			};
 			// console.log("JSON clickableLink entry:", result);
@@ -1313,19 +1324,19 @@ Object Type: ${objectType}
     }
 	
 	// Handle different download formats
-		if (dwFormat === "download_md" && finalResults.length > 0) {
-			downloadTextFile(finalResults, "Media_Manager_MD.md");
-			// console.log("finalResults:", finalResults);
-		} else if (dwFormat === "download_csv" && finalResults.length > 0) {
-			downloadTextFile(finalResults, "Media_Manager_CSV.csv");
-			// console.log("finalResults:", finalResults);
-		} else if (dwFormat === "download_txt" && finalResults.length > 0) {
-			downloadTextFile(finalResults, "Media_Manager_TXT.txt");
-			// console.log("finalResults:", finalResults);
-		} else if (dwFormat === "download_json" && finalResults.length > 0) {
-			downloadTextFile(finalResults, "Media_Manager_JSON.json");
-			// console.log("finalResults:", finalResults);
-		}
+	if (dwFormat === "download_md" && finalResults.length > 0) {
+		downloadTextFile(finalResults, "Media_Manager_MD.md");
+		// console.log("finalResults:", finalResults);
+	} else if (dwFormat === "download_csv" && finalResults.length > 0) {
+		downloadTextFile(finalResults, "Media_Manager_CSV.csv");
+		// console.log("finalResults:", finalResults);
+	} else if (dwFormat === "download_txt" && finalResults.length > 0) {
+		downloadTextFile(finalResults, "Media_Manager_TXT.txt");
+		// console.log("finalResults:", finalResults);
+	} else if (dwFormat === "download_json" && finalResults.length > 0) {
+		downloadTextFile(finalResults, "Media_Manager_JSON.json");
+		// console.log("finalResults:", finalResults);
+	}
 
 	},
 
@@ -1353,7 +1364,7 @@ Object Type: ${objectType}
 			// console.log("attachmentURL", attachmentURL);
 			await app.alert("Your file has been downloaded.");
 		} else {
-			await app.alert("Note doesn't have any valid UUID attachments Link");
+			await app.alert("Link doesn't have any valid UUID attachments pattern");
 		}
 	}
   },
