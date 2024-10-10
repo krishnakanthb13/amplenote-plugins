@@ -482,13 +482,10 @@ ${horizontalLine}
               label: "Select the Object Type",
               type: "select",
               options: [
-                { label: "Basic - All Attachments", value: "all-attachments" },
-                { label: "Basic - All Images", value: "all-images" },
-                // { label: "Advanced - All Attachments", value: "attachments" },
-                { label: "Advanced - Amplenote Hosted Images", value: "amplenote-images" },
-                { label: "Advanced - Non-Amplenote Hosted Images", value: "nonamplenote-images" },
-                { label: "Advanced - Amplenote Hosted Videos", value: "amplenote-videos" },
-                { label: "Advanced - Links", value: "links" }
+                { label: "Attachments", value: "all-attachments" },
+                { label: "Images", value: "all-images" },
+                { label: "Videos", value: "all-videos" },
+                { label: "Links", value: "links" }
               ]
             } /*, // May be some other day!!
             {
@@ -614,7 +611,7 @@ Here you can find the List of Attachments in \`${listFormat}\` format. For the s
 - **\`.docx\`** 🟦 | **\`.doc\`** 🟦 — Microsoft Word documents, frequently used for creating text documents with formatting, images, and other media.
 - **\`.pptx\`** 🟧 | **\`.ppt\`** 🟧 — PowerPoint presentations, used for creating slide shows with text, images, and multimedia elements.
 - **\`.pdf\`** 🟠 — Portable Document Format, a widely-used format for presenting documents that appear the same across different devices.
-> Object Type Selection: Basic - All Attachments.
+> Object Type Selection: Attachments.
 > Note: Using the Link Option, you can download the Attachment.
 ${horizontalLine}
 `;
@@ -697,7 +694,7 @@ Here you can find the List of Images in \`${listFormat}\` format. For the select
 - **\`.png\`** 🖼️ — PNG image files, often used for web graphics and images requiring transparency, with lossless compression.
 - **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
 - **\`.bmp\`** 🖼️ — BMP files, uncompressed and typically large, used for storing high-quality images in older systems.
-> Object Type Selection: Basic - All Images.
+> Object Type Selection: Images.
 ${horizontalLine}
 `;
 
@@ -715,43 +712,60 @@ ${horizontalLine}
 		  const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
 		  // console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
 
-		  // If the note contains attachments, generate the report section for this note
-		  if (imagesAPI.length > 0) {
-			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
-			markdownReport += `\nTags: ${note.tags}\n`;
-			markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
-			markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
-			markdownReport += `\n${horizontalLine}\n`;
+		// If the note contains attachments, generate the report section for this note
+		if (imagesAPI.length > 0) {
+		  markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
+		  markdownReport += `\nTags: ${note.tags}\n`;
+		  markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
+		  markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
+		  markdownReport += `\n${horizontalLine}\n`;
 
-			// Define an array of file types and their corresponding file extensions
-			const fileTypes = [
-			  { type: "JPG", ext: ".jpg" },
-			  { type: "JPEG", ext: ".jpeg" },
-			  { type: "PNG", ext: ".png" },
-			  { type: "GIF", ext: ".gif" },
-			  { type: "BMP", ext: ".bmp" }
-			];
+		  // Define an array of file types and their corresponding file extensions
+		  const fileTypes = [
+			{ type: "JPG", ext: ".jpg" },
+			{ type: "JPEG", ext: ".jpeg" },
+			{ type: "PNG", ext: ".png" },
+			{ type: "GIF", ext: ".gif" },
+			{ type: "BMP", ext: ".bmp" }
+		  ];
 
-			// Loop through each file type and filter attachments based on their extension
-			fileTypes.forEach(({ type, ext }) => {
-			  const filteredAttachments = imagesAPI.filter(attachment => attachment.src.endsWith(ext));
-			  // console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
-			  
-			  // If there are attachments for the current file type, add them to the report
-			  if (filteredAttachments.length > 0) {
-				markdownReport += `### File Type: ${type}\n`;
+		  // Initialize an array to hold other attachments
+		  const otherAttachments = [];
 
-				// Create clickable links for each filtered attachment and add them to the report
-				const clickableLinks = filteredAttachments.map(link => `[${link.src.split('/').pop()}](${link.src})`).join("\n");
-				markdownReport += `\n${clickableLinks}\n`;
-				// console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
-			  }
-			});
+		  // Loop through each file type and filter attachments based on their extension
+		  fileTypes.forEach(({ type, ext }) => {
+			const filteredAttachments = imagesAPI.filter(attachment => attachment.src.endsWith(ext));
+			// console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
+			
+			// If there are attachments for the current file type, add them to the report
+			if (filteredAttachments.length > 0) {
+			  markdownReport += `### File Type: ${type}\n`;
 
-			// Add a horizontal line separator after each note's attachment list
-			markdownReport += `\n${horizontalLine}\n`;
-			// console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+			  // Create clickable links for each filtered attachment and add them to the report
+			  const clickableLinks = filteredAttachments.map(link => `[${link.src.split('/').pop()}](${link.src})`).join("\n");
+			  markdownReport += `\n${clickableLinks}\n`;
+			  // console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
+			}
+		  });
+
+		  // Identify and collect attachments that do not match any of the specified file types
+		  otherAttachments.push(...imagesAPI.filter(attachment => 
+			!fileTypes.some(({ ext }) => attachment.src.endsWith(ext))
+		  ));
+
+		  // If there are other attachments, add them to the report
+		  if (otherAttachments.length > 0) {
+			markdownReport += `### File Type: Other\n`;
+			
+			// Create clickable links for each other attachment and add them to the report
+			const clickableLinks = otherAttachments.map(link => `[${link.src.split('/').pop()}](${link.src})`).join("\n");
+			markdownReport += `\n${clickableLinks}\n`;
 		  }
+
+		  // Add a horizontal line separator after each note's attachment list
+		  markdownReport += `\n${horizontalLine}\n`;
+		  // console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+		}
 
 		} catch (err) {
 		  // Handle any errors that occur during note processing
@@ -762,7 +776,100 @@ ${horizontalLine}
 		}
 	  }
 
-	} // End of if condition for "all-attachments"
+	} // End of if condition for "all-images"
+
+	// ---------------------------------------------------------- //
+
+	// If the objectType is "all-images", this block of code will be executed
+	if (objectType === "all-videos") {
+
+	  // Introductory text for the Markdown report
+	  const introLines = `
+# Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
+Here you can find the List of Videos in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
+- **.mp4 🎥** — Video file formats commonly used for storing digital video. MP4 is widely supported across platforms.
+- **.mov 🎥** — MOV is primarily used by Apple's QuickTime.
+- **.mpg 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
+- **.webm 🎬** — An open-source, royalty-free format designed for delivering high-quality video through web browsers.
+> Object Type Selection: Videos.
+${horizontalLine}
+`;
+
+	  // Initialize the Markdown report with the introductory text
+	  markdownReport = `${introLines}`;
+	  // console.log("Initial markdownReport:", markdownReport); // Log the initial report
+
+	  // Iterate over each note and extract the content
+	  for (const note of notes) {
+		try {
+		  const noteUUID = note.uuid;
+		  // console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  
+		// Get note content in markdown format
+		const markdown = await app.getNoteContent({ uuid: noteUUID });
+		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
+
+		// Regex to match AmpleNote videos with specific formats (mp4, mov, mpg, webm)
+		const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
+
+		// Extracting ampleNoteVideos that match the regex
+		const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
+		  name: match[1],  // Video name from the first capture group
+		  url: match[2],   // Video URL from the second capture group
+		  format: match[2].split('.').pop()  // Extract the file format from the URL
+		}));
+		console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+
+		// If the note contains attachments, generate the report section for this note
+		if (ampleNoteVideos.length > 0) {
+		  markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
+		  markdownReport += `\nTags: ${note.tags}\n`;
+		  markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
+		  markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
+		  markdownReport += `\n${horizontalLine}\n`;
+
+		  // Define an array of file types and their corresponding file extensions
+		  const fileTypes = [
+			{ type: "MP4", ext: ".mp4" },
+			{ type: "MOV", ext: ".mov" },
+			{ type: "MPG", ext: ".mpg" },
+			{ type: "WEBM", ext: ".webm" }
+		  ];
+
+		  // Initialize an array to hold other attachments
+		  const otherAttachments = [];
+
+		  // Loop through each file type and filter attachments based on their extension
+		  fileTypes.forEach(({ type, ext }) => {
+			const filteredAttachments = ampleNoteVideos.filter(attachment => attachment.url.endsWith(ext));
+			// console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
+			
+			// If there are attachments for the current file type, add them to the report
+			if (filteredAttachments.length > 0) {
+			  markdownReport += `### File Type: ${type}\n`;
+
+			  // Create clickable links for each filtered attachment and add them to the report
+			  const clickableLinks = filteredAttachments.map(link => `[${link.name}](${link.url})`).join("\n");
+			  markdownReport += `\n${clickableLinks}\n`;
+			  // console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
+			}
+		  });
+
+		  // Add a horizontal line separator after each note's attachment list
+		  markdownReport += `\n${horizontalLine}\n`;
+		  // console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+		}
+
+		} catch (err) {
+		  // Handle any errors that occur during note processing
+		  if (err instanceof TypeError) {
+			console.warn(`Error processing note ${note.uuid}. Skipping this note.`); // Warn about the error
+			continue;  // Skip notes with errors
+		  }
+		}
+	  }
+
+	} // End of if condition for "all-videos"
 
 	// ---------------------------------------------------------- //
 
