@@ -26,7 +26,7 @@
 		  },
 		  {
 			label: "Select the Object Type (Mandatory)",
-			type: "select",
+			type: "radio",
 			options: [
 			  { label: "Basic - All MD []() Formats", value: "basic" },
 			  { label: "Advanced - Attachments", value: "attachments" },
@@ -480,7 +480,7 @@ ${horizontalLine}
 			},
 			{
 			  label: "Select the Object Type",
-			  type: "select",
+			  type: "radio",
 			  options: [
 				{ label: "Attachments", value: "all-attachments" },
 				{ label: "Images", value: "all-images" },
@@ -1000,18 +1000,18 @@ ${horizontalLine}
 			},
 			{
 			  label: "Select the Object Type",
-			  type: "select",
+			  type: "radio",
 			  options: [
 				{ label: "Attachments", value: "all-attachments" },
 				{ label: "Images", value: "all-images" },
 				{ label: "Videos", value: "all-videos" },
-				{ label: "Links", value: "all-links" }
-				// , { label: "All the above", value: "everything" }
+				{ label: "Links", value: "all-links" },
+				{ label: "All the above", value: "everything" }
 			  ]
 			},
 			{
 			  label: "Select the Download Format",
-			  type: "select",
+			  type: "radio",
 			  options: [
 				{ label: "Download as markdown Table", value: "download_md" },
 				{ label: "Download as CSV", value: "download_csv" },
@@ -1122,78 +1122,120 @@ ${horizontalLine}
 		const markdown = await app.getNoteContent({ uuid: noteUUID });
 		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
 		
+		// Initialize markdownReport as an empty array to accumulate results
 		let markdownReport = [];
-		
+
+		// If the objectType is "all-attachments" or "everything", extract attachments
 		if (objectType === "all-attachments" || objectType === "everything") {
 			// Extract attachments via API
 			const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
 			// console.log("attachmentsAPI:", attachmentsAPI);
-			const clickableLinks = attachmentsAPI.map(link => ({
-			  name: link.name,  // Link text
-			  url: `attachment://${link.uuid}`,  // URL
-			  format: link.name.split('.').pop()  // File format
+			// Map the attachments to an array of objects
+			const attachmentLinks = attachmentsAPI.map(link => ({
+				name: link.name,  // Link text
+				url: `attachment://${link.uuid}`,  // URL
+				format: link.name.split('.').pop()  // File format
 			}));
-			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, clickableLinks);
-			markdownReport = clickableLinks;
-			// console.log("markdownReport:", markdownReport);
-		}
-		
-		if (objectType === "all-images" || objectType === "everything") {
-			// Extract AmpleNote image links via API and regex
-			const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
-			// console.log("imagesAPI:", imagesAPI);
-			const clickableLinks = imagesAPI.map(link => ({
-			  name: link.src.split('/').pop(),  // Link text
-			  url: link.src,    // URL
-			  format: link.src.split('.').pop()  // File format
-			}));
-			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, clickableLinks);
-			markdownReport = clickableLinks;
-			// console.log("markdownReport:", markdownReport);
-		}
-		
-		if (objectType === "all-videos" || objectType === "everything") {
-			// Extract AmpleNote video links
-			// const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?)\)/g;
-			const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
-			const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
-			  name: match[1],  // Video name
-			  url: match[2],   // Video URL
-			  format: match[2].split('.').pop()  // File format
-			}));
-			// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
-			markdownReport = ampleNoteVideos;
-			// console.log("markdownReport:", markdownReport);
-		}
-		
-		if (objectType === "all-links" || objectType === "everything") {
-			// Extract non-AmpleNote links excluding images and attachments
-			const linkRegex = /\[([^\]]+)\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
-			const links = [...markdown.matchAll(linkRegex)].map(match => ({
-			  name: match[1],  // Link text
-			  url: match[2],    // URL
-			  format: match[2].split('/').pop() || null  // File format
-			}));
-			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
-			markdownReport = links;
-			// console.log("markdownReport:", markdownReport);
+			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, attachmentLinks);
+			// Append attachment links to markdownReport
+			markdownReport = markdownReport.concat(attachmentLinks);
+			// console.log("markdownReport (after attachments):", markdownReport);
 		}
 
-		// Handle different download formats
+		// If the objectType is "all-images" or "everything", extract image links
+		if (objectType === "all-images" || objectType === "everything") {
+			// Extract AmpleNote image links via API
+			const imagesAPI = await app.getNoteImages({ uuid: noteUUID });
+			// console.log("imagesAPI:", imagesAPI);
+			// Map the images to an array of objects
+			const imageLinks = imagesAPI.map(link => ({
+				name: link.src.split('/').pop(),  // Link text
+				url: link.src,  // URL
+				format: link.src.split('.').pop()  // File format
+			}));
+			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, imageLinks);
+			// Append image links to markdownReport
+			markdownReport = markdownReport.concat(imageLinks);
+			// console.log("markdownReport (after images):", markdownReport);
+		}
+
+		// If the objectType is "all-videos" or "everything", extract video links
+		if (objectType === "all-videos" || objectType === "everything") {
+			// Extract AmpleNote video links via regex
+			const ampleNoteVideosRegex = /!\[([^\]]+)\]\((https:\/\/images\.amplenote\.com\/.*?\.(mp4|mov|mpg|webm))\)/g;
+			const ampleNoteVideos = [...markdown.matchAll(ampleNoteVideosRegex)].map(match => ({
+				name: match[1],  // Video name
+				url: match[2],  // Video URL
+				format: match[2].split('.').pop()  // File format
+			}));
+			// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+			// Append video links to markdownReport
+			markdownReport = markdownReport.concat(ampleNoteVideos);
+			// console.log("markdownReport (after videos):", markdownReport);
+		}
+
+		// If the objectType is "all-links" or "everything", extract non-AmpleNote links
+		if (objectType === "all-links" || objectType === "everything") {
+			// Extract non-AmpleNote links via regex
+			const linkRegex = /\[([^\]]+)\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
+			const links = [...markdown.matchAll(linkRegex)].map(match => ({
+				name: match[1],  // Link text
+				url: match[2],  // URL
+				format: match[2].split('/').pop() || null  // File format
+			}));
+			// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+			// Append links to markdownReport
+			markdownReport = markdownReport.concat(links);
+			// console.log("markdownReport (after links):", markdownReport);
+		}
+
+		// ---------------------------------------------------------- //
+
+		// Handle different download formats based on `dwFormat` and the presence of `markdownReport`
 		if (dwFormat === "download_md" && markdownReport.length > 0) {
-			// Append to md
-			const clickableLinks = markdownReport.map(link => `|${note.name}|${note.uuid}|${note.tags}|${link.name}|${link.url}|${link.format}|${objectType}|`).join("\n");
-			markdownReportz += `|Note Name|Note UUID|Note Tags|Media Name|Media URL|Media Format|Media Type|\n`;
-			markdownReportz += `|---|---|---|---|---|---|---|\n`;
-			markdownReportz += `${clickableLinks}\n`;
+		  // Markdown Format
+		  // console.log("Generating markdown format report...");
+
+		  // Map `markdownReport` to create markdown table rows
+		  const clickableLinks = markdownReport.map(link => {
+			const result = `|${note.name}|${note.uuid}|${note.tags}|${link.name}|${link.url}|${link.format}|${objectType}|`;
+			// console.log("Markdown clickableLink entry:", result);
+			return result;
+		  }).join("\n");
+
+		  // Create markdown table headers
+		  markdownReportz += `|Note Name|Note UUID|Note Tags|Media Name|Media URL|Media Format|Media Type|\n`;
+		  markdownReportz += `|---|---|---|---|---|---|---|\n`;
+
+		  // Append clickable links to the markdown report
+		  markdownReportz += `${clickableLinks}\n`;
+		  // console.log("Final markdownReportz (MD format):", markdownReportz);
+
 		} else if (dwFormat === "download_csv" && markdownReport.length > 0) {
-			// Append to csv
-			const clickableLinks = markdownReport.map(link => `"${note.name}","${note.uuid}","${note.tags}","${link.name}","${link.url}","${link.format}","${objectType}"`).join("\n");
-			markdownReportz += `Note Name,Note UUID,Note Tags,Media Name,Media URL,Media Format,Media Type\n`;
-			markdownReportz += `${clickableLinks}\n`;
+		  // CSV Format
+		  // console.log("Generating CSV format report...");
+
+		  // Map `markdownReport` to create CSV rows
+		  const clickableLinks = markdownReport.map(link => {
+			const result = `"${note.name}","${note.uuid}","${note.tags}","${link.name}","${link.url}","${link.format}","${objectType}"`;
+			// console.log("CSV clickableLink entry:", result);
+			return result;
+		  }).join("\n");
+
+		  // Create CSV headers
+		  markdownReportz += `Note Name,Note UUID,Note Tags,Media Name,Media URL,Media Format,Media Type\n`;
+
+		  // Append clickable links to the CSV report
+		  markdownReportz += `${clickableLinks}\n`;
+		  // console.log("Final markdownReportz (CSV format):", markdownReportz);
+
 		} else if (dwFormat === "download_txt" && markdownReport.length > 0) {
-			// Append to txt
-			const clickableLinks = markdownReport.map(link => `
+		  // TXT Format
+		  // console.log("Generating text format report...");
+
+		  // Map `markdownReport` to create text entries
+		  const clickableLinks = markdownReport.map(link => {
+			const result = `
 Note Name: ${note.name},
 Note UUID: ${note.uuid},
 Note Tags: ${note.tags},
@@ -1201,22 +1243,37 @@ Link Name: ${link.name},
 Link URL: ${link.url},
 Link Format: ${link.format},
 Object Type: ${objectType}
-`).join("\n");
-			markdownReportz += `${clickableLinks}\n`;
+`;
+			// console.log("Text clickableLink entry:", result);
+			return result;
+		  }).join("\n");
+
+		  // Append clickable links to the text report
+		  markdownReportz += `${clickableLinks}\n`;
+		  // console.log("Final markdownReportz (TXT format):", markdownReportz);
+
 		} else if (dwFormat === "download_json" && markdownReport.length > 0) {
-		// Append to json
-		// markdownReport is an array of links
-		const jsonLinks = markdownReport.map(link => ({
-		  noteName: note.name,
-		  noteUUID: note.uuid,
-		  noteTags: note.tags,
-		  linkName: link.name,
-		  linkURL: link.url,
-		  linkFormat: link.format,
-		  objectType: objectType
-		}));
-		// Convert the array of objects to a JSON string with proper formatting
-		markdownReportz += `${JSON.stringify(jsonLinks, null, 2)}`;
+		  // JSON Format
+		  // console.log("Generating JSON format report...");
+
+		  // Map `markdownReport` to create JSON objects
+		  const jsonLinks = markdownReport.map(link => {
+			const result = {
+			  noteName: note.name,
+			  noteUUID: note.uuid,
+			  noteTags: note.tags,
+			  linkName: link.name,
+			  linkURL: link.url,
+			  linkFormat: link.format,
+			  objectType: objectType
+			};
+			// console.log("JSON clickableLink entry:", result);
+			return result;
+		  });
+
+		  // Convert the array of objects to a JSON string with proper formatting
+		  markdownReportz += `${JSON.stringify(jsonLinks, null, 2)}\n`;
+		  // console.log("Final markdownReportz (JSON format):", markdownReportz);
 		}
 
 	  } catch (err) {
