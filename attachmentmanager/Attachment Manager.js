@@ -485,7 +485,7 @@ ${horizontalLine}
                 { label: "Attachments", value: "all-attachments" },
                 { label: "Images", value: "all-images" },
                 { label: "Videos", value: "all-videos" },
-                { label: "Links", value: "links" }
+                { label: "Links", value: "all-links" }
               ]
             } /*, // May be some other day!!
             {
@@ -818,7 +818,7 @@ ${horizontalLine}
 		  url: match[2],   // Video URL from the second capture group
 		  format: match[2].split('.').pop()  // Extract the file format from the URL
 		}));
-		console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
+		// console.log(`AmpleNote Videos for note ${noteUUID}:`, ampleNoteVideos);
 
 		// If the note contains attachments, generate the report section for this note
 		if (ampleNoteVideos.length > 0) {
@@ -854,6 +854,71 @@ ${horizontalLine}
 			  // console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 			}
 		  });
+
+		  // Add a horizontal line separator after each note's attachment list
+		  markdownReport += `\n${horizontalLine}\n`;
+		  // console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+		}
+
+		} catch (err) {
+		  // Handle any errors that occur during note processing
+		  if (err instanceof TypeError) {
+			console.warn(`Error processing note ${note.uuid}. Skipping this note.`); // Warn about the error
+			continue;  // Skip notes with errors
+		  }
+		}
+	  }
+
+	} // End of if condition for "all-videos"
+
+	// ---------------------------------------------------------- //
+
+	// If the objectType is "all-images", this block of code will be executed
+	if (objectType === "all-links") {
+
+	  // Introductory text for the Markdown report
+	  const introLines = `
+# Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
+Here you can find the List of Links in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`).
+> Object Type Selection: Links.
+${horizontalLine}
+`;
+
+	  // Initialize the Markdown report with the introductory text
+	  markdownReport = `${introLines}`;
+	  // console.log("Initial markdownReport:", markdownReport); // Log the initial report
+
+	  // Iterate over each note and extract the content
+	  for (const note of notes) {
+		try {
+		  const noteUUID = note.uuid;
+		  // console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  
+		// Get note content in markdown format
+		const markdown = await app.getNoteContent({ uuid: noteUUID });
+		// console.log(`Markdown content for note ${noteUUID}:`, markdown);
+
+		// Extract non-AmpleNote links excluding images and attachments
+		const linkRegex = /\[([^\]]+)\]\((?!attachment:\/\/)(?!https:\/\/images\.amplenote\.com\/)(?!https:\/\/www\.amplenote\.com\/notes\/)(.*?)\)/g;
+		const links = [...markdown.matchAll(linkRegex)].map(match => ({
+		  name: match[1],  // Link text
+		  url: match[2]    // URL
+		}));
+		// console.log(`Links (excluding attachments and images) for note ${noteUUID}:`, links);
+
+		// If the note contains attachments, generate the report section for this note
+		if (links.length > 0) {
+		  markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
+		  markdownReport += `\nTags: ${note.tags}\n`;
+		  markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
+		  markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
+		  markdownReport += `\n${horizontalLine}\n`;
+
+			markdownReport += `### File Type: Links\n`;
+			// Create clickable links for each filtered attachment and add them to the report
+			const clickableLinks = links.map(link => `[${link.name}](${link.url})`).join("\n");
+			markdownReport += `\n${clickableLinks}\n`;
+			// console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 
 		  // Add a horizontal line separator after each note's attachment list
 		  markdownReport += `\n${horizontalLine}\n`;
