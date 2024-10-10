@@ -603,9 +603,11 @@ ${horizontalLine}
 `;
 	// ---------------------------------------------------------- //
 
+	// If the objectType is "all-attachments", this block of code will be executed
 	if (objectType === "all-attachments") {
 
-	const introLines = `
+	  // Introductory text for the Markdown report
+	  const introLines = `
 # Welcome to your Attachment Manager. <!-- {"collapsed":true} -->
 Here you can find the List of Attachments in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`) of:
 - **\`.xlsx\`** 🟩 | **\`.xls\`** 🟩 — Excel Spreadsheet files, commonly used for storing data in tabular form, calculations, charts, and pivot tables.
@@ -616,28 +618,29 @@ Here you can find the List of Attachments in \`${listFormat}\` format. For the s
 ${horizontalLine}
 `;
 
-	// Initialize the markdown table format
-	markdownReport = `${introLines}`;
-	// console.log("Initial markdownReport:", markdownReport);
+	  // Initialize the Markdown report with the introductory text
+	  markdownReport = `${introLines}`;
+	  console.log("Initial markdownReport:", markdownReport); // Log the initial report
 
-	// Loop through each note and extract content
-	for (const note of notes) {
-	  try {
-		const noteUUID = note.uuid;
-		// console.log(`Processing note with UUID: ${noteUUID}`);
-		
-		// Extract attachments via API
-		const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
-		// console.log("attachmentsAPI:", attachmentsAPI);
+	  // Iterate over each note and extract the content
+	  for (const note of notes) {
+		try {
+		  const noteUUID = note.uuid;
+		  console.log(`Processing note with UUID: ${noteUUID}`); // Log the UUID of the note being processed
+		  
+		  // Extract attachments via the API
+		  const attachmentsAPI = await app.getNoteAttachments({ uuid: noteUUID });
+		  console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
 
-		if (attachmentsAPI.length > 0) {
-			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->`;
-			markdownReport += `\nTags: ${note.tags}`;
-			markdownReport += `\nCreated: ${formatDateTime(note.created)}`;
-			markdownReport += `\nUpdated: ${formatDateTime(note.updated)}`;
-			markdownReport += `\n${horizontalLine}`;
-		
-			// Define an array of file types and their respective extensions
+		  // If the note contains attachments, generate the report section for this note
+		  if (attachmentsAPI.length > 0) {
+			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
+			markdownReport += `\nTags: ${note.tags}\n`;
+			markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
+			markdownReport += `\nUpdated: ${formatDateTime(note.updated)}\n`;
+			markdownReport += `\n${horizontalLine}\n`;
+
+			// Define an array of file types and their corresponding file extensions
 			const fileTypes = [
 			  { type: "XLSX", ext: ".xlsx" },
 			  { type: "XLS", ext: ".xls" },
@@ -648,33 +651,37 @@ ${horizontalLine}
 			  { type: "PDF", ext: ".pdf" }
 			];
 
-			// Loop through each file type and filter attachments dynamically
+			// Loop through each file type and filter attachments based on their extension
 			fileTypes.forEach(({ type, ext }) => {
 			  const filteredAttachments = attachmentsAPI.filter(attachment => attachment.name.endsWith(ext));
+			  console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
 			  
-			  // If there are any attachments of this file type, add them to the markdown report
+			  // If there are attachments for the current file type, add them to the report
 			  if (filteredAttachments.length > 0) {
 				markdownReport += `### File Type: ${type}\n`;
-				
-				// Create clickable links for each filtered attachment
+
+				// Create clickable links for each filtered attachment and add them to the report
 				const clickableLinks = filteredAttachments.map(link => `[${link.name}](${link.uuid})`).join("\n");
 				markdownReport += `\n${clickableLinks}\n`;
+				console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 			  }
 			});
-			
-			markdownReport += `\n${horizontalLine}`;
-		
-		}
 
-	  } catch (err) {
-		if (err instanceof TypeError) {
-		  console.warn(`Error processing note ${note.uuid}. Skipping this note.`);
-		  continue;  // Skip notes with errors
+			// Add a horizontal line separator after each note's attachment list
+			markdownReport += `\n${horizontalLine}\n`;
+			console.log("Updated markdownReport after processing note:", markdownReport); // Log the updated report after processing each note
+		  }
+
+		} catch (err) {
+		  // Handle any errors that occur during note processing
+		  if (err instanceof TypeError) {
+			console.warn(`Error processing note ${note.uuid}. Skipping this note.`); // Warn about the error
+			continue;  // Skip notes with errors
+		  }
 		}
 	  }
-	}
-	
-	} // End for if - all-attachments
+
+	} // End of if condition for "all-attachments"
 
 	// ---------------------------------------------------------- //
 
