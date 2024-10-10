@@ -716,7 +716,7 @@ ${horizontalLine}
 		  // console.log("attachmentsAPI:", attachmentsAPI); // Log the fetched attachments
 
 		  // If the note contains attachments, generate the report section for this note
-		  if (attachmentsAPI.length > 0) {
+		  if (imagesAPI.length > 0) {
 			markdownReport += `## Note: [${note.name || "Untitled Note"}](https://www.amplenote.com/notes/${note.uuid}) <!-- {"collapsed":true} -->\n`;
 			markdownReport += `\nTags: ${note.tags}\n`;
 			markdownReport += `\nCreated: ${formatDateTime(note.created)}\n`;
@@ -734,7 +734,7 @@ ${horizontalLine}
 
 			// Loop through each file type and filter attachments based on their extension
 			fileTypes.forEach(({ type, ext }) => {
-			  const filteredAttachments = attachmentsAPI.filter(attachment => attachment.src.endsWith(ext));
+			  const filteredAttachments = imagesAPI.filter(attachment => attachment.src.endsWith(ext));
 			  // console.log(`Filtered attachments for ${type}:`, filteredAttachments); // Log filtered attachments
 			  
 			  // If there are attachments for the current file type, add them to the report
@@ -742,7 +742,7 @@ ${horizontalLine}
 				markdownReport += `### File Type: ${type}\n`;
 
 				// Create clickable links for each filtered attachment and add them to the report
-				const clickableLinks = filteredAttachments.map(link => `[Image](${link.src})`).join("\n");
+				const clickableLinks = filteredAttachments.map(link => `[${link.src.split('/').pop()}](${link.src})`).join("\n");
 				markdownReport += `\n${clickableLinks}\n`;
 				// console.log(`Markdown report for ${type}:`, markdownReport); // Log the report after adding each file type
 			  }
@@ -985,8 +985,9 @@ ${horizontalLine}
 
     // ********************************************************************************************************************* //
   },
+    // ********************************************************************************************************************* //
   linkOption: {
-	"Open": async function (app, link) {
+	"Download": async function (app, link) {
 		// Define the regex to match UUID format
 		const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 		// console.log("link", link);
@@ -1010,4 +1011,5 @@ ${horizontalLine}
 		}
 	}
   },
+    // ********************************************************************************************************************* //
 }
