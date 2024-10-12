@@ -136,6 +136,7 @@ Here you can find the count of All Basic Media in Table format. For the selected
 - (2) \`All Images [Through API]\`, (3) \`Amplenote Images [Images hosted by Amplenote]\`, (4) \`Non-Amplenote Hosted Images [Images hosted on the Web]\`, 
 - (5) \`Amplenote Videos [Videos hosted by Amplenote]\`, 
 - (6) \`Links [Normal Non-Amplenote links].\`
+> **Note:** More details on built-in Attachment Manager (For a Particular Note): [Link](https://www.amplenote.com/help/attachments#How_can_I_open_the_Manage_Files_view%2C_to_manage_my_attachments%3F) 
 ${horizontalLine}
 `;
 
@@ -221,6 +222,7 @@ Here you can find the count of All Attachments in Table format. For the selected
 - **\`.docx\`** 🟦 | **\`.doc\`** 🟦 — Microsoft Word documents, frequently used for creating text documents with formatting, images, and other media.
 - **\`.pptx\`** 🟧 | **\`.ppt\`** 🟧 — PowerPoint presentations, used for creating slide shows with text, images, and multimedia elements.
 - **\`.pdf\`** 🟠 — Portable Document Format, a widely-used format for presenting documents that appear the same across different devices.
+> **Note:** More details on built-in Attachment Manager (For a Particular Note): [Link](https://www.amplenote.com/help/attachments#How_can_I_open_the_Manage_Files_view%2C_to_manage_my_attachments%3F) 
 ${horizontalLine}
 `;
 
@@ -281,6 +283,7 @@ Here you can find the count of most common Image extensions in Table format. For
 - **\`.png\`** 🖼️ — PNG image files, often used for web graphics and images requiring transparency, with lossless compression.
 - **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
 - **\`.bmp\`** 🖼️ — BMP files, uncompressed and typically large, used for storing high-quality images in older systems.
+> **Note:** More details on built-in Attachment Manager (For a Particular Note): [Link](https://www.amplenote.com/help/attachments#How_can_I_open_the_Manage_Files_view%2C_to_manage_my_attachments%3F) 
 ${horizontalLine}
 `;
 
@@ -358,6 +361,7 @@ Here you can find the count of most common Video extensions in Table format. For
 - **\`.mov\` 🎥** — MOV is primarily used by Apple's QuickTime.
 - **\`.mpg\` 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
 - **\`.webm\` 🎬** — An open-source, royalty-free format designed for delivering high-quality video through web browsers.
+> **Note:** More details on built-in Attachment Manager (For a Particular Note): [Link](https://www.amplenote.com/help/attachments#How_can_I_open_the_Manage_Files_view%2C_to_manage_my_attachments%3F) 
 ${horizontalLine}
 `;
 
@@ -629,6 +633,7 @@ Here you can find the List of Attachments in \`${listFormat}\` format. For the s
 - **\`.pdf\`** 🟠 — Portable Document Format, a widely-used format for presenting documents that appear the same across different devices.
 > **Object Type Selection:** Attachments.
 > **Note:** Using the Link Option, you can \`download\` the Attachment.
+> **Note:** More details on built-in Attachment Manager (For a Particular Note): [Link](https://www.amplenote.com/help/attachments#How_can_I_open_the_Manage_Files_view%2C_to_manage_my_attachments%3F) 
 ${horizontalLine}
 `;
 
@@ -711,6 +716,7 @@ Here you can find the List of Images in \`${listFormat}\` format. For the select
 - **\`.gif\`** 🎞️ — GIF image files, popular for simple animations and web graphics, limited to 256 colors.
 - **\`.bmp\`** 🖼️ — BMP files, uncompressed and typically large, used for storing high-quality images in older systems.
 > **Object Type Selection:** Images.
+> **Note:** More details on built-in Attachment Manager (For a Particular Note): [Link](https://www.amplenote.com/help/attachments#How_can_I_open_the_Manage_Files_view%2C_to_manage_my_attachments%3F) 
 ${horizontalLine}
 `;
 
@@ -808,6 +814,7 @@ Here you can find the List of Videos in \`${listFormat}\` format. For the select
 - **\`.mpg\` 🎞️** — A standard format for video compression and distribution, particularly for DVDs and digital broadcasting.
 - **\`.webm\` 🎬** — An open-source, royalty-free format designed for delivering high-quality video through web browsers.
 > **Object Type Selection:** Videos.
+> **Note:** More details on built-in Attachment Manager (For a Particular Note): [Link](https://www.amplenote.com/help/attachments#How_can_I_open_the_Manage_Files_view%2C_to_manage_my_attachments%3F) 
 ${horizontalLine}
 `;
 
@@ -897,6 +904,7 @@ ${horizontalLine}
 # Welcome to your Markdown Media Manager. <!-- {"collapsed":true} -->
 Here you can find the List of Links in \`${listFormat}\` format. For the selected tags: (AND:\`${tagNamesAnd}\`; OR: \`${tagNamesOr}\`).
 > **Object Type Selection:** Links.
+> **Note:** More details on built-in Attachment Manager (For a Particular Note): [Link](https://www.amplenote.com/help/attachments#How_can_I_open_the_Manage_Files_view%2C_to_manage_my_attachments%3F) 
 ${horizontalLine}
 `;
 
@@ -1408,10 +1416,12 @@ Object Type: ${objectType}
 		a.href = attachmentURL;
 
 		// Set the 'download' attribute to the filename to force download
-		a.download = fileName;
+		// a.target = '_blank';
+		a.download = '';  // The 'download' attribute triggers the download
 		document.body.appendChild(a);
-		a.click();  // Programmatically trigger the download
-		document.body.removeChild(a);  // Clean up the anchor element after triggering
+		a.click();  // Programmatically trigger a click event to start the download
+		document.body.removeChild(a);  // Clean up after the click
+
 
 			// console.log("attachmentURL", attachmentURL);
 			await app.alert("Your file has been downloaded.");
