@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Note Links</title>
+	<style>
+		body { 
+			font-family: Arial, sans-serif; 
+			margin: 0; 
+			padding: 20px; 
+			background-color: #f0f0f0; /* Light mode background */
+			color: #333; /* Light mode text color */
+			transition: background-color 0.3s, color 0.3s; /* Smooth transition for colors */
+		}
+		
+		.note { 
+			margin-bottom: 20px; 
+			padding: 15px; 
+			border-radius: 5px; 
+			border: 1px solid #ccc; /* Light mode border */
+			background-color: white; /* Light mode note background */
+			transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for notes */
+		}
+		
+		.note-name { 
+			font-weight: bold; 
+			font-size: 1.2em; 
+		}
+		
+		.note-uuid, .note-tags { 
+			font-style: italic; 
+			margin-left: 10px; 
+		}
+		
+		.link { 
+			margin-left: 20px; 
+			cursor: pointer; 
+			color: blue; 
+			text-decoration: underline; 
+		}
+		
+		/* Dark Mode Styles */
+		body.dark-mode { 
+			background-color: #181818; /* Dark mode background */
+			color: #f0f0f0; /* Dark mode text color */
+		}
+		
+		.note.dark-mode { 
+			border: 1px solid #444; /* Dark mode border color */
+			background-color: #2a2a2a; /* Dark mode note background */
+		}
+
+		/* Dark mode link styles */
+		.link.dark-mode { 
+			color: #4da3ff; /* Change to a lighter blue or any other color for visibility */
+			text-decoration: underline; 
+		}
+	</style>
+
+</head>
+<body>
+
+  <h1>Notes and Links</h1>
+  <button id="toggleDarkMode">Toggle Dark Mode</button>
+
+  <!-- Filters -->
+  <label for="linkTypeFilter">Filter by Link Type:</label>
+  <select id="linkTypeFilter">
+    <option value="">All</option>
+  </select>
+
+  <label for="linkFormatFilter">Filter by Link Format:</label>
+  <select id="linkFormatFilter">
+    <option value="">All</option>
+  </select>
+
+  <!-- Notes container -->
+  <div id="notesContainer"></div>
+
+  <script>
+    // JSON data
+const data = [
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Book1.xlsx",
+    "linkURL": "attachment://f1e64cb3-6a03-44df-afaf-0336e7403776",
+    "linkFormat": "xlsx",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Book1.xls",
+    "linkURL": "attachment://da3b010d-01fc-407c-9977-f9f6494832f5",
+    "linkFormat": "xls",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "file-example_PDF_500_kB.pdf",
+    "linkURL": "attachment://d2fefa31-cf87-4330-81c6-89aea0c7c9b0",
+    "linkFormat": "pdf",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Doc1.docx",
+    "linkURL": "attachment://d1bb92b3-73bc-4146-a1bf-2a1ff5b2fdba",
+    "linkFormat": "docx",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Doc1.doc",
+    "linkURL": "attachment://b18907af-f2c3-4191-8e7c-c420376ab393",
+    "linkFormat": "doc",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Presentation1.pptx",
+    "linkURL": "attachment://d98f4ee2-5cd7-4c8c-a6fb-a06e7314e9c8",
+    "linkFormat": "pptx",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Presentation1.ppt",
+    "linkURL": "attachment://f08e3421-ebd5-4be6-b615-488870bf6b2f",
+    "linkFormat": "ppt",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "02290f26-686b-4ed0-b374-1115c573926c.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/02290f26-686b-4ed0-b374-1115c573926c.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "13a2cac8-0cbb-4da1-aa16-e5b183091665.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/13a2cac8-0cbb-4da1-aa16-e5b183091665.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "533a2776-92fe-4f11-9f8b-9a3a0f1f0f5e.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/533a2776-92fe-4f11-9f8b-9a3a0f1f0f5e.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "bd11e00c-f642-435e-be61-ab2af29c82c5.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/bd11e00c-f642-435e-be61-ab2af29c82c5.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "5de5e4a7-55de-4815-9b5d-10f26f8865ba.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/5de5e4a7-55de-4815-9b5d-10f26f8865ba.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "colorful-design-with-spiral-design_188544-9588.jpg",
+    "linkURL": "https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg",
+    "linkFormat": "jpg",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "9e75bf1e-4ad7-48a6-bc22-85470ec1713d.mp4",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/9e75bf1e-4ad7-48a6-bc22-85470ec1713d.mp4",
+    "linkFormat": "mp4",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "4a4bd363-8c28-409b-a9af-0045626fd860.mov",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/4a4bd363-8c28-409b-a9af-0045626fd860.mov",
+    "linkFormat": "mov",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "ff075b9b-d534-42c1-a663-57cade9e9560.mpg",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/ff075b9b-d534-42c1-a663-57cade9e9560.mpg",
+    "linkFormat": "mpg",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "ca4e2c44-6732-4df2-b407-e6c3cf59d057.webm",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/ca4e2c44-6732-4df2-b407-e6c3cf59d057.webm",
+    "linkFormat": "webm",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "66f54c31-1ddf-491a-b20f-6664c47da391.mp4",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/66f54c31-1ddf-491a-b20f-6664c47da391.mp4",
+    "linkFormat": "mp4",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "15d00c7a-2f59-4417-b63b-85da5d40ba7d.mp4",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/15d00c7a-2f59-4417-b63b-85da5d40ba7d.mp4",
+    "linkFormat": "mp4",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "https://www.youtube.com/watch?v=TNiOaVtcxYI",
+    "linkURL": "https://www.youtube.com/watch?v=TNiOaVtcxYI",
+    "linkFormat": "watch?v=TNiOaVtcxYI",
+    "linkType": "Link",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "https://youtu.be/TNiOaVtcxYI",
+    "linkURL": "https://youtu.be/TNiOaVtcxYI",
+    "linkFormat": "TNiOaVtcxYI",
+    "linkType": "Link",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "fa-6c34-800f-b46e-c73a66a45d48",
+    "linkURL": "https://chatgpt.com/c/66feaffa-6c34-800f-b46e-c73a66a45d48",
+    "linkFormat": "66feaffa-6c34-800f-b46e-c73a66a45d48",
+    "linkType": "Link",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Attachment Testing",
+    "noteUUID": "88da2be4-819c-11ef-8a8d-62fb339586e5",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "b02-4d40-800f-aca3-9ebac10e4ac1",
+    "linkURL": "https://chatgpt.com/c/66febb02-4d40-800f-aca3-9ebac10e4ac1",
+    "linkFormat": "66febb02-4d40-800f-aca3-9ebac10e4ac1",
+    "linkType": "Link",
+    "objectType": "everything"
+  }
+,
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Book1.xlsx",
+    "linkURL": "attachment://f1e64cb3-6a03-44df-afaf-0336e7403776",
+    "linkFormat": "xlsx",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Book1.xls",
+    "linkURL": "attachment://da3b010d-01fc-407c-9977-f9f6494832f5",
+    "linkFormat": "xls",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "file-example_PDF_500_kB.pdf",
+    "linkURL": "attachment://d2fefa31-cf87-4330-81c6-89aea0c7c9b0",
+    "linkFormat": "pdf",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Doc1.docx",
+    "linkURL": "attachment://d1bb92b3-73bc-4146-a1bf-2a1ff5b2fdba",
+    "linkFormat": "docx",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Doc1.doc",
+    "linkURL": "attachment://b18907af-f2c3-4191-8e7c-c420376ab393",
+    "linkFormat": "doc",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Presentation1.pptx",
+    "linkURL": "attachment://d98f4ee2-5cd7-4c8c-a6fb-a06e7314e9c8",
+    "linkFormat": "pptx",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "Presentation1.ppt",
+    "linkURL": "attachment://f08e3421-ebd5-4be6-b615-488870bf6b2f",
+    "linkFormat": "ppt",
+    "linkType": "Attachment",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "02290f26-686b-4ed0-b374-1115c573926c.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/02290f26-686b-4ed0-b374-1115c573926c.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "13a2cac8-0cbb-4da1-aa16-e5b183091665.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/13a2cac8-0cbb-4da1-aa16-e5b183091665.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "533a2776-92fe-4f11-9f8b-9a3a0f1f0f5e.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/533a2776-92fe-4f11-9f8b-9a3a0f1f0f5e.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "bd11e00c-f642-435e-be61-ab2af29c82c5.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/bd11e00c-f642-435e-be61-ab2af29c82c5.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "5de5e4a7-55de-4815-9b5d-10f26f8865ba.png",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/5de5e4a7-55de-4815-9b5d-10f26f8865ba.png",
+    "linkFormat": "png",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "colorful-design-with-spiral-design_188544-9588.jpg",
+    "linkURL": "https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg",
+    "linkFormat": "jpg",
+    "linkType": "Image",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "9e75bf1e-4ad7-48a6-bc22-85470ec1713d.mp4",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/9e75bf1e-4ad7-48a6-bc22-85470ec1713d.mp4",
+    "linkFormat": "mp4",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "4a4bd363-8c28-409b-a9af-0045626fd860.mov",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/4a4bd363-8c28-409b-a9af-0045626fd860.mov",
+    "linkFormat": "mov",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "ff075b9b-d534-42c1-a663-57cade9e9560.mpg",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/ff075b9b-d534-42c1-a663-57cade9e9560.mpg",
+    "linkFormat": "mpg",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "ca4e2c44-6732-4df2-b407-e6c3cf59d057.webm",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/ca4e2c44-6732-4df2-b407-e6c3cf59d057.webm",
+    "linkFormat": "webm",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "66f54c31-1ddf-491a-b20f-6664c47da391.mp4",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/66f54c31-1ddf-491a-b20f-6664c47da391.mp4",
+    "linkFormat": "mp4",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "15d00c7a-2f59-4417-b63b-85da5d40ba7d.mp4",
+    "linkURL": "https://images.amplenote.com/88da2be4-819c-11ef-8a8d-62fb339586e5/15d00c7a-2f59-4417-b63b-85da5d40ba7d.mp4",
+    "linkFormat": "mp4",
+    "linkType": "Video",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "https://www.youtube.com/watch?v=TNiOaVtcxYI",
+    "linkURL": "https://www.youtube.com/watch?v=TNiOaVtcxYI",
+    "linkFormat": "watch?v=TNiOaVtcxYI",
+    "linkType": "Link",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "https://youtu.be/TNiOaVtcxYI",
+    "linkURL": "https://youtu.be/TNiOaVtcxYI",
+    "linkFormat": "TNiOaVtcxYI",
+    "linkType": "Link",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "fa-6c34-800f-b46e-c73a66a45d48",
+    "linkURL": "https://chatgpt.com/c/66feaffa-6c34-800f-b46e-c73a66a45d48",
+    "linkFormat": "66feaffa-6c34-800f-b46e-c73a66a45d48",
+    "linkType": "Link",
+    "objectType": "everything"
+  },
+  {
+    "noteName": "Copy of Attachment Testing",
+    "noteUUID": "bcd2a7ce-8727-11ef-a3b9-ceeb1c0a5b1e",
+    "noteTags": [
+      "merge-reports"
+    ],
+    "linkName": "b02-4d40-800f-aca3-9ebac10e4ac1",
+    "linkURL": "https://chatgpt.com/c/66febb02-4d40-800f-aca3-9ebac10e4ac1",
+    "linkFormat": "66febb02-4d40-800f-aca3-9ebac10e4ac1",
+    "linkType": "Link",
+    "objectType": "everything"
+  }
+];
+
+	// Populate filter dropdowns
+	function populateFilters() {
+	  const linkTypes = [...new Set(data.map(item => item.linkType))];
+	  const linkFormats = [...new Set(data.map(item => item.linkFormat))];
+
+      // Sort link formats alphabetically
+      linkFormats.sort();
+
+	  const linkTypeFilter = document.getElementById('linkTypeFilter');
+	  const linkFormatFilter = document.getElementById('linkFormatFilter');
+
+	  // Clear existing options before populating
+	  linkTypeFilter.innerHTML = '';
+	  linkFormatFilter.innerHTML = '';
+
+	  // Add a default option for link types
+	  linkTypeFilter.appendChild(new Option('All Link Types', ''));
+
+	  // Add link types to the filter
+	  linkTypes.forEach(type => {
+		const option = document.createElement('option');
+		option.value = type;
+		option.textContent = type;
+		linkTypeFilter.appendChild(option);
+	  });
+
+	  // Add "All" option for link formats
+	  linkFormatFilter.appendChild(new Option('All Link Formats', ''));
+
+	  // Add link formats to the filter, but only those with 5 or fewer characters
+	  linkFormats.forEach(format => {
+		if (format.length <= 5) { // Check the character length
+		  const option = document.createElement('option');
+		  option.value = format;
+		  option.textContent = format;
+		  linkFormatFilter.appendChild(option);
+		}
+	  });
+	}
+
+	// Display notes based on filters
+	function displayNotes() {
+	  const container = document.getElementById('notesContainer');
+	  container.innerHTML = ''; // Clear previous notes
+
+	  const selectedLinkType = document.getElementById('linkTypeFilter').value;
+	  const selectedLinkFormat = document.getElementById('linkFormatFilter').value;
+
+	  // Filter data based on selected linkType and linkFormat
+	  const filteredData = data.filter(item => {
+		return (!selectedLinkType || item.linkType === selectedLinkType) &&
+			   (!selectedLinkFormat || item.linkFormat === selectedLinkFormat);
+	  });
+
+	  // Group notes by noteUUID
+	  const notesMap = {};
+	  filteredData.forEach(item => {
+		if (!notesMap[item.noteUUID]) {
+		  notesMap[item.noteUUID] = {
+			noteName: item.noteName,
+			noteUUID: item.noteUUID,
+			noteTags: item.noteTags,
+			links: []
+		  };
+		}
+		notesMap[item.noteUUID].links.push({
+		  linkName: item.linkName,
+		  linkURL: item.linkURL,
+		  linkFormat: item.linkFormat
+		});
+	  });
+
+	  // Display notes
+	  Object.values(notesMap).forEach(note => {
+		const noteDiv = document.createElement('div');
+		noteDiv.className = 'note';
+
+		const noteHeader = document.createElement('div');
+		noteHeader.className = 'note-header';
+
+		const noteName = document.createElement('span');
+		noteName.className = 'note-name';
+		noteName.textContent = note.noteName;
+
+		const noteUUID = document.createElement('span');
+		noteUUID.className = 'note-uuid';
+		noteUUID.textContent = `(UUID: ${note.noteUUID})`;
+
+		const noteTags = document.createElement('span');
+		noteTags.className = 'note-tags';
+		noteTags.textContent = `Tags: ${note.noteTags.join(', ')}`;
+
+		noteHeader.appendChild(noteName);
+		noteHeader.appendChild(noteUUID);
+		noteHeader.appendChild(noteTags);
+
+		noteDiv.appendChild(noteHeader);
+
+		// Display links under the note
+		note.links.forEach(link => {
+		  const linkDiv = document.createElement('div');
+		  linkDiv.className = 'link';
+		  linkDiv.textContent = `${link.linkName} (${link.linkFormat})`;
+
+		  // Make the link clickable
+		  linkDiv.addEventListener('click', () => {
+			window.open(link.linkURL, '_blank');
+		  });
+
+		  noteDiv.appendChild(linkDiv);
+		});
+
+		container.appendChild(noteDiv);
+	  });
+	}
+
+	// Function to toggle dark mode
+	function toggleDarkMode() {
+		const body = document.body;
+		const notes = document.querySelectorAll('.note');
+		const links = document.querySelectorAll('.link');
+
+		body.classList.toggle('dark-mode');
+
+		notes.forEach(note => {
+			note.classList.toggle('dark-mode');
+		});
+
+		links.forEach(link => {
+			link.classList.toggle('dark-mode');
+		});
+	}
+
+	// Event listener for the toggle button
+	document.getElementById('toggleDarkMode').addEventListener('click', toggleDarkMode);
+
+	// Initialize the page
+	populateFilters();
+	displayNotes();
+
+	// Add event listeners to filters
+	document.getElementById('linkTypeFilter').addEventListener('change', displayNotes);
+	document.getElementById('linkFormatFilter').addEventListener('change', displayNotes);
+
+  </script>
+
+</body>
+</html>
