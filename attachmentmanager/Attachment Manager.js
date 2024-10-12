@@ -1403,7 +1403,6 @@ Object Type: ${objectType}
 			// console.log("attachmentURL:",attachmentURL);
 			// As browsers have options to open a PDF documents in itself, the download option is not working properly. (viewable in-browser).
 
-			
 		// Create an anchor element
 		const a = document.createElement('a');
 		a.href = attachmentURL;
