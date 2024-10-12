@@ -8,21 +8,14 @@
 		const newTagName = ['-reports/-time-goal-progress'];
 
 		// Handle the insert or retrieve note UUID.
-		const noteUUIDz = await (async () => {
-			// Retrieve the existing UUID from settings if it exists
-			const existingUUID = await app.settings["Time Goal Progress Bar UUID [Do not Edit!]"];
-			if (existingUUID) {
-				// Return the existing UUID if found
-				return existingUUID;
-				// console.log ("existingUUID found",existingUUID);
-			}
+		const existingUUID = await app.settings["Time Goal Progress Bar UUID [Do not Edit!]"];
+		// console.log ("existingUUID found",existingUUID);
 
-			// If no existing UUID is found, create a new note and save the UUID in the settings
+		const noteUUIDz = existingUUID || await (async () => {
+			// Create a new note and save the UUID in the settings if no existing UUID is found
 			const newUUIDx = await app.createNote(newNoteName, newTagName);
 			await app.setSetting("Time Goal Progress Bar UUID [Do not Edit!]", newUUIDx);
-			
-			// Return the newly created UUID
-			return newUUIDx;
+			return newUUIDx; // Return the newly created UUID
 			// console.log ("new newUUIDx",newUUIDx);
 		})();
 
@@ -38,15 +31,12 @@
 		const peekviewEnable = await app.settings["Peek Viewer (Yes / No)"] || "Yes";
 		// console.log ("peekviewEnable",peekviewEnable);
 
-		if (peekviewEnable.toLowerCase() === "yes") {
-			// If Peek View is enabled, open the note in the sidebar
-			await app.openSidebarEmbed(1, 'sidebar', noteUUIDz);
+		// Open the note in the sidebar if Peek View is enabled, otherwise navigate to the note's URL
+		await (peekviewEnable.toLowerCase() === "yes"
+			? app.openSidebarEmbed(1, 'sidebar', noteUUIDz) // Peek View is enabled
 			// console.log ("Note opened in Side Bar");
-		} else {
-			// If Peek View is disabled or set to "no", navigate to the note's URL
-			await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
+			: app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`)); // Peek View is disabled
 			// console.log ("Navigated to the note");
-		}
 
 		// Return null at the end of the function as the result
 		return null;
