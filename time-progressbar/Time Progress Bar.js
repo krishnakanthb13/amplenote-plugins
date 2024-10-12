@@ -14,14 +14,16 @@
 			if (existingUUID) {
 				// Return the existing UUID if found
 				return existingUUID;
+				// console.log ("existingUUID found",existingUUID);
 			}
 
 			// If no existing UUID is found, create a new note and save the UUID in the settings
 			const newUUIDx = await app.createNote(newNoteName, newTagName);
 			await app.setSetting("Time Goal Progress Bar UUID [Do not Edit!]", newUUIDx);
-
+			
 			// Return the newly created UUID
 			return newUUIDx;
+			// console.log ("new newUUIDx",newUUIDx);
 		})();
 
 		// `app.context.pluginUUID` is always supplied - it is the UUID of the plugin note.
@@ -30,16 +32,20 @@
 			{ uuid: noteUUIDz }, 
 			`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`
 		);
+		// console.log ("content replaced in the destination note");
 
 		// Retrieve the Peek View setting from settings, defaulting to "Yes" if not set
 		const peekviewEnable = await app.settings["Peek Viewer (Yes / No)"] || "Yes";
+		// console.log ("peekviewEnable",peekviewEnable);
 
 		if (peekviewEnable.toLowerCase() === "yes") {
 			// If Peek View is enabled, open the note in the sidebar
 			await app.openSidebarEmbed(1, 'sidebar', noteUUIDz);
+			// console.log ("Note opened in Side Bar");
 		} else {
 			// If Peek View is disabled or set to "no", navigate to the note's URL
 			await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
+			// console.log ("Navigated to the note");
 		}
 
 		// Return null at the end of the function as the result
