@@ -9,15 +9,20 @@
 
 		// Handle the insert or retrieve note UUID.
 		const existingUUID = await app.settings["Time Goal Progress Bar UUID [Do not Edit!]"];
-		// console.log ("existingUUID found",existingUUID);
+		console.log ("existingUUID found",existingUUID);
 
 		const noteUUIDz = existingUUID || await (async () => {
 			// Create a new note and save the UUID in the settings if no existing UUID is found
 			const newUUIDx = await app.createNote(newNoteName, newTagName);
 			await app.setSetting("Time Goal Progress Bar UUID [Do not Edit!]", newUUIDx);
 			return newUUIDx; // Return the newly created UUID
-			// console.log ("new newUUIDx",newUUIDx);
+			console.log ("new newUUIDx",newUUIDx);
 		})();
+        console.log ("new noteUUIDz",noteUUIDz);
+
+        // local to normal
+        // const noteHandle = await app.findNote({ uuid: noteUUIDz });
+        // console.log ("noteHandle",noteHandle);
 
 		// `app.context.pluginUUID` is always supplied - it is the UUID of the plugin note.
 		// Insert the plugin note content with a unique UUID into the note
@@ -25,11 +30,11 @@
 			{ uuid: noteUUIDz }, 
 			`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`
 		);
-		// console.log ("content replaced in the destination note");
+		console.log ("content replaced in the destination note");
 
 		// Retrieve the Peek View setting from settings, defaulting to "Yes" if not set
 		const peekviewEnable = await app.settings["Peek Viewer [Yes / No]"] || "Yes";
-		// console.log ("peekviewEnable",peekviewEnable);
+		console.log ("peekviewEnable",peekviewEnable);
 
 		// Open the note in the sidebar if Peek View is enabled, otherwise navigate to the note's URL
 		await (peekviewEnable.toLowerCase() === "yes"
