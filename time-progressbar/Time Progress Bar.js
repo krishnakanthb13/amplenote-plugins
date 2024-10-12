@@ -28,7 +28,7 @@
 		// console.log ("content replaced in the destination note");
 
 		// Retrieve the Peek View setting from settings, defaulting to "Yes" if not set
-		const peekviewEnable = await app.settings["Peek Viewer (Yes / No)"] || "Yes";
+		const peekviewEnable = await app.settings["Peek Viewer [Yes / No]"] || "Yes";
 		// console.log ("peekviewEnable",peekviewEnable);
 
 		// Open the note in the sidebar if Peek View is enabled, otherwise navigate to the note's URL
