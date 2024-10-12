@@ -448,6 +448,22 @@ ${horizontalLine}
 	await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
 	// console.log("Replaced note content with final results");
 
+    // Audit Report
+    const auditNoteName = `MD Media Manager: Audit`;
+    const auditTagName = ['-reports/-media-manager'];
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Media_Manager_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Media_Manager_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+    const auditReport = `
+- **Media Manager Option:** Report!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; Object Type: ${objectType}; **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
+
+`;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
 	// console.log("Navigated to the new note:", noteUUID);
 
@@ -969,6 +985,22 @@ ${horizontalLine}
 	await app.replaceNoteContent({ uuid: noteUUID }, finalResults);
 	// console.log("Replaced note content with final results");
 
+    // Audit Report
+    const auditNoteName = `MD Media Manager: Audit`;
+    const auditTagName = ['-reports/-media-manager'];
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Media_Manager_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Media_Manager_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+    const auditReport = `
+- **Media Manager Option:** Lists!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; Object Type: ${objectType}; **Note:** [${newNoteName}](https://www.amplenote.com/notes/${noteUUID}), **At:** ${YYMMDD}_${HHMMSS}.
+
+`;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
 	// console.log("Navigated to the new note:", noteUUID);
 
@@ -1338,6 +1370,22 @@ Object Type: ${objectType}
 		// console.log("finalResults:", finalResults);
 	}
 
+    // Audit Report
+    const auditNoteName = `MD Media Manager: Audit`;
+    const auditTagName = ['-reports/-media-manager'];
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Media_Manager_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Media_Manager_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+    const auditReport = `
+- **Media Manager Option:** Download!, **Inputs:** [Tags(OR): ${tagNamesOr}; Tags(AND): ${tagNamesAnd}; Object Type: ${objectType}; Download Format: ${dwFormat}; **At:** ${YYMMDD}_${HHMMSS}.
+
+`;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+
 	},
 
 	// ********************************************************************************************************************* //
@@ -1360,6 +1408,31 @@ Object Type: ${objectType}
 			document.body.appendChild(a);
 			a.click();  // Programmatically trigger a click event to start the download
 			document.body.removeChild(a);  // Clean up after the click
+
+    // Function to get the current date and time in YYMMDD and HHMMSS format
+    function getCurrentDateTime() {
+        const now = new Date();
+        const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+        const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+        return { YYMMDD, HHMMSS };
+    }
+    const { YYMMDD, HHMMSS } = getCurrentDateTime();
+
+    // Audit Report
+    const auditNoteName = `MD Media Manager: Audit`;
+    const auditTagName = ['-reports/-media-manager'];
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Media_Manager_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Media_Manager_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+    const auditReport = `
+- **Media Manager Option:** File Download!. Link Details: \`attachment://${link.href}\`, **At:** ${YYMMDD}_${HHMMSS}.
+
+`;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 
 			// console.log("attachmentURL", attachmentURL);
 			await app.alert("Your file has been downloaded.");
