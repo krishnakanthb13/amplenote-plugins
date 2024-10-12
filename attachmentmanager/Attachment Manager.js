@@ -1400,14 +1400,25 @@ Object Type: ${objectType}
 		// Opens the link if the link contains a valid attachment UUID
 		if (uuidRegex.test(link.href)) {
 			const attachmentURL = await app.getAttachmentURL(link.href);
+			// console.log("attachmentURL:",attachmentURL);
+			// As browsers have options to open a PDF documents in itself, the download option is not working properly. (viewable in-browser).
+
 			
-			// Create an anchor element and set the download attribute
-			const a = document.createElement('a');
-			a.href = attachmentURL;
-			a.download = '';  // The 'download' attribute triggers the download
-			document.body.appendChild(a);
-			a.click();  // Programmatically trigger a click event to start the download
-			document.body.removeChild(a);  // Clean up after the click
+		// Create an anchor element
+		const a = document.createElement('a');
+		a.href = attachmentURL;
+
+		// Set the 'download' attribute to the filename to force download
+		a.download = fileName;
+		document.body.appendChild(a);
+		a.click();  // Programmatically trigger the download
+		document.body.removeChild(a);  // Clean up the anchor element after triggering
+
+			// console.log("attachmentURL", attachmentURL);
+			await app.alert("Your file has been downloaded.");
+		} else {
+			await app.alert("Link doesn't have any valid UUID attachments pattern");
+		}
 
     // Function to get the current date and time in YYMMDD and HHMMSS format
     function getCurrentDateTime() {
@@ -1434,11 +1445,6 @@ Object Type: ${objectType}
 
 `;  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 
-			// console.log("attachmentURL", attachmentURL);
-			await app.alert("Your file has been downloaded.");
-		} else {
-			await app.alert("Link doesn't have any valid UUID attachments pattern");
-		}
 	}
   },
 	// ********************************************************************************************************************* //
