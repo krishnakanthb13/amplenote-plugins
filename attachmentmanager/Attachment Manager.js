@@ -1056,7 +1056,8 @@ ${horizontalLine}
 				{ label: "Download as markdown Table", value: "download_md" },
 				{ label: "Download as CSV", value: "download_csv" },
 				{ label: "Download as TXT", value: "download_txt" },
-				{ label: "Download as JSON", value: "download_json" }
+				{ label: "Download as JSON", value: "download_json" },
+				{ label: "Download as HTML", value: "download_html" }
 			  ]
 			}
 		  ]
@@ -1159,6 +1160,11 @@ ${horizontalLine}
 		  // Create CSV headers
 		  markdownReportz += `Note Name,Note UUID,Note Tags,Media Name,Media URL,Media Format,Media Type,Media Type Selection\n`;
 		}		
+	}
+	
+	function convertBrackets(inputString) {
+		// Replace the exact sequence ']\n[' with a comma
+		return inputString.replace(/]\n\[/g, ',');
 	}
 
 	// ---------------------------------------------------------- //
@@ -1325,6 +1331,29 @@ Object Type: ${objectType}
 		  // Convert the array of objects to a JSON string with proper formatting
 		  markdownReportz += `${JSON.stringify(jsonLinks, null, 2)}\n`;
 		  // console.log("Final markdownReportz (JSON format):", markdownReportz);
+		} else if (dwFormat === "download_html" && markdownReport.length > 0) {
+		  // JSON Format
+		  // console.log("Generating JSON format report...");
+
+		  // Map `markdownReport` to create JSON objects
+		  const jsonLinks = markdownReport.map(link => {
+			const result = {
+			  noteName: note.name,
+			  noteUUID: note.uuid,
+			  noteTags: note.tags,
+			  linkName: link.name,
+			  linkURL: link.url,
+			  linkFormat: link.format,
+			  linkType: link.type,
+			  objectType: objectType
+			};
+			// console.log("JSON clickableLink entry:", result);
+			return result;
+		  });
+
+		  // Convert the array of objects to a JSON string with proper formatting
+		  markdownReportz += `${JSON.stringify(jsonLinks, null, 2)}\n`;
+		  // console.log("Final markdownReportz (JSON format):", markdownReportz);
 		}
 
 	  } catch (err) {
@@ -1362,6 +1391,243 @@ Object Type: ${objectType}
         link.click();
         document.body.removeChild(link);
     }
+
+	const htmlFormat = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Note Links</title>
+	<style>
+		body { 
+			font-family: Arial, sans-serif; 
+			margin: 0; 
+			padding: 20px; 
+			background-color: #f0f0f0; /* Light mode background */
+			color: #333; /* Light mode text color */
+			transition: background-color 0.3s, color 0.3s; /* Smooth transition for colors */
+		}
+		
+		.note { 
+			margin-bottom: 20px; 
+			padding: 15px; 
+			border-radius: 5px; 
+			border: 1px solid #ccc; /* Light mode border */
+			background-color: white; /* Light mode note background */
+			transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for notes */
+		}
+		
+		.note-name { 
+			font-weight: bold; 
+			font-size: 1.2em; 
+		}
+		
+		.note-uuid, .note-tags { 
+			font-style: italic; 
+			margin-left: 10px; 
+		}
+		
+		.link { 
+			margin-left: 20px; 
+			cursor: pointer; 
+			color: blue; 
+			text-decoration: underline; 
+		}
+		
+		/* Dark Mode Styles */
+		body.dark-mode { 
+			background-color: #181818; /* Dark mode background */
+			color: #f0f0f0; /* Dark mode text color */
+		}
+		
+		.note.dark-mode { 
+			border: 1px solid #444; /* Dark mode border color */
+			background-color: #2a2a2a; /* Dark mode note background */
+		}
+
+		/* Dark mode link styles */
+		.link.dark-mode { 
+			color: #4da3ff; /* Change to a lighter blue or any other color for visibility */
+			text-decoration: underline; 
+		}
+	</style>
+
+</head>
+<body>
+
+  <h1>Notes and Links</h1>
+  <button id="toggleDarkMode">Toggle Dark Mode</button>
+
+  <!-- Filters -->
+  <label for="linkTypeFilter">Filter by Link Type:</label>
+  <select id="linkTypeFilter">
+    <option value="">All</option>
+  </select>
+
+  <label for="linkFormatFilter">Filter by Link Format:</label>
+  <select id="linkFormatFilter">
+    <option value="">All</option>
+  </select>
+
+  <!-- Notes container -->
+  <div id="notesContainer"></div>
+
+  <script>
+    // JSON data
+	const data = ${convertBrackets(finalResults)};
+
+	// Populate filter dropdowns
+	function populateFilters() {
+	  const linkTypes = [...new Set(data.map(item => item.linkType))];
+	  const linkFormats = [...new Set(data.map(item => item.linkFormat))];
+
+      // Sort link formats alphabetically
+      linkFormats.sort();
+
+	  const linkTypeFilter = document.getElementById('linkTypeFilter');
+	  const linkFormatFilter = document.getElementById('linkFormatFilter');
+
+	  // Clear existing options before populating
+	  linkTypeFilter.innerHTML = '';
+	  linkFormatFilter.innerHTML = '';
+
+	  // Add a default option for link types
+	  linkTypeFilter.appendChild(new Option('All Link Types', ''));
+
+	  // Add link types to the filter
+	  linkTypes.forEach(type => {
+		const option = document.createElement('option');
+		option.value = type;
+		option.textContent = type;
+		linkTypeFilter.appendChild(option);
+	  });
+
+	  // Add "All" option for link formats
+	  linkFormatFilter.appendChild(new Option('All Link Formats', ''));
+
+	  // Add link formats to the filter, but only those with 5 or fewer characters
+	  linkFormats.forEach(format => {
+		if (format.length <= 5) { // Check the character length
+		  const option = document.createElement('option');
+		  option.value = format;
+		  option.textContent = format;
+		  linkFormatFilter.appendChild(option);
+		}
+	  });
+	}
+
+	// Display notes based on filters
+	function displayNotes() {
+	  const container = document.getElementById('notesContainer');
+	  container.innerHTML = ''; // Clear previous notes
+
+	  const selectedLinkType = document.getElementById('linkTypeFilter').value;
+	  const selectedLinkFormat = document.getElementById('linkFormatFilter').value;
+
+	  // Filter data based on selected linkType and linkFormat
+	  const filteredData = data.filter(item => {
+		return (!selectedLinkType || item.linkType === selectedLinkType) &&
+			   (!selectedLinkFormat || item.linkFormat === selectedLinkFormat);
+	  });
+
+	  // Group notes by noteUUID
+	  const notesMap = {};
+	  filteredData.forEach(item => {
+		if (!notesMap[item.noteUUID]) {
+		  notesMap[item.noteUUID] = {
+			noteName: item.noteName,
+			noteUUID: item.noteUUID,
+			noteTags: item.noteTags,
+			links: []
+		  };
+		}
+		notesMap[item.noteUUID].links.push({
+		  linkName: item.linkName,
+		  linkURL: item.linkURL,
+		  linkFormat: item.linkFormat
+		});
+	  });
+
+	  // Display notes
+	  Object.values(notesMap).forEach(note => {
+		const noteDiv = document.createElement('div');
+		noteDiv.className = 'note';
+
+		const noteHeader = document.createElement('div');
+		noteHeader.className = 'note-header';
+
+		const noteName = document.createElement('span');
+		noteName.className = 'note-name';
+		noteName.textContent = note.noteName;
+
+		const noteUUID = document.createElement('span');
+		noteUUID.className = 'note-uuid';
+		noteUUID.textContent = \`(UUID: \${note.noteUUID})\`;
+
+		const noteTags = document.createElement('span');
+		noteTags.className = 'note-tags';
+		noteTags.textContent = \`Tags: \${note.noteTags.join(', ')}\`;
+
+		noteHeader.appendChild(noteName);
+		noteHeader.appendChild(noteUUID);
+		noteHeader.appendChild(noteTags);
+
+		noteDiv.appendChild(noteHeader);
+
+		// Display links under the note
+		note.links.forEach(link => {
+		  const linkDiv = document.createElement('div');
+		  linkDiv.className = 'link';
+		  linkDiv.textContent = \`\${link.linkName} (\${link.linkFormat})\`;
+
+		  // Make the link clickable
+		  linkDiv.addEventListener('click', () => {
+			window.open(link.linkURL, '_blank');
+		  });
+
+		  noteDiv.appendChild(linkDiv);
+		});
+
+		container.appendChild(noteDiv);
+	  });
+	}
+
+	// Function to toggle dark mode
+	function toggleDarkMode() {
+		const body = document.body;
+		const notes = document.querySelectorAll('.note');
+		const links = document.querySelectorAll('.link');
+
+		body.classList.toggle('dark-mode');
+
+		notes.forEach(note => {
+			note.classList.toggle('dark-mode');
+		});
+
+		links.forEach(link => {
+			link.classList.toggle('dark-mode');
+		});
+	}
+
+	// Event listener for the toggle button
+	document.getElementById('toggleDarkMode').addEventListener('click', toggleDarkMode);
+
+	// Initialize the page
+	populateFilters();
+	displayNotes();
+
+	// Add event listeners to filters
+	document.getElementById('linkTypeFilter').addEventListener('change', displayNotes);
+	document.getElementById('linkFormatFilter').addEventListener('change', displayNotes);
+
+  </script>
+
+</body>
+</html>
+`;
+
+
 	
 	// Handle different download formats
 	if (dwFormat === "download_md" && finalResults.length > 0) {
@@ -1375,6 +1641,11 @@ Object Type: ${objectType}
 		// console.log("finalResults:", finalResults);
 	} else if (dwFormat === "download_json" && finalResults.length > 0) {
 		downloadTextFile(finalResults, "Media_Manager_JSON.json");
+		// console.log("finalResults:", finalResults);
+	} else if (dwFormat === "download_html" && finalResults.length > 0) {
+		// finalResults = convertBrackets(finalResults);
+		finalResults = htmlFormat;
+		downloadTextFile(finalResults, "Media_Manager_HTML.html");
 		// console.log("finalResults:", finalResults);
 	}
 
