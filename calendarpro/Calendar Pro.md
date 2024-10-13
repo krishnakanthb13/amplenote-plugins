@@ -1,7 +1,7 @@
 ﻿---
 title: Calendar Pro
 uuid: 02a65ee0-639b-11ef-96c6-b6c19b417745
-version: 364
+version: 408
 created: '2024-08-26T16:34:49+05:30'
 tags:
   - '-t/amplenote/mine'
@@ -24,7 +24,7 @@ No matter if you're a productivity enthusiast or just someone looking for a bett
 
 ![](https://images.amplenote.com/02a65ee0-639b-11ef-96c6-b6c19b417745/9f5c64b7-1679-4c4a-9b44-9111373e98d1.gif)
 
-\
+<mark style="color:#F2998C;">**Note:**<!-- {"cycleColor":"34"} --></mark> To the call the Plugin, you need to now click on **`ctrl + o `**and select the options to call the plugin.
 
 ### <mark style="color:#BBA215;">Calendar 2.0:<!-- {"cycleColor":"25"} --></mark>
 
@@ -135,7 +135,7 @@ Thank you for choosing the Calendar Creation Plugin! We hope it helps you stay o
   },
   // --------------------------------------------------------------------------
   // Function to handle month and year selection from a prompt, including calendar creation. -- noteOption
-  noteOption: {
+  appOption: {
     "Monthly": async function(app, noteUUID) {
       const currentYear = new Date().getFullYear();
       const years = [currentYear, currentYear - 1 , currentYear - 2 , currentYear - 3 , currentYear - 4]; // Adjust the range as needed
@@ -725,6 +725,8 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 
 - September 4th, 2024: Added Month to the Table Format itself. Preparation for Quarter and Yearly! Renamed Calendar 2.0 to Calendar Pro. Add Calendar Pro through insert-Option, Generate Report using note-Options for Monthly, Quarterly and Yearly, and they sit in a generic reports Tag. Added some colors for each type of Options that you choose [Template][^2], and the `date_time `info when the report has been generated!
 
+- October 13th, 2024: Changed the calling the plugin from `noteOptions` to `appOptions`, as these do not require the need of a specific note UUID to pick up on.
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -841,7 +843,7 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 
 ---
 
-Time Invested For this Plugin: 3h 40m + 8h 36m + 6h 42m = \~12h 16m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 3h 40m + 8h 36m + 6h 42m + 20m = \~12h 36m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 [^1]: 
     - <mark style="color:#F8914D;">**Calendar Pro**<!-- {"cycleColor":"24"} --></mark> - Now Supports Quarterly, Yearly, along with the Monthly Template. And Monthly can also be accessed from insert Options.
