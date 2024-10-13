@@ -1508,7 +1508,7 @@ Object Type: ${objectType}
 
 	  // Add link formats to the filter, but only those with 5 or fewer characters
 	  linkFormats.forEach(format => {
-		if (format.length <= 5) { // Check the character length
+		if (format && format.length <= 5) { // Check if format is not null/undefined and the length is <= 5
 		  const option = document.createElement('option');
 		  option.value = format;
 		  option.textContent = format;
