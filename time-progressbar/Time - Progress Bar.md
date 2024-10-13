@@ -1,7 +1,7 @@
 ﻿---
 title: Time - Progress Bar
 uuid: 9e46b70a-6b9d-11ef-a330-22d98565c2c0
-version: 72
+version: 108
 created: '2024-09-05T21:13:37+05:30'
 tags:
   - '-t/amplenote/mine'
@@ -56,12 +56,12 @@ Overall, the code's purpose is to provide a visual representation of time manage
 
 | | |
 |-|-|
-|Name<!-- {"cell":{"colwidth":108}} -->|Time - Progress Bar<!-- {"cell":{"colwidth":500}} -->|
-|Icon<!-- {"cell":{"colwidth":108}} -->|timelapse<!-- {"cell":{"colwidth":500}} -->|
-|Setting<!-- {"cell":{"colwidth":108}} -->|Time Goal Progress Bar UUID \[Do not Edit!\]<!-- {"cell":{"colwidth":500}} -->|
-|Setting<!-- {"cell":{"colwidth":108}} -->|Peek Viewer (Yes / No)<!-- {"cell":{"colwidth":500}} -->|
-|Description<!-- {"cell":{"colwidth":108}} -->|[^1]<!-- {"cell":{"colwidth":500}} -->|
-|Instructions<!-- {"cell":{"colwidth":108}} -->| [Time - Progress Bar Docs](https://www.amplenote.com/notes/ffc8dd2e-6b9c-11ef-a330-22d98565c2c0) <!-- {"cell":{"colwidth":500}} -->|
+|Name<!-- {"cell":{"colwidth":102}} -->|Time - Progress Bar<!-- {"cell":{"colwidth":834}} -->|
+|Icon<!-- {"cell":{"colwidth":105}} -->|timelapse<!-- {"cell":{"colwidth":834}} -->|
+|Setting|Time Goal Progress Bar UUID \[Do not Edit!\]|
+|Setting|Peek Viewer \[Yes / No\]|
+|Description|[^1]<!-- {"cell":{"colwidth":834}} -->|
+|Instructions| [Time - Progress Bar Docs](https://www.amplenote.com/notes/ffc8dd2e-6b9c-11ef-a330-22d98565c2c0) <!-- {"cell":{"colwidth":834}} -->|
 ---
 
 ## <mark style="color:#F8D616;">Code Base:<!-- {"cycleColor":"25"} --></mark>
@@ -77,21 +77,21 @@ Overall, the code's purpose is to provide a visual representation of time manage
 		const newTagName = ['-reports/-time-goal-progress'];
 
 		// Handle the insert or retrieve note UUID.
-		const noteUUIDz = await (async () => {
-			// Retrieve the existing UUID from settings if it exists
-			const existingUUID = await app.settings["Time Goal Progress Bar UUID [Do not Edit!]"];
-			if (existingUUID) {
-				// Return the existing UUID if found
-				return existingUUID;
-			}
+		const existingUUID = await app.settings["Time Goal Progress Bar UUID [Do not Edit!]"];
+		console.log ("existingUUID found",existingUUID);
 
-			// If no existing UUID is found, create a new note and save the UUID in the settings
+		const noteUUIDz = existingUUID || await (async () => {
+			// Create a new note and save the UUID in the settings if no existing UUID is found
 			const newUUIDx = await app.createNote(newNoteName, newTagName);
 			await app.setSetting("Time Goal Progress Bar UUID [Do not Edit!]", newUUIDx);
-
-			// Return the newly created UUID
-			return newUUIDx;
+			return newUUIDx; // Return the newly created UUID
+			console.log ("new newUUIDx",newUUIDx);
 		})();
+        console.log ("new noteUUIDz",noteUUIDz);
+
+        // local to normal
+        // const noteHandle = await app.findNote({ uuid: noteUUIDz });
+        // console.log ("noteHandle",noteHandle);
 
 		// `app.context.pluginUUID` is always supplied - it is the UUID of the plugin note.
 		// Insert the plugin note content with a unique UUID into the note
@@ -99,17 +99,18 @@ Overall, the code's purpose is to provide a visual representation of time manage
 			{ uuid: noteUUIDz }, 
 			`<object data="plugin://${ app.context.pluginUUID }" data-aspect-ratio="1" />`
 		);
+		console.log ("content replaced in the destination note");
 
 		// Retrieve the Peek View setting from settings, defaulting to "Yes" if not set
-		const peekviewEnable = await app.settings["Peek Viewer (Yes / No)"] || "Yes";
+		const peekviewEnable = await app.settings["Peek Viewer [Yes / No]"] || "Yes";
+		console.log ("peekviewEnable",peekviewEnable);
 
-		if (peekviewEnable.toLowerCase() === "yes") {
-			// If Peek View is enabled, open the note in the sidebar
-			await app.openSidebarEmbed(1, 'sidebar', noteUUIDz);
-		} else {
-			// If Peek View is disabled or set to "no", navigate to the note's URL
-			await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
-		}
+		// Open the note in the sidebar if Peek View is enabled, otherwise navigate to the note's URL
+		await (peekviewEnable.toLowerCase() === "yes"
+			? app.openSidebarEmbed(1, 'sidebar', noteUUIDz) // Peek View is enabled
+			// console.log ("Note opened in Side Bar");
+			: app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`)); // Peek View is disabled
+			// console.log ("Navigated to the note");
 
 		// Return null at the end of the function as the result
 		return null;
@@ -256,8 +257,8 @@ Overall, the code's purpose is to provide a visual representation of time manage
 
 			// List of goals with start and end dates
 			const goals = [
-				{ name: "September 2024", startDate: "2024-09-01", endDate: "2024-09-30" },  // Goal for September
-				{ name: "Quarter III 2024", startDate: "2024-07-01", endDate: "2024-09-30" },  // Goal for Q3
+				{ name: "October 2024", startDate: "2024-10-01", endDate: "2024-10-31" },  // Goal for October
+				{ name: "Quarter IV 2024", startDate: "2024-10-01", endDate: "2024-12-31" },  // Goal for Q4
 				{ name: "Year 2024", startDate: "2024-01-01", endDate: "2024-12-30" },  // Goal for the entire year
 			];
 
@@ -342,6 +343,8 @@ Overall, the code's purpose is to provide a visual representation of time manage
 
 - September 5th, 2024: Planned and developed a responsive daily time progress bar with real-time updates, customizable daily tracking, and dynamic goal progress bars for multiple long-term goals, featuring smooth animations and flexible display options for both sidebar and full-page views.
 
+- October 13th, 2024: Made some change to the code for easier processing and optimized the code.
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -380,14 +383,14 @@ Overall, the code's purpose is to provide a visual representation of time manage
 
 ---
 
-Time Invested For this Plugin: 5h 41m = \~5h 41m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 7h 10m + 35m = \~7h 45m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 \
 
 [^1]: 
-    - Today's Time Progress Bar
+    Today's Time Progress Bar
 
-    - Set Goals Duration Progress Bar *(Open in your Peek Viewer! \[Suggested\])*
+    Set Goals Duration Progress Bar *(Open in your Peek Viewer! \[Suggested\])*
 
 [^2]: [High-Level Explanation of the Code]()
 
