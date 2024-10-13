@@ -138,19 +138,7 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
       // Insert the accumulated content for the whole year into the note.
 	  // console.log("finalContent:", finalContent);
       await app.replaceNoteContent({ uuid: noteUUIDz }, finalContent);
-	  // await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
-
-		// Retrieve the Peek View setting from settings, defaulting to "Yes" if not set
-		const peekviewEnable = await app.settings["Peek Viewer [Yes / No]"] || "Yes";
-		// console.log ("peekviewEnable",peekviewEnable);
-
-		// Open the note in the sidebar if Peek View is enabled, otherwise navigate to the note's URL
-		await (peekviewEnable.toLowerCase() === "yes"
-			? app.openSidebarEmbed(1, 'sidebar', finalContent) // Peek View is enabled
-			// console.log ("Note opened in Side Bar");
-			: app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`)); // Peek View is disabled
-			// console.log ("Navigated to the note");
-
+	  await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
       }
     },
   // --------------------------------------------------------------------------
@@ -270,19 +258,7 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 		  // Insert the accumulated content for the whole year into the note.
 		  // console.log("finalContent:", finalContent);
 		  await app.replaceNoteContent({ uuid: noteUUIDz }, finalContent);
-		  // await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
-
-		// Retrieve the Peek View setting from settings, defaulting to "Yes" if not set
-		const peekviewEnable = await app.settings["Peek Viewer [Yes / No]"] || "Yes";
-		// console.log ("peekviewEnable",peekviewEnable);
-
-		// Open the note in the sidebar if Peek View is enabled, otherwise navigate to the note's URL
-		await (peekviewEnable.toLowerCase() === "yes"
-			? app.openSidebarEmbed(1, 'sidebar', noteUUIDz) // Peek View is enabled
-			// console.log ("Note opened in Side Bar");
-			: app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`)); // Peek View is disabled
-			// console.log ("Navigated to the note");
-
+		  await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
 		},
 
   // --------------------------------------------------------------------------
@@ -407,19 +383,7 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 		  // Insert the accumulated content for the whole year into the note.
 		  // console.log("finalContent:", finalContent);
 		  await app.replaceNoteContent({ uuid: noteUUIDz }, finalContent);
-		  // await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
-
-		// Retrieve the Peek View setting from settings, defaulting to "Yes" if not set
-		const peekviewEnable = await app.settings["Peek Viewer [Yes / No]"] || "Yes";
-		// console.log ("peekviewEnable",peekviewEnable);
-
-		// Open the note in the sidebar if Peek View is enabled, otherwise navigate to the note's URL
-		await (peekviewEnable.toLowerCase() === "yes"
-			? app.openSidebarEmbed(1, 'sidebar', noteUUIDz) // Peek View is enabled
-			// console.log ("Note opened in Side Bar");
-			: app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`)); // Peek View is disabled
-			// console.log ("Navigated to the note");
-
+		  await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
 		},
 
   // --------------------------------------------------------------------------
