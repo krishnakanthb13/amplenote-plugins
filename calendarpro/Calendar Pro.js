@@ -10,7 +10,7 @@
   },
   // --------------------------------------------------------------------------
   // Function to handle month and year selection from a prompt, including calendar creation. -- noteOption
-  noteOption: {
+  appOption: {
     "Monthly": async function(app, noteUUID) {
       const currentYear = new Date().getFullYear();
       const years = [currentYear, currentYear - 1 , currentYear - 2 , currentYear - 3 , currentYear - 4]; // Adjust the range as needed
