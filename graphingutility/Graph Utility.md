@@ -1,7 +1,7 @@
 ﻿---
 title: Graph Utility
 uuid: 2d631ce2-6169-11ef-a048-22074e34eefe
-version: 788
+version: 834
 created: '2024-08-23T21:33:02+05:30'
 tags:
   - '-9-permanent'
@@ -36,7 +36,7 @@ In summary, this plugin is an essential tool for anyone looking to elevate their
 
 ## <mark style="color:#F8D616;">Demo:<!-- {"cycleColor":"25"} --></mark>
 
-![](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/4ea73370-db32-42ab-b572-c1d41f3472ea.png) [^1]    ![](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/f56412d9-e337-4d1a-8165-a2b120e9c19e.png) [^2]
+![](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/4ea73370-db32-42ab-b572-c1d41f3472ea.png) [^1]    ![](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/f56412d9-e337-4d1a-8165-a2b120e9c19e.png) [^2]  ![](https://images.amplenote.com/2d631ce2-6169-11ef-a048-22074e34eefe/059a72a8-69a6-4e84-94d2-e2896c324900.png) [^3]
 
 \
 
@@ -58,7 +58,9 @@ In summary, this plugin is an essential tool for anyone looking to elevate their
 
     - `Download - Interactive Charts (Recommended)` Download a HTML file with all the Interactive Chart Options, with all the table data from the note that you are selecting from.
 
-    - `Download all Tables - Markdown` This option will let you download a formatted markdown type of all the tables present in the note that you selected from, this can used in the above HTML, by editing using a notepad or any other software that support markdown tables.
+    - `Download all Tables - MD` This option will let you download a formatted markdown type of all the tables present in the note that you selected from, this can be used in the above HTML, by editing using a notepad or any other software that support markdown tables.
+
+    - `Download all Tables - CSV` This option will let you download a formatted comma separated file type of all the tables present in the note that you selected from, this can be used to open in excel and continue analytics.
 
     - `Copy all Tables from this Note to a new Note` If you have to many data points or to much noise data, which is not letting you focus on your data, then move all your data in tables alone into a clean and separate note.
 
@@ -78,20 +80,22 @@ In summary, this plugin is an essential tool for anyone looking to elevate their
 
 ### Features
 
-**`Easy Table Selection:`** Automatically identifies tables in your markdown. You just have to select which table that you want to select in the order in which it is present in your note.\
-**`Variety of Chart Types:`** Line, bar, pie, and advanced charts as well.\
-**`Customizable Axes:`** Choose which data goes on the X, Y, or Z axis. (Limited to Column data alone for now!)\
-**`Immediate Visualization:`** View your chart right in your document. Quickly compare and see which one suits you best for your visualization.
+- **`Easy Table Selection:`** Automatically identifies tables in your markdown. You just have to select which table that you want to select in the order in which it is present in your note.
 
-**`Select your Fav Animations:`** Feeling overwhelmed by your data. Have some fidgeting with some animation, see which one is distracting you and get a chance to unwind occasionally.
+- **`Variety of Chart Types:`** Line, bar, pie, and advanced charts as well.
 
-\
-Troubleshooting
+- **`Customizable Axes:`** Choose which data goes on the X, Y, or Z axis. (Limited to Column data alone for now!)
 
-No Tables Found? Make sure your markdown contains properly formatted tables.\
-Chart Not Showing? Ensure you’ve selected the right data for the chart’s axes.
+- **`Immediate Visualization:`** View your chart right in your document. Quickly compare and see which one suits you best for your visualization.
 
-\
+- **`Select your Fav Animations:`** Feeling overwhelmed by your data. Have some fidgeting with some animation, see which one is distracting you and get a chance to unwind occasionally.
+
+- Troubleshooting
+
+    - No Tables Found? Make sure your markdown contains properly formatted tables.
+
+    - Chart Not Showing? Ensure you’ve selected the right data for the chart’s axes.
+
 For more details, refer to the Full Documentation in the Instruction below or comment if you need support.
 
 \
@@ -115,7 +119,7 @@ For more details, refer to the Full Documentation in the Instruction below or co
 
 ```
 {
-noteOption: {
+	noteOption: {
 /* ----------------------------------- */
 "Download!":  async function (app, noteUUID) {
     // Prompt the user to select tags and choose options
@@ -128,7 +132,8 @@ noteOption: {
                 type: "radio",
                 options: [
                     { label: "Download - Interactive Charts (Recommended)", value: "1" },
-                    { label: "Download all Tables - Markdown", value: "2" },
+                    { label: "Download all Tables - MD", value: "2" },
+                    { label: "Download all Tables - CSV", value: "4" },
                     { label: "Copy all Tables from this Note to a new Note", value: "3" }
                 ]
             }
@@ -367,6 +372,34 @@ ${transposeContent}
         document.body.removeChild(link);
     }
 
+	// Function to convert the markdown file into csv
+	function convertMarkdownToCSV(content) {
+		// Step 1: Remove #, ##, ### at the start of lines but keep the content
+		let cleanedContent = content.split('\n').map(line => {
+			return line.replace(/^#+\s*/, ''); // Remove leading # followed by any amount of spaces
+		}).join('\n');
+		
+		// Step 2: Split the content by lines
+		let lines = cleanedContent.split('\n');
+
+		// Step 3: Process each line (remove pipes and add commas + quotes)
+		let csvLines = lines.map(line => {
+			// Skip lines that don't represent a table (those that don't contain '|')
+			if (!line.includes('|')) return '';
+
+			// Remove leading and trailing pipes and trim spaces
+			let cleanedLine = line.trim().replace(/^\|/, '').replace(/\|$/, '').trim();
+
+			// Replace pipes with commas, add quotes around each value
+			let csvLine = cleanedLine.split('|').map(cell => `"${cell.trim()}"`).join(',');
+
+			return csvLine;
+		}).filter(line => line !== ''); // Remove any empty lines
+
+		// Step 4: Join all processed lines to form CSV content
+		return csvLines.join('\n');
+	}
+
     // Determine the format and trigger the appropriate download
     if (result === "3") {
 		const newNoteName = `Tables Copy ${YYMMDD}_${HHMMSS}`;
@@ -376,8 +409,12 @@ ${transposeContent}
 		await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
         // console.log("cleanedContentz:", cleanedContentz);
     } else if (result === "2") {
-        downloadTextFile(cleanedContentz, "Markdown_Tables.txt");
+        downloadTextFile(cleanedContentz, "Markdown_Tables.md");
         // console.log("cleanedContentz:", cleanedContentz);
+    } else if (result === "4") {
+        const csvContent = convertMarkdownToCSV(cleanedContentz);
+        downloadTextFile(csvContent, "Markdown_Tables.csv");
+        // console.log("csvContent:", csvContent);
     } else if (result === "1") {
 
 const htmlTemplate = `
@@ -1309,7 +1346,7 @@ ${transposeContent}
 	return null;
 },
 /* ----------------------------------- */
-"Update Viewer!":  async function (app, noteUUID) {
+"Update!":  async function (app, noteUUID) {
     // app.alert(noteUUID);
 	await app.setSetting("Current_Note_UUID [Do not Edit!]", noteUUID);
 	// const noteUUIDz = noteUUID;
@@ -2477,6 +2514,8 @@ return(htmlTemplate);
 
 - August 25th, 2024 + August 26th, 2024 - Added Transpose for Row wise data. Disabled Auto populate column names and use the names already existing in the Table. Skipping download Image option, as right click and save as is enabled by default. Testing of all the feature mentioned earlier in this line, and also respective documentations required. Added Multiselect, in the backend still working on it (Will be applicable only for few charts!).
 
+- October 14th, 2024 - Updated the name of the selection. Added CSV Download Option. Tested. Rolled-out.
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -2509,6 +2548,8 @@ return(htmlTemplate);
 
     - ~~Right click and save Image!~~
 
+    - ~~CSV format.~~
+
 <mark style="color:#9AD62A;">**Future Ideas in the Bucket:**<!-- {"cycleColor":"26"} --></mark>
 
 - Note: Upon request, will implement <mark style="color:#F8914D;">Audit function<!-- {"cycleColor":"24"} --></mark> similar to [Gallery](https://public.amplenote.com/LpRxpX/gallery) Plugin. (If at least 15 comment or unique interactions of implementation of Audit is useful, I can make it happen).
@@ -2517,11 +2558,11 @@ return(htmlTemplate);
 
 ---
 
-[High-Level Explanation of the Code][^3]   For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
+[High-Level Explanation of the Code][^4]   For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
 
 ---
 
-Time Invested For this Plugin: 8h 9m + 11h 48m + 5h 49m + 3h 40m + 4h 46m = \~34h 14m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 8h 9m + 11h 48m + 5h 49m + 3h 40m + 4h 46m + 1h 10m = \~35h 24m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
  
 
@@ -2547,7 +2588,22 @@ Time Invested For this Plugin: 8h 9m + 11h 48m + 5h 49m + 3h 40m + 4h 46m = \~34
     SUBMIT
     Cancel
 
-[^3]: [High-Level Explanation of the Code]()
+[^3]: Na Graph Utility
+    X
+    Select any one of the Option Below!
+    Select the format that you want to download / copy in!
+    O
+    Download - Interactive Charts (Recommended)
+    O
+    Download all Tables - MD
+    O
+    Download all Tables - CSV
+    O
+    Copy all Tables from this Note to a new Note
+    SUBMIT
+    Cancel
+
+[^4]: [High-Level Explanation of the Code]()
 
     ### High-Level Overview of the JavaScript Code
 
