@@ -254,8 +254,10 @@ ${transposeContent}
 
 	// Function to convert the markdown file into csv
 	function convertMarkdownToCSV(content) {
-		// Step 1: Remove lines that start with headers (#, ##, ###)
-		let cleanedContent = content.split('\n').filter(line => !line.trim().startsWith('#')).join('\n');
+		// Step 1: Remove #, ##, ### at the start of lines but keep the content
+		let cleanedContent = content.split('\n').map(line => {
+			return line.replace(/^#+\s*/, ''); // Remove leading # followed by any amount of spaces
+		}).join('\n');
 		
 		// Step 2: Split the content by lines
 		let lines = cleanedContent.split('\n');
