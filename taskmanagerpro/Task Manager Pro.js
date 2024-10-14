@@ -319,15 +319,22 @@
 	results = Array.from(notesGroupNames);
 	// console.log("results:", results);
 
+	const horizontalLine = `
+
+---
+
+`;
+
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Active Tasks!</mark>
+### Readme! - <mark>Task Manager - Active Tasks!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: R-Active!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
+${horizontalLine}
 `;
 
 /* 	const readmeNotesX = `
@@ -496,15 +503,22 @@
 	results = Array.from(notesGroupNames);
 	// console.log("results:", results);
 
+	const horizontalLine = `
+
+---
+
+`;
+
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Finished Tasks!</mark>
+### Readme! - <mark>Task Manager - Finished Tasks!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having no Pending or Un-completed Task, but has at least one Completed or Dismissed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: R-Finished!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
+${horizontalLine}
 `;
 	
 	// Create the final result text as a markdown table, including headers and the joined note information.
@@ -630,13 +644,20 @@
 	// console.log("notesGroupNames:", notesGroupNames);
 	// console.log("results:", results);
 
+	const horizontalLine = `
+
+---
+
+`;
+
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Tasks Trend!</mark>
+### Readme! - <mark>Task Manager - Tasks Trend!</mark> <!-- {"collapsed":true} -->
 - Below are list of Task Metrics based on Date, having at least one Completed or Dismissed Task in the Note. Sorted and Pivoted by Date + Status.
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: Trend!\` once in a week/month and organize your Task respectively.
 - <mark>Visualization:</mark> Using my [Graph Utility Plugin](https://www.amplenote.com/plugins/sDBcbBrdEhAuerZ5HzLyaTn5) - **Viewer!** Option, You can Visualize the Trend over the period of time, for task count and task score gained on a particular day.
+${horizontalLine}
 `;
 	
 	// Create the final result text as a markdown table, including headers and the joined note information.
@@ -747,9 +768,15 @@
 	results = Array.from(notesGroupNames);
 	// console.log("results:", results);
 
+	const horizontalLine = `
+
+---
+
+`;
+
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Eisenhower Matrix!</mark>
+### Readme! - <mark>Task Manager - Eisenhower Matrix!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note, w/ tasks Important OR Urgent Options are selected.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
@@ -757,6 +784,7 @@
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: E.M.!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`🔥 (Important and urgent), ⚡ (Important but not urgent), ⚾ (Not important but urgent), 🗑️ (Not important and not urgent), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 	- Learn more on [Eisenhower Method](https://public.amplenote.com/Eu8Azcoih6NaU2r4pebHHaP3).
+${horizontalLine}
 `;
 	
 	// Create the final result text as a markdown table, including headers and the joined note information.
