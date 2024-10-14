@@ -1,5 +1,5 @@
 {
-	appOption: {
+	noteOption: {
 /* ----------------------------------- */
 "Download!":  async function (app, noteUUID) {
     // Prompt the user to select tags and choose options
@@ -12,7 +12,8 @@
                 type: "radio",
                 options: [
                     { label: "Download - Interactive Charts (Recommended)", value: "1" },
-                    { label: "Download all Tables - Markdown", value: "2" },
+                    { label: "Download all Tables - MD", value: "2" },
+                    { label: "Download all Tables - CSV", value: "4" },
                     { label: "Copy all Tables from this Note to a new Note", value: "3" }
                 ]
             }
@@ -251,6 +252,32 @@ ${transposeContent}
         document.body.removeChild(link);
     }
 
+	// Function to convert the markdown file into csv
+	function convertMarkdownToCSV(content) {
+		// Step 1: Remove lines that start with headers (#, ##, ###)
+		let cleanedContent = content.split('\n').filter(line => !line.trim().startsWith('#')).join('\n');
+		
+		// Step 2: Split the content by lines
+		let lines = cleanedContent.split('\n');
+
+		// Step 3: Process each line (remove pipes and add commas + quotes)
+		let csvLines = lines.map(line => {
+			// Skip lines that don't represent a table (those that don't contain '|')
+			if (!line.includes('|')) return '';
+
+			// Remove leading and trailing pipes and trim spaces
+			let cleanedLine = line.trim().replace(/^\|/, '').replace(/\|$/, '').trim();
+
+			// Replace pipes with commas, add quotes around each value
+			let csvLine = cleanedLine.split('|').map(cell => `"${cell.trim()}"`).join(',');
+
+			return csvLine;
+		}).filter(line => line !== ''); // Remove any empty lines
+
+		// Step 4: Join all processed lines to form CSV content
+		return csvLines.join('\n');
+	}
+
     // Determine the format and trigger the appropriate download
     if (result === "3") {
 		const newNoteName = `Tables Copy ${YYMMDD}_${HHMMSS}`;
@@ -260,8 +287,12 @@ ${transposeContent}
 		await app.navigate(`https://www.amplenote.com/notes/${noteUUIDz}`);
         // console.log("cleanedContentz:", cleanedContentz);
     } else if (result === "2") {
-        downloadTextFile(cleanedContentz, "Markdown_Tables.txt");
+        downloadTextFile(cleanedContentz, "Markdown_Tables.md");
         // console.log("cleanedContentz:", cleanedContentz);
+    } else if (result === "4") {
+        const csvContent = convertMarkdownToCSV(cleanedContentz);
+        downloadTextFile(csvContent, "Markdown_Tables.csv");
+        // console.log("csvContent:", csvContent);
     } else if (result === "1") {
 
 const htmlTemplate = `
@@ -1180,11 +1211,8 @@ ${transposeContent}
 
         downloadTextFile(htmlTemplate, "InteractiveCharts.html");
         // console.log("htmlTemplate:", htmlTemplate);
-    }
   }
 },
-/* ----------------------------------- */
-  noteOption: {
 /* ----------------------------------- */
 "Viewer!":  async function (app, noteUUID) {
     // app.alert(noteUUID);
