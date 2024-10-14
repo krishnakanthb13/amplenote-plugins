@@ -24,7 +24,7 @@ async onEmbedCall(app, ...args) {
 		} */ 
 
       } else {
-		  console.log("Does not seem to be working!");
+		  console.log("Does not seem to be working!",args);
 	  }
     },
 /* ----------------------------------- */
