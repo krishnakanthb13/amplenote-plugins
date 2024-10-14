@@ -191,9 +191,12 @@
     // Replace the note content in the 'Progress' section with the progress bar and categorized task list
     return app.replaceNoteContent({ uuid: app.context.noteUUID }, `${taskProgress}\n${allTaskCategorizedz}`, { section });
 
+	}
 },
 // ************************************************************** //
-	"R-Active!": async function(app, noteUUID) {
+  appOption: {
+// ************************************************************** //
+	"R-Active!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -377,7 +380,7 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"R-Finished!": async function(app, noteUUID) {
+	"R-Finished!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -548,7 +551,7 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"Trend!": async function(app, noteUUID) {
+	"Trend!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -679,7 +682,7 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"E.M.!": async function(app, noteUUID) {
+	"E.M.!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
