@@ -1,7 +1,7 @@
 ﻿---
 title: Task Manager Pro
 uuid: 6c5991b0-6457-11ef-b225-22074e34eefe
-version: 575
+version: 618
 created: '2024-08-27T15:03:32+05:30'
 tags:
   - '-9-permanent'
@@ -19,6 +19,10 @@ tags:
 ### <mark style="color:#BBA215;">**Task Manager Pro: Note!:**<!-- {"cycleColor":"25"} --></mark>
 
 ![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/b0990369-d92a-4d76-a13e-a7aa201db489.png) [^2]
+
+<mark style="color:#F2998C;">**Note:**<!-- {"cycleColor":"34"} --></mark> To the call the Plugin, you need to now click on **`ctrl + o `**and select the options to call the plugin.
+
+Except `Note!` option still accessible from `noteOptions` `(•••)`
 
 ### <mark style="color:#BBA215;">**Task Manager Pro: Overall Active!**<!-- {"cycleColor":"25"} --></mark>
 
@@ -373,9 +377,12 @@ These emoji sets give users a wide variety of creative options to visualize thei
     // Replace the note content in the 'Progress' section with the progress bar and categorized task list
     return app.replaceNoteContent({ uuid: app.context.noteUUID }, `${taskProgress}\n${allTaskCategorizedz}`, { section });
 
+	}
 },
 // ************************************************************** //
-	"R-Active!": async function(app, noteUUID) {
+  appOption: {
+// ************************************************************** //
+	"Report Active Tasks!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -501,15 +508,22 @@ These emoji sets give users a wide variety of creative options to visualize thei
 	results = Array.from(notesGroupNames);
 	// console.log("results:", results);
 
+	const horizontalLine = `
+
+---
+
+`;
+
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Active Tasks!</mark>
+# Readme! - <mark>Task Manager - Active Tasks!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: R-Active!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
+${horizontalLine}
 `;
 
 /* 	const readmeNotesX = `
@@ -552,7 +566,7 @@ These emoji sets give users a wide variety of creative options to visualize thei
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"R-Finished!": async function(app, noteUUID) {
+	"Report Finished Tasks!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -678,15 +692,22 @@ These emoji sets give users a wide variety of creative options to visualize thei
 	results = Array.from(notesGroupNames);
 	// console.log("results:", results);
 
+	const horizontalLine = `
+
+---
+
+`;
+
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Finished Tasks!</mark>
+# Readme! - <mark>Task Manager - Finished Tasks!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having no Pending or Un-completed Task, but has at least one Completed or Dismissed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: R-Finished!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`❗ (Pending Tasks), ✔️ (Completed Tasks), ✖️ (Dismissed Tasks), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
+${horizontalLine}
 `;
 	
 	// Create the final result text as a markdown table, including headers and the joined note information.
@@ -716,7 +737,7 @@ These emoji sets give users a wide variety of creative options to visualize thei
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"Trend!": async function(app, noteUUID) {
+	"Trend Over Dates!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -812,13 +833,20 @@ These emoji sets give users a wide variety of creative options to visualize thei
 	// console.log("notesGroupNames:", notesGroupNames);
 	// console.log("results:", results);
 
+	const horizontalLine = `
+
+---
+
+`;
+
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Tasks Trend!</mark>
+# Readme! - <mark>Task Manager - Tasks Trend!</mark> <!-- {"collapsed":true} -->
 - Below are list of Task Metrics based on Date, having at least one Completed or Dismissed Task in the Note. Sorted and Pivoted by Date + Status.
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: Trend!\` once in a week/month and organize your Task respectively.
 - <mark>Visualization:</mark> Using my [Graph Utility Plugin](https://www.amplenote.com/plugins/sDBcbBrdEhAuerZ5HzLyaTn5) - **Viewer!** Option, You can Visualize the Trend over the period of time, for task count and task score gained on a particular day.
+${horizontalLine}
 `;
 	
 	// Create the final result text as a markdown table, including headers and the joined note information.
@@ -840,7 +868,7 @@ These emoji sets give users a wide variety of creative options to visualize thei
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"E.M.!": async function(app, noteUUID) {
+	"Eisenhower Matrix!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -929,9 +957,15 @@ These emoji sets give users a wide variety of creative options to visualize thei
 	results = Array.from(notesGroupNames);
 	// console.log("results:", results);
 
+	const horizontalLine = `
+
+---
+
+`;
+
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Eisenhower Matrix!</mark>
+# Readme! - <mark>Task Manager - Eisenhower Matrix!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note, w/ tasks Important OR Urgent Options are selected.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
@@ -939,6 +973,7 @@ These emoji sets give users a wide variety of creative options to visualize thei
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: E.M.!\` once in a week/month and organize your Task respectively.
 - <mark>Legends:</mark> \`🔥 (Important and urgent), ⚡ (Important but not urgent), ⚾ (Not important but urgent), 🗑️ (Not important and not urgent), 🔢 (Total Task Score), ✒️ (Add your Comments).\`
 	- Learn more on [Eisenhower Method](https://public.amplenote.com/Eu8Azcoih6NaU2r4pebHHaP3).
+${horizontalLine}
 `;
 	
 	// Create the final result text as a markdown table, including headers and the joined note information.
@@ -982,6 +1017,8 @@ These emoji sets give users a wide variety of creative options to visualize thei
 
 - September 15th, 2024: Added the Trend Feature, Tested, Documentation, all the add-on tasks.
 
+- October 14th, 2024: The readme content is collapsed in the report by default. Moved all the options to `appOptions` which can be called using `ctrl + o / cmd + o` . Except `Note!` option still accessible from `noteOptions` `(•••)`. Report Header title level change. Selection name update - Expanded.
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -1022,7 +1059,7 @@ These emoji sets give users a wide variety of creative options to visualize thei
 
 ---
 
-Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m  = \~23h 1m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m + 1h 2m = \~24h 3m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 [^1]: [<mark style="color:#9AD62A;">Welcome Note:<!-- {"cycleColor":"26"} --></mark>]()
 
