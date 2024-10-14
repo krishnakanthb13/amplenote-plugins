@@ -196,7 +196,7 @@
 // ************************************************************** //
   appOption: {
 // ************************************************************** //
-	"R-Active!": async function(app) {
+	"Report Active Tasks!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -330,7 +330,7 @@
 
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Active Tasks!</mark> <!-- {"collapsed":true} -->
+# Readme! - <mark>Task Manager - Active Tasks!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
@@ -380,7 +380,7 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"R-Finished!": async function(app) {
+	"Report Finished Tasks!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -514,7 +514,7 @@ ${horizontalLine}
 
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Finished Tasks!</mark> <!-- {"collapsed":true} -->
+# Readme! - <mark>Task Manager - Finished Tasks!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having no Pending or Un-completed Task, but has at least one Completed or Dismissed Task in the Note.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
@@ -551,7 +551,7 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"Trend!": async function(app) {
+	"Trend Over Dates!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -655,7 +655,7 @@ ${horizontalLine}
 
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Tasks Trend!</mark> <!-- {"collapsed":true} -->
+# Readme! - <mark>Task Manager - Tasks Trend!</mark> <!-- {"collapsed":true} -->
 - Below are list of Task Metrics based on Date, having at least one Completed or Dismissed Task in the Note. Sorted and Pivoted by Date + Status.
 - You can add your Comments to this page for your reference!
 - <mark>Tip:</mark> You can generate, \`Task Manager Pro: Trend!\` once in a week/month and organize your Task respectively.
@@ -682,7 +682,7 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
-	"E.M.!": async function(app) {
+	"Eisenhower Matrix!": async function(app) {
 
 	// Initialize a Set to hold the final results to ensure unique entries.
 	let results = new Set();
@@ -779,7 +779,7 @@ ${horizontalLine}
 
 	// Readme Notes
 	const readmeNotes = `
-### Readme! - <mark>Task Manager - Eisenhower Matrix!</mark> <!-- {"collapsed":true} -->
+# Readme! - <mark>Task Manager - Eisenhower Matrix!</mark> <!-- {"collapsed":true} -->
 - Below are list of Notes with respective Details, having at least one Pending or Un-completed Task in the Note, w/ tasks Important OR Urgent Options are selected.
 - By clicking on the Note Link, the Pop-down window opens up displaying the Note content.
 	- (You can add the \`Task Manager: Note\` into those pages too to get a detailed \`Categorized Task: List View!\`)
