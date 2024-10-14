@@ -1,5 +1,39 @@
 {
-  async noteOption(app) {
+insertText: {
+/* ----------------------------------- */
+"Tagged!": async function (app) {
+
+    await app.context.replaceSelection(`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="2" />`);
+    return null;
+
+}
+/* ----------------------------------- */
+},
+/* ----------------------------------- */
+async onEmbedCall(app, ...args) {
+      if (args.length === 1) {
+		  const taskUuid = args[0];
+		  console.log(`Editing task with UUID: ${taskUuid}`);
+        // return await this["End Cycle Early"]();
+		
+/* 		// Editing Task!
+		const changez = true;
+		if (changez) {
+		  await app.updateTask("4a784a37-2b1e-41f2-98cb-b290c41eaeca", {noteUUID: "0a0496aa-775c-11ef-bfb2-f222b153c6e3"});
+		  // console.log("Success");
+		} */ 
+
+      } else {
+		  console.log("Does not seem to be working!");
+	  }
+    },
+/* ----------------------------------- */
+async renderEmbed(app, ...args) {
+	// let _args = JSON.stringify(args[0]);
+	// console.log(_args);
+
+    let htmlTemplate = "";
+    let allTasksText;
 
     const kanbanTag = (await app.filterNotes({ tag: "-reports/-kanban" })).length > 0;
     console.log("kanbanTag:", kanbanTag);
@@ -74,7 +108,20 @@
         const tasks = await app.getNoteTasks({ uuid: noteUUID }, { includeDone: true });
         console.log("tasks:", tasks);
         
-		tasks.forEach(task => allTasks.push({ ...task, notename: note.name, noteurl: `https://www.amplenote.com/notes/${note.uuid}`, tags: noteTags, startAtz: `${formatTimestamp(task.startAt)}`, hideUntilz: `${formatTimestamp(task.hideUntil)}`, endAtz: `${formatTimestamp(task.endAt)}`, repeatz: `${formatTaskRepeat(task.repeat)}`, taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${formatTimestamp(task.startAt)}<br><b>Hide Until:</b> ${formatTimestamp(task.hideUntil)}<br><b>End At:</b> ${formatTimestamp(task.endAt)}<br><b>Repeat:</b> ${formatTaskRepeat(task.repeat)}<br><hr><b>Note Link:</b> <a href="https://www.amplenote.com/notes/${note.uuid}" target="_blank">${note.name}</a><br><b>Tags:</b> ${noteTags}` }));
+		for (let i = 0; i < tasks.length; i++) {
+			const task = tasks[i];
+			allTasks.push({
+				...task,
+				notename: note.name,
+				noteurl: `https://www.amplenote.com/notes/${note.uuid}`,
+				tags: noteTags,
+				startAtz: `${formatTimestamp(task.startAt)}`,
+				hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+				endAtz: `${formatTimestamp(task.endAt)}`,
+				repeatz: `${formatTaskRepeat(task.repeat)}`,
+				taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${formatTimestamp(task.startAt)}<br><b>Hide Until:</b> ${formatTimestamp(task.hideUntil)}<br><b>End At:</b> ${formatTimestamp(task.endAt)}<br><b>Repeat:</b> ${formatTaskRepeat(task.repeat)}<br><hr><b>Note Link:</b> <a href="https://www.amplenote.com/notes/${note.uuid}" target="_blank">${note.name}</a><br><b>Tags:</b> ${noteTags}`
+			});
+		}
 
       }
       console.log("allTasks:", allTasks);
@@ -92,7 +139,7 @@
 		if (taskSorting === 'urgent') {
 			allTasks.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
 		}
-      const allTasksText = JSON.stringify(allTasks, null, 2);
+      allTasksText = JSON.stringify(allTasks, null, 2);
       console.log("allTasksText:", allTasksText);
      
     } else {
@@ -108,12 +155,246 @@
       }
     }
 
-    /* const changez = true;
-    if (changez) {
-      await app.updateTask("4a784a37-2b1e-41f2-98cb-b290c41eaeca", {noteUUID: "0a0496aa-775c-11ef-bfb2-f222b153c6e3"});
-      console.log("Success"); 
-    } */
+    // const changez = true;
+    // if (changez) {
+      // await app.updateTask("4a784a37-2b1e-41f2-98cb-b290c41eaeca", {noteUUID: "0a0496aa-775c-11ef-bfb2-f222b153c6e3"});
+      // console.log("Success"); 
+    // } 
 
-    
-  }
+
+htmlTemplate = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+        }
+        #kanban-board {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding-bottom: 20px;
+        }
+        .column {
+            flex: 0 0 auto;
+            min-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: transparent;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 10px;
+        }
+        .task-category {
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .task-category h3 {
+            margin: 0;
+            padding: 10px;
+            background: transparent;
+            border-radius: 10px;
+        }
+        .task {
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            color: black;
+            font-size: 14px;
+            position: relative;
+            transition: background-color 0.3s;
+			max-width: 300px;
+        }
+        .task-button {
+            background-color: transparent;
+			border-radius: 5px;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+			position: absolute;
+			right: 5px;
+        }
+        .task-button:hover {
+			background-color: black;
+            color: #ddd;
+        }
+        .task-button2 {
+            background-color: transparent;
+			border-radius: 5px;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+			position: absolute;
+			right: 20px;
+        }
+        .task-button2:hover {
+			background-color: black;			
+            color: #ddd;
+        }
+		.high-urgent.high-important {
+			background: linear-gradient(to right, #ff6666, #ff9999); /* Light red to lighter red */
+		}
+
+		.high-urgent.low-important {
+			background: linear-gradient(to right, #ffb84d, #ffd699); /* Light orange to lighter orange */
+		}
+
+		.low-urgent.high-important {
+			background: linear-gradient(to right, #66b3ff, #c2e0ff); /* Light blue to lighter blue */
+		}
+
+		.low-urgent.low-important {
+			background: linear-gradient(to right, #b3b3b3, #e6e6e6); /* Light gray to lighter gray */
+		}
+        .task-info {
+            display: none;
+            position: relative;
+            top: 100%;
+            left: 30;
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="kanban-board"></div>
+
+    <script>
+        
+  const tasks = ${allTasksText};
+  console.log("tasks:", tasks);
+try {
+
+    // Function to determine the CSS class based on task urgency and importance
+	function getColor(task) {
+		return task.urgent ? (task.important ? 'high-urgent high-important' : 'high-urgent low-important') : (task.important ? 'low-urgent high-important' : 'low-urgent low-important');
+	}
+
+	function showTaskInfo(task, element) {
+		let infoDiv = element.querySelector('.task-info');
+		if (!infoDiv) {
+			infoDiv = document.createElement('div');
+			infoDiv.className = 'task-info';
+			infoDiv.innerHTML = task.taskInfo;
+			element.appendChild(infoDiv);
+		}
+		infoDiv.style.display = 'block';
+	}
+
+	function hideTaskInfo(element) {
+		const infoDiv = element.querySelector('.task-info');
+		if (infoDiv) infoDiv.style.display = 'none';
+	}
+
+	function createTaskItem(task, actionHandlers = {}) {
+		const taskItem = document.createElement('div');
+		taskItem.className = 'task ' + getColor(task);
+		taskItem.textContent = task.content;
+
+		const infoButton = document.createElement('button');
+		infoButton.textContent = 'ℹ';
+		infoButton.className = 'task-button';
+		infoButton.onmouseenter = () => showTaskInfo(task, taskItem);
+		infoButton.onmouseleave = () => hideTaskInfo(taskItem);
+		taskItem.appendChild(infoButton);
+
+		if (actionHandlers.infoButton2) {
+			const infoButton2 = document.createElement('button');
+			infoButton2.textContent = '⚙';
+			infoButton2.className = 'task-button2';
+			infoButton2.onclick = actionHandlers.infoButton2;
+			taskItem.appendChild(infoButton2);
+		}
+
+		return taskItem;
+	}
+
+	function renderKanbanBoard() {
+		const board = document.getElementById('kanban-board');
+		const columns = {};
+
+		for (let i = 0; i < tasks.length; i++) {
+			const task = tasks[i];
+			const note = task.notename;
+			if (!columns[note]) {
+				columns[note] = { pending: [], completed: [], dismissed: [] };
+			}
+			if (task.completedAt) {
+				columns[note].completed.push(task);
+			} else if (task.dismissedAt) {
+				columns[note].dismissed.push(task);
+			} else {
+				columns[note].pending.push(task);
+			}
+		}
+
+		board.innerHTML = '';
+
+		for (const note in columns) {
+			if (columns.hasOwnProperty(note)) {
+				const column = document.createElement('div');
+				column.className = 'column';
+
+				const header = document.createElement('h3');
+				header.textContent = note;
+				header.className = 'task-category';
+				column.appendChild(header);
+
+				const taskLists = {
+					pending: 'Pending',
+					completed: 'Completed',
+					dismissed: 'Dismissed'
+				};
+
+				for (const key in taskLists) {
+					if (taskLists.hasOwnProperty(key)) {
+						const listDiv = document.createElement('div');
+						listDiv.innerHTML = '<strong>' + taskLists[key] + ':</strong>';
+
+						for (let j = 0; j < columns[note][key].length; j++) {
+							const task = columns[note][key][j];
+							const taskItem = createTaskItem(task, {
+								infoButton2: () => window.callAmplenotePlugin("taskEdit", task.uuid)
+							});
+							listDiv.appendChild(taskItem);
+						}
+
+						column.appendChild(listDiv);
+					}
+				}
+
+				board.appendChild(column);
+			}
+		}
+	}
+
+    renderKanbanBoard();
+
+} catch (error) {
+    console.error("Error processing scripts:", error);
+}
+    </script>
+</body>
+</html>
+`;
+ 
+      return(htmlTemplate);
+	  console.log(htmlTemplate);
+     
+},
 }
