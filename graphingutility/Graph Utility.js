@@ -1,5 +1,5 @@
 {
-noteOption: {
+	appOption: {
 /* ----------------------------------- */
 "Download!":  async function (app, noteUUID) {
     // Prompt the user to select tags and choose options
@@ -1180,8 +1180,11 @@ ${transposeContent}
 
         downloadTextFile(htmlTemplate, "InteractiveCharts.html");
         // console.log("htmlTemplate:", htmlTemplate);
+    }
   }
 },
+/* ----------------------------------- */
+  noteOption: {
 /* ----------------------------------- */
 "Viewer!":  async function (app, noteUUID) {
     // app.alert(noteUUID);
@@ -1193,7 +1196,7 @@ ${transposeContent}
 	return null;
 },
 /* ----------------------------------- */
-"Update Viewer!":  async function (app, noteUUID) {
+"Update!":  async function (app, noteUUID) {
     // app.alert(noteUUID);
 	await app.setSetting("Current_Note_UUID [Do not Edit!]", noteUUID);
 	// const noteUUIDz = noteUUID;
