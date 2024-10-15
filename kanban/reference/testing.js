@@ -1,145 +1,182 @@
-let htmlTemplate = ""; // Placeholder for HTML output (if needed)
-let allTasksText; // Stores the JSON string of all tasks for logging
-let taskSorting; // Stores the current sorting setting
-
-// Check if any notes have the tag "-reports/-kanban"
-const kanbanTag = (await app.filterNotes({ tag: "-reports/-kanban" })).length > 0;
-console.log("kanbanTag:", kanbanTag);
-
-/**
- * Formats the task's repeat information.
- * @param {string} repeatInfo - The task's repeat information in a specific string format.
- * @returns {string} - A formatted string displaying the repeat frequency, start date, and time.
- */
-function formatTaskRepeat(repeatInfo) {
-  if (!repeatInfo || typeof repeatInfo !== 'string') {
-    return "Not Available"; // Return default message if repeatInfo is missing or not a string
-  }
-
-  // Split the repeatInfo into lines
-  const lines = repeatInfo.split('\n').map(line => line.trim());
-
-  // Extract date and time from DTSTART
-  const dtstartLine = lines[0];
-  const rruleLine = lines[1];
-  
-  const dtstart = dtstartLine.substring(8); // Remove 'DTSTART:'
-  const year = dtstart.substring(0, 4);
-  const month = dtstart.substring(4, 6);
-  const day = dtstart.substring(6, 8);
-  const hours = dtstart.substring(8, 10);
-  const minutes = dtstart.substring(10, 12);
-  const seconds = dtstart.substring(12, 14);
-
-  // Format date and time
-  const formattedDate = `${month}/${day}/${year}`;
-  const formattedTime = `${hours}:${minutes}:${seconds}`;
-
-  // Parse RRULE to get the repeat frequency
-  const rrule = rruleLine.substring(10); // Remove 'RRULE:FREQ='
-  const repeatFrequency = rrule.toUpperCase(); // Convert frequency to uppercase
-
-  // Format and return the output
-  return `${repeatFrequency.charAt(0).toUpperCase() + repeatFrequency.slice(1).toLowerCase()} <b>Starts At:</b> ${formattedDate} at ${formattedTime}`;
-}
-
-/**
- * Formats a Unix timestamp into a readable date and time string.
- * @param {number} timestamp - The Unix timestamp (in seconds).
- * @returns {string} - A formatted string with the date and time or "Not Set!" if no timestamp.
- */
-function formatTimestamp(timestamp) {
-  if (!timestamp) {
-    return 'Not Set!'; // Return if timestamp is null or undefined
-  }
-
-  // Create a new Date object from the Unix timestamp (in milliseconds)
-  const date = new Date(timestamp * 1000);
-
-  // Extract date and time components
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-
-  // Format and return date and time
-  const formattedDate = `${month}/${day}/${year}`;
-  const formattedTime = `${hours}:${minutes}:${seconds}`;
-
-  return `${formattedDate} at ${formattedTime}`;
-}
-
-if (kanbanTag) {
-  let allTasks = []; // Array to store all tasks
-  
-  // Retrieve notes with the kanban tag
-  const noteHandles = await app.filterNotes({ tag: "-reports/-kanban" });
-  console.log("noteHandles:", noteHandles);
-  
-  // Iterate through each note to retrieve tasks
-  for (let note of noteHandles) {
-    const noteUUID = note.uuid;
-    const noteTags = note.tags.join(", ");
-    console.log("noteUUID:", noteUUID);
-    console.log("noteTags:", noteTags);
-
-    // Fetch tasks from the current note
-    const tasks = await app.getNoteTasks({ uuid: noteUUID }, { includeDone: true });
-    console.log("tasks:", tasks);
-
-    // Process each task and add relevant info
-    for (let i = 0; i < tasks.length; i++) {
-      const task = tasks[i];
-      allTasks.push({
-        ...task,
-        notename: note.name,
-        noteurl: `https://www.amplenote.com/notes/${note.uuid}`,
-        tags: noteTags,
-        startAtz: `${formatTimestamp(task.startAt)}`,
-        hideUntilz: `${formatTimestamp(task.hideUntil)}`,
-        endAtz: `${formatTimestamp(task.endAt)}`,
-        repeatz: `${formatTaskRepeat(task.repeat)}`,
-        taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${formatTimestamp(task.startAt)}<br><b>Hide Until:</b> ${formatTimestamp(task.hideUntil)}<br><b>End At:</b> ${formatTimestamp(task.endAt)}<br><b>Repeat:</b> ${formatTaskRepeat(task.repeat)}<br><hr><b>Completed At:</b> ${formatTimestamp(task.completedAt)}<br><b>Dismissed At:</b> ${formatTimestamp(task.dismissedAt)}<br><hr><b>Note Link:</b> <a href="https://www.amplenote.com/notes/${note.uuid}" target="_blank">${note.name}</a><br><b>Tags:</b> ${noteTags}`
-      });
+try {
+    /**
+     * Determines the CSS class based on the task's urgency and importance.
+     * 
+     * @param {Object} task - The task object containing urgency and importance flags.
+     * @returns {string} CSS class that reflects the urgency and importance level of the task.
+     */
+    function getColor(task) {
+        if (task.urgent && task.important) return 'high-urgent high-important';
+        if (task.urgent) return 'high-urgent low-important';
+        if (task.important) return 'low-urgent high-important';
+        return 'low-urgent low-important';
     }
-  }
 
-  console.log("allTasks:", allTasks);
-  
-  // Sorting logic based on user settings
-  taskSorting = app.settings["Toggle Sort"] || 'taskScore'; // Default to 'taskScore' if not set
-  if (taskSorting === 'startDate') {
-    allTasks.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
-  }
-  if (taskSorting === 'taskScore') {
-    allTasks.sort((a, b) => b.score - a.score);
-  }
-  if (taskSorting === 'important') {
-    allTasks.sort((a, b) => (b.important ? 1 : 0) - (a.important ? 1 : 0));
-  }
-  if (taskSorting === 'urgent') {
-    allTasks.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
-  }
+    const values = ['Start Date', 'Score', 'Important', 'Urgent'];
+    let currentIndex = 0;
+    const valueDisplay = document.getElementById('valueDisplay');
+    const cycleButton = document.getElementById('cycleButton');
 
-  // Convert all tasks to JSON for logging
-  allTasksText = JSON.stringify(allTasks, null, 2);
-  console.log("allTasksText:", allTasksText);
+    /**
+     * Cycles through sorting values (Start Date, Score, Important, Urgent),
+     * updates the display, and re-renders the Kanban board.
+     */
+    function updateValue() {
+        valueDisplay.textContent = values[currentIndex];
+        currentIndex = (currentIndex + 1) % values.length;
+        renderKanbanBoard();
+        window.callAmplenotePlugin("togglesort");
+    }
 
-} else {
-  // Define the headers for Kanban notes
-  const headersBig = ["To Do", "In Progress", "Review", "Blocked", "Completed", "Backlog", "On Hold", "Ready for Testing", "Deployed", "Archived"];
-  const headersSmall = ["To Do", "In Progress", "Review", "Completed", "Backlog", "On Hold"];
-  console.log("headersBig:", headersBig);
-  console.log("headersSmall:", headersSmall);
-  
-  // Create initial notes for Kanban if none exist
-  for (const header of headersSmall) {
-    const uuid = await app.createNote(header, ["-reports/-kanban"]);
-    console.log("uuid:", uuid);
+    cycleButton.addEventListener('click', updateValue);
 
-    // Alert the user upon successful note creation
-    app.alert("Success! Looks like it’s your first time running the program, so we created a few notes with a specific tag to get you rolling. Now you can run the Kanban Plugin again and see at your brand-new board!");
-  }
+    /**
+     * Displays detailed task information when hovering over a task.
+     * 
+     * @param {Object} task - The task object containing detailed information.
+     * @param {HTMLElement} element - The DOM element representing the task.
+     */
+    function showTaskInfo(task, element) {
+        let infoDiv = element.querySelector('.task-info');
+        if (!infoDiv) {
+            infoDiv = document.createElement('div');
+            infoDiv.className = 'task-info' + (document.body.classList.contains('dark-mode') ? ' dark-mode' : '');
+            infoDiv.innerHTML = task.taskInfo;
+            element.appendChild(infoDiv);
+        }
+        infoDiv.style.display = 'block';
+    }
+
+    /**
+     * Hides the task information when the mouse leaves the task element.
+     * 
+     * @param {HTMLElement} element - The DOM element representing the task.
+     */
+    function hideTaskInfo(element) {
+        const infoDiv = element.querySelector('.task-info');
+        if (infoDiv) {
+            infoDiv.style.display = 'none';
+        }
+    }
+
+    /**
+     * Helper function to create a button for task items.
+     * 
+     * @param {string} text - The text content of the button.
+     * @param {string} className - The CSS class to be applied to the button.
+     * @param {function} clickHandler - The function to handle click events.
+     * @returns {HTMLElement} The created button element.
+     */
+    function createButton(text, className, clickHandler) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.className = className;
+        button.onclick = clickHandler;
+        return button;
+    }
+
+    /**
+     * Creates and appends a task item to the specified container.
+     * 
+     * @param {Object} task - The task object to be displayed.
+     * @param {HTMLElement} container - The DOM element representing the task list (pending, completed, or dismissed).
+     * @param {boolean} isPending - Whether the task is in the pending state (default is true).
+     */
+    function createTaskItem(task, container, isPending = true) {
+        const taskItem = document.createElement('div');
+        taskItem.className = 'task ' + getColor(task);
+        taskItem.textContent = task.content;
+
+        taskItem.appendChild(createButton('ℹ', 'task-button', () => showTaskInfo(task, taskItem)));
+
+        if (isPending) {
+            taskItem.appendChild(createButton('⚙', 'task-button2', () => window.callAmplenotePlugin("taskEdit", task.uuid)));
+        }
+
+        taskItem.onmouseleave = () => hideTaskInfo(taskItem);
+
+        container.appendChild(taskItem);
+    }
+
+    /**
+     * Sorts tasks based on the specified sorting criterion (Start Date, Score, Important, Urgent).
+     * 
+     * @param {Array} tasks - The array of tasks to be sorted.
+     * @param {string} sortBy - The criterion to sort the tasks by.
+     * @returns {Array} The sorted array of tasks.
+     */
+    function sortTasks(tasks, sortBy) {
+        switch (sortBy) {
+            case 'Start Date':
+                return tasks.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
+            case 'Score':
+                return tasks.sort((a, b) => b.score - a.score);
+            case 'Important':
+                return tasks.sort((a, b) => (b.important ? 1 : 0) - (a.important ? 1 : 0));
+            case 'Urgent':
+                return tasks.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+            default:
+                return tasks;
+        }
+    }
+
+    /**
+     * Renders the Kanban board by creating columns for each note and sorting tasks into pending, completed, and dismissed.
+     */
+    function renderKanbanBoard() {
+        const board = document.getElementById('kanban-board');
+        const columns = {};
+
+        tasks.forEach(task => {
+            const note = task.notename;
+            if (!columns[note]) {
+                columns[note] = { pending: [], completed: [], dismissed: [] };
+            }
+
+            if (task.completedAt) {
+                columns[note].completed.push(task);
+            } else if (task.dismissedAt) {
+                columns[note].dismissed.push(task);
+            } else {
+                columns[note].pending.push(task);
+            }
+        });
+
+        board.innerHTML = '';  // Clear board before rendering
+
+        Object.keys(columns).forEach(note => {
+            const column = document.createElement('div');
+            column.className = 'column';
+
+            const header = document.createElement('h3');
+            header.textContent = note;
+            header.className = 'task-category';
+            column.appendChild(header);
+
+            const pendingList = document.createElement('div');
+            pendingList.appendChild(document.createTextNode('Pending:'));
+            sortTasks(columns[note].pending, valueDisplay.textContent).forEach(task => createTaskItem(task, pendingList));
+
+            const completedList = document.createElement('div');
+            completedList.appendChild(document.createTextNode('Completed:'));
+            columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
+                .forEach(task => createTaskItem(task, completedList, false));
+
+            const dismissedList = document.createElement('div');
+            dismissedList.appendChild(document.createTextNode('Dismissed:'));
+            columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt))
+                .forEach(task => createTaskItem(task, dismissedList, false));
+
+            column.appendChild(pendingList);
+            column.appendChild(completedList);
+            column.appendChild(dismissedList);
+
+            board.appendChild(column);
+        });
+    }
+
+    renderKanbanBoard();
+
+} catch (error) {
+    console.error("Error processing scripts:", error);
 }
