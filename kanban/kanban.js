@@ -362,12 +362,14 @@ async renderEmbed(app, ...args) {
 	} else {
 	  // Define the headers for Kanban notes
 	  const headersBig = ["To Do", "In Progress", "Review", "Blocked", "Completed", "Backlog", "On Hold", "Ready for Testing", "Deployed", "Archived"];
-	  const headersSmall = ["To Do", "In Progress", "Review", "Completed", "Backlog", "On Hold"];
+	  const headersSmall = ["To Do", "In Progress", "Review", "Completed"];
+	  const goalsSmall = ["Life Goals", "Yearly Goals", "Monthly Goals", "Today's Tasks"];
 	  console.log("headersBig:", headersBig);
 	  console.log("headersSmall:", headersSmall);
+	  console.log("goalsSmall:", goalsSmall);
 	  
 	  // Create initial notes for Kanban if none exist
-	  for (const header of headersSmall) {
+	  for (const header of goalsSmall) {
 		const uuid = await app.createNote(header, ["-reports/-kanban"]);
 		console.log("uuid:", uuid);
 
