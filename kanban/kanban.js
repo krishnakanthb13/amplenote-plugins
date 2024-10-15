@@ -11,19 +11,197 @@ insertText: {
 },
 /* ----------------------------------- */
 async onEmbedCall(app, ...args) {
-      if (args.length === 1) {
-		  const taskUuid = args[0];
-		  console.log(`Editing task with UUID: ${taskUuid}`);
-        // return await this["End Cycle Early"]();
-		
-/* 		// Editing Task!
-		const changez = true;
-		if (changez) {
-		  await app.updateTask("4a784a37-2b1e-41f2-98cb-b290c41eaeca", {noteUUID: "0a0496aa-775c-11ef-bfb2-f222b153c6e3"});
-		  // console.log("Success");
-		} */ 
+      if (args[0] === "taskEdit") {
 
-      } else {
+		const taskUuid = args[1];
+		console.log(`Editing task with UUID: ${taskUuid}`);
+		const task = await app.getTask(taskUuid);
+		console.log(task, JSON.stringify(task));
+
+		const importantValue = task.important
+		  ? [{ label: "True", value: "" }, { label: "False", value: "false" }]
+		  : [{ label: "True", value: "true" }, { label: "False", value: "" }];
+		console.log("importantValue", importantValue);
+
+		const urgentValue = task.urgent
+		  ? [{ label: "True", value: "" }, { label: "False", value: "false" }]
+		  : [{ label: "True", value: "true" }, { label: "False", value: "" }];
+		console.log("urgentValue", urgentValue);
+		const sections = await app.getNoteSections({ uuid: task.noteUUID });
+		console.log("sections", sections);
+
+		// Transform the sections array to the desired format
+		const transformedSections = sections.map((item, index) => {
+			const headerValue = item.heading ? item.heading.text : "Main"; // Use "Null" for null headings
+			return { label: headerValue, value: index }; // Create new object with Headers and Value
+		});
+		console.log("transformedSections:", transformedSections);
+
+		const result = await app.prompt("Update Task Details", {
+		  inputs: [
+			{
+			  label: "Update Task Content:",
+			  type: "text",
+			  value: `${task.content}`,
+			},
+			{
+			  label: "Update Important:",
+			  type: "select",
+			  options: importantValue,
+			},
+			{
+			  label: "Update Urgent:",
+			  type: "select",
+			  options: urgentValue,
+			},
+			{
+			  label: "Move it to a Paricular note OR To a Header in the Existing note. Select Note:",
+			  type: "note",
+			  value: `${task.noteUUID}`,
+			},
+			{
+			  label: "Select Section or Header:",
+			  type: "select",
+			  options: transformedSections,
+			},
+			{
+			  label: "Update Score:",
+			  type: "string",
+			  value: `${task.score}`,
+			},
+			{
+			  label: "Mark this Task as Completed / Dismissed",
+			  type: "radio",
+			  options: [
+				{ label: "Completed", value: 1 },
+				{ label: "Dismissed", value: 2 },
+			  ],
+			},
+		  ],
+		});
+
+		if (result) {
+		  let [taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus] = result;
+		  notesections = parseFloat(notesections);
+		  taskScore = parseFloat(taskScore);
+		  console.log("result", result);
+		  console.log(taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus);
+
+		  const currentTimeUnix = Math.floor(Date.now() / 1000);
+
+		  // Prepare an object to store updated fields
+		  const updatedFields = {};
+
+		  // Move the task to Header Section of the existing note.
+		  async function moveTaskToHeader(noteUUID, uuidToMove, headerNumber) {
+		  	const markdown = await app.getNoteContent({ uuid: noteUUID });
+			console.log("markdown",markdown);
+		  	const lines = markdown.split('\n'); // Split the markdown into lines
+		  	const updatedLines = [];
+		  	let taskLine = null;
+		     
+		  	// Iterate through the lines to find the task with the specified UUID and collect headers
+		  	const headers = [];
+		  	
+		  	for (let line of lines) {
+		  		// Check for the task line containing the specific UUID
+		  		if (line.includes(`"uuid":"${uuidToMove}"`)) {
+		  			taskLine = line; // Save the line to move later
+		  		} else {
+		  			updatedLines.push(line); // Add non-matching lines to the updated lines
+		  		}
+		     
+		  		// Check if the line is a header
+		  		const headerMatch = line.match(/^(#+)\s*(.*)/); // Matches markdown headers
+		  		if (headerMatch) {
+		  			headers.push(headerMatch[0]); // Save the header line
+		  		}
+				console.log("headers",headers);
+		  	}
+			console.log("updatedLines",updatedLines);
+			console.log("taskLine",taskLine);
+			console.log("headers",headers);
+			console.log("headerNumber",headerNumber);
+		     
+		  	// If the task line was found and the headerNumber is valid
+		  	if (taskLine && headerNumber < headers.length) {
+		  		// Insert the task line just below the specified header
+				const insertIndex = headerNumber === 0
+					? 0 // Insert at the start of the content
+					: updatedLines.indexOf(headers[headerNumber-1]) + 1; // Find the header's position and insert after it
+		  		updatedLines.splice(insertIndex, 0, taskLine); // Insert task line after the header
+		  	}
+		     
+		  	// Join the updated lines back into a single markdown string
+		  	return updatedLines.join('\n');
+		  }
+		  let updatedMarkdown;
+
+		  // Check if each field has changed, and only update changed fields
+		  if (taskContent !== task.content) updatedFields.content = taskContent;
+		  if (taskImportant) { 
+			updatedFields.important = !task.important; 
+		  }		  
+		  if (taskUrgent) { 
+			updatedFields.urgent = !task.urgent; 
+		  }
+		  console.log("taskNoteuuid.uuid",taskNoteuuid.uuid);
+		  console.log("task.noteUUID",task.noteUUID);
+		  console.log("notesections",notesections);
+		  if (taskNoteuuid.uuid !== task.noteUUID) { 
+			updatedFields.noteUUID = taskNoteuuid.uuid; 
+		  }
+		  if (notesections >= 0 && (taskNoteuuid.uuid == task.noteUUID)) { 
+			updatedMarkdown = moveTaskToHeader(task.noteUUID, task.uuid, notesections); 
+			console.log("updatedMarkdown",updatedMarkdown);
+		  }
+		  if (taskScore !== task.score) updatedFields.score = taskScore;
+
+		  if (taskStatus === 1) {
+			updatedFields.completedAt = currentTimeUnix;
+		  } else if (taskStatus === 2) {
+			updatedFields.dismissedAt = currentTimeUnix;
+		  }
+
+		  // Update task only if there are changes
+		  if (Object.keys(updatedFields).length > 0) {
+			await app.updateTask(taskUuid, updatedFields);
+			console.log("Task Updated with changes:", updatedFields);
+		  } else {
+			console.log("No changes detected, task not updated.");
+		  }
+
+		  if (taskStatus === 1) {
+			console.log("Task marked as completed.");
+		  } else if (taskStatus === 2) {
+			console.log("Task marked as dismissed.");
+		  }
+		} else {
+		  // User canceled
+		  return;
+		}
+
+      } else if (args[0] === "togglesort") {
+		const sortSetting = await app.settings["Toggle Sort"];
+		console.log("sortSetting:",sortSetting);
+		const result = await app.prompt(`Sort Tasks. Current Setting: ${sortSetting}`, {
+			inputs: [
+			  {
+				label: `Tasks Toggle Sort: ${sortSetting}`,
+				type: "select",
+				options: [ { label: "startDate", value: "startDate" }, { label: "taskScore", value: "taskScore" } , { label: "important", value: "important" }, { label: "urgent", value: "urgent" } ]
+			  }
+			]	
+		});
+	 
+		if (result) {
+		  console.log("result",result);
+		  await app.setSetting("Toggle Sort", result);
+		} else {
+		  // User canceled
+		  return;
+		}		  
+	  } else {
 		  console.log("Does not seem to be working!",args);
 	  }
     },
@@ -34,6 +212,7 @@ async renderEmbed(app, ...args) {
 
     let htmlTemplate = "";
     let allTasksText;
+	let taskSorting;
 
     const kanbanTag = (await app.filterNotes({ tag: "-reports/-kanban" })).length > 0;
     console.log("kanbanTag:", kanbanTag);
@@ -119,14 +298,14 @@ async renderEmbed(app, ...args) {
 				hideUntilz: `${formatTimestamp(task.hideUntil)}`,
 				endAtz: `${formatTimestamp(task.endAt)}`,
 				repeatz: `${formatTaskRepeat(task.repeat)}`,
-				taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${formatTimestamp(task.startAt)}<br><b>Hide Until:</b> ${formatTimestamp(task.hideUntil)}<br><b>End At:</b> ${formatTimestamp(task.endAt)}<br><b>Repeat:</b> ${formatTaskRepeat(task.repeat)}<br><hr><b>Note Link:</b> <a href="https://www.amplenote.com/notes/${note.uuid}" target="_blank">${note.name}</a><br><b>Tags:</b> ${noteTags}`
+				taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${formatTimestamp(task.startAt)}<br><b>Hide Until:</b> ${formatTimestamp(task.hideUntil)}<br><b>End At:</b> ${formatTimestamp(task.endAt)}<br><b>Repeat:</b> ${formatTaskRepeat(task.repeat)}<br><hr><b>Completed At:</b> ${formatTimestamp(task.completedAt)}<br><b>Dismissed At:</b> ${formatTimestamp(task.dismissedAt)}<br><hr><b>Note Link:</b> <a href="https://www.amplenote.com/notes/${note.uuid}" target="_blank">${note.name}</a><br><b>Tags:</b> ${noteTags}`
 			});
 		}
 
       }
       console.log("allTasks:", allTasks);
-		let taskSorting = '';
-		taskSorting = taskSorting || 'startDate';
+		taskSorting = app.settings["Toggle Sort"];
+		taskSorting = taskSorting || 'taskScore';
 		if (taskSorting === 'startDate') {
 			allTasks.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
 		}
@@ -272,122 +451,155 @@ htmlTemplate = `
     </style>
 </head>
 <body>
+    <button id="cycleButton">Toggle Sort: <div id="valueDisplay">${taskSorting}</div></button>
+    <br><br>
     <div id="kanban-board"></div>
 
     <script>
         
   const tasks = ${allTasksText};
   console.log("tasks:", tasks);
+
 try {
-
     // Function to determine the CSS class based on task urgency and importance
-	function getColor(task) {
-		return task.urgent ? (task.important ? 'high-urgent high-important' : 'high-urgent low-important') : (task.important ? 'low-urgent high-important' : 'low-urgent low-important');
-	}
+    function getColor(task) {
+        if (task.urgent && task.important) return 'high-urgent high-important';
+        if (task.urgent) return 'high-urgent low-important';
+        if (task.important) return 'low-urgent high-important';
+        return 'low-urgent low-important';
+    }
 
-	function showTaskInfo(task, element) {
-		let infoDiv = element.querySelector('.task-info');
-		if (!infoDiv) {
-			infoDiv = document.createElement('div');
-			infoDiv.className = 'task-info';
-			infoDiv.innerHTML = task.taskInfo;
-			element.appendChild(infoDiv);
-		}
-		infoDiv.style.display = 'block';
-	}
+    const values = ['Start Date', 'Score', 'Important', 'Urgent'];
+    let currentIndex = 0;
+    const valueDisplay = document.getElementById('valueDisplay');
+    const cycleButton = document.getElementById('cycleButton');
 
-	function hideTaskInfo(element) {
-		const infoDiv = element.querySelector('.task-info');
-		if (infoDiv) infoDiv.style.display = 'none';
-	}
+    function updateValue() {
+		valueDisplay.textContent = values[currentIndex];
+        currentIndex = (currentIndex + 1) % values.length;
+        renderKanbanBoard();
+		window.callAmplenotePlugin("togglesort")
+    }
 
-	function createTaskItem(task, actionHandlers = {}) {
-		const taskItem = document.createElement('div');
-		taskItem.className = 'task ' + getColor(task);
-		taskItem.textContent = task.content;
+    cycleButton.addEventListener('click', updateValue);
 
-		const infoButton = document.createElement('button');
-		infoButton.textContent = 'ℹ';
-		infoButton.className = 'task-button';
-		infoButton.onmouseenter = () => showTaskInfo(task, taskItem);
-		infoButton.onmouseleave = () => hideTaskInfo(taskItem);
-		taskItem.appendChild(infoButton);
+    function showTaskInfo(task, element) {
+        let infoDiv = element.querySelector('.task-info');
+        if (!infoDiv) {
+            infoDiv = document.createElement('div');
+            infoDiv.className = 'task-info' + (document.body.classList.contains('dark-mode') ? ' dark-mode' : '');
+            infoDiv.innerHTML = task.taskInfo;
+            infoDiv.innerHTML = task.taskInfo;
+            element.appendChild(infoDiv);
+        }
+        infoDiv.style.display = 'block';
+    }
 
-		if (actionHandlers.infoButton2) {
-			const infoButton2 = document.createElement('button');
-			infoButton2.textContent = '⚙';
-			infoButton2.className = 'task-button2';
-			infoButton2.onclick = actionHandlers.infoButton2;
-			taskItem.appendChild(infoButton2);
-		}
+    function hideTaskInfo(element) {
+        const infoDiv = element.querySelector('.task-info');
+        if (infoDiv) {
+            infoDiv.style.display = 'none';
+        }
+    }
 
-		return taskItem;
-	}
+    // Helper to create buttons for task items
+    function createButton(text, className, clickHandler) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.className = className;
+        button.onclick = clickHandler;
+        return button;
+    }
 
-	function renderKanbanBoard() {
-		const board = document.getElementById('kanban-board');
-		const columns = {};
+    // Function to create and append task items
+    function createTaskItem(task, container, isPending = true) {
+        const taskItem = document.createElement('div');
+        taskItem.className = 'task ' + getColor(task);
+        taskItem.textContent = task.content;
 
-		for (let i = 0; i < tasks.length; i++) {
-			const task = tasks[i];
-			const note = task.notename;
-			if (!columns[note]) {
-				columns[note] = { pending: [], completed: [], dismissed: [] };
-			}
-			if (task.completedAt) {
-				columns[note].completed.push(task);
-			} else if (task.dismissedAt) {
-				columns[note].dismissed.push(task);
-			} else {
-				columns[note].pending.push(task);
-			}
-		}
+        taskItem.appendChild(createButton('ℹ', 'task-button', () => showTaskInfo(task, taskItem)));
+        if (isPending) {
+            taskItem.appendChild(createButton('⚙', 'task-button2', () => window.callAmplenotePlugin("taskEdit", task.uuid)));
+        }
+        taskItem.onmouseleave = () => hideTaskInfo(taskItem);
 
-		board.innerHTML = '';
+        container.appendChild(taskItem);
+    }
 
-		for (const note in columns) {
-			if (columns.hasOwnProperty(note)) {
-				const column = document.createElement('div');
-				column.className = 'column';
+    // Helper to sort tasks based on the current value display
+    function sortTasks(tasks, sortBy) {
+        switch (sortBy) {
+            case 'Start Date':
+                return tasks.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
+            case 'Score':
+                return tasks.sort((a, b) => b.score - a.score);
+            case 'Important':
+                return tasks.sort((a, b) => (b.important ? 1 : 0) - (a.important ? 1 : 0));
+            case 'Urgent':
+                return tasks.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+            default:
+                return tasks;
+        }
+    }
 
-				const header = document.createElement('h3');
-				header.textContent = note;
-				header.className = 'task-category';
-				column.appendChild(header);
+    // Function to render the Kanban board
+    function renderKanbanBoard() {
+        const board = document.getElementById('kanban-board');
+        const columns = {};
 
-				const taskLists = {
-					pending: 'Pending',
-					completed: 'Completed',
-					dismissed: 'Dismissed'
-				};
+        tasks.forEach(task => {
+            const note = task.notename;
+            if (!columns[note]) {
+                columns[note] = { pending: [], completed: [], dismissed: [] };
+            }
+            if (task.completedAt) {
+                columns[note].completed.push(task);
+            } else if (task.dismissedAt) {
+                columns[note].dismissed.push(task);
+            } else {
+                columns[note].pending.push(task);
+            }
+        });
 
-				for (const key in taskLists) {
-					if (taskLists.hasOwnProperty(key)) {
-						const listDiv = document.createElement('div');
-						listDiv.innerHTML = '<strong>' + taskLists[key] + ':</strong>';
+        board.innerHTML = '';  // Clear board before rendering
 
-						for (let j = 0; j < columns[note][key].length; j++) {
-							const task = columns[note][key][j];
-							const taskItem = createTaskItem(task, {
-								infoButton2: () => window.callAmplenotePlugin("taskEdit", task.uuid)
-							});
-							listDiv.appendChild(taskItem);
-						}
+        Object.keys(columns).forEach(note => {
+            const column = document.createElement('div');
+            column.className = 'column';
 
-						column.appendChild(listDiv);
-					}
-				}
+            const header = document.createElement('h3');
+            header.textContent = note;
+            header.className = 'task-category';
+            column.appendChild(header);
 
-				board.appendChild(column);
-			}
-		}
-	}
+            const pendingList = document.createElement('div');
+            pendingList.appendChild(document.createTextNode('Pending:'));
+            sortTasks(columns[note].pending, valueDisplay.textContent).forEach(task => createTaskItem(task, pendingList));
+
+            const completedList = document.createElement('div');
+            completedList.appendChild(document.createTextNode('Completed:'));
+            columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
+                .forEach(task => createTaskItem(task, completedList, false));
+
+            const dismissedList = document.createElement('div');
+            dismissedList.appendChild(document.createTextNode('Dismissed:'));
+            columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt))
+                .forEach(task => createTaskItem(task, dismissedList, false));
+
+            column.appendChild(pendingList);
+            column.appendChild(completedList);
+            column.appendChild(dismissedList);
+
+            board.appendChild(column);
+        });
+    }
 
     renderKanbanBoard();
 
 } catch (error) {
     console.error("Error processing scripts:", error);
 }
+
     </script>
 </body>
 </html>
