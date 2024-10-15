@@ -424,7 +424,12 @@
 ;
 
 try {
-    // Function to determine the CSS class based on task urgency and importance
+    /**
+     * Determines the CSS class based on the task's urgency and importance.
+     * 
+     * @param {Object} task - The task object containing urgency and importance flags.
+     * @returns {string} CSS class that reflects the urgency and importance level of the task.
+     */
     function getColor(task) {
         if (task.urgent && task.important) return 'high-urgent high-important';
         if (task.urgent) return 'high-urgent low-important';
@@ -437,15 +442,25 @@ try {
     const valueDisplay = document.getElementById('valueDisplay');
     const cycleButton = document.getElementById('cycleButton');
 
+    /**
+     * Cycles through sorting values (Start Date, Score, Important, Urgent),
+     * updates the display, and re-renders the Kanban board.
+     */
     function updateValue() {
         valueDisplay.textContent = values[currentIndex];
         currentIndex = (currentIndex + 1) % values.length;
         renderKanbanBoard();
-		window.callAmplenotePlugin("togglesort")
+        window.callAmplenotePlugin("togglesort");
     }
 
     cycleButton.addEventListener('click', updateValue);
 
+    /**
+     * Displays detailed task information when hovering over a task.
+     * 
+     * @param {Object} task - The task object containing detailed information.
+     * @param {HTMLElement} element - The DOM element representing the task.
+     */
     function showTaskInfo(task, element) {
         let infoDiv = element.querySelector('.task-info');
         if (!infoDiv) {
@@ -457,6 +472,11 @@ try {
         infoDiv.style.display = 'block';
     }
 
+    /**
+     * Hides the task information when the mouse leaves the task element.
+     * 
+     * @param {HTMLElement} element - The DOM element representing the task.
+     */
     function hideTaskInfo(element) {
         const infoDiv = element.querySelector('.task-info');
         if (infoDiv) {
@@ -464,7 +484,14 @@ try {
         }
     }
 
-    // Helper to create buttons for task items
+    /**
+     * Helper function to create a button for task items.
+     * 
+     * @param {string} text - The text content of the button.
+     * @param {string} className - The CSS class to be applied to the button.
+     * @param {function} clickHandler - The function to handle click events.
+     * @returns {HTMLElement} The created button element.
+     */
     function createButton(text, className, clickHandler) {
         const button = document.createElement('button');
         button.textContent = text;
@@ -473,22 +500,36 @@ try {
         return button;
     }
 
-    // Function to create and append task items
+    /**
+     * Creates and appends a task item to the specified container.
+     * 
+     * @param {Object} task - The task object to be displayed.
+     * @param {HTMLElement} container - The DOM element representing the task list (pending, completed, or dismissed).
+     * @param {boolean} isPending - Whether the task is in the pending state (default is true).
+     */
     function createTaskItem(task, container, isPending = true) {
         const taskItem = document.createElement('div');
         taskItem.className = 'task ' + getColor(task);
         taskItem.textContent = task.content;
 
         taskItem.appendChild(createButton('ℹ', 'task-button', () => showTaskInfo(task, taskItem)));
+
         if (isPending) {
             taskItem.appendChild(createButton('⚙', 'task-button2', () => window.callAmplenotePlugin("taskEdit", task.uuid)));
         }
+
         taskItem.onmouseleave = () => hideTaskInfo(taskItem);
 
         container.appendChild(taskItem);
     }
 
-    // Helper to sort tasks based on the current value display
+    /**
+     * Sorts tasks based on the specified sorting criterion (Start Date, Score, Important, Urgent).
+     * 
+     * @param {Array} tasks - The array of tasks to be sorted.
+     * @param {string} sortBy - The criterion to sort the tasks by.
+     * @returns {Array} The sorted array of tasks.
+     */
     function sortTasks(tasks, sortBy) {
         switch (sortBy) {
             case 'Start Date':
@@ -504,7 +545,9 @@ try {
         }
     }
 
-    // Function to render the Kanban board
+    /**
+     * Renders the Kanban board by creating columns for each note and sorting tasks into pending, completed, and dismissed.
+     */
     function renderKanbanBoard() {
         const board = document.getElementById('kanban-board');
         const columns = {};
@@ -514,6 +557,7 @@ try {
             if (!columns[note]) {
                 columns[note] = { pending: [], completed: [], dismissed: [] };
             }
+
             if (task.completedAt) {
                 columns[note].completed.push(task);
             } else if (task.dismissedAt) {
