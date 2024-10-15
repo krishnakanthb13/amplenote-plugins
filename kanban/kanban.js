@@ -3,343 +3,378 @@ insertText: {
 /* ----------------------------------- */
 "Tagged!": async function (app) {
 
-    await app.context.replaceSelection(`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="2" />`);
+/**
+ * Inserts an object element into the selection in the application context.
+ * 
+ * This function updates the current selection in the application context 
+ * with an HTML object tag that points to a plugin using its UUID.
+ * The object tag includes a data-aspect-ratio attribute to control its display ratio.
+ * 
+ * @returns {null} - The function does not return any meaningful value.
+ */
+async function insertPluginObject() {
+    // Replace the current selection in the app's context with the plugin's object data
+    await app.context.replaceSelection(
+        `<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="2" />`
+    );
+
+    // Return null as no further action is required
     return null;
+}
 
 }
 /* ----------------------------------- */
 },
 /* ----------------------------------- */
 async onEmbedCall(app, ...args) {
-      if (args[0] === "taskEdit") {
 
+	/**
+	 * Handles task editing and sorting based on the provided arguments.
+	 * 
+	 * When the "taskEdit" argument is passed, the function allows editing of a task's content, importance, urgency, 
+	 * note association, section (header), score, and status. 
+	 * When the "togglesort" argument is passed, the function allows the user to toggle task sorting settings.
+	 *
+	 * @param {Array} args - The arguments that specify the operation (e.g., "taskEdit", "togglesort").
+	 */
+	if (args[0] === "taskEdit") {
+		// Get the task UUID from arguments
 		const taskUuid = args[1];
 		console.log(`Editing task with UUID: ${taskUuid}`);
+
+		// Fetch the task details using its UUID
 		const task = await app.getTask(taskUuid);
 		console.log(task, JSON.stringify(task));
 
+		// Create options for updating task importance and urgency
 		const importantValue = task.important
-		  ? [{ label: "True", value: "" }, { label: "False", value: "false" }]
-		  : [{ label: "True", value: "true" }, { label: "False", value: "" }];
+			? [{ label: "True", value: "" }, { label: "False", value: "false" }]
+			: [{ label: "True", value: "true" }, { label: "False", value: "" }];
 		console.log("importantValue", importantValue);
 
 		const urgentValue = task.urgent
-		  ? [{ label: "True", value: "" }, { label: "False", value: "false" }]
-		  : [{ label: "True", value: "true" }, { label: "False", value: "" }];
+			? [{ label: "True", value: "" }, { label: "False", value: "false" }]
+			: [{ label: "True", value: "true" }, { label: "False", value: "" }];
 		console.log("urgentValue", urgentValue);
+
+		// Fetch sections (headers) from the note associated with the task
 		const sections = await app.getNoteSections({ uuid: task.noteUUID });
 		console.log("sections", sections);
 
-		// Transform the sections array to the desired format
+		// Transform sections into a label-value format for easier selection in the prompt
 		const transformedSections = sections.map((item, index) => {
-			const headerValue = item.heading ? item.heading.text : "Main"; // Use "Null" for null headings
-			return { label: headerValue, value: index }; // Create new object with Headers and Value
+			const headerValue = item.heading ? item.heading.text : "Main"; // Default to "Main" if no heading
+			return { label: headerValue, value: index };
 		});
 		console.log("transformedSections:", transformedSections);
 
+		// Display a prompt to update task details
 		const result = await app.prompt("Update Task Details", {
-		  inputs: [
-			{
-			  label: "Update Task Content:",
-			  type: "text",
-			  value: `${task.content}`,
-			},
-			{
-			  label: "Update Important:",
-			  type: "select",
-			  options: importantValue,
-			},
-			{
-			  label: "Update Urgent:",
-			  type: "select",
-			  options: urgentValue,
-			},
-			{
-			  label: "Move it to a Paricular note OR To a Header in the Existing note. Select Note:",
-			  type: "note",
-			  value: `${task.noteUUID}`,
-			},
-			{
-			  label: "Select Section or Header:",
-			  type: "select",
-			  options: transformedSections,
-			},
-			{
-			  label: "Update Score:",
-			  type: "string",
-			  value: `${task.score}`,
-			},
-			{
-			  label: "Mark this Task as Completed / Dismissed",
-			  type: "radio",
-			  options: [
-				{ label: "Completed", value: 1 },
-				{ label: "Dismissed", value: 2 },
-			  ],
-			},
-		  ],
+			inputs: [
+				{ label: "Update Task Content:", type: "text", value: `${task.content}` },
+				{ label: "Update Important:", type: "select", options: importantValue },
+				{ label: "Update Urgent:", type: "select", options: urgentValue },
+				{ label: "Move to a Note or Header. Select Note:", type: "note", value: `${task.noteUUID}` },
+				{ label: "Select Section or Header (Caution: refrain from using --- in the note.):", type: "select", options: transformedSections },
+				{ label: "Update Score:", type: "string", value: `${task.score}` },
+				{ label: "Mark Task Status:", type: "radio", options: [
+					{ label: "Started", value: 3 },
+					{ label: "Completed", value: 1 },
+					{ label: "Dismissed", value: 2 }
+				]}
+			]
 		});
 
 		if (result) {
-		  let [taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus] = result;
-		  notesections = parseFloat(notesections);
-		  taskScore = parseFloat(taskScore);
-		  console.log("result", result);
-		  console.log(taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus);
+			// Destructure the result for easy access to task fields
+			let [taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus] = result;
+			notesections = parseFloat(notesections);
+			taskScore = parseFloat(taskScore);
+			console.log("result", result);
+			console.log(taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus);
 
-		  const currentTimeUnix = Math.floor(Date.now() / 1000);
+			const currentTimeUnix = Math.floor(Date.now() / 1000);
 
-		  // Prepare an object to store updated fields
-		  const updatedFields = {};
+			// Prepare an object to hold updated task fields
+			const updatedFields = {};
 
-		  // Move the task to Header Section of the existing note.
-		  async function moveTaskToHeader(noteUUID, uuidToMove, headerNumber) {
-		  	const markdown = await app.getNoteContent({ uuid: noteUUID });
-			console.log("markdown",markdown);
-		  	const lines = markdown.split('\n'); // Split the markdown into lines
-		  	const updatedLines = [];
-		  	let taskLine = null;
-		     
-		  	// Iterate through the lines to find the task with the specified UUID and collect headers
-		  	const headers = [];
-		  	
-		  	for (let line of lines) {
-		  		// Check for the task line containing the specific UUID
-		  		if (line.includes(`"uuid":"${uuidToMove}"`)) {
-		  			taskLine = line; // Save the line to move later
-		  		} else {
-		  			updatedLines.push(line); // Add non-matching lines to the updated lines
-		  		}
-		     
-		  		// Check if the line is a header
-		  		const headerMatch = line.match(/^(#+)\s*(.*)/); // Matches markdown headers
-		  		if (headerMatch) {
-		  			headers.push(headerMatch[0]); // Save the header line
-		  		}
-				console.log("headers",headers);
-		  	}
-			console.log("updatedLines",updatedLines);
-			console.log("taskLine",taskLine);
-			console.log("headers",headers);
-			console.log("headerNumber",headerNumber);
-		     
-		  	// If the task line was found and the headerNumber is valid
-		  	if (taskLine && headerNumber < headers.length) {
-		  		// Insert the task line just below the specified header
-				const insertIndex = headerNumber === 0
-					? 0 // Insert at the start of the content
-					: updatedLines.indexOf(headers[headerNumber-1]) + 1; // Find the header's position and insert after it
-		  		updatedLines.splice(insertIndex, 0, taskLine); // Insert task line after the header
-		  	}
-		     
-		  	// Join the updated lines back into a single markdown string
-		  	return updatedLines.join('\n');
-		  }
-		  let updatedMarkdown;
+			/**
+			 * Move the task to a specific header within the note.
+			 * 
+			 * @param {string} noteUUID - The UUID of the note containing the task.
+			 * @param {string} uuidToMove - The UUID of the task to move.
+			 * @param {number} headerNumber - The header number to move the task under.
+			 * @returns {string} - The updated markdown content.
+			 */
+			async function moveTaskToHeader(noteUUID, uuidToMove, headerNumber) {
+				const markdown = await app.getNoteContent({ uuid: noteUUID });
+				console.log("markdown", markdown);
+				const lines = markdown.split('\n');
+				const updatedLines = [];
+				let taskLine = null;
+				const headers = [];
 
-		  // Check if each field has changed, and only update changed fields
-		  if (taskContent !== task.content) updatedFields.content = taskContent;
-		  if (taskImportant) { 
-			updatedFields.important = !task.important; 
-		  }		  
-		  if (taskUrgent) { 
-			updatedFields.urgent = !task.urgent; 
-		  }
-		  console.log("taskNoteuuid.uuid",taskNoteuuid.uuid);
-		  console.log("task.noteUUID",task.noteUUID);
-		  console.log("notesections",notesections);
-		  if (taskNoteuuid.uuid !== task.noteUUID) { 
-			updatedFields.noteUUID = taskNoteuuid.uuid; 
-		  }
-		  if (notesections >= 0 && (taskNoteuuid.uuid == task.noteUUID)) { 
-			updatedMarkdown = moveTaskToHeader(task.noteUUID, task.uuid, notesections); 
-			console.log("updatedMarkdown",updatedMarkdown);
-		  }
-		  if (taskScore !== task.score) updatedFields.score = taskScore;
+				// Iterate through the lines to find the task and headers
+				for (let line of lines) {
+					if (line.includes(`"uuid":"${uuidToMove}"`)) {
+						taskLine = line; // Save task line for later insertion
+					} else {
+						updatedLines.push(line); // Keep non-task lines
+					}
 
-		  if (taskStatus === 1) {
-			updatedFields.completedAt = currentTimeUnix;
-		  } else if (taskStatus === 2) {
-			updatedFields.dismissedAt = currentTimeUnix;
-		  }
+					// Detect headers in markdown
+					const headerMatch = line.match(/^(#+)\s*(.*)/);
+					if (headerMatch) {
+						headers.push(headerMatch[0]);
+					}
+					console.log("headers", headers);
+				}
+				console.log("updatedLines", updatedLines);
+				console.log("taskLine", taskLine);
 
-		  // Update task only if there are changes
-		  if (Object.keys(updatedFields).length > 0) {
-			await app.updateTask(taskUuid, updatedFields);
-			console.log("Task Updated with changes:", updatedFields);
-		  } else {
-			console.log("No changes detected, task not updated.");
-		  }
+				// Insert task under the correct header
+				if (taskLine) {
+					const insertIndex = headerNumber === 0
+						? 0
+						: updatedLines.indexOf(headers[headerNumber - 1]) + 1;
+					updatedLines.splice(insertIndex, 0, taskLine); // Insert task
+				}
 
-		  if (taskStatus === 1) {
-			console.log("Task marked as completed.");
-		  } else if (taskStatus === 2) {
-			console.log("Task marked as dismissed.");
-		  }
+				return updatedLines.join('\n'); // Rejoin markdown content
+			}
+
+			let updatedMarkdown;
+
+			// Check which fields have changed and update them
+			if (taskContent !== task.content) updatedFields.content = taskContent;
+			if (taskImportant) updatedFields.important = !task.important;
+			if (taskUrgent) updatedFields.urgent = !task.urgent;
+
+			if (taskNoteuuid.uuid !== task.noteUUID) {
+				updatedFields.noteUUID = taskNoteuuid.uuid;
+			}
+
+			if (taskScore !== task.score) updatedFields.score = taskScore;
+
+			// Update task status based on user input
+			if (taskStatus === 1) {
+				updatedFields.completedAt = currentTimeUnix;
+			} else if (taskStatus === 2) {
+				updatedFields.dismissedAt = currentTimeUnix;
+			} else if (taskStatus === 3) {
+				updatedFields.startAt = currentTimeUnix;
+			}
+
+			// Update the task if any fields have changed
+			if (Object.keys(updatedFields).length > 0) {
+				await app.updateTask(taskUuid, updatedFields);
+				console.log("Task Updated with changes:", updatedFields);
+			} else {
+				console.log("No changes detected, task not updated.");
+			}
+
+			if (taskStatus === 1) {
+				console.log("Task marked as completed.");
+			} else if (taskStatus === 2) {
+				console.log("Task marked as dismissed.");
+			} else if (taskStatus === 3) {
+				console.log("Task marked as started.");
+			}
+			
+			if (notesections >= 0 && taskNoteuuid.uuid == task.noteUUID) {
+				updatedMarkdown = await moveTaskToHeader(task.noteUUID, task.uuid, notesections);
+				console.log("updatedMarkdown", updatedMarkdown);
+				await app.replaceNoteContent({ uuid: task.noteUUID }, updatedMarkdown);
+				console.log("Task Moved Successfully.");
+			}
+			
 		} else {
-		  // User canceled
-		  return;
+			// User canceled the prompt
+			return;
 		}
 
-      } else if (args[0] === "togglesort") {
+	} else if (args[0] === "togglesort") {
+		// Handle sorting settings
 		const sortSetting = await app.settings["Toggle Sort"];
-		console.log("sortSetting:",sortSetting);
+		console.log("sortSetting:", sortSetting);
+
+		// Display prompt to toggle sort settings
 		const result = await app.prompt(`Sort Tasks. Current Setting: ${sortSetting}`, {
 			inputs: [
-			  {
-				label: `Tasks Toggle Sort: ${sortSetting}`,
-				type: "select",
-				options: [ { label: "startDate", value: "startDate" }, { label: "taskScore", value: "taskScore" } , { label: "important", value: "important" }, { label: "urgent", value: "urgent" } ]
-			  }
-			]	
+				{
+					label: `Tasks Toggle Sort: ${sortSetting}`,
+					type: "select",
+					options: [
+						{ label: "startDate", value: "startDate" },
+						{ label: "taskScore", value: "taskScore" },
+						{ label: "important", value: "important" },
+						{ label: "urgent", value: "urgent" }
+					]
+				}
+			]
 		});
-	 
+
 		if (result) {
-		  console.log("result",result);
-		  await app.setSetting("Toggle Sort", result);
+			console.log("result", result);
+			await app.setSetting("Toggle Sort", result);
 		} else {
-		  // User canceled
-		  return;
-		}		  
-	  } else {
-		  console.log("Does not seem to be working!",args);
-	  }
+			return; // User canceled the prompt
+		}
+
+	} else {
+		console.log("Does not seem to be working!", args);
+	}
     },
 /* ----------------------------------- */
 async renderEmbed(app, ...args) {
 	// let _args = JSON.stringify(args[0]);
 	// console.log(_args);
 
-    let htmlTemplate = "";
-    let allTasksText;
-	let taskSorting;
+	let htmlTemplate = ""; // Placeholder for HTML output (if needed)
+	let allTasksText; // Stores the JSON string of all tasks for logging
+	let taskSorting; // Stores the current sorting setting
 
-    const kanbanTag = (await app.filterNotes({ tag: "-reports/-kanban" })).length > 0;
-    console.log("kanbanTag:", kanbanTag);
+	// Check if any notes have the tag "-reports/-kanban"
+	const kanbanTag = (await app.filterNotes({ tag: "-reports/-kanban" })).length > 0;
+	console.log("kanbanTag:", kanbanTag);
 
+	/**
+	 * Formats the task's repeat information.
+	 * @param {string} repeatInfo - The task's repeat information in a specific string format.
+	 * @returns {string} - A formatted string displaying the repeat frequency, start date, and time.
+	 */
 	function formatTaskRepeat(repeatInfo) {
-		// Check if repeatInfo is provided and is a string
-		if (!repeatInfo || typeof repeatInfo !== 'string') {
-			return "Not Available";
-		}
+	  if (!repeatInfo || typeof repeatInfo !== 'string') {
+		return "Not Available"; // Return default message if repeatInfo is missing or not a string
+	  }
 
-		// Split the repeatInfo into lines
-		const lines = repeatInfo.split('\n').map(line => line.trim());
+	  // Split the repeatInfo into lines
+	  const lines = repeatInfo.split('\n').map(line => line.trim());
 
-		// Extract date and time from DTSTART
-		const dtstartLine = lines[0];
-		const rruleLine = lines[1];
-		
-		const dtstart = dtstartLine.substring(8); // Remove 'DTSTART:'
-		const year = dtstart.substring(0, 4);
-		const month = dtstart.substring(4, 6);
-		const day = dtstart.substring(6, 8);
-		const hours = dtstart.substring(8, 10);
-		const minutes = dtstart.substring(10, 12);
-		const seconds = dtstart.substring(12, 14);
+	  // Extract date and time from DTSTART
+	  const dtstartLine = lines[0];
+	  const rruleLine = lines[1];
+	  
+	  const dtstart = dtstartLine.substring(8); // Remove 'DTSTART:'
+	  const year = dtstart.substring(0, 4);
+	  const month = dtstart.substring(4, 6);
+	  const day = dtstart.substring(6, 8);
+	  const hours = dtstart.substring(8, 10);
+	  const minutes = dtstart.substring(10, 12);
+	  const seconds = dtstart.substring(12, 14);
 
-		// Format date and time
-		const formattedDate = `${month}/${day}/${year}`;
-		const formattedTime = `${hours}:${minutes}:${seconds}`;
+	  // Format date and time
+	  const formattedDate = `${month}/${day}/${year}`;
+	  const formattedTime = `${hours}:${minutes}:${seconds}`;
 
-		// Parse RRULE
-		const rrule = rruleLine.substring(10); // Remove 'RRULE:FREQ='
-		const repeatFrequency = rrule.toUpperCase(); // Extract frequency part
+	  // Parse RRULE to get the repeat frequency
+	  const rrule = rruleLine.substring(10); // Remove 'RRULE:FREQ='
+	  const repeatFrequency = rrule.toUpperCase(); // Convert frequency to uppercase
 
-		// Format output
-		return `${repeatFrequency.charAt(0).toUpperCase() + repeatFrequency.slice(1).toLowerCase()} <b>Starts At:</b> ${formattedDate} at ${formattedTime}`;
+	  // Format and return the output
+	  return `${repeatFrequency.charAt(0).toUpperCase() + repeatFrequency.slice(1).toLowerCase()} <b>Starts At:</b> ${formattedDate} at ${formattedTime}`;
 	}
 
+	/**
+	 * Formats a Unix timestamp into a readable date and time string.
+	 * @param {number} timestamp - The Unix timestamp (in seconds).
+	 * @returns {string} - A formatted string with the date and time or "Not Set!" if no timestamp.
+	 */
 	function formatTimestamp(timestamp) {
-		if (!timestamp) {
-			return 'Not Set!'; // Return 'Not Set' if timestamp is null or undefined
-		}
+	  if (!timestamp) {
+		return 'Not Set!'; // Return if timestamp is null or undefined
+	  }
 
-		// Create a new Date object with the Unix timestamp (in milliseconds)
-		const date = new Date(timestamp * 1000);
+	  // Create a new Date object from the Unix timestamp (in milliseconds)
+	  const date = new Date(timestamp * 1000);
 
-		// Extract date and time components
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
-		const day = String(date.getDate()).padStart(2, '0');
-		const hours = String(date.getHours()).padStart(2, '0');
-		const minutes = String(date.getMinutes()).padStart(2, '0');
-		const seconds = String(date.getSeconds()).padStart(2, '0');
+	  // Extract date and time components
+	  const year = date.getFullYear();
+	  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
+	  const day = String(date.getDate()).padStart(2, '0');
+	  const hours = String(date.getHours()).padStart(2, '0');
+	  const minutes = String(date.getMinutes()).padStart(2, '0');
+	  const seconds = String(date.getSeconds()).padStart(2, '0');
 
-		// Format date and time
-		const formattedDate = `${month}/${day}/${year}`;
-		const formattedTime = `${hours}:${minutes}:${seconds}`;
+	  // Format and return date and time
+	  const formattedDate = `${month}/${day}/${year}`;
+	  const formattedTime = `${hours}:${minutes}:${seconds}`;
 
-		return `${formattedDate} at ${formattedTime}`;
+	  return `${formattedDate} at ${formattedTime}`;
 	}
-    
-    if (kanbanTag) {
-      let allTasks = [];
-      const noteHandles = await app.filterNotes({ tag: "-reports/-kanban" });
-      console.log("noteHandles:", noteHandles);
-      
-      for (let note of noteHandles) {
-        const noteUUID = note.uuid;
-        const noteTags = note.tags.join(", ");
-        console.log("noteUUID:", noteUUID);
-        console.log("noteTags:", noteTags);
-        
-        const tasks = await app.getNoteTasks({ uuid: noteUUID }, { includeDone: true });
-        console.log("tasks:", tasks);
-        
+
+	if (kanbanTag) {
+	  let allTasks = []; // Array to store all tasks
+	  
+	  // Retrieve notes with the kanban tag
+	  const noteHandles = await app.filterNotes({ tag: "-reports/-kanban" });
+	  console.log("noteHandles:", noteHandles);
+	  
+	  // Iterate through each note to retrieve tasks
+	  for (let note of noteHandles) {
+		const noteUUID = note.uuid;
+		const noteTags = note.tags.join(", ");
+		console.log("noteUUID:", noteUUID);
+		console.log("noteTags:", noteTags);
+
+		// Fetch tasks from the current note
+		const tasks = await app.getNoteTasks({ uuid: noteUUID }, { includeDone: true });
+		console.log("tasks:", tasks);
+
+		// Process each task and add relevant info
 		for (let i = 0; i < tasks.length; i++) {
-			const task = tasks[i];
-			allTasks.push({
-				...task,
-				notename: note.name,
-				noteurl: `https://www.amplenote.com/notes/${note.uuid}`,
-				tags: noteTags,
-				startAtz: `${formatTimestamp(task.startAt)}`,
-				hideUntilz: `${formatTimestamp(task.hideUntil)}`,
-				endAtz: `${formatTimestamp(task.endAt)}`,
-				repeatz: `${formatTaskRepeat(task.repeat)}`,
-				taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${formatTimestamp(task.startAt)}<br><b>Hide Until:</b> ${formatTimestamp(task.hideUntil)}<br><b>End At:</b> ${formatTimestamp(task.endAt)}<br><b>Repeat:</b> ${formatTaskRepeat(task.repeat)}<br><hr><b>Completed At:</b> ${formatTimestamp(task.completedAt)}<br><b>Dismissed At:</b> ${formatTimestamp(task.dismissedAt)}<br><hr><b>Note Link:</b> <a href="https://www.amplenote.com/notes/${note.uuid}" target="_blank">${note.name}</a><br><b>Tags:</b> ${noteTags}`
-			});
+		  const task = tasks[i];
+		  allTasks.push({
+			...task,
+			notename: note.name,
+			noteurl: `https://www.amplenote.com/notes/${note.uuid}`,
+			tags: noteTags,
+			startAtz: `${formatTimestamp(task.startAt)}`,
+			hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+			endAtz: `${formatTimestamp(task.endAt)}`,
+			repeatz: `${formatTaskRepeat(task.repeat)}`,
+			taskInfo: `<b>Important:</b> ${task.important}<br><b>Urgent:</b> ${task.urgent}<br><b>Score:</b> ${task.score.toFixed(2)}<br><hr><b>Start At:</b> ${formatTimestamp(task.startAt)}<br><b>Hide Until:</b> ${formatTimestamp(task.hideUntil)}<br><b>End At:</b> ${formatTimestamp(task.endAt)}<br><b>Repeat:</b> ${formatTaskRepeat(task.repeat)}<br><hr><b>Completed At:</b> ${formatTimestamp(task.completedAt)}<br><b>Dismissed At:</b> ${formatTimestamp(task.dismissedAt)}<br><hr><b>Note Link:</b> <a href="https://www.amplenote.com/notes/${note.uuid}" target="_blank">${note.name}</a><br><b>Tags:</b> ${noteTags}`
+		  });
 		}
+	  }
 
-      }
-      console.log("allTasks:", allTasks);
-		taskSorting = app.settings["Toggle Sort"];
-		taskSorting = taskSorting || 'taskScore';
-		if (taskSorting === 'startDate') {
-			allTasks.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
-		}
-		if (taskSorting === 'taskScore') {
-			allTasks.sort((a, b) => b.score - a.score);
-		}
-		if (taskSorting === 'important') {
-			allTasks.sort((a, b) => (b.important ? 1 : 0) - (a.important ? 1 : 0));
-		}
-		if (taskSorting === 'urgent') {
-			allTasks.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
-		}
-      allTasksText = JSON.stringify(allTasks, null, 2);
-      console.log("allTasksText:", allTasksText);
-     
-    } else {
-      const headersBig = ["To Do", "In Progress", "Review", "Blocked", "Completed", "Backlog", "On Hold", "Ready for Testing", "Deployed", "Archived"];
-      const headersSmall = ["To Do", "In Progress", "Review", "Completed", "Backlog", "On Hold"];
-      console.log("headersBig:", headersBig);
-      console.log("headersSmall:", headersSmall);
-      
-      for (const header of headersSmall) {
-        const uuid = await app.createNote(header, ["-reports/-kanban"]);
-        console.log("uuid:", uuid);
-        app.alert("Success! Looks like it’s your first time running the program, so we created a few notes with a specific tag to get you rolling. Now you can run the Kanban Plugin again and see at your brand-new board!");
-      }
-    }
+	  console.log("allTasks:", allTasks);
+	  
+	  // Sorting logic based on user settings
+	  taskSorting = app.settings["Toggle Sort"] || 'taskScore'; // Default to 'taskScore' if not set
+	  if (taskSorting === 'startDate') {
+		allTasks.sort((a, b) => new Date(b.startAtz) - new Date(a.startAtz));
+	  }
+	  if (taskSorting === 'taskScore') {
+		allTasks.sort((a, b) => b.score - a.score);
+	  }
+	  if (taskSorting === 'important') {
+		allTasks.sort((a, b) => (b.important ? 1 : 0) - (a.important ? 1 : 0));
+	  }
+	  if (taskSorting === 'urgent') {
+		allTasks.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+	  }
 
-    // const changez = true;
-    // if (changez) {
-      // await app.updateTask("4a784a37-2b1e-41f2-98cb-b290c41eaeca", {noteUUID: "0a0496aa-775c-11ef-bfb2-f222b153c6e3"});
-      // console.log("Success"); 
-    // } 
+	  // Convert all tasks to JSON for logging
+	  allTasksText = JSON.stringify(allTasks, null, 2);
+	  console.log("allTasksText:", allTasksText);
 
+	} else {
+	  // Define the headers for Kanban notes
+	  const headersBig = ["To Do", "In Progress", "Review", "Blocked", "Completed", "Backlog", "On Hold", "Ready for Testing", "Deployed", "Archived"];
+	  const headersSmall = ["To Do", "In Progress", "Review", "Completed", "Backlog", "On Hold"];
+	  console.log("headersBig:", headersBig);
+	  console.log("headersSmall:", headersSmall);
+	  
+	  // Create initial notes for Kanban if none exist
+	  for (const header of headersSmall) {
+		const uuid = await app.createNote(header, ["-reports/-kanban"]);
+		console.log("uuid:", uuid);
+
+		// Alert the user upon successful note creation
+		app.alert("Success! Looks like it’s your first time running the program, so we created a few notes with a specific tag to get you rolling. Now you can run the Kanban Plugin again and see at your brand-new board!");
+	  }
+	}
 
 htmlTemplate = `
 <!DOCTYPE html>
@@ -461,7 +496,12 @@ htmlTemplate = `
   console.log("tasks:", tasks);
 
 try {
-    // Function to determine the CSS class based on task urgency and importance
+    /**
+     * Determines the CSS class based on the task's urgency and importance.
+     * 
+     * @param {Object} task - The task object containing urgency and importance flags.
+     * @returns {string} CSS class that reflects the urgency and importance level of the task.
+     */
     function getColor(task) {
         if (task.urgent && task.important) return 'high-urgent high-important';
         if (task.urgent) return 'high-urgent low-important';
@@ -474,27 +514,41 @@ try {
     const valueDisplay = document.getElementById('valueDisplay');
     const cycleButton = document.getElementById('cycleButton');
 
+    /**
+     * Cycles through sorting values (Start Date, Score, Important, Urgent),
+     * updates the display, and re-renders the Kanban board.
+     */
     function updateValue() {
-		valueDisplay.textContent = values[currentIndex];
+        valueDisplay.textContent = values[currentIndex];
         currentIndex = (currentIndex + 1) % values.length;
         renderKanbanBoard();
-		window.callAmplenotePlugin("togglesort")
+        window.callAmplenotePlugin("togglesort");
     }
 
     cycleButton.addEventListener('click', updateValue);
 
+    /**
+     * Displays detailed task information when hovering over a task.
+     * 
+     * @param {Object} task - The task object containing detailed information.
+     * @param {HTMLElement} element - The DOM element representing the task.
+     */
     function showTaskInfo(task, element) {
         let infoDiv = element.querySelector('.task-info');
         if (!infoDiv) {
             infoDiv = document.createElement('div');
             infoDiv.className = 'task-info' + (document.body.classList.contains('dark-mode') ? ' dark-mode' : '');
             infoDiv.innerHTML = task.taskInfo;
-            infoDiv.innerHTML = task.taskInfo;
             element.appendChild(infoDiv);
         }
         infoDiv.style.display = 'block';
     }
 
+    /**
+     * Hides the task information when the mouse leaves the task element.
+     * 
+     * @param {HTMLElement} element - The DOM element representing the task.
+     */
     function hideTaskInfo(element) {
         const infoDiv = element.querySelector('.task-info');
         if (infoDiv) {
@@ -502,7 +556,14 @@ try {
         }
     }
 
-    // Helper to create buttons for task items
+    /**
+     * Helper function to create a button for task items.
+     * 
+     * @param {string} text - The text content of the button.
+     * @param {string} className - The CSS class to be applied to the button.
+     * @param {function} clickHandler - The function to handle click events.
+     * @returns {HTMLElement} The created button element.
+     */
     function createButton(text, className, clickHandler) {
         const button = document.createElement('button');
         button.textContent = text;
@@ -511,22 +572,36 @@ try {
         return button;
     }
 
-    // Function to create and append task items
+    /**
+     * Creates and appends a task item to the specified container.
+     * 
+     * @param {Object} task - The task object to be displayed.
+     * @param {HTMLElement} container - The DOM element representing the task list (pending, completed, or dismissed).
+     * @param {boolean} isPending - Whether the task is in the pending state (default is true).
+     */
     function createTaskItem(task, container, isPending = true) {
         const taskItem = document.createElement('div');
         taskItem.className = 'task ' + getColor(task);
         taskItem.textContent = task.content;
 
         taskItem.appendChild(createButton('ℹ', 'task-button', () => showTaskInfo(task, taskItem)));
+
         if (isPending) {
             taskItem.appendChild(createButton('⚙', 'task-button2', () => window.callAmplenotePlugin("taskEdit", task.uuid)));
         }
+
         taskItem.onmouseleave = () => hideTaskInfo(taskItem);
 
         container.appendChild(taskItem);
     }
 
-    // Helper to sort tasks based on the current value display
+    /**
+     * Sorts tasks based on the specified sorting criterion (Start Date, Score, Important, Urgent).
+     * 
+     * @param {Array} tasks - The array of tasks to be sorted.
+     * @param {string} sortBy - The criterion to sort the tasks by.
+     * @returns {Array} The sorted array of tasks.
+     */
     function sortTasks(tasks, sortBy) {
         switch (sortBy) {
             case 'Start Date':
@@ -542,7 +617,9 @@ try {
         }
     }
 
-    // Function to render the Kanban board
+    /**
+     * Renders the Kanban board by creating columns for each note and sorting tasks into pending, completed, and dismissed.
+     */
     function renderKanbanBoard() {
         const board = document.getElementById('kanban-board');
         const columns = {};
@@ -552,6 +629,7 @@ try {
             if (!columns[note]) {
                 columns[note] = { pending: [], completed: [], dismissed: [] };
             }
+
             if (task.completedAt) {
                 columns[note].completed.push(task);
             } else if (task.dismissedAt) {
