@@ -441,6 +441,7 @@ try {
         valueDisplay.textContent = values[currentIndex];
         currentIndex = (currentIndex + 1) % values.length;
         renderKanbanBoard();
+		window.callAmplenotePlugin("togglesort")
     }
 
     cycleButton.addEventListener('click', updateValue);
