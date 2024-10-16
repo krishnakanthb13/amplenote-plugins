@@ -72,8 +72,8 @@ async onEmbedCall(app, ...args) {
 		const result = await app.prompt("Update Task Details", {
 			inputs: [
 				{ label: "Update Task Content:", type: "text", value: `${task.content}` },
-				{ label: "Update Important:", type: "select", options: importantValue },
-				{ label: "Update Urgent:", type: "select", options: urgentValue },
+				{ label: "Update Important:", type: "checkbox", value: task.important },
+				{ label: "Update Urgent:", type: "checkbox", value: task.urgent },
 				{ label: "Move to a Note or Header. Select Note:", type: "note", value: `${task.noteUUID}` },
 				{ label: "Select Section or Header (Caution: refrain from using --- in the note.):", type: "select", options: transformedSections },
 				{ label: "Update Score:", type: "string", value: `${task.score}` },
