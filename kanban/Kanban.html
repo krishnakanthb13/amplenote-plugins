@@ -123,6 +123,7 @@
     <button id="cycleButton">Toggle Sort: <div id="valueDisplay">None</div></button>
 	<button id="createNewNote">Create New Note</button>
 	<button id="updateTag">Update Tag</button>
+	<button id="refreshPage">Refresh Page</button>
     <br><br>
     <div id="kanban-board"></div>
 
@@ -458,6 +459,16 @@ try {
     const cycleButton = document.getElementById('cycleButton');
     const createNewNote = document.getElementById('createNewNote');
     const updateTag = document.getElementById('updateTag');
+    const refreshPage = document.getElementById('refreshPage');
+
+    /**
+     * Update the tag used in Kanban
+     */
+    function refreshPagecall() {
+		window.callAmplenotePlugin("refreshPage")
+    }
+
+    refreshPage.addEventListener('click', refreshPagecall);
 
     /**
      * Update the tag used in Kanban

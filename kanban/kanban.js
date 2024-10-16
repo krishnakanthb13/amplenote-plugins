@@ -1,30 +1,42 @@
 {
-	
-	
-	
-	
 appOption: {
 /* ----------------------------------- */
 "Tagged!": async function (app) {
 
-/**
- * Inserts an object element into the selection in the application context.
- * 
- * This function updates the current selection in the application context 
- * with an HTML object tag that points to a plugin using its UUID.
- * The object tag includes a data-aspect-ratio attribute to control its display ratio.
- * 
- * @returns {null} - The function does not return any meaningful value.
- */
-async function insertPluginObject() {
-    // Replace the current selection in the app's context with the plugin's object data
-    await app.context.replaceSelection(
-        `<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="2" />`
-    );
+	console.log("Lets get it started.");
 
-    // Return null as no further action is required
-    return null;
-}
+	const destNoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+	  console.log("existingUUID",existingUUID);
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote("Kanban Board", ["-reports/-kanban"]);
+	  await app.setSetting("Current_Note_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	  console.log("newUUID",newUUID);
+	})();
+	console.log("destNoteUUID",destNoteUUID);
+
+	/**
+	 * Inserts an object element into the selection in the application context.
+	 * 
+	 * This function updates the current selection in the application context 
+	 * with an HTML object tag that points to a plugin using its UUID.
+	 * The object tag includes a data-aspect-ratio attribute to control its display ratio.
+	 * 
+	 * @returns {null} - The function does not return any meaningful value.
+	 */
+
+	// Replace the current selection in the app's context with the plugin's object data
+	await app.replaceNoteContent(
+		{ uuid: destNoteUUID },
+		`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+	);
+	await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+	console.log("Plugin Inserted into Note", destNoteUUID);
+
+	// Return null as no further action is required
+	return null;
 
 }
 /* ----------------------------------- */
@@ -192,6 +204,15 @@ async onEmbedCall(app, ...args) {
 			return;
 		}
 
+		/*// Refresh the Kanban Plugin Page
+		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+		// Replace the current selection in the app's context with the plugin's object data
+		await app.replaceNoteContent(
+			{ uuid: destNoteUUID },
+			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+		);
+		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
+
 	} else if (args[0] === "createTask") {
 		const noteName = args[1];
 		console.log("noteName:", noteName);
@@ -327,6 +348,15 @@ async onEmbedCall(app, ...args) {
 			// User canceled the prompt
 			return;
 		}
+
+		/*// Refresh the Kanban Plugin Page
+		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+		// Replace the current selection in the app's context with the plugin's object data
+		await app.replaceNoteContent(
+			{ uuid: destNoteUUID },
+			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+		);
+		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
 	
 	} else if (args[0] === "createNewNote") {
 		const details = args[0];
@@ -336,7 +366,7 @@ async onEmbedCall(app, ...args) {
 		const result = await app.prompt(`Details for New Note Creation`, {
 			inputs: [
 				{ label: "Enter a Note Name:", type: "text" },
-				{ label: "Select a Note as Template: (Optional)", type: "note" }
+				{ label: "Select a Note as Template w/ Tasks: (Optional)", type: "note" }
 			]
 		});
 
@@ -354,11 +384,22 @@ async onEmbedCall(app, ...args) {
 			console.log("markdown:", markdown);
 			await app.replaceNoteContent({ uuid: uuidz }, markdown);
 			console.log("Template Successfully Pasted");
+		} else {
+			const taskUUID = await app.insertTask({ uuid: uuidz }, { text: "Temp: This Task is created by [Kanban Plugin](https://www.amplenote.com/plugins?sort_by=newest)" });
 		}
 
 		} else {
 			return; // User canceled the prompt
 		}
+
+		/*// Refresh the Kanban Plugin Page
+		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+		// Replace the current selection in the app's context with the plugin's object data
+		await app.replaceNoteContent(
+			{ uuid: destNoteUUID },
+			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+		);
+		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
 
 	} else if (args[0] === "updateTag") {
 		const details = args[0];
@@ -382,6 +423,15 @@ async onEmbedCall(app, ...args) {
 		} else {
 			return; // User canceled the prompt
 		}
+
+		/*// Refresh the Kanban Plugin Page
+		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+		// Replace the current selection in the app's context with the plugin's object data
+		await app.replaceNoteContent(
+			{ uuid: destNoteUUID },
+			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+		);
+		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
 
 	} else if (args[0] === "togglesort") {
 		// Handle sorting settings
@@ -410,6 +460,19 @@ async onEmbedCall(app, ...args) {
 		} else {
 			return; // User canceled the prompt
 		}
+
+		/*// Refresh the Kanban Plugin Page
+		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+		// Replace the current selection in the app's context with the plugin's object data
+		await app.replaceNoteContent(
+			{ uuid: destNoteUUID },
+			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+		);
+		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
+
+	} else if (args[0] === "refreshPage") {
+
+		location.href = location.href;
 
 	} else {
 		console.log("Does not seem to be working!", args);
@@ -696,6 +759,7 @@ htmlTemplate = `
     <button id="cycleButton">Toggle Sort: <div id="valueDisplay">None</div></button>
 	<button id="createNewNote">Create New Note</button>
 	<button id="updateTag">Update Tag</button>
+	<button id="refreshPage">Refresh Page</button>
     <br><br>
     <div id="kanban-board"></div>
 
@@ -724,6 +788,16 @@ try {
     const cycleButton = document.getElementById('cycleButton');
     const createNewNote = document.getElementById('createNewNote');
     const updateTag = document.getElementById('updateTag');
+    const refreshPage = document.getElementById('refreshPage');
+
+    /**
+     * Update the tag used in Kanban
+     */
+    function refreshPagecall() {
+		window.callAmplenotePlugin("refreshPage")
+    }
+
+    refreshPage.addEventListener('click', refreshPagecall);
 
     /**
      * Update the tag used in Kanban
@@ -924,4 +998,5 @@ try {
 	  console.log(htmlTemplate);
      
 },
+
 }
