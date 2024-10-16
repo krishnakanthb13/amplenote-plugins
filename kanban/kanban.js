@@ -204,14 +204,25 @@ async onEmbedCall(app, ...args) {
 			return;
 		}
 
-		/*// Refresh the Kanban Plugin Page
-		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
-		// Replace the current selection in the app's context with the plugin's object data
-		await app.replaceNoteContent(
-			{ uuid: destNoteUUID },
-			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
-		);
-		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
+		// Function to refresh the Kanban Plugin Page
+		async function refreshKanbanPage() {
+			const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+
+			// Replace current selection with a message indicating page refresh
+			await app.replaceNoteContent({ uuid: destNoteUUID },`Refreshing the Page!`);
+
+			// Wait for 3 seconds, then replace the note content with the plugin's object data
+			setTimeout(async () => {
+				await app.replaceNoteContent({ uuid: destNoteUUID },`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`);
+
+				// Navigate to the refreshed page after content is updated
+				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+				console.log("Page refreshed!");
+			}, 500);
+		}
+
+		// Call the function to refresh the page
+		refreshKanbanPage();
 
 	} else if (args[0] === "createTask") {
 		const noteName = args[1];
@@ -349,14 +360,25 @@ async onEmbedCall(app, ...args) {
 			return;
 		}
 
-		/*// Refresh the Kanban Plugin Page
-		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
-		// Replace the current selection in the app's context with the plugin's object data
-		await app.replaceNoteContent(
-			{ uuid: destNoteUUID },
-			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
-		);
-		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
+		// Function to refresh the Kanban Plugin Page
+		async function refreshKanbanPage() {
+			const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+
+			// Replace current selection with a message indicating page refresh
+			await app.replaceNoteContent({ uuid: destNoteUUID },`Refreshing the Page!`);
+
+			// Wait for 3 seconds, then replace the note content with the plugin's object data
+			setTimeout(async () => {
+				await app.replaceNoteContent({ uuid: destNoteUUID },`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`);
+
+				// Navigate to the refreshed page after content is updated
+				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+				console.log("Page refreshed!");
+			}, 500);
+		}
+
+		// Call the function to refresh the page
+		refreshKanbanPage();
 	
 	} else if (args[0] === "createNewNote") {
 		const details = args[0];
@@ -385,21 +407,33 @@ async onEmbedCall(app, ...args) {
 			await app.replaceNoteContent({ uuid: uuidz }, markdown);
 			console.log("Template Successfully Pasted");
 		} else {
-			const taskUUID = await app.insertTask({ uuid: uuidz }, { text: "Temp: This Task is created by [Kanban Plugin](https://www.amplenote.com/plugins?sort_by=newest)" });
+			const note = await app.notes.find(uuidz);
+			const taskUUID = await note.insertTask({ content: "Temp: This Task is created by [Kanban Plugin](https://www.amplenote.com/plugins?sort_by=newest)" });
 		}
 
 		} else {
 			return; // User canceled the prompt
 		}
 
-		/*// Refresh the Kanban Plugin Page
-		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
-		// Replace the current selection in the app's context with the plugin's object data
-		await app.replaceNoteContent(
-			{ uuid: destNoteUUID },
-			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
-		);
-		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
+		// Function to refresh the Kanban Plugin Page
+		async function refreshKanbanPage() {
+			const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+
+			// Replace current selection with a message indicating page refresh
+			await app.replaceNoteContent({ uuid: destNoteUUID },`Refreshing the Page!`);
+
+			// Wait for 3 seconds, then replace the note content with the plugin's object data
+			setTimeout(async () => {
+				await app.replaceNoteContent({ uuid: destNoteUUID },`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`);
+
+				// Navigate to the refreshed page after content is updated
+				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+				console.log("Page refreshed!");
+			}, 500);
+		}
+
+		// Call the function to refresh the page
+		refreshKanbanPage();
 
 	} else if (args[0] === "updateTag") {
 		const details = args[0];
@@ -424,19 +458,25 @@ async onEmbedCall(app, ...args) {
 			return; // User canceled the prompt
 		}
 
-		// Refresh the Kanban Plugin Page
-		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
-		// Replace the current selection in the app's context with the plugin's object data
-		await app.replaceNoteContent(
-			{ uuid: destNoteUUID },
-			`Refreshing the Page!`
-		);
-		setTimeout(await app.replaceNoteContent(
-			{ uuid: destNoteUUID },
-			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
-		), 3000);
-		app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-		console.log("reload:");	
+		// Function to refresh the Kanban Plugin Page
+		async function refreshKanbanPage() {
+			const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+
+			// Replace current selection with a message indicating page refresh
+			await app.replaceNoteContent({ uuid: destNoteUUID },`Refreshing the Page!`);
+
+			// Wait for 3 seconds, then replace the note content with the plugin's object data
+			setTimeout(async () => {
+				await app.replaceNoteContent({ uuid: destNoteUUID },`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`);
+
+				// Navigate to the refreshed page after content is updated
+				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+				console.log("Page refreshed!");
+			}, 500);
+		}
+
+		// Call the function to refresh the page
+		refreshKanbanPage();
 
 	} else if (args[0] === "togglesort") {
 		// Handle sorting settings
@@ -466,58 +506,43 @@ async onEmbedCall(app, ...args) {
 			return; // User canceled the prompt
 		}
 
-		/*// Refresh the Kanban Plugin Page
-		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
-		// Replace the current selection in the app's context with the plugin's object data
-		await app.replaceNoteContent(
-			{ uuid: destNoteUUID },
-			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
-		);
-		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
+		// Function to refresh the Kanban Plugin Page
+		async function refreshKanbanPage() {
+			const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+
+			// Replace current selection with a message indicating page refresh
+			await app.replaceNoteContent({ uuid: destNoteUUID },`Refreshing the Page!`);
+
+			// Wait for 3 seconds, then replace the note content with the plugin's object data
+			setTimeout(async () => {
+				await app.replaceNoteContent({ uuid: destNoteUUID },`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`);
+
+				// Navigate to the refreshed page after content is updated
+				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+				console.log("Page refreshed!");
+			}, 500);
+		}
+
+		// Call the function to refresh the page
+		refreshKanbanPage();
 
 	} else if (args[0] === "refreshPage") {
-
-		/*// Refresh the Kanban Plugin Page
-		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
-		// Replace the current selection in the app's context with the plugin's object data
-		await app.replaceNoteContent(
-			{ uuid: destNoteUUID },
-			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
-		);
-		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
-		
-		/*// Refresh the Kanban Plugin Page
-		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
-		// Replace the current selection in the app's context with the plugin's object data
-		await app.replaceNoteContent(
-			{ uuid: destNoteUUID },
-			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
-		);
-		app.navigate(`https://www.amplenote.com/notes/8d13d67c-5fd4-11ef-ae75-b6c19b417745`);
-		app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-		console.log("reload:");*/
 
 		// Function to refresh the Kanban Plugin Page
 		async function refreshKanbanPage() {
 			const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
 
 			// Replace current selection with a message indicating page refresh
-			await app.replaceNoteContent(
-				{ uuid: destNoteUUID },
-				`Refreshing the Page!`
-			);
+			await app.replaceNoteContent({ uuid: destNoteUUID },`Refreshing the Page!`);
 
 			// Wait for 3 seconds, then replace the note content with the plugin's object data
 			setTimeout(async () => {
-				await app.replaceNoteContent(
-					{ uuid: destNoteUUID },
-					`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
-				);
+				await app.replaceNoteContent({ uuid: destNoteUUID },`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`);
 
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
 				console.log("Page refreshed!");
-			}, 3000);
+			}, 500);
 		}
 
 		// Call the function to refresh the page
