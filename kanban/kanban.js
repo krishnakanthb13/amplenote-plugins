@@ -365,7 +365,7 @@ async onEmbedCall(app, ...args) {
 		// Display prompt to note creation settings
 		const result = await app.prompt(`Details for New Note Creation`, {
 			inputs: [
-				{ label: "Enter a Note Name:", type: "text" },
+				{ label: "Enter a Note Name:", type: "string" },
 				{ label: "Select a Note as Template w/ Tasks: (Optional)", type: "note" }
 			]
 		});
@@ -424,14 +424,19 @@ async onEmbedCall(app, ...args) {
 			return; // User canceled the prompt
 		}
 
-		/*// Refresh the Kanban Plugin Page
+		// Refresh the Kanban Plugin Page
 		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
 		// Replace the current selection in the app's context with the plugin's object data
 		await app.replaceNoteContent(
 			{ uuid: destNoteUUID },
-			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+			`Refreshing the Page!`
 		);
-		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
+		setTimeout(await app.replaceNoteContent(
+			{ uuid: destNoteUUID },
+			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+		), 3000);
+		app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+		console.log("reload:");	
 
 	} else if (args[0] === "togglesort") {
 		// Handle sorting settings
@@ -442,7 +447,7 @@ async onEmbedCall(app, ...args) {
 		const result = await app.prompt(`Sort Tasks. Current Setting: ${sortSetting}`, {
 			inputs: [
 				{
-					label: `Tasks Toggle Sort: ${sortSetting}`,
+					label: `Tasks Toggle Sort: [${sortSetting}]`,
 					type: "select",
 					options: [
 						{ label: "startDate", value: "startDate" },
@@ -472,7 +477,51 @@ async onEmbedCall(app, ...args) {
 
 	} else if (args[0] === "refreshPage") {
 
-		location.href = location.href;
+		/*// Refresh the Kanban Plugin Page
+		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+		// Replace the current selection in the app's context with the plugin's object data
+		await app.replaceNoteContent(
+			{ uuid: destNoteUUID },
+			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+		);
+		await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);*/
+		
+		/*// Refresh the Kanban Plugin Page
+		const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+		// Replace the current selection in the app's context with the plugin's object data
+		await app.replaceNoteContent(
+			{ uuid: destNoteUUID },
+			`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+		);
+		app.navigate(`https://www.amplenote.com/notes/8d13d67c-5fd4-11ef-ae75-b6c19b417745`);
+		app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+		console.log("reload:");*/
+
+		// Function to refresh the Kanban Plugin Page
+		async function refreshKanbanPage() {
+			const destNoteUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
+
+			// Replace current selection with a message indicating page refresh
+			await app.replaceNoteContent(
+				{ uuid: destNoteUUID },
+				`Refreshing the Page!`
+			);
+
+			// Wait for 3 seconds, then replace the note content with the plugin's object data
+			setTimeout(async () => {
+				await app.replaceNoteContent(
+					{ uuid: destNoteUUID },
+					`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
+				);
+
+				// Navigate to the refreshed page after content is updated
+				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
+				console.log("Page refreshed!");
+			}, 3000);
+		}
+
+		// Call the function to refresh the page
+		refreshKanbanPage();
 
 	} else {
 		console.log("Does not seem to be working!", args);
@@ -480,8 +529,8 @@ async onEmbedCall(app, ...args) {
     },
 /* ----------------------------------- */
 async renderEmbed(app, ...args) {
-	// let _args = JSON.stringify(args[0]);
-	// console.log(_args);
+	let _args = JSON.stringify(args[0]);
+	console.log(_args);
 
 	let htmlTemplate = ""; // Placeholder for HTML output (if needed)
 	let allTasksText; // Stores the JSON string of all tasks for logging
