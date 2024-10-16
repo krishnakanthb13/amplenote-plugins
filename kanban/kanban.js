@@ -159,10 +159,13 @@ async onEmbedCall(app, ...args) {
 			// Update task status based on user input
 			if (taskStatus === 1) {
 				updatedFields.completedAt = currentTimeUnix;
+				console.log("Task marked as completed.");
 			} else if (taskStatus === 2) {
 				updatedFields.dismissedAt = currentTimeUnix;
+				console.log("Task marked as dismissed.");
 			} else if (taskStatus === 3) {
 				updatedFields.startAt = currentTimeUnix;
+				console.log("Task marked as started.");
 			}
 
 			// Update the task if any fields have changed
@@ -171,14 +174,6 @@ async onEmbedCall(app, ...args) {
 				console.log("Task Updated with changes:", updatedFields);
 			} else {
 				console.log("No changes detected, task not updated.");
-			}
-
-			if (taskStatus === 1) {
-				console.log("Task marked as completed.");
-			} else if (taskStatus === 2) {
-				console.log("Task marked as dismissed.");
-			} else if (taskStatus === 3) {
-				console.log("Task marked as started.");
 			}
 			
 			if (notesections >= 0 && taskNoteuuid.uuid == task.noteUUID) {
@@ -193,6 +188,141 @@ async onEmbedCall(app, ...args) {
 			return;
 		}
 
+	} else if (args[0] === "createTask") {
+		const noteName = args[1];
+		console.log("noteName:", noteName);
+		const noteHandleCT = await app.findNote({ name: noteName, tag: "-reports/-kanban" });
+		console.log("noteHandleCT:", noteHandleCT);
+
+		// Fetch sections (headers) from the note associated with the task
+		const sections = await app.getNoteSections({ uuid: noteHandleCT.uuid });
+		console.log("sections", sections);
+
+		// Transform sections into a label-value format for easier selection in the prompt
+		const transformedSections = sections.map((item, index) => {
+			const headerValue = item.heading ? item.heading.text : "Main"; // Default to "Main" if no heading
+			return { label: headerValue, value: index };
+		});
+		console.log("transformedSections:", transformedSections);
+
+		// Display a prompt to update task details
+		const result = await app.prompt("Update Task Details", {
+			inputs: [
+				{ label: "Update Task Content:", type: "text" },
+				{ label: "Update Important:", type: "checkbox" },
+				{ label: "Update Urgent:", type: "checkbox" },
+				{ label: "Move to a Note or Header. Select Note:", type: "note", value: `${noteHandleCT.uuid}` },
+				{ label: "Select Section or Header (Caution: refrain from using --- in the note.):", type: "select", options: transformedSections },
+				{ label: "Update Score:", type: "string" },
+				{ label: "Mark Task Status:", type: "radio", options: [
+					{ label: "Started", value: 3 },
+					{ label: "Completed", value: 1 },
+					{ label: "Dismissed", value: 2 }
+				]}
+			]
+		});
+
+		if (result) {
+			// Destructure the result for easy access to task fields
+			let [taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus] = result;
+			notesections = parseFloat(notesections);
+			taskScore = parseFloat(taskScore);
+			console.log("result", result);
+			console.log(taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus);
+
+			const currentTimeUnix = Math.floor(Date.now() / 1000);
+
+			// Prepare an object to hold updated task fields
+			const updatedFields = {};
+
+			/**
+			 * Move the task to a specific header within the note.
+			 * 
+			 * @param {string} noteUUID - The UUID of the note containing the task.
+			 * @param {string} uuidToMove - The UUID of the task to move.
+			 * @param {number} headerNumber - The header number to move the task under.
+			 * @returns {string} - The updated markdown content.
+			 */
+			async function moveTaskToHeader(noteUUID, uuidToMove, headerNumber) {
+				const markdown = await app.getNoteContent({ uuid: noteUUID });
+				console.log("markdown", markdown);
+				const lines = markdown.split('\n');
+				const updatedLines = [];
+				let taskLine = null;
+				const headers = [];
+
+				// Iterate through the lines to find the task and headers
+				for (let line of lines) {
+					if (line.includes(`"uuid":"${uuidToMove}"`)) {
+						taskLine = line; // Save task line for later insertion
+					} else {
+						updatedLines.push(line); // Keep non-task lines
+					}
+
+					// Detect headers in markdown
+					const headerMatch = line.match(/^(#+)\s*(.*)/);
+					if (headerMatch) {
+						headers.push(headerMatch[0]);
+					}
+					console.log("headers", headers);
+				}
+				console.log("updatedLines", updatedLines);
+				console.log("taskLine", taskLine);
+
+				// Insert task under the correct header
+				if (taskLine) {
+					const insertIndex = headerNumber === 0
+						? 0
+						: updatedLines.indexOf(headers[headerNumber - 1]) + 1;
+					updatedLines.splice(insertIndex, 0, taskLine); // Insert task
+				}
+
+				return updatedLines.join('\n'); // Rejoin markdown content
+			}
+
+			let updatedMarkdown;
+			let taskUUID;
+
+			// Check which fields have changed and update them
+			if (taskNoteuuid) {
+				taskUUID = await app.insertTask({ uuid: taskNoteuuid.uuid }, { text: "" });
+				console.log("Task is created and taskUUID:", taskUUID);
+			}
+			if (taskContent) updatedFields.content = taskContent;
+			if (taskImportant) updatedFields.important = true;
+			if (taskUrgent) updatedFields.urgent = true;
+			if (taskScore) updatedFields.score = taskScore;
+			// Update task status based on user input
+			if (taskStatus === 1) {
+				updatedFields.completedAt = currentTimeUnix;
+				console.log("Task marked as completed.");
+			} else if (taskStatus === 2) {
+				updatedFields.dismissedAt = currentTimeUnix;
+				console.log("Task marked as dismissed.");
+			} else if (taskStatus === 3) {
+				updatedFields.startAt = currentTimeUnix;
+				console.log("Task marked as started.");
+			}
+			// Update the task if any fields have changed
+			if (Object.keys(updatedFields).length > 0) {
+				await app.updateTask(taskUUID, updatedFields);
+				console.log("Task Updated with changes:", updatedFields);
+			} else {
+				console.log("No changes detected, task not updated.");
+			}
+			
+			if (notesections >= 0 && taskNoteuuid.uuid) {
+				updatedMarkdown = await moveTaskToHeader(taskNoteuuid.uuid, taskUUID, notesections);
+				console.log("updatedMarkdown", updatedMarkdown);
+				await app.replaceNoteContent({ uuid: taskNoteuuid.uuid }, updatedMarkdown);
+				console.log("Task Moved Successfully.");
+			}
+			
+		} else {
+			// User canceled the prompt
+			return;
+		}
+	
 	} else if (args[0] === "togglesort") {
 		// Handle sorting settings
 		const sortSetting = await app.settings["Toggle Sort"];
@@ -457,6 +587,19 @@ htmlTemplate = `
 			background-color: black;			
             color: #ddd;
         }
+        .task-button3 {
+            background-color: transparent;
+			border-radius: 5px;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .task-button3:hover {
+			background-color: black;			
+            color: #ddd;
+        }
 		.high-urgent.high-important {
 			background: linear-gradient(to right, #ff6666, #ff9999); /* Light red to lighter red */
 		}
@@ -643,35 +786,43 @@ try {
 
         board.innerHTML = '';  // Clear board before rendering
 
-        Object.keys(columns).forEach(note => {
-            const column = document.createElement('div');
-            column.className = 'column';
+		Object.keys(columns).forEach(note => {
+			const column = document.createElement('div');
+			column.className = 'column';
 
-            const header = document.createElement('h3');
-            header.textContent = note;
-            header.className = 'task-category';
-            column.appendChild(header);
+			// Create the header with note name
+			const header = document.createElement('h3');
+			header.textContent = note;
+			header.className = 'task-category';
+			column.appendChild(header);
+			header.append(createButton('➕', 'task-button3', () => window.callAmplenotePlugin("createTask", note)));
 
-            const pendingList = document.createElement('div');
-            pendingList.appendChild(document.createTextNode('Pending:'));
-            sortTasks(columns[note].pending, valueDisplay.textContent).forEach(task => createTaskItem(task, pendingList));
+			// Pending tasks list
+			const pendingList = document.createElement('div');
+			pendingList.append(document.createTextNode('Pending: '));
+			sortTasks(columns[note].pending, valueDisplay.textContent).forEach(task => createTaskItem(task, pendingList));
 
-            const completedList = document.createElement('div');
-            completedList.appendChild(document.createTextNode('Completed:'));
-            columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
-                .forEach(task => createTaskItem(task, completedList, false));
+			// Completed tasks list
+			const completedList = document.createElement('div');
+			completedList.appendChild(document.createTextNode('Completed:'));
+			columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
+				.forEach(task => createTaskItem(task, completedList, false));
 
-            const dismissedList = document.createElement('div');
-            dismissedList.appendChild(document.createTextNode('Dismissed:'));
-            columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt))
-                .forEach(task => createTaskItem(task, dismissedList, false));
+			// Dismissed tasks list
+			const dismissedList = document.createElement('div');
+			dismissedList.appendChild(document.createTextNode('Dismissed:'));
+			columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt))
+				.forEach(task => createTaskItem(task, dismissedList, false));
 
-            column.appendChild(pendingList);
-            column.appendChild(completedList);
-            column.appendChild(dismissedList);
+			// Append lists to the column
+			column.appendChild(pendingList);
+			column.appendChild(completedList);
+			column.appendChild(dismissedList);
 
-            board.appendChild(column);
-        });
+			// Append the column to the board
+			board.appendChild(column);
+		});
+
     }
 
     renderKanbanBoard();

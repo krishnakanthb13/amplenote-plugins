@@ -76,6 +76,19 @@
 			background-color: black;			
             color: #ddd;
         }
+        .task-button3 {
+            background-color: transparent;
+			border-radius: 5px;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .task-button3:hover {
+			background-color: black;			
+            color: #ddd;
+        }
 		.high-urgent.high-important {
 			background: linear-gradient(to right, #ff6666, #ff9999); /* Light red to lighter red */
 		}
@@ -569,35 +582,43 @@ try {
 
         board.innerHTML = '';  // Clear board before rendering
 
-        Object.keys(columns).forEach(note => {
-            const column = document.createElement('div');
-            column.className = 'column';
+		Object.keys(columns).forEach(note => {
+			const column = document.createElement('div');
+			column.className = 'column';
 
-            const header = document.createElement('h3');
-            header.textContent = note;
-            header.className = 'task-category';
-            column.appendChild(header);
+			// Create the header with note name
+			const header = document.createElement('h3');
+			header.textContent = note;
+			header.className = 'task-category';
+			column.appendChild(header);
+			header.append(createButton('➕', 'task-button3', () => window.callAmplenotePlugin("createTask", note.noteUUID)));
 
-            const pendingList = document.createElement('div');
-            pendingList.appendChild(document.createTextNode('Pending:'));
-            sortTasks(columns[note].pending, valueDisplay.textContent).forEach(task => createTaskItem(task, pendingList));
+			// Pending tasks list
+			const pendingList = document.createElement('div');
+			pendingList.append(document.createTextNode('Pending: '));
+			sortTasks(columns[note].pending, valueDisplay.textContent).forEach(task => createTaskItem(task, pendingList));
 
-            const completedList = document.createElement('div');
-            completedList.appendChild(document.createTextNode('Completed:'));
-            columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
-                .forEach(task => createTaskItem(task, completedList, false));
+			// Completed tasks list
+			const completedList = document.createElement('div');
+			completedList.appendChild(document.createTextNode('Completed:'));
+			columns[note].completed.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
+				.forEach(task => createTaskItem(task, completedList, false));
 
-            const dismissedList = document.createElement('div');
-            dismissedList.appendChild(document.createTextNode('Dismissed:'));
-            columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt))
-                .forEach(task => createTaskItem(task, dismissedList, false));
+			// Dismissed tasks list
+			const dismissedList = document.createElement('div');
+			dismissedList.appendChild(document.createTextNode('Dismissed:'));
+			columns[note].dismissed.sort((a, b) => new Date(b.dismissedAt) - new Date(a.dismissedAt))
+				.forEach(task => createTaskItem(task, dismissedList, false));
 
-            column.appendChild(pendingList);
-            column.appendChild(completedList);
-            column.appendChild(dismissedList);
+			// Append lists to the column
+			column.appendChild(pendingList);
+			column.appendChild(completedList);
+			column.appendChild(dismissedList);
 
-            board.appendChild(column);
-        });
+			// Append the column to the board
+			board.appendChild(column);
+		});
+
     }
 
     renderKanbanBoard();
