@@ -323,6 +323,37 @@ async onEmbedCall(app, ...args) {
 			return;
 		}
 	
+	} else if (args[0] === "createNewNote") {
+		const details = args[0];
+		console.log("details:", details);
+
+		// Display prompt to toggle sort settings
+		const result = await app.prompt(`Details for New Note Creation`, {
+			inputs: [
+				{ label: "Enter a Note Name:", type: "text" },
+				{ label: "Select a Note as Template: (Optional)", type: "note" }
+			]
+		});
+
+		if (result) {
+			console.log("result", result);
+		const [ noteName, copyNote ] = result;
+		console.log("noteName:", noteName);
+		console.log("copyNote:", copyNote);
+		const uuidz = await app.createNote(noteName, ["-reports/-kanban"]);
+		console.log("uuidz:", uuidz);
+		console.log("createNote Successful");
+		if (copyNote) {
+			const markdown = await app.getNoteContent({ uuid: copyNote.uuid });
+			console.log("markdown:", markdown);
+			await app.replaceNoteContent({ uuid: uuidz }, markdown);
+			console.log("Template Successfully Pasted");
+		}
+
+		} else {
+			return; // User canceled the prompt
+		}
+
 	} else if (args[0] === "togglesort") {
 		// Handle sorting settings
 		const sortSetting = await app.settings["Toggle Sort"];
@@ -631,7 +662,8 @@ htmlTemplate = `
     </style>
 </head>
 <body>
-    <button id="cycleButton">Toggle Sort: <div id="valueDisplay">${taskSorting}</div></button>
+    <button id="cycleButton">Toggle Sort: <div id="valueDisplay">None</div></button>
+	<button id="createNewNote">Create New Note</button>
     <br><br>
     <div id="kanban-board"></div>
 
@@ -658,6 +690,17 @@ try {
     let currentIndex = 0;
     const valueDisplay = document.getElementById('valueDisplay');
     const cycleButton = document.getElementById('cycleButton');
+    const createNewNote = document.getElementById('createNewNote');
+
+    /**
+     * Cycles through sorting values (Start Date, Score, Important, Urgent),
+     * updates the display, and re-renders the Kanban board.
+     */
+    function createNewNotecall() {
+		window.callAmplenotePlugin("createNewNote")
+    }
+
+    createNewNote.addEventListener('click', createNewNotecall);
 
     /**
      * Cycles through sorting values (Start Date, Score, Important, Urgent),
@@ -795,7 +838,7 @@ try {
 			header.textContent = note;
 			header.className = 'task-category';
 			column.appendChild(header);
-			header.append(createButton('➕', 'task-button3', () => window.callAmplenotePlugin("createTask", note)));
+			header.append(createButton('➕', 'task-button3', () => window.callAmplenotePlugin("createTask", note.noteUUID)));
 
 			// Pending tasks list
 			const pendingList = document.createElement('div');
