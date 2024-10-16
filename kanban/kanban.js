@@ -1,5 +1,9 @@
 {
-insertText: {
+	
+	
+	
+	
+appOption: {
 /* ----------------------------------- */
 "Tagged!": async function (app) {
 
