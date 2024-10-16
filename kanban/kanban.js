@@ -191,7 +191,8 @@ async onEmbedCall(app, ...args) {
 	} else if (args[0] === "createTask") {
 		const noteName = args[1];
 		console.log("noteName:", noteName);
-		const noteHandleCT = await app.findNote({ name: noteName, tag: "-reports/-kanban" });
+		const kanbanTagz = await app.settings["Kanban Filter Tag"];
+		const noteHandleCT = await app.findNote({ name: noteName, tag: kanbanTagz || "-reports/-kanban" });
 		console.log("noteHandleCT:", noteHandleCT);
 
 		// Fetch sections (headers) from the note associated with the task
@@ -327,7 +328,7 @@ async onEmbedCall(app, ...args) {
 		const details = args[0];
 		console.log("details:", details);
 
-		// Display prompt to toggle sort settings
+		// Display prompt to note creation settings
 		const result = await app.prompt(`Details for New Note Creation`, {
 			inputs: [
 				{ label: "Enter a Note Name:", type: "text" },
@@ -340,7 +341,8 @@ async onEmbedCall(app, ...args) {
 		const [ noteName, copyNote ] = result;
 		console.log("noteName:", noteName);
 		console.log("copyNote:", copyNote);
-		const uuidz = await app.createNote(noteName, ["-reports/-kanban"]);
+		const kanbanTagz = await app.settings["Kanban Filter Tag"];
+		const uuidz = await app.createNote(noteName, [kanbanTagz || "-reports/-kanban"]);
 		console.log("uuidz:", uuidz);
 		console.log("createNote Successful");
 		if (copyNote) {
@@ -350,6 +352,29 @@ async onEmbedCall(app, ...args) {
 			console.log("Template Successfully Pasted");
 		}
 
+		} else {
+			return; // User canceled the prompt
+		}
+
+	} else if (args[0] === "updateTag") {
+		const details = args[0];
+		console.log("details:", details);
+
+		// Handle sorting settings
+		const tagSetting = await app.settings["Kanban Filter Tag"];
+		console.log("tagSetting:", tagSetting);
+
+		// Display prompt to Update Tag settings
+		const result = await app.prompt(`Details for Tag Filtering in Kanban. Current Selection:[${tagSetting}]`, {
+			inputs: [
+				{ label: "Select a Tag: (1)", type: "tags", limit: 1, value: tagSetting }
+			]
+		});
+		
+		if (result) {
+			console.log("result", result);
+			await app.setSetting("Kanban Filter Tag", result);
+			console.log("Tag updated successfully");
 		} else {
 			return; // User canceled the prompt
 		}
@@ -396,7 +421,8 @@ async renderEmbed(app, ...args) {
 	let taskSorting; // Stores the current sorting setting
 
 	// Check if any notes have the tag "-reports/-kanban"
-	const kanbanTag = (await app.filterNotes({ tag: "-reports/-kanban" })).length > 0;
+	const kanbanTagz = await app.settings["Kanban Filter Tag"];
+	const kanbanTag = (await app.filterNotes({ tag: kanbanTagz || "-reports/-kanban" })).length > 0;
 	console.log("kanbanTag:", kanbanTag);
 
 	/**
@@ -468,7 +494,7 @@ async renderEmbed(app, ...args) {
 	  let allTasks = []; // Array to store all tasks
 	  
 	  // Retrieve notes with the kanban tag
-	  const noteHandles = await app.filterNotes({ tag: "-reports/-kanban" });
+	  const noteHandles = await app.filterNotes({ tag: kanbanTagz || "-reports/-kanban" });
 	  console.log("noteHandles:", noteHandles);
 	  
 	  // Iterate through each note to retrieve tasks
@@ -532,6 +558,7 @@ async renderEmbed(app, ...args) {
 	  // Create initial notes for Kanban if none exist
 	  for (const header of goalsSmall) {
 		const uuid = await app.createNote(header, ["-reports/-kanban"]);
+		await app.setSetting("Kanban Filter Tag", "-reports/-kanban");
 		console.log("uuid:", uuid);
 
 		// Alert the user upon successful note creation
@@ -664,6 +691,7 @@ htmlTemplate = `
 <body>
     <button id="cycleButton">Toggle Sort: <div id="valueDisplay">None</div></button>
 	<button id="createNewNote">Create New Note</button>
+	<button id="updateTag">Update Tag</button>
     <br><br>
     <div id="kanban-board"></div>
 
@@ -691,10 +719,19 @@ try {
     const valueDisplay = document.getElementById('valueDisplay');
     const cycleButton = document.getElementById('cycleButton');
     const createNewNote = document.getElementById('createNewNote');
+    const updateTag = document.getElementById('updateTag');
 
     /**
-     * Cycles through sorting values (Start Date, Score, Important, Urgent),
-     * updates the display, and re-renders the Kanban board.
+     * Update the tag used in Kanban
+     */
+    function updateTagcall() {
+		window.callAmplenotePlugin("updateTag")
+    }
+
+    updateTag.addEventListener('click', updateTagcall);
+
+    /**
+     * Create a new note call function.
      */
     function createNewNotecall() {
 		window.callAmplenotePlugin("createNewNote")

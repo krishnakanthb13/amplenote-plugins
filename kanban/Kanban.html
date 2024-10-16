@@ -122,12 +122,13 @@
 <body>
     <button id="cycleButton">Toggle Sort: <div id="valueDisplay">None</div></button>
 	<button id="createNewNote">Create New Note</button>
+	<button id="updateTag">Update Tag</button>
     <br><br>
     <div id="kanban-board"></div>
 
     <script>
 	
-        let tasks = 
+let tasks = 
 [
   {
     "content": "asdf",
@@ -456,13 +457,22 @@ try {
     const valueDisplay = document.getElementById('valueDisplay');
     const cycleButton = document.getElementById('cycleButton');
     const createNewNote = document.getElementById('createNewNote');
+    const updateTag = document.getElementById('updateTag');
 
     /**
-     * Cycles through sorting values (Start Date, Score, Important, Urgent),
-     * updates the display, and re-renders the Kanban board.
+     * Update the tag used in Kanban
+     */
+    function updateTagcall() {
+		window.callAmplenotePlugin("updateTag")
+    }
+
+    updateTag.addEventListener('click', updateTagcall);
+
+    /**
+     * Create a new note call function.
      */
     function createNewNotecall() {
-		() => window.callAmplenotePlugin("createNewNote")
+		window.callAmplenotePlugin("createNewNote")
     }
 
     createNewNote.addEventListener('click', createNewNotecall);
