@@ -399,10 +399,10 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 	"Clikcable Links for Tags": async function (app) {
 /* ----------------------------------- */
 
-	console.log('Tag (Clikcable Links) Started');
+	// console.log('Tag (Clikcable Links) Started');
 	let notes = [];
 	notes = await app.filterNotes({ });
-	console.log("notes:",notes);
+	// console.log("notes:",notes);
 	
 	// Step 1: Get unique tags and sort them
 	const noteTags = Array.from(new Set(notes.flatMap(note => note.tags))).sort();
@@ -452,7 +452,7 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 	const finalMarkdownLinks = Array.from(uniqueMarkdownLinks).join('\n');
 
 	// Print the result
-	console.log(finalMarkdownLinks);
+	// console.log(finalMarkdownLinks);
 
 	const tagMarkdown = `
 ---
@@ -465,7 +465,7 @@ ${finalMarkdownLinks}
 	- Hence having at least one note attached to all the Tags and in all levels, make sense in this case. Rest assured, should be working well.
 **For more details:** [Search queries: tag, filter, and other queries](https://www.amplenote.com/help/search_filter_tags_groups)
 `;
-console.log("tagMarkdown:",tagMarkdown);
+// console.log("tagMarkdown:",tagMarkdown);
 
     // Tag Report
     const tagNoteName = `Tag Clickable Links`;
@@ -474,17 +474,17 @@ console.log("tagMarkdown:",tagMarkdown);
 	  const existingUUID = await app.settings["Tag_Clickable_Links_UUID [Do not Edit!]"];
 	  if (existingUUID) 
 		  return existingUUID;
-	  console.log("existingUUID:",existingUUID);
+	  // console.log("existingUUID:",existingUUID);
 	  const newUUID = await app.createNote(tagNoteName, tagTagName);
 	  await app.setSetting("Tag_Clickable_Links_UUID [Do not Edit!]", newUUID);
 	  return newUUID;
-	  console.log("newUUID:",newUUID);
+	  // console.log("newUUID:",newUUID);
 	})();
-	console.log("tagnoteUUID:",tagnoteUUID);
+	// console.log("tagnoteUUID:",tagnoteUUID);
 	await app.replaceNoteContent({ uuid: tagnoteUUID }, tagMarkdown);
     await app.navigate(`https://www.amplenote.com/notes/${tagnoteUUID}`);
 
-	console.log('Finished');
+	// console.log('Finished');
 	},
 /* ----------------------------------- */
   }
