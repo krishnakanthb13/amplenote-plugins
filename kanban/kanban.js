@@ -719,7 +719,7 @@ htmlTemplate = `
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background: white;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
         #kanban-board {
             display: flex;
@@ -799,21 +799,21 @@ htmlTemplate = `
 			background-color: black;			
             color: #ddd;
         }
-		.high-urgent.high-important {
-			background: linear-gradient(to right, #ff6666, #ff9999); /* Light red to lighter red */
-		}
+.high-urgent.high-important {
+    background: radial-gradient(1023px at 3.1% 6.9%, rgb(255, 230, 230) 0%, rgb(165, 30, 63) 74.9%); /* Lighter red to darker red */
+}
 
-		.high-urgent.low-important {
-			background: linear-gradient(to right, #ffb84d, #ffd699); /* Light orange to lighter orange */
-		}
+.high-urgent.low-important {
+    background: radial-gradient(1023px at 3.1% 6.9%, rgb(255, 235, 200) 0%, rgb(221, 98, 98) 74.9%); /* Lighter orange to darker orange */
+}
 
-		.low-urgent.high-important {
-			background: linear-gradient(to right, #66b3ff, #c2e0ff); /* Light blue to lighter blue */
-		}
+.low-urgent.high-important {
+    background: radial-gradient(1023px at 3.1% 6.9%, rgb(230, 245, 255) 0%, rgb(82, 139, 215) 74.9%); /* Lighter blue to darker blue */
+}
 
-		.low-urgent.low-important {
-			background: linear-gradient(to right, #b3b3b3, #e6e6e6); /* Light gray to lighter gray */
-		}
+.low-urgent.low-important {
+    background: radial-gradient(1023px at 3.1% 6.9%, rgb(240, 240, 240) 0%, rgb(139, 139, 139) 74.9%); /* Lighter gray to darker gray */
+}
         .task-info {
             display: none;
             position: relative;
