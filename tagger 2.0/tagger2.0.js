@@ -340,7 +340,7 @@
 	// console.log('Finished');
 	},
 /* ----------------------------------- */
-	"Groups Clikcable Links": async function (app) {
+	"Clikcable Links for Groups": async function (app) {
 /* ----------------------------------- */
 	// console.log('Groups (Clikcable Links) Started');
 	const groupMarkdown = `
@@ -394,6 +394,59 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 	await app.replaceNoteContent({ uuid: groupnoteUUID }, groupMarkdown);
     await app.navigate(`https://www.amplenote.com/notes/${groupnoteUUID}`);
 
+	},
+/* ----------------------------------- */
+	"Clikcable Links for Tags": async function (app) {
+/* ----------------------------------- */
+
+	console.log('Tag (Clikcable Links) Started');
+	let notes = [];
+	notes = await app.filterNotes({ });
+	console.log("notes:",notes);
+	
+	// Step 1: Get unique tags and sort them
+	const noteTags = Array.from(new Set(notes.flatMap(note => note.tags))).sort();
+
+	// Step 2: Create a function to format the tag into a Markdown link
+	const formatTagToMarkdownLink = (tag) => {
+	  // Retain the leading dash and create a URL-friendly version
+	  const urlTag = tag.replace(/^-/, '').trim(); // Remove only the leading dash
+	  const formattedUrl = `https://www.amplenote.com/notes?tag=${encodeURIComponent(urlTag)}`;
+	  const indentLevel = tag.split('/').length - 1; // Count slashes for indent level
+	  const indent = '  '.repeat(indentLevel); // Create indentation
+	  return `${indent}- [${tag}](${formattedUrl})`; // Keep the leading dash in the link text
+	};
+
+	// Step 3: Create a set to keep track of existing parent tags
+	const parentTags = new Set();
+
+	// Step 4: Build the output
+	const markdownLinks = noteTags.map(tag => {
+	  // Split the tag to determine the parent hierarchy
+	  const parts = tag.split('/');
+	  let parentPath = '';
+
+	  // Build the parent path and check for missing parents
+	  const markdownLines = parts.map(part => {
+		parentPath += `${part}/`; // Construct parent path
+		const trimmedPath = parentPath.slice(0, -1); // Remove trailing slash
+		// If parent path doesn't exist, add it to the set
+		if (!noteTags.includes(trimmedPath)) {
+		  parentTags.add(trimmedPath);
+		}
+		return formatTagToMarkdownLink(tag);
+	  });
+
+	  return markdownLines;
+	});
+
+	// Add parent tags to markdownLinks if they were not initially in noteTags
+	const finalMarkdownLinks = [...parentTags].map(formatTagToMarkdownLink).concat(...markdownLinks.flat());
+
+	// Print the result
+	console.log(finalMarkdownLinks.join('\n'));
+
+	console.log('Finished');
 	},
 /* ----------------------------------- */
   }
