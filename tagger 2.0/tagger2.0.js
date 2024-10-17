@@ -454,12 +454,35 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 	// Print the result
 	console.log(finalMarkdownLinks);
 
-	const groupMarkdown = `
+	const tagMarkdown = `
+---
+${finalMarkdownLinks}
+---
 ### Details<!-- {"collapsed":true} -->
-This brings only Tags which are linked to at least one amplenote.
-Caveat: If a Parent Tag does not contain any notes, then I have added a fix, still it does not do its best. Hence having atleast one note attached to all the Tags and in all levels, make sense in this case. Rest assured, should be working well.
+**Caveat:**
+- This brings only Tags which are linked to at least one amplenote. (Fetches all the Tags).
+- If a Parent Tag does not contain any notes, then I have added a fix, still it does not do its best. 
+	- Hence having at least one note attached to all the Tags and in all levels, make sense in this case. Rest assured, should be working well.
 **For more details:** [Search queries: tag, filter, and other queries](https://www.amplenote.com/help/search_filter_tags_groups)
 `;
+console.log("tagMarkdown:",tagMarkdown);
+
+    // Tag Report
+    const tagNoteName = `Tag Clickable Links`;
+    const tagTagName = ['-reports/-tagger-pro'];
+	const tagnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Tag_Clickable_Links_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  console.log("existingUUID:",existingUUID);
+	  const newUUID = await app.createNote(tagNoteName, tagTagName);
+	  await app.setSetting("Tag_Clickable_Links_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	  console.log("newUUID:",newUUID);
+	})();
+	console.log("tagnoteUUID:",tagnoteUUID);
+	await app.replaceNoteContent({ uuid: tagnoteUUID }, tagMarkdown);
+    await app.navigate(`https://www.amplenote.com/notes/${tagnoteUUID}`);
 
 	console.log('Finished');
 	},
