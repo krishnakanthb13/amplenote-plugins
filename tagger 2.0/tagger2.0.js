@@ -1,4 +1,5 @@
 {
+/* ----------------------------------- */
   // Define an asynchronous function 'noteOption' that takes 'app' and 'noteUUID' as parameters
   async insertText(app, noteUUID) {
     // Log the start of the function
@@ -194,5 +195,151 @@
     }
 
     return null; // Return an empty string after adding tags
+  }, 
+/* ----------------------------------- */
+	appOption: {
+/* ----------------------------------- */
+	"Correlation matrix (Tags) Download!": async function (app) {
+/* ----------------------------------- */
+    const result = await app.prompt("This is the message", {
+      inputs: [ 
+        { label: "Select the Tags to Filter (leave blank to consider all)", type: "tags", limit: 10 },
+        { label: "Format to Download", type: "radio", options: [ { label: "CSV", value: "csv" }, { label: "JSON", value: "json" }, { label: "Array", value: "txt" } ] },
+      ] 
+    });
+
+	if (!result) {
+		app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+		return;
+	}
+	
+	const [ tagNames, downloadType ] = result;
+	console.log("result:",result);
+	const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
+	console.log("tagsArray:",tagsArray);
+ 
+	let notes = [];
+	if (tagsArray.length > 0) {
+		for (let tag of tagsArray) {
+			let taggedNotes = await app.filterNotes({
+				tag
+			});
+			notes = notes.concat(taggedNotes);
+		}
+	}
+	else {
+		notes = await app.filterNotes({ });
+	}
+	console.log("notes:",notes);
+	// Flatten the tags, remove duplicates, and sort the result
+	const noteTags = Array.from(new Set(notes.flatMap(note => note.tags))).sort();
+	console.log("noteTags:",noteTags);
+
+	// Step 1: Extract the tags from each note and flatten them
+	const allTags = notes.map(note => note.tags);
+
+	// Step 2: Get the unique variables (tags)
+	const variables = Array.from(new Set(allTags.flat())).sort();
+
+	// Step 3: Initialize a matrix of zeros (for counting pairs)
+	const matrix = Array(variables.length).fill(0).map(() => Array(variables.length).fill(0));
+
+	// Step 4: Helper function to increment the count for a pair in the matrix
+	const incrementMatrix = (var1, var2) => {
+	  const i = variables.indexOf(var1);
+	  const j = variables.indexOf(var2);
+	  if (i === j) {
+		matrix[i][i] += 1; // Only increment once if it's a self pair (same tag)
+	  } else {
+		matrix[i][j] += 1;
+		matrix[j][i] += 1; // Increment both sides for different pairs (symmetrical)
+	  }
+	};
+
+	// Step 5: Process each combination of tags
+	allTags.forEach(combo => {
+	  if (combo.length === 1) {
+		// If the tag is alone, increment the count for the same tag (self pair)
+		incrementMatrix(combo[0], combo[0]);
+	  } else {
+		// If there are multiple tags, increment counts for each pair
+		for (let i = 0; i < combo.length; i++) {
+		  for (let j = i + 1; j < combo.length; j++) {
+			incrementMatrix(combo[i], combo[j]);
+		  }
+		}
+	  }
+	});
+
+	// Output the variables (unique tags) and the matrix
+	console.log('Variables (Tags):', variables);
+	console.log('Matrix:', matrix);	
+
+	// Function to download content in specified format
+	const downloadFile = (data, fileName, type) => {
+	  const blob = new Blob([data], { type });
+	  const link = document.createElement('a');
+	  link.href = URL.createObjectURL(blob);
+	  link.download = fileName;
+	  document.body.appendChild(link);
+	  link.click();
+	  document.body.removeChild(link);
+	};
+	console.log('download started.');	
+
+    // Function to get current date and time formatted as YYMMDD_HHMMSS
+    function getCurrentDateTime() {
+        const now = new Date();
+
+        // Format the date and time as per requirement
+        const YYMMDD = now.toLocaleDateString('en-GB').split('/').reverse().join('');
+        const HHMMSS = now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '');
+
+        return { YYMMDD, HHMMSS };
+    }
+
+    // Generate a new note with the results
+    const { YYMMDD, HHMMSS } = getCurrentDateTime();
+
+	// Generate file based on downloadType
+	const generateDownload = (downloadType) => {
+	  let content = '';
+	  const fileName = `notes.${downloadType}`;
+	  
+	  if (downloadType === 'csv') {
+		// Generate CSV
+		const csvRows = ['Tags,\'' + variables.join(',\'')];
+		matrix.forEach((row, i) => {
+		  csvRows.push('\'' + variables[i] + ',' + row.join(','));
+		});
+		content = csvRows.join('\n');
+		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.csv`, 'text/csv');
+		
+	  } else if (downloadType === 'json') {
+		// Generate JSON
+		const jsonObject = {
+		  variables: variables,
+		  matrix: matrix
+		};
+		content = JSON.stringify(jsonObject, null, 2);
+		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.json`, 'application/json');
+		
+	  } else if (downloadType === 'txt') {
+		// Generate Matrix text format (for Array)
+		const matrixRows = ['Matrix Representation:'];
+		matrix.forEach((row, i) => {
+		  matrixRows.push(variables[i] + ' -> ' + row.join(' '));
+		});
+		content = matrixRows.join('\n');
+		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
+	  } else {
+		console.log('Invalid download type');
+	  }
+	};
+	generateDownload(downloadType);
+	console.log('Finished');
+	},
+/* ----------------------------------- */
+
   }
 }
