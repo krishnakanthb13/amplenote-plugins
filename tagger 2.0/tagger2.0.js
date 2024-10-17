@@ -201,10 +201,10 @@
 /* ----------------------------------- */
 	"Correlation Matrix for Tags": async function (app) {
 /* ----------------------------------- */
-    const result = await app.prompt("This is the message", {
+    const result = await app.prompt("Select details for Correlation Matrix for Tags", {
       inputs: [ 
         { label: "Select the Tags to Filter (leave blank to consider all)", type: "tags", limit: 10 },
-        { label: "Format to Download", type: "radio", options: [ { label: "CSV", value: "csv" }, { label: "JSON", value: "json" }, { label: "Array", value: "txt" } ] },
+        { label: "Format to Download", type: "radio", options: [ { label: "CSV (Suggested)", value: "csv" }, { label: "JSON", value: "json" }, { label: "Array", value: "txt" } ] },
       ] 
     });
 
