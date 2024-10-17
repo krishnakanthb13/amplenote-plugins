@@ -199,7 +199,7 @@
 /* ----------------------------------- */
 	appOption: {
 /* ----------------------------------- */
-	"Correlation matrix (Tags) Download!": async function (app) {
+	"Correlation Matrix for Tags": async function (app) {
 /* ----------------------------------- */
     const result = await app.prompt("This is the message", {
       inputs: [ 
@@ -214,9 +214,9 @@
 	}
 	
 	const [ tagNames, downloadType ] = result;
-	console.log("result:",result);
+	// console.log("result:",result);
 	const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
-	console.log("tagsArray:",tagsArray);
+	// console.log("tagsArray:",tagsArray);
  
 	let notes = [];
 	if (tagsArray.length > 0) {
@@ -230,10 +230,10 @@
 	else {
 		notes = await app.filterNotes({ });
 	}
-	console.log("notes:",notes);
+	// console.log("notes:",notes);
 	// Flatten the tags, remove duplicates, and sort the result
 	const noteTags = Array.from(new Set(notes.flatMap(note => note.tags))).sort();
-	console.log("noteTags:",noteTags);
+	// console.log("noteTags:",noteTags);
 
 	// Step 1: Extract the tags from each note and flatten them
 	const allTags = notes.map(note => note.tags);
@@ -272,8 +272,8 @@
 	});
 
 	// Output the variables (unique tags) and the matrix
-	console.log('Variables (Tags):', variables);
-	console.log('Matrix:', matrix);	
+	// console.log('Variables (Tags):', variables);
+	// console.log('Matrix:', matrix);	
 
 	// Function to download content in specified format
 	const downloadFile = (data, fileName, type) => {
@@ -285,7 +285,7 @@
 	  link.click();
 	  document.body.removeChild(link);
 	};
-	console.log('download started.');	
+	// console.log('download started.');	
 
     // Function to get current date and time formatted as YYMMDD_HHMMSS
     function getCurrentDateTime() {
@@ -333,13 +333,68 @@
 		content = matrixRows.join('\n');
 		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
 	  } else {
-		console.log('Invalid download type');
+		// console.log('Invalid download type');
 	  }
 	};
 	generateDownload(downloadType);
-	console.log('Finished');
+	// console.log('Finished');
 	},
 /* ----------------------------------- */
+	"Groups Clikcable Links": async function (app) {
+/* ----------------------------------- */
+	// console.log('Groups (Clikcable Links) Started');
+	const groupMarkdown = `
+---
+### Grouped-folders
+- **[Archived](https://www.amplenote.com/notes?group=archived)**: Notes that have been archived or auto-archived.
+- **[Vault Notes](https://www.amplenote.com/notes?group=vault)**: Encrypted notes.
+- **[Deleted Notes](https://www.amplenote.com/notes?group=deleted)**: Notes that have been deleted in the past 30 days.
+- **[Active plugin notes](https://www.amplenote.com/notes?group=plugin)**: Notes that represent currently active plugins.
+### Notes-contain-tasks
+- **[Task Lists](https://www.amplenote.com/notes?group=taskLists)**: Notes that contain tasks inside them.
+### Notes-untagged
+- **[Un-tagged](https://www.amplenote.com/notes?group=untagged)**: Notes that are not assigned any tag.
+### Shared-notes
+- **[Created by me](https://www.amplenote.com/notes?group=created)**: Notes that have been created by the current user.
+- **[Shared publicly](https://www.amplenote.com/notes?group=public)**: Notes that have been published to the web via a public URL.
+- **[Shared notes](https://www.amplenote.com/notes?group=shared)**: Notes created by anyone that are shared with at least another user.
+- **[Notes shared with me](https://www.amplenote.com/notes?group=shareReceived)**: Notes that have been created by others but shared with the current user.
+- **[Notes not created by me](https://www.amplenote.com/notes?group=notCreated)**: Notes that have been created by others but shared with the current user.
+- **[Notes I shared with others](https://www.amplenote.com/notes?group=shareSent)**: Notes created by the current user and shared with others.
+### Creation-date
+- **[This week](https://www.amplenote.com/notes?group=thisWeek)**: Notes that have been created some time over the previous 7 days.
+- **[Today](https://www.amplenote.com/notes?group=today)**: Notes that have been edited in the current day.
+### Low-level-queries
+- **[Notes Saving](https://www.amplenote.com/notes?group=saving)**: Notes that have pending changes to push to the server.
+- **[Notes Downloading](https://www.amplenote.com/notes?group=stale)**: Notes that have pending changes to pull from the server.
+- **[Notes Indexing](https://www.amplenote.com/notes?group=indexing)**: Notes that are currently being indexed for search locally.
+---
+### Details<!-- {"collapsed":true} -->
+This Markdown format presents the data clearly, with **Categories** as headers and each option having a link and description.
+**Options** first with **Markdown links**, followed by the **description**, and use **categories** as headers.
+**For more details:** [Search queries: tag, filter, and other queries](https://www.amplenote.com/help/search_filter_tags_groups)
+`;
 
+	// console.log("groupMarkdown:",groupMarkdown);
+
+    // Group Report
+    const groupNoteName = `Group Clickable Links`;
+    const groupTagName = ['-reports/-tagger-pro'];
+	const groupnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Group_Clickable_Links_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  // console.log("existingUUID:",existingUUID);
+	  const newUUID = await app.createNote(groupNoteName, groupTagName);
+	  await app.setSetting("Group_Clickable_Links_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	  // console.log("newUUID:",newUUID);
+	})();
+	// console.log("groupnoteUUID:",groupnoteUUID);
+	await app.replaceNoteContent({ uuid: groupnoteUUID }, groupMarkdown);
+    await app.navigate(`https://www.amplenote.com/notes/${groupnoteUUID}`);
+
+	},
+/* ----------------------------------- */
   }
 }
