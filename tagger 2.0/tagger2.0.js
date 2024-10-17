@@ -409,7 +409,6 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 
 	// Step 2: Create a function to format the tag into a Markdown link
 	const formatTagToMarkdownLink = (tag) => {
-	  // Retain the leading dash and create a URL-friendly version
 	  const urlTag = tag.replace(/^-/, '').trim(); // Remove only the leading dash
 	  const formattedUrl = `https://www.amplenote.com/notes?tag=${encodeURIComponent(urlTag)}`;
 	  const indentLevel = tag.split('/').length - 1; // Count slashes for indent level
@@ -421,30 +420,46 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 	const parentTags = new Set();
 
 	// Step 4: Build the output
-	const markdownLinks = noteTags.map(tag => {
+	const uniqueMarkdownLinks = new Set(); // Use a Set to avoid duplicates
+
+	noteTags.forEach(tag => {
 	  // Split the tag to determine the parent hierarchy
 	  const parts = tag.split('/');
 	  let parentPath = '';
 
+	  // Create Markdown link for the tag
+	  const markdownLink = formatTagToMarkdownLink(tag);
+	  
+	  // Add the tag link to the unique set
+	  uniqueMarkdownLinks.add(markdownLink);
+	  
 	  // Build the parent path and check for missing parents
-	  const markdownLines = parts.map(part => {
+	  parts.forEach(part => {
 		parentPath += `${part}/`; // Construct parent path
 		const trimmedPath = parentPath.slice(0, -1); // Remove trailing slash
 		// If parent path doesn't exist, add it to the set
 		if (!noteTags.includes(trimmedPath)) {
 		  parentTags.add(trimmedPath);
 		}
-		return formatTagToMarkdownLink(tag);
 	  });
-
-	  return markdownLines;
 	});
 
-	// Add parent tags to markdownLinks if they were not initially in noteTags
-	const finalMarkdownLinks = [...parentTags].map(formatTagToMarkdownLink).concat(...markdownLinks.flat());
+	// Add parent tags to uniqueMarkdownLinks if they were not initially in noteTags
+	parentTags.forEach(parentTag => {
+	  uniqueMarkdownLinks.add(formatTagToMarkdownLink(parentTag));
+	});
+
+	// Convert the Set to an array and join for output
+	const finalMarkdownLinks = Array.from(uniqueMarkdownLinks).join('\n');
 
 	// Print the result
-	console.log(finalMarkdownLinks.join('\n'));
+	console.log(finalMarkdownLinks);
+	const groupMarkdown = `
+### Details<!-- {"collapsed":true} -->
+This brings only Tags which are linked to at least one amplenote.
+Caveat: If a Parent Tag does not contain any notes, then I have added a fix, still it does not do its best. Hence having atleast one note attached to all the Tags and in all levels, make sense in this case. Rest assured, should be working well.
+**For more details:** [Search queries: tag, filter, and other queries](https://www.amplenote.com/help/search_filter_tags_groups)
+`;
 
 	console.log('Finished');
 	},
