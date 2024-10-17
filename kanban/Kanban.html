@@ -624,7 +624,7 @@ try {
 			header.textContent = note;
 			header.className = 'task-category';
 			column.appendChild(header);
-			header.append(createButton('➕', 'task-button3', () => window.callAmplenotePlugin("createTask", note.noteUUID)));
+			header.append(createButton('➕', 'task-button3', () => window.callAmplenotePlugin("createTask", note)));
 
 			// Pending tasks list
 			const pendingList = document.createElement('div');
