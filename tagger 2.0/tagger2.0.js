@@ -409,8 +409,7 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 
 	// Step 2: Create a function to format the tag into a Markdown link
 	const formatTagToMarkdownLink = (tag) => {
-	  const urlTag = tag.replace(/^-/, '').trim(); // Remove only the leading dash
-	  const formattedUrl = `https://www.amplenote.com/notes?tag=${encodeURIComponent(urlTag)}`;
+	  const formattedUrl = `https://www.amplenote.com/notes?tag=${encodeURIComponent(tag.trim())}`; // Keep the leading dash in URL
 	  const indentLevel = tag.split('/').length - 1; // Count slashes for indent level
 	  const indent = '  '.repeat(indentLevel); // Create indentation
 	  return `${indent}- [${tag}](${formattedUrl})`; // Keep the leading dash in the link text
@@ -454,6 +453,7 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 
 	// Print the result
 	console.log(finalMarkdownLinks);
+
 	const groupMarkdown = `
 ### Details<!-- {"collapsed":true} -->
 This brings only Tags which are linked to at least one amplenote.
