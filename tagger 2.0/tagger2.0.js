@@ -340,9 +340,9 @@
 	// console.log('Finished');
 	},
 /* ----------------------------------- */
-	"Clikcable Links for Groups": async function (app) {
+	"Clickable Links for Groups": async function (app) {
 /* ----------------------------------- */
-	// console.log('Groups (Clikcable Links) Started');
+	// console.log('Groups (Clickable Links) Started');
 	const groupMarkdown = `
 ---
 ### Grouped-folders
@@ -396,10 +396,10 @@ This Markdown format presents the data clearly, with **Categories** as headers a
 
 	},
 /* ----------------------------------- */
-	"Clikcable Links for Tags": async function (app) {
+	"Clickable Links for Tags": async function (app) {
 /* ----------------------------------- */
 
-	// console.log('Tag (Clikcable Links) Started');
+	// console.log('Tag (Clickable Links) Started');
 	let notes = [];
 	notes = await app.filterNotes({ });
 	// console.log("notes:",notes);
