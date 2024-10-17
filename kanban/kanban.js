@@ -3,19 +3,19 @@ appOption: {
 /* ----------------------------------- */
 "Tagged!": async function (app) {
 
-	console.log("Lets get it started.");
+	// console.log("Lets get it started.");
 
 	const destNoteUUID = await (async () => {
 	  const existingUUID = await app.settings["Current_Note_UUID [Do not Edit!]"];
-	  console.log("existingUUID",existingUUID);
+	  // console.log("existingUUID",existingUUID);
 	  if (existingUUID) 
 		  return existingUUID;
 	  const newUUID = await app.createNote("Kanban Board", ["-reports/-kanban"]);
 	  await app.setSetting("Current_Note_UUID [Do not Edit!]", newUUID);
 	  return newUUID;
-	  console.log("newUUID",newUUID);
+	  // console.log("newUUID",newUUID);
 	})();
-	console.log("destNoteUUID",destNoteUUID);
+	// console.log("destNoteUUID",destNoteUUID);
 
 	/**
 	 * Inserts an object element into the selection in the application context.
@@ -33,7 +33,7 @@ appOption: {
 		`<object data="plugin://${app.context.pluginUUID}" data-aspect-ratio="1" />`
 	);
 	await app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-	console.log("Plugin Inserted into Note", destNoteUUID);
+	// console.log("Plugin Inserted into Note", destNoteUUID);
 
 	// Return null as no further action is required
 	return null;
@@ -56,33 +56,33 @@ async onEmbedCall(app, ...args) {
 	if (args[0] === "taskEdit") {
 		// Get the task UUID from arguments
 		const taskUuid = args[1];
-		console.log(`Editing task with UUID: ${taskUuid}`);
+		// console.log(`Editing task with UUID: ${taskUuid}`);
 
 		// Fetch the task details using its UUID
 		const task = await app.getTask(taskUuid);
-		console.log(task, JSON.stringify(task));
+		// console.log(task, JSON.stringify(task));
 
 		// Create options for updating task importance and urgency
 		const importantValue = task.important
 			? [{ label: "True", value: "" }, { label: "False", value: "false" }]
 			: [{ label: "True", value: "true" }, { label: "False", value: "" }];
-		console.log("importantValue", importantValue);
+		// console.log("importantValue", importantValue);
 
 		const urgentValue = task.urgent
 			? [{ label: "True", value: "" }, { label: "False", value: "false" }]
 			: [{ label: "True", value: "true" }, { label: "False", value: "" }];
-		console.log("urgentValue", urgentValue);
+		// console.log("urgentValue", urgentValue);
 
 		// Fetch sections (headers) from the note associated with the task
 		const sections = await app.getNoteSections({ uuid: task.noteUUID });
-		console.log("sections", sections);
+		// console.log("sections", sections);
 
 		// Transform sections into a label-value format for easier selection in the prompt
 		const transformedSections = sections.map((item, index) => {
 			const headerValue = item.heading ? item.heading.text : "Main"; // Default to "Main" if no heading
 			return { label: headerValue, value: index };
 		});
-		console.log("transformedSections:", transformedSections);
+		// console.log("transformedSections:", transformedSections);
 
 		// Display a prompt to update task details
 		const result = await app.prompt("Update Task Details", {
@@ -106,8 +106,8 @@ async onEmbedCall(app, ...args) {
 			let [taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus] = result;
 			notesections = parseFloat(notesections);
 			taskScore = parseFloat(taskScore);
-			console.log("result", result);
-			console.log(taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus);
+			// console.log("result", result);
+			// console.log(taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus);
 
 			const currentTimeUnix = Math.floor(Date.now() / 1000);
 
@@ -124,7 +124,7 @@ async onEmbedCall(app, ...args) {
 			 */
 			async function moveTaskToHeader(noteUUID, uuidToMove, headerNumber) {
 				const markdown = await app.getNoteContent({ uuid: noteUUID });
-				console.log("markdown", markdown);
+				// console.log("markdown", markdown);
 				const lines = markdown.split('\n');
 				const updatedLines = [];
 				let taskLine = null;
@@ -143,10 +143,10 @@ async onEmbedCall(app, ...args) {
 					if (headerMatch) {
 						headers.push(headerMatch[0]);
 					}
-					console.log("headers", headers);
+					// console.log("headers", headers);
 				}
-				console.log("updatedLines", updatedLines);
-				console.log("taskLine", taskLine);
+				// console.log("updatedLines", updatedLines);
+				// console.log("taskLine", taskLine);
 
 				// Insert task under the correct header
 				if (taskLine) {
@@ -175,28 +175,28 @@ async onEmbedCall(app, ...args) {
 			// Update task status based on user input
 			if (taskStatus === 1) {
 				updatedFields.completedAt = currentTimeUnix;
-				console.log("Task marked as completed.");
+				// console.log("Task marked as completed.");
 			} else if (taskStatus === 2) {
 				updatedFields.dismissedAt = currentTimeUnix;
-				console.log("Task marked as dismissed.");
+				// console.log("Task marked as dismissed.");
 			} else if (taskStatus === 3) {
 				updatedFields.startAt = currentTimeUnix;
-				console.log("Task marked as started.");
+				// console.log("Task marked as started.");
 			}
 
 			// Update the task if any fields have changed
 			if (Object.keys(updatedFields).length > 0) {
 				await app.updateTask(taskUuid, updatedFields);
-				console.log("Task Updated with changes:", updatedFields);
+				// console.log("Task Updated with changes:", updatedFields);
 			} else {
-				console.log("No changes detected, task not updated.");
+				// console.log("No changes detected, task not updated.");
 			}
 			
 			if (notesections >= 0 && taskNoteuuid.uuid == task.noteUUID) {
 				updatedMarkdown = await moveTaskToHeader(task.noteUUID, task.uuid, notesections);
-				console.log("updatedMarkdown", updatedMarkdown);
+				// console.log("updatedMarkdown", updatedMarkdown);
 				await app.replaceNoteContent({ uuid: task.noteUUID }, updatedMarkdown);
-				console.log("Task Moved Successfully.");
+				// console.log("Task Moved Successfully.");
 			}
 			
 		} else {
@@ -217,7 +217,7 @@ async onEmbedCall(app, ...args) {
 
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-				console.log("Page refreshed!");
+				// console.log("Page refreshed!");
 			}, 500);
 		}
 
@@ -226,21 +226,21 @@ async onEmbedCall(app, ...args) {
 
 	} else if (args[0] === "createTask") {
 		const noteName = args[1];
-		console.log("noteName:", noteName);
+		// console.log("noteName:", noteName);
 		const kanbanTagz = await app.settings["Kanban Filter Tag"];
 		const noteHandleCT = await app.findNote({ name: noteName, tag: kanbanTagz || "-reports/-kanban" });
-		console.log("noteHandleCT:", noteHandleCT);
+		// console.log("noteHandleCT:", noteHandleCT);
 
 		// Fetch sections (headers) from the note associated with the task
 		const sections = await app.getNoteSections({ uuid: noteHandleCT.uuid });
-		console.log("sections", sections);
+		// console.log("sections", sections);
 
 		// Transform sections into a label-value format for easier selection in the prompt
 		const transformedSections = sections.map((item, index) => {
 			const headerValue = item.heading ? item.heading.text : "Main"; // Default to "Main" if no heading
 			return { label: headerValue, value: index };
 		});
-		console.log("transformedSections:", transformedSections);
+		// console.log("transformedSections:", transformedSections);
 
 		// Display a prompt to update task details
 		const result = await app.prompt("Update Task Details", {
@@ -264,8 +264,8 @@ async onEmbedCall(app, ...args) {
 			let [taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus] = result;
 			notesections = parseFloat(notesections);
 			taskScore = parseFloat(taskScore);
-			console.log("result", result);
-			console.log(taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus);
+			// console.log("result", result);
+			// console.log(taskContent, taskImportant, taskUrgent, taskNoteuuid, notesections, taskScore, taskStatus);
 
 			const currentTimeUnix = Math.floor(Date.now() / 1000);
 
@@ -282,7 +282,7 @@ async onEmbedCall(app, ...args) {
 			 */
 			async function moveTaskToHeader(noteUUID, uuidToMove, headerNumber) {
 				const markdown = await app.getNoteContent({ uuid: noteUUID });
-				console.log("markdown", markdown);
+				// console.log("markdown", markdown);
 				const lines = markdown.split('\n');
 				const updatedLines = [];
 				let taskLine = null;
@@ -301,10 +301,10 @@ async onEmbedCall(app, ...args) {
 					if (headerMatch) {
 						headers.push(headerMatch[0]);
 					}
-					console.log("headers", headers);
+					// console.log("headers", headers);
 				}
-				console.log("updatedLines", updatedLines);
-				console.log("taskLine", taskLine);
+				// console.log("updatedLines", updatedLines);
+				// console.log("taskLine", taskLine);
 
 				// Insert task under the correct header
 				if (taskLine) {
@@ -323,7 +323,7 @@ async onEmbedCall(app, ...args) {
 			// Check which fields have changed and update them
 			if (taskNoteuuid) {
 				taskUUID = await app.insertTask({ uuid: taskNoteuuid.uuid }, { text: "" });
-				console.log("Task is created and taskUUID:", taskUUID);
+				// console.log("Task is created and taskUUID:", taskUUID);
 			}
 			if (taskContent) updatedFields.content = taskContent;
 			if (taskImportant) updatedFields.important = true;
@@ -332,27 +332,27 @@ async onEmbedCall(app, ...args) {
 			// Update task status based on user input
 			if (taskStatus === 1) {
 				updatedFields.completedAt = currentTimeUnix;
-				console.log("Task marked as completed.");
+				// console.log("Task marked as completed.");
 			} else if (taskStatus === 2) {
 				updatedFields.dismissedAt = currentTimeUnix;
-				console.log("Task marked as dismissed.");
+				// console.log("Task marked as dismissed.");
 			} else if (taskStatus === 3) {
 				updatedFields.startAt = currentTimeUnix;
-				console.log("Task marked as started.");
+				// console.log("Task marked as started.");
 			}
 			// Update the task if any fields have changed
 			if (Object.keys(updatedFields).length > 0) {
 				await app.updateTask(taskUUID, updatedFields);
-				console.log("Task Updated with changes:", updatedFields);
+				// console.log("Task Updated with changes:", updatedFields);
 			} else {
-				console.log("No changes detected, task not updated.");
+				// console.log("No changes detected, task not updated.");
 			}
 			
 			if (notesections >= 0 && taskNoteuuid.uuid) {
 				updatedMarkdown = await moveTaskToHeader(taskNoteuuid.uuid, taskUUID, notesections);
-				console.log("updatedMarkdown", updatedMarkdown);
+				// console.log("updatedMarkdown", updatedMarkdown);
 				await app.replaceNoteContent({ uuid: taskNoteuuid.uuid }, updatedMarkdown);
-				console.log("Task Moved Successfully.");
+				// console.log("Task Moved Successfully.");
 			}
 			
 		} else {
@@ -373,7 +373,7 @@ async onEmbedCall(app, ...args) {
 
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-				console.log("Page refreshed!");
+				// console.log("Page refreshed!");
 			}, 500);
 		}
 
@@ -382,7 +382,7 @@ async onEmbedCall(app, ...args) {
 	
 	} else if (args[0] === "createNewNote") {
 		const details = args[0];
-		console.log("details:", details);
+		// console.log("details:", details);
 
 		// Display prompt to note creation settings
 		const result = await app.prompt(`Details for New Note Creation`, {
@@ -393,19 +393,19 @@ async onEmbedCall(app, ...args) {
 		});
 
 		if (result) {
-			console.log("result", result);
+			// console.log("result", result);
 		const [ noteName, copyNote ] = result;
-		console.log("noteName:", noteName);
-		console.log("copyNote:", copyNote);
+		// console.log("noteName:", noteName);
+		// console.log("copyNote:", copyNote);
 		const kanbanTagz = await app.settings["Kanban Filter Tag"];
 		const uuidz = await app.createNote(noteName, [kanbanTagz || "-reports/-kanban"]);
-		console.log("uuidz:", uuidz);
-		console.log("createNote Successful");
+		// console.log("uuidz:", uuidz);
+		// console.log("createNote Successful");
 		if (copyNote) {
 			const markdown = await app.getNoteContent({ uuid: copyNote.uuid });
-			console.log("markdown:", markdown);
+			// console.log("markdown:", markdown);
 			await app.replaceNoteContent({ uuid: uuidz }, markdown);
-			console.log("Template Successfully Pasted");
+			// console.log("Template Successfully Pasted");
 		} else {
 			const note = await app.notes.find(uuidz);
 			const taskUUID = await note.insertTask({ content: "Temp: This Task is created by [Kanban Plugin](https://www.amplenote.com/plugins?sort_by=newest)" });
@@ -428,7 +428,7 @@ async onEmbedCall(app, ...args) {
 
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-				console.log("Page refreshed!");
+				// console.log("Page refreshed!");
 			}, 500);
 		}
 
@@ -437,11 +437,11 @@ async onEmbedCall(app, ...args) {
 
 	} else if (args[0] === "updateTag") {
 		const details = args[0];
-		console.log("details:", details);
+		// console.log("details:", details);
 
 		// Handle sorting settings
 		const tagSetting = await app.settings["Kanban Filter Tag"];
-		console.log("tagSetting:", tagSetting);
+		// console.log("tagSetting:", tagSetting);
 
 		// Display prompt to Update Tag settings
 		const result = await app.prompt(`Details for Tag Filtering in Kanban. Current Selection:[${tagSetting}]`, {
@@ -451,9 +451,9 @@ async onEmbedCall(app, ...args) {
 		});
 		
 		if (result) {
-			console.log("result", result);
+			// console.log("result", result);
 			await app.setSetting("Kanban Filter Tag", result);
-			console.log("Tag updated successfully");
+			// console.log("Tag updated successfully");
 		} else {
 			return; // User canceled the prompt
 		}
@@ -471,7 +471,7 @@ async onEmbedCall(app, ...args) {
 
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-				console.log("Page refreshed!");
+				// console.log("Page refreshed!");
 			}, 500);
 		}
 
@@ -481,7 +481,7 @@ async onEmbedCall(app, ...args) {
 	} else if (args[0] === "togglesort") {
 		// Handle sorting settings
 		const sortSetting = await app.settings["Toggle Sort"];
-		console.log("sortSetting:", sortSetting);
+		// console.log("sortSetting:", sortSetting);
 
 		// Display prompt to toggle sort settings
 		const result = await app.prompt(`Sort Tasks. Current Setting: ${sortSetting}`, {
@@ -500,7 +500,7 @@ async onEmbedCall(app, ...args) {
 		});
 
 		if (result) {
-			console.log("result", result);
+			// console.log("result", result);
 			await app.setSetting("Toggle Sort", result);
 		} else {
 			return; // User canceled the prompt
@@ -519,7 +519,7 @@ async onEmbedCall(app, ...args) {
 
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-				console.log("Page refreshed!");
+				// console.log("Page refreshed!");
 			}, 500);
 		}
 
@@ -541,7 +541,7 @@ async onEmbedCall(app, ...args) {
 
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
-				console.log("Page refreshed!");
+				// console.log("Page refreshed!");
 			}, 500);
 		}
 
@@ -549,13 +549,13 @@ async onEmbedCall(app, ...args) {
 		refreshKanbanPage();
 
 	} else {
-		console.log("Does not seem to be working!", args);
+		// console.log("Does not seem to be working!", args);
 	}
     },
 /* ----------------------------------- */
 async renderEmbed(app, ...args) {
 	let _args = JSON.stringify(args[0]);
-	console.log(_args);
+	// console.log(_args);
 
 	let htmlTemplate = ""; // Placeholder for HTML output (if needed)
 	let allTasksText; // Stores the JSON string of all tasks for logging
@@ -564,7 +564,7 @@ async renderEmbed(app, ...args) {
 	// Check if any notes have the tag "-reports/-kanban"
 	const kanbanTagz = await app.settings["Kanban Filter Tag"];
 	const kanbanTag = (await app.filterNotes({ tag: kanbanTagz || "-reports/-kanban" })).length > 0;
-	console.log("kanbanTag:", kanbanTag);
+	// console.log("kanbanTag:", kanbanTag);
 
 	/**
 	 * Formats the task's repeat information.
@@ -636,18 +636,18 @@ async renderEmbed(app, ...args) {
 	  
 	  // Retrieve notes with the kanban tag
 	  const noteHandles = await app.filterNotes({ tag: kanbanTagz || "-reports/-kanban" });
-	  console.log("noteHandles:", noteHandles);
+	  // console.log("noteHandles:", noteHandles);
 	  
 	  // Iterate through each note to retrieve tasks
 	  for (let note of noteHandles) {
 		const noteUUID = note.uuid;
 		const noteTags = note.tags.join(", ");
-		console.log("noteUUID:", noteUUID);
-		console.log("noteTags:", noteTags);
+		// console.log("noteUUID:", noteUUID);
+		// console.log("noteTags:", noteTags);
 
 		// Fetch tasks from the current note
 		const tasks = await app.getNoteTasks({ uuid: noteUUID }, { includeDone: true });
-		console.log("tasks:", tasks);
+		// console.log("tasks:", tasks);
 
 		// Process each task and add relevant info
 		for (let i = 0; i < tasks.length; i++) {
@@ -666,7 +666,7 @@ async renderEmbed(app, ...args) {
 		}
 	  }
 
-	  console.log("allTasks:", allTasks);
+	  // console.log("allTasks:", allTasks);
 	  
 	  // Sorting logic based on user settings
 	  taskSorting = app.settings["Toggle Sort"] || 'taskScore'; // Default to 'taskScore' if not set
@@ -685,22 +685,22 @@ async renderEmbed(app, ...args) {
 
 	  // Convert all tasks to JSON for logging
 	  allTasksText = JSON.stringify(allTasks, null, 2);
-	  console.log("allTasksText:", allTasksText);
+	  // console.log("allTasksText:", allTasksText);
 
 	} else {
 	  // Define the headers for Kanban notes
 	  const headersBig = ["To Do", "In Progress", "Review", "Blocked", "Completed", "Backlog", "On Hold", "Ready for Testing", "Deployed", "Archived"];
 	  const headersSmall = ["To Do", "In Progress", "Review", "Completed"];
 	  const goalsSmall = ["Life Goals", "Yearly Goals", "Monthly Goals", "Today's Tasks"];
-	  console.log("headersBig:", headersBig);
-	  console.log("headersSmall:", headersSmall);
-	  console.log("goalsSmall:", goalsSmall);
+	  // console.log("headersBig:", headersBig);
+	  // console.log("headersSmall:", headersSmall);
+	  // console.log("goalsSmall:", goalsSmall);
 	  
 	  // Create initial notes for Kanban if none exist
 	  for (const header of goalsSmall) {
 		const uuid = await app.createNote(header, ["-reports/-kanban"]);
 		await app.setSetting("Kanban Filter Tag", "-reports/-kanban");
-		console.log("uuid:", uuid);
+		// console.log("uuid:", uuid);
 
 		// Alert the user upon successful note creation
 		app.alert("Success! Looks like it’s your first time running the program, so we created a few notes with a specific tag to get you rolling. Now you can run the Kanban Plugin again and see at your brand-new board!");
@@ -840,7 +840,7 @@ htmlTemplate = `
     <script>
         
   const tasks = ${allTasksText};
-  console.log("tasks:", tasks);
+  // console.log("tasks:", tasks);
 
 try {
     /**
@@ -1069,7 +1069,7 @@ try {
 `;
  
       return(htmlTemplate);
-	  console.log(htmlTemplate);
+	  // console.log(htmlTemplate);
      
 },
 
