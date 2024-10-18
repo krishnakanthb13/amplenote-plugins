@@ -204,7 +204,7 @@
     const result = await app.prompt("Select details for Correlation Matrix for Tags", {
       inputs: [ 
         { label: "Select the Tags to Filter (leave blank to consider all)", type: "tags", limit: 10 },
-        { label: "Format to Download", type: "radio", options: [ { label: "CSV (Suggested)", value: "csv" }, { label: "JSON", value: "json" }, { label: "Array", value: "txt" } ] },
+        { label: "Format to Download", type: "radio", options: [ { label: "Document Report (Suggested - Simple)", value: "report" }, { label: "CSV Table (Suggested - Analysis)", value: "csv" }, { label: "JSON", value: "json" }, { label: "Array", value: "txt" } ] },
       ] 
     });
 
@@ -301,6 +301,26 @@
     // Generate a new note with the results
     const { YYMMDD, HHMMSS } = getCurrentDateTime();
 
+	// Function to generate text report excluding zero matches
+	const generateTextReport = () => {
+	  let report = '';
+
+	  variables.forEach((tag, i) => {
+		const matches = [];
+		matrix[i].forEach((count, j) => {
+		  if (count > 0) {
+			matches.push(`${variables[j]}: ${count}`);
+		  }
+		});
+
+		if (matches.length > 0) {
+		  report += `- Tag: ${tag}\nMatch:\n${matches.join('\n')}\n\n`;
+		}
+	  });
+
+	  return report;
+	};
+
 	// Generate file based on downloadType
 	const generateDownload = (downloadType) => {
 	  let content = '';
@@ -313,7 +333,7 @@
 		  csvRows.push('\'' + variables[i] + ',' + row.join(','));
 		});
 		content = csvRows.join('\n');
-		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.csv`, 'text/csv');
+		downloadFile(content, `Correlation count matrix (Tags CSV Table) ${YYMMDD}-${HHMMSS}.csv`, 'text/csv');
 		
 	  } else if (downloadType === 'json') {
 		// Generate JSON
@@ -322,7 +342,7 @@
 		  matrix: matrix
 		};
 		content = JSON.stringify(jsonObject, null, 2);
-		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.json`, 'application/json');
+		downloadFile(content, `Correlation count matrix (Tags JSON) ${YYMMDD}-${HHMMSS}.json`, 'application/json');
 		
 	  } else if (downloadType === 'txt') {
 		// Generate Matrix text format (for Array)
@@ -331,7 +351,11 @@
 		  matrixRows.push(variables[i] + ' -> ' + row.join(' '));
 		});
 		content = matrixRows.join('\n');
-		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
+		downloadFile(content, `Correlation count matrix (Tags Matrix) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
+	  } else if (downloadType === 'report') {
+		// Generate the tag match report with non-zero counts
+		content = generateTextReport();
+		downloadFile(content, `Correlation count matrix (Tag Match Report) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
 	  } else {
 		// console.log('Invalid download type');
 	  }
