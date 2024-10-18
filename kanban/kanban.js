@@ -163,8 +163,8 @@ async onEmbedCall(app, ...args) {
 
 			// Check which fields have changed and update them
 			if (taskContent !== task.content) updatedFields.content = taskContent;
-			if (taskImportant) updatedFields.important = !task.important;
-			if (taskUrgent) updatedFields.urgent = !task.urgent;
+			if (taskImportant !== task.important) updatedFields.important = taskImportant;
+			if (taskUrgent !== task.urgent) updatedFields.urgent = taskUrgent;
 
 			if (taskNoteuuid.uuid !== task.noteUUID) {
 				updatedFields.noteUUID = taskNoteuuid.uuid;
@@ -218,7 +218,7 @@ async onEmbedCall(app, ...args) {
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
 				// console.log("Page refreshed!");
-			}, 500);
+			}, 100);
 		}
 
 		// Call the function to refresh the page
@@ -374,7 +374,7 @@ async onEmbedCall(app, ...args) {
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
 				// console.log("Page refreshed!");
-			}, 500);
+			}, 100);
 		}
 
 		// Call the function to refresh the page
@@ -429,7 +429,7 @@ async onEmbedCall(app, ...args) {
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
 				// console.log("Page refreshed!");
-			}, 500);
+			}, 100);
 		}
 
 		// Call the function to refresh the page
@@ -472,7 +472,7 @@ async onEmbedCall(app, ...args) {
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
 				// console.log("Page refreshed!");
-			}, 500);
+			}, 100);
 		}
 
 		// Call the function to refresh the page
@@ -520,7 +520,7 @@ async onEmbedCall(app, ...args) {
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
 				// console.log("Page refreshed!");
-			}, 500);
+			}, 100);
 		}
 
 		// Call the function to refresh the page
@@ -542,7 +542,7 @@ async onEmbedCall(app, ...args) {
 				// Navigate to the refreshed page after content is updated
 				app.navigate(`https://www.amplenote.com/notes/${destNoteUUID}`);
 				// console.log("Page refreshed!");
-			}, 500);
+			}, 100);
 		}
 
 		// Call the function to refresh the page
