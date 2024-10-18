@@ -199,7 +199,7 @@
 /* ----------------------------------- */
 	appOption: {
 /* ----------------------------------- */
-	"Correlation Matrix for Tags": async function (app) {
+	"Correlation Count Matrix for Tags": async function (app) {
 /* ----------------------------------- */
     const result = await app.prompt("Select details for Correlation Matrix for Tags", {
       inputs: [ 
