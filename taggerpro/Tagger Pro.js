@@ -204,7 +204,7 @@
     const result = await app.prompt("Select details for Correlation Matrix for Tags", {
       inputs: [ 
         { label: "Select the Tags to Filter (leave blank to consider all)", type: "tags", limit: 10 },
-        { label: "Format to Download", type: "radio", options: [ { label: "Document Report (Suggested - Simple)", value: "report" }, { label: "CSV Table (Suggested - Analysis)", value: "csv" }, { label: "JSON", value: "json" }, { label: "Array", value: "txt" } ] },
+        { label: "Format to Download", type: "radio", options: [ { label: "Document Report (Suggested - Simple)", value: "report" }, { label: "CSV Table (Suggested - Analysis)", value: "csv" }, { label: "JSON", value: "json" }, { label: "Matrix", value: "txt" } ] },
       ] 
     });
 
