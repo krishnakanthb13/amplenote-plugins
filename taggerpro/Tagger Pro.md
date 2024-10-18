@@ -1,7 +1,7 @@
 ﻿---
 title: Tagger Pro
 uuid: 672c22b2-521d-11ef-8c2f-0663d8339c46
-version: 805
+version: 851
 created: '2024-08-04T10:22:52+05:30'
 tags:
   - '-t/amplenote/mine'
@@ -32,7 +32,7 @@ The intuitive prompt-based interface and asynchronous updates ensure a user-frie
 
 ![](https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/b7de21d5-951c-41a0-8173-11058a738424.png) [^2]
 
-![](https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/1cc7eae9-aee5-471c-8ec1-2afa2b6ee744.png) [^3]
+![](https://images.amplenote.com/672c22b2-521d-11ef-8c2f-0663d8339c46/f87c65e5-98b7-4cc9-b944-6fc2f5dfe234.png) [^3]
 
 ---
 
@@ -70,7 +70,7 @@ This plugin allows users to customize their notes by modifying names, adding tag
 
     - It gives you a report of comparative analysis using Correlation Matrix, It give you a count of occurrence two tags have occurred together.
 
-        - You can get his in CSV (Suggested), JSON, Matrix Downloadable formats.
+        - You can get his in Document Report (Suggested - Simple), CSV Table (Suggested - Analysis), JSON, Matrix Downloadable formats.
 
 - <mark style="color:#BBA215;">Clickable Links for Groups:<!-- {"cycleColor":"25"} --></mark> 
 
@@ -298,12 +298,12 @@ This plugin allows users to customize their notes by modifying names, adding tag
 /* ----------------------------------- */
 	appOption: {
 /* ----------------------------------- */
-	"Correlation Matrix for Tags": async function (app) {
+	"Correlation Count Matrix for Tags": async function (app) {
 /* ----------------------------------- */
     const result = await app.prompt("Select details for Correlation Matrix for Tags", {
       inputs: [ 
         { label: "Select the Tags to Filter (leave blank to consider all)", type: "tags", limit: 10 },
-        { label: "Format to Download", type: "radio", options: [ { label: "CSV", value: "csv" }, { label: "JSON", value: "json" }, { label: "Array", value: "txt" } ] },
+        { label: "Format to Download", type: "radio", options: [ { label: "Document Report (Suggested - Simple)", value: "report" }, { label: "CSV Table (Suggested - Analysis)", value: "csv" }, { label: "JSON", value: "json" }, { label: "Matrix", value: "txt" } ] },
       ] 
     });
 
@@ -400,6 +400,26 @@ This plugin allows users to customize their notes by modifying names, adding tag
     // Generate a new note with the results
     const { YYMMDD, HHMMSS } = getCurrentDateTime();
 
+	// Function to generate text report excluding zero matches
+	const generateTextReport = () => {
+	  let report = '';
+
+	  variables.forEach((tag, i) => {
+		const matches = [];
+		matrix[i].forEach((count, j) => {
+		  if (count > 0) {
+			matches.push(`${variables[j]}: ${count}`);
+		  }
+		});
+
+		if (matches.length > 0) {
+		  report += `- Tag: ${tag}\nMatch:\n${matches.join('\n')}\n\n`;
+		}
+	  });
+
+	  return report;
+	};
+
 	// Generate file based on downloadType
 	const generateDownload = (downloadType) => {
 	  let content = '';
@@ -412,7 +432,7 @@ This plugin allows users to customize their notes by modifying names, adding tag
 		  csvRows.push('\'' + variables[i] + ',' + row.join(','));
 		});
 		content = csvRows.join('\n');
-		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.csv`, 'text/csv');
+		downloadFile(content, `Correlation count matrix (Tags CSV Table) ${YYMMDD}-${HHMMSS}.csv`, 'text/csv');
 		
 	  } else if (downloadType === 'json') {
 		// Generate JSON
@@ -421,7 +441,7 @@ This plugin allows users to customize their notes by modifying names, adding tag
 		  matrix: matrix
 		};
 		content = JSON.stringify(jsonObject, null, 2);
-		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.json`, 'application/json');
+		downloadFile(content, `Correlation count matrix (Tags JSON) ${YYMMDD}-${HHMMSS}.json`, 'application/json');
 		
 	  } else if (downloadType === 'txt') {
 		// Generate Matrix text format (for Array)
@@ -430,7 +450,11 @@ This plugin allows users to customize their notes by modifying names, adding tag
 		  matrixRows.push(variables[i] + ' -> ' + row.join(' '));
 		});
 		content = matrixRows.join('\n');
-		downloadFile(content, `Correlation matrix (Tags) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
+		downloadFile(content, `Correlation count matrix (Tags Matrix) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
+	  } else if (downloadType === 'report') {
+		// Generate the tag match report with non-zero counts
+		content = generateTextReport();
+		downloadFile(content, `Correlation count matrix (Tag Match Report) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
 	  } else {
 		// console.log('Invalid download type');
 	  }
@@ -618,6 +642,10 @@ ${finalMarkdownLinks}
 
     - Implemented, tested Clickable Links for Tags (Getting and de-duplicating the tags was fine, but handling different scenarios was the hard part, and getting the indent was also a good learning here. Then the only caveat is all the tags should have a note for this to pick it up and utilize here, especially parent tags, if not note is present, the code creates a dummy link - still not perfect as it drops it at the last).
 
+- October 18th, 2024
+
+    - Added an additional download type as `Document Report (Suggested - Simple)`, and made some changes to the already existing names of the download options for better understanding and decision making process. Tested and rolled out.
+
 ---
 
 ### <mark style="color:#F5614C;">**Implemented & Upcoming:**<!-- {"cycleColor":"23"} --></mark>
@@ -680,7 +708,7 @@ ${finalMarkdownLinks}
 
 ---
 
-Time Invested For this Plugin: 4h 32m + 5h 29m = 10h 1m \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 4h 32m + 7h 20m + 4h 44m = 16h 38m \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 [^1]: Tagger 2.0
     X
@@ -706,17 +734,21 @@ Time Invested For this Plugin: 4h 32m + 5h 29m = 10h 1m \[Not including the idea
     Create a new note named Tagger Pro:
     1! to navigate \| e to open \| Tab to toggle task lookup \| ctrito to toggle dialog
 
-[^3]: Tagger Pro
+[^3]: D
+    Tagger Pro
     X
     Select details for Correlation Matrix for Tags
     -Select the Tags to Filter (leave blank to consider all)
     Search for a tag
     Format to Download
     O
-    CSV
+    Document Report (Suggested - Simple)
+    O
+    CSV Table (Suggested - Analysis)
     O
     JSON
-    Array
+    O
+    Matrix
     SUBMIT
     Cancel
 

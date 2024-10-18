@@ -1,7 +1,7 @@
 ﻿---
 title: Tagger Pro - Docs 2
 uuid: 2a01db68-8c86-11ef-8f66-ceeb1c0a5b1e
-version: 81
+version: 92
 created: '2024-10-17T18:18:52+05:30'
 tags:
   - '-9-permanent'
@@ -73,6 +73,8 @@ To create a correlation matrix that captures the relationships between different
 1. **Download Options**:
 
     1. Based on the user's selected format, the correlation matrix is generated as follows:
+
+        1. **Document**: For ever Tag, its matching pair occurrence count.
 
         1. **CSV**: Rows contain the tags and their counts.
 
