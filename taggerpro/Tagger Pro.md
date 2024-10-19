@@ -1,7 +1,7 @@
 ﻿---
 title: Tagger Pro
 uuid: 672c22b2-521d-11ef-8c2f-0663d8339c46
-version: 851
+version: 859
 created: '2024-08-04T10:22:52+05:30'
 tags:
   - '-t/amplenote/mine'
@@ -70,7 +70,7 @@ This plugin allows users to customize their notes by modifying names, adding tag
 
     - It gives you a report of comparative analysis using Correlation Matrix, It give you a count of occurrence two tags have occurred together.
 
-        - You can get his in Document Report (Suggested - Simple), CSV Table (Suggested - Analysis), JSON, Matrix Downloadable formats.
+        - You can get his in Document Report (Suggested), Document Report - Trend, CSV Table (Analysis), JSON, Matrix Downloadable formats.
 
 - <mark style="color:#BBA215;">Clickable Links for Groups:<!-- {"cycleColor":"25"} --></mark> 
 
@@ -303,7 +303,15 @@ This plugin allows users to customize their notes by modifying names, adding tag
     const result = await app.prompt("Select details for Correlation Matrix for Tags", {
       inputs: [ 
         { label: "Select the Tags to Filter (leave blank to consider all)", type: "tags", limit: 10 },
-        { label: "Format to Download", type: "radio", options: [ { label: "Document Report (Suggested - Simple)", value: "report" }, { label: "CSV Table (Suggested - Analysis)", value: "csv" }, { label: "JSON", value: "json" }, { label: "Matrix", value: "txt" } ] },
+        { label: "Format to Download", type: "radio", 
+			options: [ 
+				{ label: "Document Report (Suggested)", value: "report" }, 
+				{ label: "Document Report - Trend", value: "trend" }, 
+				{ label: "CSV Table (Analysis)", value: "csv" }, 
+				{ label: "JSON", value: "json" }, 
+				{ label: "Matrix", value: "txt" } 
+			] 
+		},
       ] 
     });
 
@@ -420,6 +428,34 @@ This plugin allows users to customize their notes by modifying names, adding tag
 	  return report;
 	};
 
+	// Function to generate trend report showing highest match counts (excluding self-pairs)
+	const generateTrendReport = () => {
+	  let trends = [];
+
+	  // Collect all pairs and their match counts, but exclude self-pairs (e.g., a, a)
+	  for (let i = 0; i < variables.length; i++) {
+		for (let j = i + 1; j < variables.length; j++) {  // Start from i+1 to avoid self-pairs
+		  if (matrix[i][j] > 0) {
+			trends.push({
+			  pair: [variables[i], variables[j]],
+			  count: matrix[i][j]
+			});
+		  }
+		}
+	  }
+
+	  // Sort pairs by their match count in descending order
+	  trends.sort((a, b) => b.count - a.count);
+
+	  // Create the report in the desired format
+	  let trendReport = 'Trend of highest match counts:\n\n';
+	  trends.forEach((trend, index) => {
+		trendReport += `- ${index + 1} - ${trend.pair.join(', ')}: ${trend.count}\n`;
+	  });
+
+	  return trendReport;
+	};
+
 	// Generate file based on downloadType
 	const generateDownload = (downloadType) => {
 	  let content = '';
@@ -455,6 +491,10 @@ This plugin allows users to customize their notes by modifying names, adding tag
 		// Generate the tag match report with non-zero counts
 		content = generateTextReport();
 		downloadFile(content, `Correlation count matrix (Tag Match Report) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
+	  } else if (downloadType === 'trend') {
+		// Generate the trend report of highest match counts
+		content = generateTrendReport();
+		downloadFile(content, `Correlation count matrix (Tag Match Trend) ${YYMMDD}-${HHMMSS}.txt`, 'text/plain');
 	  } else {
 		// console.log('Invalid download type');
 	  }
