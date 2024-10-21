@@ -1,7 +1,7 @@
 ﻿---
 title: Plugin Maniac
 uuid: d123725e-3fe6-11ef-b01a-26e37c279344
-version: 2199
+version: 2573
 created: '2024-07-12T06:06:46+05:30'
 tags:
   - '-1-working-big'
@@ -47,29 +47,31 @@ tags:
 
     - <mark style="background-color:undefined;">**<< Priority >>**<!-- {"backgroundCycleColor":"58"} --></mark>
 
-        - New: [ANP ATTACHMENT MANAGER](https://www.amplenote.com/notes/a46dc2b2-6b49-11ef-a2ef-126797ff7670) - Super-be One! <mark style="background-color:undefined;">**<< Quick Win !!**<!-- {"backgroundCycleColor":"58"} --></mark>
+        - New: [ANP EXPORT](https://www.amplenote.com/notes/4867ed96-4ce3-11ef-b542-26e37c279344) > Understanding Existing [LINK ](https://www.amplenote.com/bounty_plugins#--Export-plugin) + Start Building one by one! <mark style="color:#F5614C;">**YOU CAN DO IT!**<!-- {"cycleColor":"23"} --></mark> **- <mark style="color:#3CC07D;">$1,000 = 83,722.50 Indian Rupee<!-- {"cycleColor":"27"} --></mark>**
 
-        - New: [ANP LINK MANAGER](https://www.amplenote.com/notes/ac798abc-7437-11ef-861e-eeba9115991d) - Super-be One! <mark style="background-color:undefined;">**<< Quick Win !!**<!-- {"backgroundCycleColor":"58"} --></mark>
+        - New: [ANP KANBAN](https://www.amplenote.com/notes/ae5601ec-5936-11ef-a559-b6c19b417745) <mark style="color:#F8D616;">> Add Graphical User Interface - using Embed tech.<!-- {"cycleColor":"25"} --></mark> - $2,500 <mark style="color:#F5614C;">**YOU CAN DO IT!**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$2,500 = 2,00,992.38 Indian Rupee**<!-- {"cycleColor":"27"} --></mark>
 
-        - Update: [ANP TAGGER 2.0](https://www.amplenote.com/notes/24121146-4591-11ef-b82c-26e37c279344) - Advanced Options. Tagger Pro + Tagger Pro Max 😃 <mark style="background-color:undefined;">**<< Focus Improvements !!**<!-- {"backgroundCycleColor":"60"} --></mark> <mark style="background-color:undefined;">**<< Quick !!**<!-- {"backgroundCycleColor":"58"} --></mark>
+        - New: [ANP DICE](https://www.amplenote.com/notes/7a2ff26e-4591-11ef-a034-26e37c279344) - $250 <mark style="color:#F5614C;">**YOU CAN DO IT!**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$250 = 20,992.38 Indian Rupee**<!-- {"cycleColor":"27"} --></mark>
 
-        - New: [ANP DICE](https://www.amplenote.com/notes/7a2ff26e-4591-11ef-a034-26e37c279344) - $250 <mark style="color:#F5614C;">**YOU CAN DO IT!**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$500 = 20,992.38 Indian Rupee**<!-- {"cycleColor":"27"} --></mark>
+        - Update: [ANP EXTRACT TO A NOTE 2.0](https://www.amplenote.com/notes/1eae9d2c-4812-11ef-82cc-6ef34fa959ce) - Super-be One! <mark style="background-color:undefined;">**<< Quick Win !!**<!-- {"backgroundCycleColor":"58"} --></mark>
+
+        - <mark style="color:#BBA215;">**Something Unique:**<!-- {"cycleColor":"25"} --></mark>
+
+            - New: [ANP ADVANCED SEARCH](https://www.amplenote.com/notes/733c79ba-7f10-11ef-b83b-beb264bbea1a) - Super-be One! <mark style="background-color:undefined;">**<< Quick Win !!**<!-- {"backgroundCycleColor":"58"} --></mark>
+
+            - New: [ANP ADVANCDED FORMULAS](https://www.amplenote.com/notes/a1c991fa-7f10-11ef-b83b-beb264bbea1a) - Super-be One! <mark style="background-color:undefined;">**<< Quick Win !!**<!-- {"backgroundCycleColor":"58"} --></mark>
 
         - New: [ANP ORPHANED NOTES](https://www.amplenote.com/notes/dd7a2896-5935-11ef-bf57-22074e34eefe)  <mark style="background-color:undefined;">**<< Quick Win !!**<!-- {"backgroundCycleColor":"58"} --></mark>
 
     - <mark style="background-color:undefined;">**<< Post Priority >>**<!-- {"backgroundCycleColor":"58"} --></mark>
 
-        - New: [ANP EXPORT](https://www.amplenote.com/notes/4867ed96-4ce3-11ef-b542-26e37c279344) > Understanding Existing [LINK ](https://www.amplenote.com/bounty_plugins#--Export-plugin) + Start Building one by one! <mark style="color:#F5614C;">**YOU CAN DO IT!**<!-- {"cycleColor":"23"} --></mark> **- <mark style="color:#3CC07D;">$1,000 = 83,722.50 Indian Rupee<!-- {"cycleColor":"27"} --></mark>**
-
         - Update: [ANP METADATA 0.0](https://www.amplenote.com/notes/7ae3a396-4590-11ef-a034-26e37c279344)  - Ultimatum!
 
         - Update: [ANP REVIEW NOTES](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344) [ANP SERENDIPITY](https://www.amplenote.com/notes/e5fab774-5c5a-11ef-af1b-22074e34eefe) <mark style="color:#BBA215;">> Add Graphical User Interface - using Embed tech.<!-- {"cycleColor":"25"} --></mark>
 
-            - New: [ANP SERENDIPITY](https://www.amplenote.com/notes/e5fab774-5c5a-11ef-af1b-22074e34eefe)  - `Add on to `[`ANP REVIEW NOTES`](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344)` `
+            - New: [ANP SERENDIPITY](https://www.amplenote.com/notes/e5fab774-5c5a-11ef-af1b-22074e34eefe)  - `Add on to `[`ANP REVIEW NOTES`](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344)` ` <mark style="color:#F2998C;">**- Looks like there is not pay for it !!!**<!-- {"cycleColor":"34"} --></mark>
 
         - New: [ANP SPEECHMATICS](https://www.amplenote.com/notes/b73529cc-6f3a-11ef-88df-c280a4b4c37e)  - Cool one
-
-        - New: [ANP KANBAN](https://www.amplenote.com/notes/ae5601ec-5936-11ef-a559-b6c19b417745) <mark style="color:#F8D616;">> Add Graphical User Interface - using Embed tech.<!-- {"cycleColor":"25"} --></mark>
 
         - New: [ANP TREE (GRAPH 2.0)](https://www.amplenote.com/notes/432c86d4-5215-11ef-8c2f-0663d8339c46)  <mark style="background-color:undefined;">**<< Quick !!**<!-- {"backgroundCycleColor":"58"} --></mark>
 
@@ -80,6 +82,12 @@ tags:
     - [Next - Plugin Maniac](https://www.amplenote.com/notes/206d41bc-4593-11ef-a034-26e37c279344) 
 
 - <mark style="background-color:undefined;">**HISTORY**:<!-- {"backgroundCycleColor":"58"} --></mark>
+
+    - ~~New:~~ [~~ANP SORT TABLES~~](https://www.amplenote.com/notes/82e8fa14-7f10-11ef-b83b-beb264bbea1a) ~~- Super-be One! <mark style="background-color:undefined;">**<< Quick Win !! **<!-- {"backgroundCycleColor":"58"} --></mark>~~<mark style="background-color:#F2998C;">**Looks like it already Exist.**<!-- {"backgroundCycleColor":"34"} --></mark>
+
+    - ~~Update:~~ [~~ANP TAGGER 2.0~~](https://www.amplenote.com/notes/24121146-4591-11ef-b82c-26e37c279344) [~~Tagger Pro~~](https://www.amplenote.com/notes/672c22b2-521d-11ef-8c2f-0663d8339c46) ~~- Advanced Options. Tagger Pro + Tagger Pro Max 😃 <mark style="background-color:undefined;">**<< Focus Improvements !!**<!-- {"backgroundCycleColor":"60"} --></mark> <mark style="background-color:undefined;">**<< Quick !! **<!-- {"backgroundCycleColor":"58"} --></mark>~~October 17th, 2024 (19:18:35)
+
+    - ~~New:~~ [~~ANP ATTACHMENT MANAGER~~](https://www.amplenote.com/notes/a46dc2b2-6b49-11ef-a2ef-126797ff7670) ~~+~~ [~~ANP LINK MANAGER~~](https://www.amplenote.com/notes/ac798abc-7437-11ef-861e-eeba9115991d) ~~- Super-be One! <mark style="background-color:undefined;">**<< Quick Win !! **<!-- {"backgroundCycleColor":"58"} --></mark>~~October 13th, 2024 (15:40:14)
 
     - [~~ANP HEADER COLLAPSE~~](https://www.amplenote.com/notes/3be1d490-73ff-11ef-b9d3-eeba9115991d) <mark style="background-color:undefined;">~~**<< Quick Win !! **~~<!-- {"backgroundCycleColor":"58"} --></mark>September 16th, 2024 (17:23:30)
 
@@ -99,29 +107,29 @@ tags:
 
     - ~~New:~~ [ANP CALENDAR PRO](https://www.amplenote.com/notes/d442ccbc-62b6-11ef-98c7-22074e34eefe)  ~~- Completed~~ August 26th, 2024 (21:49:25)
 
-    - New: [ANP GRAPHING UTILITY](https://www.amplenote.com/notes/1a3f9b2a-6058-11ef-b2f6-22074e34eefe)  - $750  <mark style="color:#F5614C;">**YOU CAN DO IT! > `YOU DID IT `**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$750 = 62,798.70 Indian Rupee**<!-- {"cycleColor":"27"} --></mark> <mark style="color:#BBA215;">**\[Pending!!!\] + \[Waiting!!!\] + \[Dono!!!\]**<!-- {"cycleColor":"25"} --></mark> 
+    - New: [ANP GRAPHING UTILITY](https://www.amplenote.com/notes/1a3f9b2a-6058-11ef-b2f6-22074e34eefe)  - $750  <mark style="color:#F5614C;">**YOU CAN DO IT! > `YOU DID IT `**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$750 = 62,798.70 Indian Rupee**<!-- {"cycleColor":"27"} --></mark> <mark style="color:#BBA215;">**\[Pending!!!\] + \[Waiting!!!\] + \[Dono!!!\]**<!-- {"cycleColor":"25"} --></mark>
 
         - ~~Completed by August 24th, 2024, Dono means - one more person has released a plugin in a similar fashion.~~
 
-    - New: [ANP IMAGE VIEWER](https://www.amplenote.com/notes/8b8dac54-4591-11ef-a034-26e37c279344) - $1,250 + $500 <mark style="color:#F5614C;">**YOU CAN DO IT! > `YOU DID IT`**<!-- {"cycleColor":"23"} --></mark> **- <mark style="color:#3CC07D;">$1,750 = 1,46,934.81 Indian Rupee<!-- {"cycleColor":"27"} --></mark> <mark style="color:#BBA215;">\[Pending!!!\] + \[Waiting!!!\]<!-- {"cycleColor":"25"} --></mark>**
+    - New: [ANP IMAGE VIEWER](https://www.amplenote.com/notes/8b8dac54-4591-11ef-a034-26e37c279344) - $1,250 + $500 <mark style="color:#F5614C;">**YOU CAN DO IT! > `YOU DID IT`**<!-- {"cycleColor":"23"} --></mark> **- <mark style="color:#3CC07D;">$1,750 = 1,46,934.81 Indian Rupee <!-- {"cycleColor":"27"} --></mark><mark style="color:#BBA215;">~~\[Pending!!!\] + \[Waiting!!!\]   ~~<!-- {"cycleColor":"25"} --></mark><mark style="background-color:undefined;color:#454545;">🌈🌈\[You Did It!\] 🌈🌈<!-- {"backgroundCycleColor":"60","cycleColor":"22"} --></mark>**
 
         - ~~Get the pending things from~~ [~~August 16th, 2024~~](https://www.amplenote.com/notes/2cfc1f1e-5b4d-11ef-9dcc-22074e34eefe)  August 18th, 2024 (13:38:43)
 
         - ~~Email them with these details, and along with the rest pending ones!~~ - before August 21st, 2024 (20:48:52)
 
-    - New: [ANP REVIEW NOTES](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344) - $750  <mark style="color:#F5614C;">**YOU CAN DO IT! > `YOU DID IT `**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$750 = 62,798.70 Indian Rupee**<!-- {"cycleColor":"27"} --></mark> <mark style="color:#BBA215;">**\[Pending!!!\] + \[Waiting!!!\]**<!-- {"cycleColor":"25"} --></mark>
+    - New: [ANP REVIEW NOTES](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344) - $750  <mark style="color:#F5614C;">**YOU CAN DO IT! > `YOU DID IT `**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$750 = 62,798.70 Indian Rupee **<!-- {"cycleColor":"27"} --></mark><mark style="color:#BBA215;">**~~\[Pending!!!\] + \[Waiting!!!\]   ~~**<!-- {"cycleColor":"25"} --></mark><mark style="background-color:undefined;color:#454545;">**🌈🌈\[You Did It!\] 🌈🌈**<!-- {"backgroundCycleColor":"60","cycleColor":"22"} --></mark>
 
         - ~~> Framework already build up in book 5, start collecting code requirements + start building + reach the destination!~~
 
         - ~~Completed the Basics~~ [~~ANP REVIEW NOTES~~](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344)  August 06th, 2024 (23:02:45)
 
-        - Add a Check function, for the link option to work only when the link is in the note note-reviewer, or has any of the tags involved. 
+        - Add a Check function, for the <mark style="color:#F8914D;">**link option**<!-- {"cycleColor":"24"} --></mark> to work only when the link is in the note note-reviewer, or has any of the tags involved. 
 
         - See for further options. [Link](https://www.amplenote.com/help/developing_amplenote_plugins#Action_function_arguments). In [Review-Notes🕵 Planning](https://www.amplenote.com/notes/fd7b8cfe-50be-11ef-a406-f2c7410336d6)  search for 1724257742 (For initial works.).  <mark style="background-color:undefined;">**<< Request !!**<!-- {"backgroundCycleColor":"58"} --></mark>
 
     - ~~New:~~ [~~ANP TAGGER 2.0~~](https://www.amplenote.com/notes/24121146-4591-11ef-b82c-26e37c279344) ~~- Completed the full Plugin + Testing -~~ August 04th, 2024 (15:03:34)
 
-    - New: [ANP METADATA 1.0](https://www.amplenote.com/notes/46646354-458f-11ef-a034-26e37c279344)  <mark style="color:#F5614C;">**YOU CAN DO IT! > `YOU DID IT `**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$500 = 41,981.45 Indian Rupee**<!-- {"cycleColor":"27"} --></mark> <mark style="color:#BBA215;">**\[Pending!!!\] + \[Waiting!!!\]**<!-- {"cycleColor":"25"} --></mark>
+    - New: [ANP METADATA 1.0](https://www.amplenote.com/notes/46646354-458f-11ef-a034-26e37c279344)  <mark style="color:#F5614C;">**YOU CAN DO IT! > `YOU DID IT `**<!-- {"cycleColor":"23"} --></mark> - <mark style="color:#3CC07D;">**$500 = 41,981.45 Indian Rupee **<!-- {"cycleColor":"27"} --></mark><mark style="color:#BBA215;">**~~\[Pending!!!\] + \[Waiting!!!\]   ~~**<!-- {"cycleColor":"25"} --></mark><mark style="background-color:undefined;color:#454545;">**🌈🌈\[You Did It!\] 🌈🌈**<!-- {"backgroundCycleColor":"60","cycleColor":"22"} --></mark>
 
         - ~~Updates:~~ [~~ANP METADATA 1.0~~](https://www.amplenote.com/notes/46646354-458f-11ef-a034-26e37c279344) ~~> Testing + Formatting + Split into main and test code in notepad.js - Labor Intense!~~ July 31st, 2024 (13:28:14) 
 
@@ -133,7 +141,7 @@ tags:
 
     - ~~Updates:~~ [~~ANP EXTRACT TO A NOTE 2.0~~](https://www.amplenote.com/notes/1eae9d2c-4812-11ef-82cc-6ef34fa959ce)  ~~> Minor tweaks!~~ <mark style="color:#FFFFFF;">July 28th, 2024 (18:37:35)<!-- {"cycleColor":"55"} --></mark>
 
-    - <mark style="color:#F8D616;">Started tracking from July 28th, 2024 (18:37:35).<!-- {"cycleColor":"25"} --></mark>
+    - <mark style="color:#F8D616;">**Started tracking from July 28th, 2024 (18:37:35).**<!-- {"cycleColor":"25"} --></mark>
 
 ---
 
@@ -157,7 +165,7 @@ tags:
 
 1. [ANP EXTRACT TO A NOTE 2.0](https://www.amplenote.com/notes/1eae9d2c-4812-11ef-82cc-6ef34fa959ce)  > [Extract to a note 2.0](https://www.amplenote.com/notes/ee62e45c-4811-11ef-bd43-6ef34fa959ce) 
 
-1. [ANP TAGGER 2.0](https://www.amplenote.com/notes/24121146-4591-11ef-b82c-26e37c279344)  > [Tagger 2.0](https://www.amplenote.com/notes/672c22b2-521d-11ef-8c2f-0663d8339c46) 
+1. [ANP TAGGER 2.0](https://www.amplenote.com/notes/24121146-4591-11ef-b82c-26e37c279344)  > [Tagger 2.0](https://www.amplenote.com/notes/47e5a396-8c66-11ef-be52-ceeb1c0a5b1e) [Tagger Pro](https://www.amplenote.com/notes/672c22b2-521d-11ef-8c2f-0663d8339c46) 
 
 1. [ANP REVIEW NOTES](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344)  > [Notes Reviewer](https://www.amplenote.com/notes/b7e36f98-532c-11ef-8716-0663d8339c46) 
 
@@ -185,23 +193,31 @@ tags:
 
 - Completed: <mark style="background-color:undefined;">**(Should reach the 700 installs / 15 upvotes!)\*\*\***<!-- {"backgroundCycleColor":"58"} --></mark>
 
-    - [ANP METADATA 0.0](https://www.amplenote.com/notes/7ae3a396-4590-11ef-a034-26e37c279344) - $500  <mark style="background-color:undefined;">**<< Focus Improvements  1 !!**<!-- {"backgroundCycleColor":"60"} --></mark> <mark style="color:#F8D616;">**\[Pending!!!\]**<!-- {"cycleColor":"25"} --></mark>
+    - [ANP METADATA 0.0](https://www.amplenote.com/notes/7ae3a396-4590-11ef-a034-26e37c279344) - $500  <mark style="background-color:undefined;">**<< Focus Improvements  1 !!    **<!-- {"backgroundCycleColor":"60"} --></mark><mark style="background-color:undefined;color:#454545;">**🌈🌈\[You Did It!\] 🌈🌈**<!-- {"backgroundCycleColor":"60","cycleColor":"22"} --></mark>
 
-    - [ANP REVIEW NOTES](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344)  + [ANP SERENDIPITY](https://www.amplenote.com/notes/e5fab774-5c5a-11ef-af1b-22074e34eefe) - $750  <mark style="background-color:undefined;">**<< Focus Improvements  2 !!**<!-- {"backgroundCycleColor":"60"} --></mark> <mark style="color:#F8D616;">**\[Pending!!!\]**<!-- {"cycleColor":"25"} --></mark>
+    - [ANP REVIEW NOTES](https://www.amplenote.com/notes/031faa50-4723-11ef-aabb-26e37c279344)  - $750  <mark style="background-color:undefined;">**<< Focus Improvements  2 !!    **<!-- {"backgroundCycleColor":"60"} --></mark><mark style="background-color:undefined;color:#454545;">**🌈🌈\[You Did It!\] 🌈🌈**<!-- {"backgroundCycleColor":"60","cycleColor":"22"} --></mark>
 
-    - [ANP IMAGE VIEWER](https://www.amplenote.com/notes/8b8dac54-4591-11ef-a034-26e37c279344) - $1,250 + $500  <mark style="background-color:undefined;">**<< Focus Improvements 3 !!**<!-- {"backgroundCycleColor":"60"} --></mark> <mark style="color:#BBA215;">**\[Pending!!!\]**<!-- {"cycleColor":"25"} --></mark>
+        - [ANP SERENDIPITY](https://www.amplenote.com/notes/e5fab774-5c5a-11ef-af1b-22074e34eefe) 
 
-    - [ANP GRAPHING UTILITY](https://www.amplenote.com/notes/1a3f9b2a-6058-11ef-b2f6-22074e34eefe) - $750 <mark style="background-color:undefined;">**<< Focus Improvements 4 !!**<!-- {"backgroundCycleColor":"60"} --></mark> <mark style="color:#BBA215;">**\[Pending!!!\]**<!-- {"cycleColor":"25"} --></mark>
+    - [ANP IMAGE VIEWER](https://www.amplenote.com/notes/8b8dac54-4591-11ef-a034-26e37c279344) - $1,250 + $500  <mark style="background-color:undefined;">**<< Focus Improvements 3 !!    **<!-- {"backgroundCycleColor":"60"} --></mark><mark style="background-color:undefined;color:#454545;">**🌈🌈\[You Did It!\] 🌈🌈**<!-- {"backgroundCycleColor":"60","cycleColor":"22"} --></mark>
+
+    - [ANP GRAPHING UTILITY](https://www.amplenote.com/notes/1a3f9b2a-6058-11ef-b2f6-22074e34eefe) - $750 <mark style="background-color:undefined;">**<< Focus Improvements 4 !!**<!-- {"backgroundCycleColor":"60"} --></mark> <mark style="color:#BBA215;">**\[Pending!\]**<!-- {"cycleColor":"25"} --></mark>
 
 - Pending + Now Focus:
 
-    - [ANP AGENDA](https://www.amplenote.com/notes/d73fb9ac-589d-11ef-9a1a-220e436b8a7b) - $500 <mark style="background-color:undefined;">**<< Focus 1 !!**<!-- {"backgroundCycleColor":"60"} --></mark>
+    - [ANP KANBAN](https://www.amplenote.com/notes/ae5601ec-5936-11ef-a559-b6c19b417745) - $2500 <mark style="background-color:undefined;">**<< Focus 0 !!**<!-- {"backgroundCycleColor":"60"} --></mark>
 
     - [ANP DICE](https://www.amplenote.com/notes/7a2ff26e-4591-11ef-a034-26e37c279344) - $250 <mark style="background-color:undefined;">**<< Focus 1 !!**<!-- {"backgroundCycleColor":"60"} --></mark>
+
+    - [ANP JOURNALING TEMPLATER](https://www.amplenote.com/notes/6b88b9de-459c-11ef-a034-26e37c279344) - $750 <mark style="background-color:undefined;">**<< Focus 1 !!**<!-- {"backgroundCycleColor":"60"} --></mark>
 
     - [ANP EXPORT](https://www.amplenote.com/notes/4867ed96-4ce3-11ef-b542-26e37c279344)  - $1,000 <mark style="background-color:undefined;">**<< Focus 2 !!**<!-- {"backgroundCycleColor":"60"} --></mark>
 
     - [ANP KING-SIZED EMOJIS ICONS](https://www.amplenote.com/notes/e2614a50-6250-11ef-921d-b6c19b417745) - $750 + $750 <mark style="background-color:undefined;">**<< Focus 3 !!**<!-- {"backgroundCycleColor":"60"} --></mark>
+
+    - [ANP AGENDA](https://www.amplenote.com/notes/d73fb9ac-589d-11ef-9a1a-220e436b8a7b) - $500 <mark style="background-color:undefined;">**<< Focus X !!**<!-- {"backgroundCycleColor":"60"} --></mark>
+
+    - [ANP IMAGE RESIZER](https://www.amplenote.com/notes/d8902eec-8933-11ef-b6ed-62fb339586e5) - $500 <mark style="background-color:undefined;">**<< Focus X !!**<!-- {"backgroundCycleColor":"60"} --></mark>
 
 - Pending + Later Focus:
 
@@ -289,6 +305,55 @@ tags:
 
 ---
 
+### Competition ![](https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/svg/1f3c6.svg)
+
+- `Debanjan Dhar`
+
+    - [https://www.amplenote.com/bounty_plugins#---Translate-markdown-to-mindmap](https://www.amplenote.com/bounty_plugins#---Translate-markdown-to-mindmap) **Bounty:** $1,500
+
+    - [https://www.amplenote.com/bounty_plugins#--Sync-with-Omnivore](https://www.amplenote.com/bounty_plugins#--Sync-with-Omnivore)  **Bounty:** $400
+
+    - [https://www.amplenote.com/bounty_plugins#--Markdown-backed-Graphing-Utility](https://www.amplenote.com/bounty_plugins#--Markdown-backed-Graphing-Utility)  **Bounty:** $750 / 2 = $375
+
+    - [https://www.amplenote.com/bounty_plugins#--King-sized-emojis-icons](https://www.amplenote.com/bounty_plugins#--King-sized-emojis-icons)  **Bounty:** $750
+
+    - [~~https://www.amplenote.com/bounty_plugins#---AI-Agents~~](https://www.amplenote.com/bounty_plugins#---AI-Agents) ~~**Bounty:** $2,500~~ - unsure!
+
+- All Plugins
+
+    - [https://www.amplenote.com/plugins/1xinG87h1ZMS777i1EWtCYJx](https://www.amplenote.com/plugins/1xinG87h1ZMS777i1EWtCYJx) Bigmoji <mark style="background-color:undefined;">**<Bounty>**<!-- {"backgroundCycleColor":"59"} --></mark>
+
+    - [https://www.amplenote.com/plugins/NAmsPp574uryGXGHxWRU2eeK](https://www.amplenote.com/plugins/NAmsPp574uryGXGHxWRU2eeK) Ample Charts <mark style="background-color:undefined;">**<Bounty>**<!-- {"backgroundCycleColor":"59"} --></mark>
+
+    - [https://www.amplenote.com/plugins/MuvmH1oW5HB49Dn4WBzj7UnX](https://www.amplenote.com/plugins/MuvmH1oW5HB49Dn4WBzj7UnX) Amplenote Omnivore Sync <mark style="background-color:undefined;">**<Bounty>**<!-- {"backgroundCycleColor":"59"} --></mark>
+
+    - [https://www.amplenote.com/plugins/XzpFYg22dGNTyRMBbZnzpf21](https://www.amplenote.com/plugins/XzpFYg22dGNTyRMBbZnzpf21) Amplenote Mindmap <mark style="background-color:undefined;">**<Bounty>**<!-- {"backgroundCycleColor":"59"} --></mark>
+
+    - [https://www.amplenote.com/plugins/NjKGYaYR96rn565uta8RJTnp](https://www.amplenote.com/plugins/NjKGYaYR96rn565uta8RJTnp) ChatAI
+
+    - [https://www.amplenote.com/plugins/75Y6GKuC41U32kFUArLhccFu](https://www.amplenote.com/plugins/75Y6GKuC41U32kFUArLhccFu) Dictionary
+
+    - [https://www.amplenote.com/plugins/w8hDT9YqonzUHCbF1CU2xbiV](https://www.amplenote.com/plugins/w8hDT9YqonzUHCbF1CU2xbiV) Text2Dia
+
+    - [https://www.amplenote.com/plugins/vw2kE7g4ajbUCqLTjVKcDwa1](https://www.amplenote.com/plugins/vw2kE7g4ajbUCqLTjVKcDwa1) AutoLink
+
+![](https://images.amplenote.com/d123725e-3fe6-11ef-b01a-26e37c279344/94881ec5-73a5-4321-8d21-9ef3fefa3034.png) [^6]
+> As of October 13th, 2024 \[13:42:05\]\
+> DED - (Bounty:4; Non-Bounty:04; Total:08) && (Bounty Value: [3025][^7])\
+> BKK - (Bounty:4; Non-Bounty:10; Total:14) && (Bounty Value: [3375][^8])
+
+- `Krishna Kanth B`
+
+    - [https://www.amplenote.com/bounty_plugins#--COMPLETED-------Generate-a-note-that-is-a-categorized-directory-of-published-notes](https://www.amplenote.com/bounty_plugins#--COMPLETED-------Generate-a-note-that-is-a-categorized-directory-of-published-notes) **Bounty:** $500
+
+    - [https://www.amplenote.com/bounty_plugins#--COMPLETED-------Photo-gallery](https://www.amplenote.com/bounty_plugins#--COMPLETED-------Photo-gallery) **Bounty:** $1,250 + $500 = $1,750
+
+    - [https://www.amplenote.com/bounty_plugins#--COMPLETED---------Review-notes--functionality](https://www.amplenote.com/bounty_plugins#--COMPLETED---------Review-notes--functionality) **Bounty:** $750
+
+    - [https://www.amplenote.com/bounty_plugins#--Markdown-backed-Graphing-Utility](https://www.amplenote.com/bounty_plugins#--Markdown-backed-Graphing-Utility)  **Bounty:** $750 / 2 = $375
+
+---
+
 \
 
 [^1]: 
@@ -318,4 +383,17 @@ tags:
     the meantime, we offer the plugin Bounty Board, where more than $20,000 is available for building plugins that Amplenote users would
     benefit from!
     You can also set up plugins to have a custom links to support you, read more on the public profile page.
+
+[^6]: i @Krishna Kanth B oh okay, you have published totally 5, am I correct?
+    debanjandhar12 09/29/2024 6:46 PM
+    bounty plugins - 3
+    non-bounty plugins - 4 (i think)
+
+[^7]: [3025]()
+
+    400+750+750-375+1500
+
+[^8]: [3375]()
+
+    500+1250+500+750+750-375
 
