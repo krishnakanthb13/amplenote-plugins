@@ -218,8 +218,8 @@
     });
 
     // ------- Check if the user has cancelled the operation -------
-      // console.log("User cancelled the operation");
 	if (!result) {
+      // console.log("User cancelled the operation");
 		app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
 		return;
 	}
