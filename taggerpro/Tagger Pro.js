@@ -203,7 +203,8 @@
 /* ----------------------------------- */
     const result = await app.prompt("Select details for Correlation Matrix for Tags", {
       inputs: [ 
-        { label: "Select the Tags to Filter (leave blank to consider all)", type: "tags", limit: 10 },
+        { label: "Select the Tags to Include in Report (leave blank to consider all)", type: "tags", limit: 10 },
+        { label: "Select the Tags to Exclude in Report (leave blank to consider all)", type: "tags", limit: 10 },
         { label: "Format to Download", type: "radio", 
 			options: [ 
 				{ label: "Document Report (Suggested)", value: "report" }, 
@@ -216,15 +217,25 @@
       ] 
     });
 
+    // ------- Check if the user has cancelled the operation -------
+      // console.log("User cancelled the operation");
 	if (!result) {
 		app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
 		return;
 	}
-	
-	const [ tagNames, downloadType ] = result;
+
+	const [ tagNames, tagNamesEx, downloadType ] = result;
 	// console.log("result:",result);
 	const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
 	// console.log("tagsArray:",tagsArray);
+	const tagsArrayEx = tagNamesEx ? tagNamesEx.split(',').map(tag => '^' + tag.trim()) : [];
+	// console.log("tagsArrayEx:",tagsArrayEx);
+
+    if (tagsArray.length > 0 && tagsArrayEx.length > 0) {
+      // console.log("User selected both include and exclude.");
+      app.alert("Choose either Include or Exclude.");
+      return;
+    }
  
 	let notes = [];
 	if (tagsArray.length > 0) {
@@ -234,8 +245,14 @@
 			});
 			notes = notes.concat(taggedNotes);
 		}
-	}
-	else {
+	} else if (tagsArrayEx.length > 0) {
+		for (let tag of tagsArrayEx) {
+			let taggedNotes = await app.filterNotes({
+				tag
+			});
+			notes = notes.concat(taggedNotes);
+		}
+	} else {
 		notes = await app.filterNotes({ });
 	}
 	// console.log("notes:",notes);
