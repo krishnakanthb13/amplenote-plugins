@@ -2,11 +2,26 @@
 	appOption: {
 	/* ----------------------------------- */
 	"List": async function (app) {
+		
+	const today = new Date();
+	const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+	// console.log(formattedDate);  // Outputs: MM/DD/YYYY
 
-	const tagSelect = "-0-planner";
-	const startDate = new Date(2024, 11, 1);  // Months are zero-indexed, so 10 is November
-	const numberOfDays = "31";
-	const chronoOrder = `false`;
+    const result = await app.prompt("Select details for Correlation Matrix for Tags", {
+      inputs: [ 
+        { label: "Select the Tags (Default: daily-jots)", type: "tags", limit: 1 },
+        { label: "Select the Number of Days (Default: 10, if left blank)", type: "string" },
+		{ label: "Reverse Chronological Order (Default: Chronological)", type: "checkbox" },
+		{ label: "Select the Start Date (MM/DD/YYYY)", type: "string", value: `${formattedDate}` },
+      ] 
+    });
+
+	const [ tagNames, numberDays, chronoSelect, startDatex ] = result;
+
+	const tagSelect = tagNames || "daily-jots";
+	const startDate = startDatex ? new Date(startDatex) : today;  // Use user input for start date, default to today if empty
+	const numberOfDays = parseInt(numberDays) || 10;  // Default to 10 days if left blank
+	const chronoOrder = chronoSelect;
 
 	function generateDates(startDate, days) {
 		const dates = [];
@@ -20,11 +35,7 @@
 			
 			dates.push(formattedDate);
 		}
-		if (!chronoOrder) {
-		  return dates.reverse(); // Reverse the array for descending order
-		} else {
-		  return dates(); // Array for descending order
-		}
+		return chronoOrder ? dates : dates.reverse();  // Reverse the array for descending order if chronoOrder is true
 	}
 
 	function getSuffix(day) {
@@ -37,9 +48,9 @@
 		}
 	}
 
-	// Example usage: Generate dates for November 2024
+	// Example usage: Generate dates based on user input
 	let dates = generateDates(startDate, numberOfDays);
-	dates = dates.join('\n')
+	dates = dates.join('\n');
 	console.log(dates);
 		
 		}
