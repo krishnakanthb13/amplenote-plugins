@@ -1,7 +1,7 @@
 ﻿---
 title: Daily Jots Generator
 uuid: 9508ccfe-9826-11ef-980c-fde8113e5c94
-version: 142
+version: 146
 created: '2024-11-01T13:24:56+05:30'
 tags:
   - '-t/amplenote/mine'
@@ -79,7 +79,7 @@ Whether you're tracking daily updates, managing project timelines, or simply org
 
 | | |
 |-|-|
-|name|Daily Jots Generator Test|
+|name|Daily Jots Generator|
 |icon<!-- {"cell":{"colwidth":116}} -->|note_add|
 |description<!-- {"cell":{"colwidth":116}} -->|Gives you a list of dynamic new note creation or existing note linking option, based on few basic inputs.|
 |instructions|Trigger the User Prompt using `{Daily Jots Generator: List}`, and get the list anywhere in the note.<br />[Daily Jots Generator - Docs](https://www.amplenote.com/notes/cd147828-9826-11ef-8733-7b5929f76244) |
@@ -96,13 +96,14 @@ Whether you're tracking daily updates, managing project timelines, or simply org
          */
         "List": async function (app) {
 
-            // Initialize today's date and format it as MM/DD/YYYY for default prompt input.
+            // console.log("Start:");
+			// Initialize today's date and format it as MM/DD/YYYY for default prompt input.
             const today = new Date();
             const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
 			// console.log("formattedDate:", formattedDate);  // Outputs: MM/DD/YYYY
 
             // Prompt the user for details to configure the correlation matrix.
-            const result = await app.prompt("Select details for Correlation Matrix for Tags", {
+            const result = await app.prompt("Select details for Generating Daily Jots List", {
                 inputs: [
                     { label: "Select the Tags (Default: daily-jots)", type: "tags", limit: 1 },
                     { label: "Select the Number of Days (Default: 10, if left blank)", type: "string" },
@@ -111,8 +112,16 @@ Whether you're tracking daily updates, managing project timelines, or simply org
                 ]
             });
 
+			// ------- Check if the user has cancelled the operation -------
+			if (!result) {
+			  // console.log("User cancelled the operation");
+			  app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+			  return;
+			}
+
             // Destructure user input into variables.
             const [tagNames, numberDays, chronoSelect, startDatex] = result;
+			// const [tagNames = "daily-jots", numberDays = "10", chronoSelect = false, startDatex = null] = result;
 			// console.log("result:", result);
 
             // Default tag selection to 'daily-jots' if none provided.
