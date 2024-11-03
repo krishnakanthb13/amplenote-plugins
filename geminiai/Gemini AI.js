@@ -10,12 +10,14 @@
         { label: "Prompting Type", type: "select", options: 
 			[ 
 				{ label: "Summarize", value: "Summarize this text" },
+				{ label: "Rephrase", value: "Rephrase this text" },
 				{ label: "Explain/Define (Points)", value: "Explain or Define this text as points" },
 				{ label: "Explain/Define (Paragraph)", value: "Explain or Define this text as paragraph" },
 				{ label: "Actionable Points", value: "Convert into Actionable Points" },
 				{ label: "Answer Question", value: "Answer the below question" },
 				{ label: "Complete the Sentence", value: "Complete the Sentence" },
-				{ label: "Rhymes With", value: "Give 5 Rhyming Synonyms and Antonyms" },
+				{ label: "Rhymes With (One-word)", value: "Give 5 Rhyming Synonyms and Antonyms" },
+				{ label: "Other (Fill following boxes)", value: "Customized - Use the below Details" },
 			],
 			value: "Summarize this text"
 		},
@@ -59,8 +61,7 @@
 			placeholder: "Eg: Basic, intermediate, advanced",
 			type: "string",
 		},*/
-      ] 
-    
+      ]    
     });
  
 	// If the result is falsy, the user has canceled the operation
@@ -68,10 +69,12 @@
 		app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
 		return;
 	}
-	const [ modelVariant, promptSelect, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
+	const [ modelVariant, promptSelect, promptContext, promptConstraint, promptFormat, promptTone, promptOther ] = result;
 	console.log("result",result);
 
     const modelVariantz = modelVariant;
+	let finalAIResponse;
+	// let finalTxtResponse;
 
     function _loadLibrary(url) {
     return import(url);
@@ -87,19 +90,61 @@
     console.log("aiModel",aiModel);
   
     // Define the prompt
-    const promptAI = `${promptSelect}.\n Context:${promptContext || "None"}.\n Constraint:${promptConstraint || "None"}.\n Format:${promptFormat || "Markdown"}.\n Tone:${promptTone || "None"}.\n Other Details:${promptOther || "None"}.\n Text:${text}`;
+    const promptAI = `${promptSelect}.\nContext:${promptContext || "None"}.\nConstraint:${promptConstraint || "None"}.\nFormat:${promptFormat || "Markdown"}.\nTone:${promptTone || "None"}.\nAdditional_Details:${promptOther || "None"}.\nText:${text}`;
 	console.log("promptAI",promptAI);
   
     // Generate content based on the prompt
-    const aiResponse = await model.generateContent(promptAI);
+    const aiResponse = await aiModel.generateContent(promptAI);
 	console.log("aiResponse",aiResponse);
   
     // Log the result
+	finalAIResponse = aiResponse.response.text();
     console.log(aiResponse.response.text());
-	console.log("aiResponse.response.text()",aiResponse.response.text());
+	console.log("finalAIResponse",finalAIResponse);
+
+	const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
+      actions: [     
+        { label: "Copy", value: "copytxt" },
+        // { label: "RFN Insert", value: "insert" },
+		{ label: "New Note", value: "newnote" },
+      ]
+		});
+
+	if (!result) { return; }
+	const actionResult = result2;
+
+	// Define the filename for the new note.
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `Gemini AI_${YYMMDD}_${HHMMSS}`;
+
+  if (actionResult === "copytxt") {
+	  await app.writeClipboardData(finalAIResponse);
+	  console.log("Copied to clipboard.");
+	  // finalTxtResponse = text;
+  } else if (actionResult === "insert") {
+	   const finalAIResponsez = `
+[Categorized Task: List View!][^GAI]
+[^GAI]: []()${finalAIResponse}
+`;
+	  finalAIResponse = `${text} ${finalAIResponsez}`;
+	  console.log("finalAIResponse2",finalAIResponse);
+	  // finalTxtResponse = finalAIResponse;
+	  console.log("Inserted After");
+  } else if (actionResult === "newnote") {
+	  const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
+	  console.log("New note Created.");
+	  await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
+	  await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+	  // finalTxtResponse = finalTxtResponse;
+  }
+	
   }).catch(error => {
     console.error("Failed to load library or execute code:", error);
   });
+  
+  // return `${finalTxtResponse}`;
 
   },
 //******************************************************************************//
@@ -133,6 +178,8 @@
 	console.log("result",result);
 
     const modelVariantz = modelVariant;
+	let finalAIResponse;
+
 	const markdown = await app.getNoteContent({ uuid: noteUUID });
 	console.log("markdown",markdown);
 
@@ -155,18 +202,21 @@
     const genAI = new GoogleGenerativeAI(API_KEY);
   
     // Fetch the generative model
-    const model = genAI.getGenerativeModel({ model: `${modelVariantz}` });
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}` });
+    console.log("aiModel",aiModel);
   
     // Define the prompt
     const promptAI = `${promptSelect}.\n${promptWrite}.\n${cleanedMarkdown}`;
 	console.log("promptAI",promptAI);
   
     // Generate content based on the prompt
-    const aiResponse = await model.generateContent(promptx);
+    const aiResponse = await aiModel.generateContent(promptAI);
 	console.log("aiResponse",aiResponse);
   
     // Log the result
+	finalAIResponse = aiResponse.response.text();
     console.log(aiResponse.response.text());
+
   }).catch(error => {
     console.error("Failed to load library or execute code:", error);
   });
