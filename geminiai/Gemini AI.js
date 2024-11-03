@@ -123,7 +123,7 @@
 	  await app.writeClipboardData(finalAIResponse);
 	  console.log("Copied to clipboard.");
 	  // finalTxtResponse = text;
-  } else if (actionResult === "insert") {
+  } /* else if (actionResult === "insert") {
 	   const finalAIResponsez = `
 [Categorized Task: List View!][^GAI]
 [^GAI]: []()${finalAIResponse}
@@ -132,7 +132,7 @@
 	  console.log("finalAIResponse2",finalAIResponse);
 	  // finalTxtResponse = finalAIResponse;
 	  console.log("Inserted After");
-  } else if (actionResult === "newnote") {
+  } */ else if (actionResult === "newnote") {
 	  const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
 	  console.log("New note Created.");
 	  await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
@@ -281,7 +281,7 @@
 	  await app.writeClipboardData(finalAIResponse);
 	  console.log("Copied to clipboard.");
 	  // finalTxtResponse = text;
-  } else if (actionResult === "insert") {
+  } /* else if (actionResult === "insert") {
 	   const finalAIResponsez = `
 [Categorized Task: List View!][^GAI]
 [^GAI]: []()${finalAIResponse}
@@ -290,7 +290,7 @@
 	  console.log("finalAIResponse2",finalAIResponse);
 	  // finalTxtResponse = finalAIResponse;
 	  console.log("Inserted After");
-  } else if (actionResult === "newnote") {
+  } */ else if (actionResult === "newnote") {
 	  const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
 	  console.log("New note Created.");
 	  await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
