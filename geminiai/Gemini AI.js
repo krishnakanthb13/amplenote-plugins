@@ -158,13 +158,55 @@
 		},
         { label: "Prompting Type", type: "select", options: 
 			[ 
-				{ label: "Summarize", value: "Summarize this text:" }, 
-				{ label: "Actionable Items", value: "Summarize this text:" },
-				{ label: "Answer Question", value: "Give me an Answer for the below question:" },
+				{ label: "Summarize", value: "Summarize this text" },
+				{ label: "Rephrase", value: "Rephrase this text" },
+				{ label: "Actionable Points", value: "Convert into Actionable Points" },
+				{ label: "Answer Questions", value: "Answer the below questions" },
+				{ label: "Organise Grocries", value: "Sort and Organize Grocries as a list of shopping items" },
+				{ label: "Other (Fill following boxes)", value: "Customized - Use the below Details" },
 			],
 			value: "Summarize this text:"
 		},
-		{ label: "Free Hand Prompting (Any futher instructions)", placeholder: "Give clear instructions", type: "text" },
+		{
+			label: "Add contextual information",
+			placeholder: "Eg: Assume the audience is a group of high school students.",
+			type: "string",
+		},
+		{
+			label: "Specify any constraints", 
+			placeholder: "Eg: Summarize in no more than 50 words.",
+			type: "string",
+		},
+		{
+			label: "Define the format of the response",
+			placeholder: "Eg: Provide a list of bullet points.",
+			type: "string",
+		},
+		{
+			label: "Specify the tone or style",
+			placeholder: "Eg: Formal, friendly, persuasive",
+			type: "string",
+		},
+		{
+			label: "Other Free Text requests",
+			placeholder: "Eg: Provide relevant examples or comparisons",
+			type: "string",
+		},
+		/*{
+			label: "Request for examples or analogies",
+			placeholder: "Eg: Provide relevant examples or comparisons",
+			type: "string",
+		},
+		{
+			label: "Request for specific details",
+			placeholder: "Eg: Add details or subpoints",
+			type: "string",
+		},
+		{
+			label: "Set a desired language level",
+			placeholder: "Eg: Basic, intermediate, advanced",
+			type: "string",
+		},*/
       ] 
     
     });
@@ -174,7 +216,7 @@
 		app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
 		return;
 	}
-	const [ modelVariant, promptSelect, promptWrite ] = result;
+	const [ modelVariant, promptSelect, promptContext, promptConstraint, promptFormat, promptTone, promptOther ] = result;
 	console.log("result",result);
 
     const modelVariantz = modelVariant;
@@ -206,7 +248,7 @@
     console.log("aiModel",aiModel);
   
     // Define the prompt
-    const promptAI = `${promptSelect}.\n${promptWrite}.\n${cleanedMarkdown}`;
+    const promptAI = `${promptSelect}.\nContext:${promptContext || "None"}.\nConstraint:${promptConstraint || "None"}.\nFormat:${promptFormat || "Markdown"}.\nTone:${promptTone || "None"}.\nAdditional_Details:${promptOther || "None"}.\nText:${cleanedMarkdown}`;
 	console.log("promptAI",promptAI);
   
     // Generate content based on the prompt
@@ -216,6 +258,45 @@
     // Log the result
 	finalAIResponse = aiResponse.response.text();
     console.log(aiResponse.response.text());
+	console.log("finalAIResponse",finalAIResponse);
+	
+	const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
+      actions: [     
+        { label: "Copy", value: "copytxt" },
+        // { label: "RFN Insert", value: "insert" },
+		{ label: "New Note", value: "newnote" },
+      ]
+		});
+
+	if (!result) { return; }
+	const actionResult = result2;
+
+	// Define the filename for the new note.
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `Gemini AI_${YYMMDD}_${HHMMSS}`;
+
+  if (actionResult === "copytxt") {
+	  await app.writeClipboardData(finalAIResponse);
+	  console.log("Copied to clipboard.");
+	  // finalTxtResponse = text;
+  } else if (actionResult === "insert") {
+	   const finalAIResponsez = `
+[Categorized Task: List View!][^GAI]
+[^GAI]: []()${finalAIResponse}
+`;
+	  finalAIResponse = `${text} ${finalAIResponsez}`;
+	  console.log("finalAIResponse2",finalAIResponse);
+	  // finalTxtResponse = finalAIResponse;
+	  console.log("Inserted After");
+  } else if (actionResult === "newnote") {
+	  const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
+	  console.log("New note Created.");
+	  await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
+	  await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+	  // finalTxtResponse = finalTxtResponse;
+  }
 
   }).catch(error => {
     console.error("Failed to load library or execute code:", error);
