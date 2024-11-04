@@ -67,13 +67,25 @@ replaceText: {
     return import(url);
   }
 
-  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI }) => {
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
     // Initialize GoogleGenerativeAI instance with API key
     const API_KEY = app.settings["Gemini API Key"]; // Replace with your actual API key
     const genAI = new GoogleGenerativeAI(API_KEY);
 
     // Fetch the generative model specified by the user
-    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}` });
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
 	console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
@@ -104,10 +116,10 @@ replaceText: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `Gemini_AI_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `\n### *<mark>xpand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `> Text: ${text}`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Text: ${text}\n`;
 	finalAIResponse += `> Prompt:${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint:${promptConstraint || "None"}.\n> Format:${promptFormat || "Markdown"}.\n> Tone:${promptTone || "None"}.\n> Additional_Details:${promptOther || "None"}.`;
 
     //---------------------------
@@ -199,11 +211,23 @@ noteOption: {
     return import(url);
   }
 
-  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI }) => {
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
     const API_KEY = app.settings["Gemini API Key"];
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}` });
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
 	console.log("aiModel",aiModel);
 
     const promptAI = `${promptSelect}.\nContext:${promptContext || "None"}.\nConstraint:${promptConstraint || "None"}.\nFormat:${promptFormat || "Markdown"}.\nTone:${promptTone || "None"}.\nAdditional_Details:${promptOther || "None"}.\nText:${cleanedMarkdown}`;
@@ -232,10 +256,10 @@ noteOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `Gemini_AI_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `\n### *<mark>xpand to Read more: Details of Note considered.</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `> Note: ${noteUUID}`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Details of Note considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Note: ${noteUUID}\n`;
 	finalAIResponse += `> Prompt:${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint:${promptConstraint || "None"}.\n> Format:${promptFormat || "Markdown"}.\n> Tone:${promptTone || "None"}.\n> Additional_Details:${promptOther || "None"}.`;
 
     //---------------------------
@@ -333,13 +357,25 @@ imageOption: {
     return import(url);
   }
 
-  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI }) => {
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
     // Initialize GoogleGenerativeAI instance with API key
     const API_KEY = app.settings["Gemini API Key"]; // Replace with your actual API key
     const genAI = new GoogleGenerativeAI(API_KEY);
 
     // Fetch the generative model specified by the user
-    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}` });
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
 	console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
@@ -370,7 +406,7 @@ imageOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `Gemini_AI_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -493,11 +529,23 @@ appOption: {
     return import(url);
   }
 
-  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI }) => {
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
     const API_KEY = app.settings["Gemini API Key"];
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}` });
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
 	console.log("aiModel",aiModel);
 
     const promptAI = `${promptSelect}.\nContext:${promptContext || "None"}.\nConstraint:${promptConstraint || "None"}.\nFormat:${promptFormat || "Markdown"}.\nTone:${promptTone || "None"}.\nAdditional_Details:${promptOther || "None"}.\nNote Info: Each Note is separated by #0000#\nNote Collection:${cleanedMarkdown}`;
@@ -526,9 +574,9 @@ appOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `Gemini_AI_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
 	
-	finalAIResponse += `\n### *<mark>xpand to Read more: Details of notes considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Details of notes considered.</mark>* <!-- {"collapsed":true} -->\n`;
 
 	for (let i = 0; i < notes.length; i++) {
 		const note = notes[i];
