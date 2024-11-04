@@ -179,12 +179,14 @@ noteOption: {
   console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
-  // Fetch and clean markdown content from the note
-  const markdown = await app.getNoteContent({ uuid: noteUUID });
-  const cleanedMarkdown = markdown
-    .replace(/<!--[\s\S]*?-->/g, "")   // Remove HTML comments
-    .replace(/<mark[^>]*>/g, "")       // Remove opening <mark> tags with any attributes
-    .replace(/<\/mark>/g, "")          // Remove closing </mark> tags
+	// Fetch and clean markdown content from the note
+	const markdown = await app.getNoteContent({ uuid: noteUUID });
+	// Clean the markdown content
+	const cleanedMarkdown = markdown
+	  .replace(/<!--[\s\S]*?-->/g, "")   // Remove HTML comments
+	  .replace(/<mark[^>]*>/g, "")       // Remove opening <mark> tags with any attributes
+	  .replace(/<\/mark>/g, "")          // Remove closing </mark> tags
+	  .replace(/^\s*[\r\n]/gm, "");      // Remove empty lines (including those with only whitespace)
 
   //---------------------------
   // Load external library for AI response
@@ -382,14 +384,20 @@ imageOption: {
 },
 },
 //---------------------------
-// Function for handling options on a specific image by url
+// Function for handling options on a specific set of notes
 //---------------------------
 appOption: {
-  "Multiple Notes": async function (app, image) {
+  "Multiple Notes": async function (app) {
 
-  const result1 = await app.prompt("Select the Tags, to choose the notes from. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+  const result1 = await app.prompt("Select the Notes, that you want to do AI analysis for. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
     inputs: [
-		  { label: "Select the Tags to see the notes From.", type: "tags", limit: 5 }
+		  { label: "Select the Note 1", type: "note" },
+		  { label: "Select the Note 2", type: "note" },
+		  { label: "Select the Note 3", type: "note" },
+		  { label: "Select the Note 4", type: "note" },
+		  { label: "Select the Note 5", type: "note" },
+		  { label: "Select the Note 6", type: "note" },
+		  { label: "Select the Note 7", type: "note" },
     ]
   });
 
@@ -399,19 +407,9 @@ appOption: {
     return;
   }
 
-	const noteHandles = await app.filterNotes({ tag: result1 });
-
-  const result2 = await app.prompt("Select the notes (Multiple-Notes allowed). Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
-    inputs: [
-		  { label: `${noteHandles.name} | ${noteHandles.tag}`, type: "checkbox", value: noteHandles.uuid },
-    ]
-  });
-
-  // If the result is falsy, the user canceled the operation
-  if (!result2) {
-    app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
-    return;
-  }
+  // Extract user-selected inputs
+  const [note1, note2, note3, note4, note5, note6, note7] = result1;
+  console.log("result1",result1);
 
   // Prompt the user for desired actions with the note content
   const result = await app.prompt("What do you want to do with this Notes. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -430,6 +428,8 @@ appOption: {
         type: "select", 
         options: [
           { label: "Summarize", value: "Summarize these Multiple Notes" },
+		  { label: "Compare", value: "Compare these Multiple Notes" },
+		  { label: "Link them", value: "Find or Link these notes together" },
           { label: "Actionable Points", value: "Convert into Actionable Points from these Multiple Notes" },
           { label: "Other (Fill following boxes)", value: "Customized - Use the below Details" }
         ],
@@ -457,13 +457,26 @@ appOption: {
   const modelVariantz = modelVariant;
   console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
+  let markdown;
 
-  // Fetch and clean markdown content from the note
-  const markdown = await app.getNoteContent({ uuid: noteUUID });
-  const cleanedMarkdown = markdown
-    .replace(/<!--[\s\S]*?-->/g, "")   // Remove HTML comments
-    .replace(/<mark[^>]*>/g, "")       // Remove opening <mark> tags with any attributes
-    .replace(/<\/mark>/g, "")          // Remove closing </mark> tags
+	// Assuming note1 to note7 are defined and accessible
+	const notes = [note1, note2, note3, note4, note5, note6, note7];
+
+	// Fetch and clean markdown content from the notes
+	for (const note of notes) {
+		// Check if note is not null
+		if (note) {
+			const noteContent = await app.getNoteContent({ uuid: note.uuid }) || "";
+			markdown += `#0000#\n${note.name}\n${noteContent}`;
+		}
+	}
+
+	// Clean the markdown content
+	const cleanedMarkdown = markdown
+	  .replace(/<!--[\s\S]*?-->/g, "")   // Remove HTML comments
+	  .replace(/<mark[^>]*>/g, "")       // Remove opening <mark> tags with any attributes
+	  .replace(/<\/mark>/g, "")          // Remove closing </mark> tags
+	  .replace(/^\s*[\r\n]/gm, "");      // Remove empty lines (including those with only whitespace)
 
   //---------------------------
   // Load external library for AI response
@@ -479,7 +492,7 @@ appOption: {
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}` });
 	console.log("aiModel",aiModel);
 
-    const promptAI = `${promptSelect}.\nContext:${promptContext || "None"}.\nConstraint:${promptConstraint || "None"}.\nFormat:${promptFormat || "Markdown"}.\nTone:${promptTone || "None"}.\nAdditional_Details:${promptOther || "None"}.\nText:${cleanedMarkdown}`;
+    const promptAI = `${promptSelect}.\nContext:${promptContext || "None"}.\nConstraint:${promptConstraint || "None"}.\nFormat:${promptFormat || "Markdown"}.\nTone:${promptTone || "None"}.\nAdditional_Details:${promptOther || "None"}.\nNote Info: Each Note is separated by #0000#\nNote Collection:${cleanedMarkdown}`;
 	console.log("promptAI",promptAI);
 
     const aiResponse = await aiModel.generateContent(promptAI);
@@ -506,6 +519,17 @@ appOption: {
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
     const filename = `Gemini_AI_${YYMMDD}_${HHMMSS}`;
+	
+	finalAIResponse += `\n### *<mark>xpand to Read more: Details of notes considered.</mark>* <!-- {"collapsed":true} -->\n`;
+
+	for (let i = 0; i < notes.length; i++) {
+		const note = notes[i];
+		if (note) {
+			finalAIResponse += `> note${i + 1}: ${note.name || ""}, ${note.tags || ""}\n`;
+		}
+	}
+	
+	finalAIResponse += `> Prompt:${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint:${promptConstraint || "None"}.\n> Format:${promptFormat || "Markdown"}.\n> Tone:${promptTone || "None"}.\n> Additional_Details:${promptOther || "None"}.`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
