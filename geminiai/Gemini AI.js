@@ -106,6 +106,10 @@ replaceText: {
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
     const filename = `Gemini_AI_${YYMMDD}_${HHMMSS}`;
 
+	finalAIResponse += `\n### *<mark>xpand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Text: ${text}`;
+	finalAIResponse += `> Prompt:${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint:${promptConstraint || "None"}.\n> Format:${promptFormat || "Markdown"}.\n> Tone:${promptTone || "None"}.\n> Additional_Details:${promptOther || "None"}.`;
+
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
     //---------------------------
@@ -229,6 +233,10 @@ noteOption: {
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
     const filename = `Gemini_AI_${YYMMDD}_${HHMMSS}`;
+
+	finalAIResponse += `\n### *<mark>xpand to Read more: Details of Note considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Note: ${noteUUID}`;
+	finalAIResponse += `> Prompt:${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint:${promptConstraint || "None"}.\n> Format:${promptFormat || "Markdown"}.\n> Tone:${promptTone || "None"}.\n> Additional_Details:${promptOther || "None"}.`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
