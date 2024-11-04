@@ -250,7 +250,7 @@ noteOption: {
 // Function for handling options on a specific image by url
 //---------------------------
 imageOption: {
-  "Image": async function (app, image) {
+  "Text Image": async function (app, image) {
   console.log("image: " + image.src);
   console.log(image);
 
@@ -272,14 +272,14 @@ imageOption: {
         label: "Prompting Type", 
         type: "select", 
         options: [
-          { label: "Explain", value: "Tell me about this image" },
-		  { label: "Transcribe", value: "Transcribe the image for me" },
-          { label: "Actionable Points", value: "Give me Actionable Points from this image" },
-          { label: "Answer Questions", value: "Answer the questions in this image" },
-          { label: "Organise Groceries", value: "Sort and Organize Groceries as a list of shopping items in this image" },
-          { label: "Other (Fill following boxes)", value: "Customized - Use the below Details in this image" }
+          { label: "Summarize", value: "Summarize this text" },
+          { label: "Rephrase", value: "Rephrase this text" },
+          { label: "Actionable Points", value: "Convert into Actionable Points" },
+          { label: "Answer Questions", value: "Answer the below questions" },
+          { label: "Organise Groceries", value: "Sort and Organize Groceries as a list of shopping items" },
+          { label: "Other (Fill following boxes)", value: "Customized - Use the below Details" }
         ],
-        value: "Tell me about this image"
+        value: "Summarize this text"
       },
       // Additional user inputs for customization of the AI response
 	  { label: "AI System Instructions", placeholder: "Eg: You are a cat. Your name is Neko. OR You are a Teacher, Review my Document.", type: "text" },
@@ -323,45 +323,24 @@ imageOption: {
     return import(url);
   }
 
-	// Define the URLs for each component
-	const generativeAIUrl = "https://esm.run/@google/generative-ai";
-	const fileManagerUrl = "https://esm.run/@google/generative-ai/server"; // Adjust if the URL is different
-
-	Promise.all([
-	  _loadLibrary(generativeAIUrl),
-	  _loadLibrary(fileManagerUrl)
-	]).then(async ([{ GoogleGenerativeAI }, { GoogleAIFileManager }]) => {
-
-    const API_KEY = app.settings["Gemini API Key"];
-    
-	const fileManager = new GoogleAIFileManager(API_KEY);
-
-	const uploadResult = await fileManager.uploadFile(
-	  `${image.src}`,
-	  {
-		mimeType: `${extension}`,
-		displayName: `${name}`,
-	  },
-	);
-	// View the response.
-	console.log(
-	  `Uploaded file ${uploadResult.file.displayName} as: ${uploadResult.file.uri}`,
-	);
-
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI }) => {
+    // Initialize GoogleGenerativeAI instance with API key
+    const API_KEY = app.settings["Gemini API Key"]; // Replace with your actual API key
     const genAI = new GoogleGenerativeAI(API_KEY);
-	const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}` });
+
+    // Fetch the generative model specified by the user
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}` });
 	console.log("aiModel",aiModel);
 
-	finalAIResponse = await model.generateContent([
-	  `${promptAI}`,
-	  {
-		fileData: {
-		  fileUri: uploadResult.file.uri,
-		  mimeType: uploadResult.file.mimeType,
-		},
-	  },
-	]);
-	console.log(result.response.text());
+    // Construct the prompt to be sent to the AI model
+    const promptAI = `${promptSelect}.\nContext:${promptContext || "None"}.\nConstraint:${promptConstraint || "None"}.\nFormat:${promptFormat || "Markdown"}.\nTone:${promptTone || "None"}.\nAdditional_Details:${promptOther || "None"}.\nText:${image.caption}. ${image.text}`;
+	console.log("promptAI",promptAI);
+    
+    // Generate content based on the constructed prompt
+    const aiResponse = await aiModel.generateContent(promptAI);
+	console.log("aiResponse",aiResponse);
+    finalAIResponse = aiResponse.response.text();
+	console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
