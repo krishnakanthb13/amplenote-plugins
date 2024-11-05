@@ -27,7 +27,13 @@
         // Start capturing if the URL is found in any line
         if (line.includes(url)) {
           inSection = true; // Start capturing content
+          
+          // Capture the URL line
           sectionContent += '> ' + line + '\n';
+          
+          // Determine the indentation level of the URL line
+          const urlMatch = line.match(/^(\s*)/);
+          parentIndentLevel = urlMatch ? urlMatch[1].length : 0;
           continue;
         }
 
@@ -43,13 +49,8 @@
           if (bulletMatch) {
             const currentIndent = bulletMatch[1].length;
             
-            // If this is the first bullet after the URL, set it as the parent level
-            if (parentIndentLevel === null) {
-              parentIndentLevel = currentIndent;
-              sectionContent += '> ' + line + '\n';
-            } 
-            // Capture child bullets only if they are indented more than the parent
-            else if (currentIndent > parentIndentLevel) {
+            // Capture only child bullets that are indented more than the parent bullet
+            if (currentIndent > parentIndentLevel) {
               sectionContent += '> ' + line + '\n';
             } 
             // Stop capturing if we encounter a bullet at the same or lesser indentation
