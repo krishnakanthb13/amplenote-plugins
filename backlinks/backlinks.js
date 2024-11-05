@@ -39,9 +39,10 @@
 
         // Capture content within the section if URL has been found
         if (inSection) {
-          // Stop capturing if we hit another header or divider
-          if (line.startsWith('#') || line.startsWith('---')) {
-            break;
+          // Continue capturing headers without stopping at them
+          if (line.startsWith('#')) {
+            sectionContent += '> ' + line + '\n';
+            continue;
           }
 
           // Check for main bullet points or numbered list items
