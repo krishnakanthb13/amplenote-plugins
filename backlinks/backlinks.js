@@ -38,16 +38,27 @@
           }
 
           // Check for main bullet points or numbered list items
-          if (/^(\s*[-*+]\s|\s*\d+\.\s)/.test(line)) {
-            sectionContent += '> ' + line + '\n'; // Start capturing bullet content
+          const bulletMatch = line.match(/^(\s*)([-*+]\s|\d+\.\s)/);
+          if (bulletMatch) {
+            const parentIndent = bulletMatch[1].length; // Get parent bullet's indentation level
+            sectionContent += '> ' + line + '\n'; // Capture the main bullet content
             
-            // Capture all child lines until the next main bullet, header, or divider
+            // Capture child bullets with greater indentation level
             i++;
-            while (i < lines.length && !/^(\s*[-*+]\s|\s*\d+\.\s)/.test(lines[i]) && !lines[i].startsWith('#') && !lines[i].startsWith('---')) {
-              sectionContent += '> ' + lines[i] + '\n';
+            while (i < lines.length) {
+              const childLine = lines[i];
+              const childBulletMatch = childLine.match(/^(\s*)([-*+]\s|\d+\.\s)/);
+              
+              // Stop if we find a bullet at the same or higher level as the parent
+              if (childBulletMatch && childBulletMatch[1].length <= parentIndent) {
+                i--; // Step back to handle this line in the outer loop
+                break;
+              }
+              
+              // Capture child line if it is indented more deeply than the parent
+              sectionContent += '> ' + childLine + '\n';
               i++;
             }
-            i--; // Step back to allow the outer loop to continue at the right spot
           } else {
             // Capture regular lines in the section
             sectionContent += '> ' + line + '\n';
