@@ -19,6 +19,7 @@
       
       let inSection = false;
       let sectionContent = '';
+      let parentIndentLevel = null;
       
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
@@ -40,24 +41,20 @@
           // Check for main bullet points or numbered list items
           const bulletMatch = line.match(/^(\s*)([-*+]\s|\d+\.\s)/);
           if (bulletMatch) {
-            const parentIndent = bulletMatch[1].length; // Get parent bullet's indentation level
-            sectionContent += '> ' + line + '\n'; // Capture the main bullet content
+            const currentIndent = bulletMatch[1].length;
             
-            // Capture child bullets with greater indentation level
-            i++;
-            while (i < lines.length) {
-              const childLine = lines[i];
-              const childBulletMatch = childLine.match(/^(\s*)([-*+]\s|\d+\.\s)/);
-              
-              // Stop if we find a bullet at the same or higher level as the parent
-              if (childBulletMatch && childBulletMatch[1].length <= parentIndent) {
-                i--; // Step back to handle this line in the outer loop
-                break;
-              }
-              
-              // Capture child line if it is indented more deeply than the parent
-              sectionContent += '> ' + childLine + '\n';
-              i++;
+            // If this is the first bullet after the URL, set it as the parent level
+            if (parentIndentLevel === null) {
+              parentIndentLevel = currentIndent;
+              sectionContent += '> ' + line + '\n';
+            } 
+            // Capture child bullets only if they are indented more than the parent
+            else if (currentIndent > parentIndentLevel) {
+              sectionContent += '> ' + line + '\n';
+            } 
+            // Stop capturing if we encounter a bullet at the same or lesser indentation
+            else {
+              break;
             }
           } else {
             // Capture regular lines in the section
