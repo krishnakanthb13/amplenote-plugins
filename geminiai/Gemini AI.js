@@ -955,6 +955,7 @@ taskOption: {
 		  { label: "Identify Required Resources", value: "List the tools, information, or resources needed to complete the task efficiently." },
 		  { label: "Identify Potential Obstacles", value: "Anticipate possible challenges and outline solutions to stay prepared and motivated." },
 		  { label: "Define Success Criteria", value: "Describe how you’ll know when the task is complete, establishing clear success markers." },
+		  { label: "Other (Fill following boxes)", value: "Customized - Use the below Details" }
 		],
         value: "Outline reasons to accomplish this task, adding motivational quotes, affirmations, or positive reinforcements bullet points."
 	  },
