@@ -1705,7 +1705,6 @@ dailyJotOption: {
 // Work In progress - Need to find a way to get the content of webpage into a variable, and send it to Gemini AI.
 //---------------------------
 // Main Section //
-/*
 linkOption: {
 	"Link": async function (app, link) {
       console.log("link.description",link.description);
@@ -1853,6 +1852,5 @@ linkOption: {
 
 },
 },
-*/
 //---------------------------
 }
