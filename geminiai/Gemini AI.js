@@ -3,6 +3,7 @@
 // This function handles replacing selected text by prompting the user with various options 
 // for generating responses via the Gemini AI model.
 //---------------------------
+// Main Section //
 replaceText: {
 	"Selected Text": async function (app, text) {
   // Prompt the user for input on desired actions with the selected text.
@@ -145,6 +146,7 @@ replaceText: {
 //---------------------------
 // Function for handling options on a specific note by UUID
 //---------------------------
+// Main Section //
 noteOption: {
   "Note": async function (app, noteUUID) {
   // Prompt the user for desired actions with the note content
@@ -282,10 +284,230 @@ noteOption: {
     console.error("Failed to load library or execute code:", error);
   });
 },
+//---------------------------
+// Function for handling options on a specific note by UUID
+//---------------------------
+// Main Section //
+  "Note Name Tag": async function (app, noteUUID) {
+	  console.log("noteUUID", noteUUID);
+	  
+	  const noteHandle = await app.findNote({ uuid: noteUUID });
+	  console.log("noteHandle", noteHandle);
+
+  // Prompt the user for desired actions with the note content
+  const result = await app.prompt("What do you want to do with this Note's Name and Tags. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+    inputs: [
+      { 
+        label: "Gemini Model variants", 
+        type: "select", 
+        options: [
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
+          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
+          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
+          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+        ],
+        value: "gemini-1.5-flash"
+      },
+      { 
+        label: `Update Name. Current Name: ${noteHandle.name}`,
+        type: "radio", 
+        options: [
+          { label: "Do not Update", value: "nothing" },
+          { label: "Based on Other Notes in the Same Tag + Content", value: "nametagcontent" },
+          { label: "Based on only Content", value: "content" },
+          { label: "Random Name (Feeling lucky?)", value: "random" }
+        ],
+        value: "nothing"
+      },
+      { 
+        label: `Update Tags. Current Tag/s: ${noteHandle.tags}`,
+        type: "radio", 
+        options: [
+		  { label: "Do not Update", value: "nothing" },
+		  { label: "Based on Other Avaliable Tags + Content", value: "existtagcontent" },
+          { label: "Based on only Content", value: "content" },
+          { label: "Random Name (Feeling lucky?)", value: "random" }
+        ],
+        value: "nothing"
+      },
+    ]
+  });
+
+  // If the result is falsy, the user canceled the operation
+  if (!result) {
+    app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+    return;
+  }
+
+  // Extract user-selected inputs
+  const [modelVariant, nameUpdate, tagUpdate] = result;
+  console.log("result",result);
+  const modelVariantz = modelVariant;
+  console.log("modelVariantz",modelVariantz);
+  let finalAIResponse;
+  let promptAI;
+
+	// Fetch and clean markdown content from the note
+	const markdown = await app.getNoteContent({ uuid: noteUUID });
+	// Clean the markdown content
+	const cleanedMarkdown = markdown
+	  .replace(/<!--[\s\S]*?-->/g, "")   // Remove HTML comments
+	  .replace(/<mark[^>]*>/g, "")       // Remove opening <mark> tags with any attributes
+	  .replace(/<\/mark>/g, "")          // Remove closing </mark> tags
+	  .replace(/^\s*[\r\n]/gm, "");      // Remove empty lines (including those with only whitespace)
+
+	// Step 1: Get unique tags and sort them (Generally All Tags - Attached to Notes)
+	let notesT = [];
+	notesT = await app.filterNotes({ });
+	const noteTags = Array.from(new Set(notesT.flatMap(note => note.tags))).sort();
+	console.log("noteTags", noteTags);
+	
+	// Split tags into an array
+	let notesN = [];
+	const tagNameTags = noteHandle.tags;
+	// Ensure tags are in an array format
+	const tagsArray = Array.isArray(tagNameTags) ? tagNameTags : 
+					  (typeof tagNameTags === "string" ? tagNameTags.split(',').map(tag => tag.trim()) : []);	
+	// Filter notes based on tags
+	if (tagsArray.length > 0) {
+		for (let tag of tagsArray) {
+			let taggedNotes = await app.filterNotes({
+				tag, group: "^vault"
+			});
+			notesN = notesN.concat(taggedNotes);
+		}
+	} else {
+		notesN = await app.filterNotes({
+			tag: "", group: "^vault"
+		});
+	} 
+	// Step 2: Get unique names and sort them (All Note Names - Linked to the Tag or Tags)
+	const noteNames = Array.from(new Set(notesN.flatMap(note => note.name || []))).sort();
+	console.log("noteNames", noteNames);
+
+    // Prompt for Name
+	if (nameUpdate === "random") {
+	promptAI = `
+List 5 Random Names for a note. (Keep it short and simple)
+NoteName = {'Names': string}
+Return: Array<NoteName>`;
+	console.log("promptAI",promptAI);
+	} else if (nameUpdate === "content") {
+	promptAI = `
+List 5 Note Names for a note, by using the below content. (Keep it short and simple)
+Content: ${cleanedMarkdown}
+NoteName = {'Names': string}
+Return: Array<NoteName>`;		
+	} else if (nameUpdate === "nametagcontent") {
+	promptAI = `
+List 5 Note Names for a note, by using the below mentioned list of Note Name as a Template. (Keep it short and simple)
+Existing Names: ${notesN}
+Content: ${cleanedMarkdown}
+NoteName = {'Names': string}
+Return: Array<NoteName>`;
+	}
+
+    // Prompt for Tag
+	if (tagUpdate === "random") {
+	promptAI = `
+List 5 Random Tags for a note. (Keep it short and simple, And hierarchy is allowed using "/")
+NoteTag = {'Tags': string}
+Return: Array<NoteTag>`;
+	console.log("promptAI",promptAI);
+	} else if (tagUpdate === "content") {
+	promptAI = `
+List 5 Random Tags for a note, by using the below content. (Keep it short and simple, And hierarchy is allowed using "/")
+Content: ${cleanedMarkdown}
+NoteTag = {'Tags': string}
+Return: Array<NoteTag>`;		
+	} else if (tagUpdate === "existtagcontent") {
+	promptAI = `
+List 5 Random Tags for a note, by using the below mentioned list of Tags, if any match. (Keep it short and simple, And hierarchy is allowed using "/")
+Eg Names: ${notesT}
+Content: ${cleanedMarkdown}
+NoteTag = {'Tags': string}
+Return: Array<NoteTag>`;		
+	}
+
+  //---------------------------
+  // Load external library for AI response
+  //---------------------------
+  function _loadLibrary(url) {
+    return import(url);
+  }
+
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
+    const API_KEY = app.settings["Gemini API Key"];
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
+	console.log("aiModel",aiModel);
+
+    const aiResponse = await aiModel.generateContent(promptAI);
+	console.log("aiResponse",aiResponse);
+    finalAIResponse = aiResponse.response.text();
+	console.log("finalAIResponse",finalAIResponse);
+
+    //---------------------------
+    // Present the generated AI response to the user with further options
+	// Prompt user for response handling options (Copy or Replace Note Content)
+    //---------------------------
+    /* const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
+      actions: [     
+        { label: "Copy", value: "copytxt" },
+        { label: "New Note", value: "newnote" },
+      ]
+    });
+
+    if (!result2) { return; }
+    const actionResult = result2;
+
+    // Define a unique filename for the new note, if that option is selected
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `AI_Note_Res_${YYMMDD}_${HHMMSS}`;
+
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Note: ${noteUUID}\n`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
+
+    //---------------------------
+    // Handle user action for AI response (Copy to Clipboard or Create New Note)
+    //---------------------------
+    if (actionResult === "copytxt") {
+      await app.writeClipboardData(finalAIResponse);
+	  console.log("Copied to clipboard.");
+    } else if (actionResult === "newnote") {
+      const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
+	  console.log("New note Created.");
+      await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
+      await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+    } */
+
+  }).catch(error => {
+    console.error("Failed to load library or execute code:", error);
+  });
+	  
+},
 },
 //---------------------------
 // Function for handling options on a specific image by url
 //---------------------------
+// Main Section //
 imageOption: {
   "Text Image": async function (app, image) {
   console.log("image: " + image.src);
@@ -409,7 +631,7 @@ imageOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Img_Res_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Image_Res_${YYMMDD}_${HHMMSS}`;
 
 	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
 	finalAIResponse += `> Text: ${image.caption}. ${image.text}\n`;
@@ -438,6 +660,7 @@ imageOption: {
 //---------------------------
 // Function for handling options on a specific set of notes
 //---------------------------
+// Main Section //
 appOption: {
   "Include Multiple Notes For AI Prompting": async function (app) {
 
@@ -616,6 +839,7 @@ appOption: {
 //---------------------------
 // for generating responses via the Gemini AI model. Grounding with Google Search
 //---------------------------
+// Main Section //
 	"Grounding with Google Search (Paid*)": async function (app) {
   // Prompt the user for input on desired actions with the selected text.
 
@@ -791,6 +1015,7 @@ appOption: {
 //---------------------------
 // for generating responses via the Gemini AI model.
 //---------------------------
+// Main Section //
 	"General AI Text Generation": async function (app) {
   // Prompt the user for input on desired actions with the selected text.
   const result = await app.prompt("Do a Simple General AI Text Search. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -932,6 +1157,7 @@ appOption: {
 //---------------------------
 // For a Task
 //---------------------------
+// Main Section //
 taskOption: {
 	"Task": async function (app, task) {
 
@@ -1078,8 +1304,9 @@ taskOption: {
 },
 },
 //---------------------------
-// For a Task
+// For a Insert Text Option
 //---------------------------
+// Main Section //
 insertText: {
 	"Insert": async function (app) {
 
@@ -1231,6 +1458,7 @@ insertText: {
 // This function handles replacing selected text by prompting the user with various options 
 // for generating responses via the Gemini AI model.
 //---------------------------
+// Main Section //
 dailyJotOption: {
 	"Plan Today": async function (app, noteHandle) {
       console.log("noteHandle",noteHandle);
@@ -1312,9 +1540,9 @@ dailyJotOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_DailyJot_Res_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_2DaysJot_Res_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `**Gemini Ai: ${filename}**`;
+	finalAIResponse = `**Gemini Ai: ${filename}**`;
   
   //---------------------------
   // Load the external Google Generative AI library
@@ -1401,13 +1629,157 @@ dailyJotOption: {
 },
 },
 //---------------------------
-// This function handles replacing selected text by prompting the user with various options
-// for generating responses via the Gemini AI model.
+// Work In progress - Need to find a way to get the content of webpage into a variable, and send it to Gemini AI.
 //---------------------------
+// Main Section //
+/*
 linkOption: {
 	"Link": async function (app, link) {
-      console.log("link",link);
+      console.log("link.description",link.description);
+	  console.log("link.href",link.href);
+
+  // Prompt the user for input on desired actions with the selected text.
+  const result = await app.prompt("What do you want with the Link. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+    inputs: [
+      { label: "Selected URL. You can update it if required.", type: "text", value: `${link.href}` },
+      // Selection for Gemini Model Variants
+      { 
+        label: "Gemini Model variants", 
+        type: "select", 
+        options: [
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" },
+          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" },
+          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" },
+          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+        ],
+        value: "gemini-1.5-flash"
+      },
+      // Options for Prompting Type
+      { 
+        label: "Prompting Type", 
+        type: "select", 
+        options: [
+          { label: "Summarize", value: "Obtain Title and Summarize the data in Website from the URL" },
+          { label: "Explain/Define (Points)", value: "Obtain Title and Explain or Define the data in Website from the URL as points" },
+          { label: "Explain/Define (Paragraph)", value: "Obtain Title and Explain or Define the data in Website from the URL as paragraph" },
+          { label: "Actionable Points", value: "Obtain Title and the data in Website from the URL into Actionable Points" },
+          { label: "Other (Fill following boxes)", value: "Customized - Use the below Details" }
+        ],
+        value: "Obtain Title and Summarize the data in Website from the URL"
+      },
+      // Additional user inputs for customization of the AI response
+	  { label: "AI System Instructions", placeholder: "Eg: You are a cat. Your name is Neko. OR You are a Teacher, Review my Document.", type: "text" },
+      { label: "Add contextual information", placeholder: "Eg: Assume the audience is a group of high school students.", type: "string" },
+      { label: "Specify any constraints", placeholder: "Eg: Summarize in no more than 50 words.", type: "string" },
+      { label: "Define the format of the response", placeholder: "Eg: Provide a list of bullet points.", type: "string" },
+      { label: "Specify the tone or style", placeholder: "Eg: Formal, friendly, persuasive", type: "string" },
+      { label: "Other Free Text requests", placeholder: "Eg: Provide relevant examples or comparisons", type: "string" },
+    ]
+  });
+
+  // Exit if the user cancels the operation
+  if (!result) {
+    app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+    return;
+  }
+
+  // Extract user-selected inputs
+  const [inputURL, modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
+  console.log("result",result);
+  const modelVariantz = modelVariant;
+  console.log("modelVariantz",modelVariantz);
+  let finalAIResponse;
+
+  //---------------------------
+  // Load the external Google Generative AI library
+  //---------------------------
+  function _loadLibrary(url) {
+    return import(url);
+  }
+
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
+    // Initialize GoogleGenerativeAI instance with API key
+    const API_KEY = app.settings["Gemini API Key"]; // Replace with your actual API key
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    // Fetch the generative model specified by the user
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
+	console.log("aiModel",aiModel);
+
+    // Construct the prompt to be sent to the AI model
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "Keep it as short as possible."}.\nFormat: ${promptFormat || "Simple Markdown based on Prompt"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nURL: ${inputURL}`;
+	console.log("promptAI",promptAI);
+    
+    // Generate content based on the constructed prompt
+    const aiResponse = await aiModel.generateContent(promptAI);
+	console.log("aiResponse",aiResponse);
+    finalAIResponse = aiResponse.response.text();
+	console.log("finalAIResponse",finalAIResponse);
+
+    //---------------------------
+    // Present the generated AI response to the user with further options
+	// Prompt user for response handling options (Copy or Replace Note Content)
+    //---------------------------
+    const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
+      actions: [     
+        { label: "Copy", value: "copytxt" },
+		// { label: "Insert", value: "insert" },
+        { label: "New Note", value: "newnote" },
+      ]
+    });
+
+    if (!result) { return; }
+    const actionResult = result2;
+
+    // Define a unique filename for the new note, if that option is selected
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `AI_Link_Res_${YYMMDD}_${HHMMSS}`;
+
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details: (This is still work in progress!)</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> URL: ${inputURL}\n`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "Keep it as short as possible."}.\n> Format: ${promptFormat || "Simple Markdown based on Prompt"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
+
+    //---------------------------
+    // Handle user action for AI response (Copy to Clipboard or Create New Note)
+    //---------------------------
+    if (actionResult === "copytxt") {
+      await app.writeClipboardData(finalAIResponse);
+	  console.log("Copied to clipboard.");
+    } else if (actionResult === "insert") {
+	  const newDescription = finalAIResponse;
+	  app.context.updateLink({ description: newDescription });
+	  console.log("AI Response Inserted");
+	} else if (actionResult === "newnote") {
+      const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
+	  console.log("New note Created.");
+      await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
+      await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+	  // const noteHandle = await app.findNote({ uuid: noteUUIDNew });
+	  // const newNoteLink = `[${filename}](https://www.amplenote.com/notes/${noteHandle.uuid})`;
+	  // return newNoteLink;
+    }
+    
+  }).catch(error => {
+    console.error("Failed to load library or execute code:", error);
+  });
+
 },
 },
+*/
 //---------------------------
 }
