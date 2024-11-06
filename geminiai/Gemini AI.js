@@ -309,10 +309,10 @@ noteOption: {
         value: "gemini-1.5-flash"
       },
       { 
-        label: `Update Name. Current Name: ${noteHandle.name}`,
+        label: `Update Name.`,
         type: "radio", 
         options: [
-          { label: "Do not Update", value: "nothing" },
+          { label: `Keep - Current Name: ${noteHandle.name}`, value: "nothing" },
           { label: "Based on Other Notes in the Same Tag + Content", value: "nametagcontent" },
           { label: "Based on only Content", value: "content" },
           { label: "Random Name (Feeling lucky?)", value: "random" }
@@ -320,10 +320,10 @@ noteOption: {
         value: "nothing"
       },
       { 
-        label: `Update Tags. Current Tag/s: ${noteHandle.tags}`,
+        label: `Update Tags.`,
         type: "radio", 
         options: [
-		  { label: "Do not Update", value: "nothing" },
+		  { label: `Keep - Current Tag/s: ${noteHandle.tags}`, value: "nothing" },
 		  { label: "Based on Other Avaliable Tags + Content", value: "existtagcontent" },
           { label: "Based on only Content", value: "content" },
           { label: "Random Name (Feeling lucky?)", value: "random" }
@@ -345,7 +345,6 @@ noteOption: {
   const modelVariantz = modelVariant;
   console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
-  let promptAI;
 
 	// Fetch and clean markdown content from the note
 	const markdown = await app.getNoteContent({ uuid: noteUUID });
@@ -385,49 +384,60 @@ noteOption: {
 	const noteNames = Array.from(new Set(notesN.flatMap(note => note.name || []))).sort();
 	console.log("noteNames", noteNames);
 
-    // Prompt for Name
-	if (nameUpdate === "random") {
-	promptAI = `
-List 5 Random Names for a note. (Keep it short and simple)
-NoteName = {'Names': string}
-Return: Array<NoteName>`;
-	console.log("promptAI",promptAI);
-	} else if (nameUpdate === "content") {
-	promptAI = `
-List 5 Note Names for a note, by using the below content. (Keep it short and simple)
-Content: ${cleanedMarkdown}
-NoteName = {'Names': string}
-Return: Array<NoteName>`;		
-	} else if (nameUpdate === "nametagcontent") {
-	promptAI = `
-List 5 Note Names for a note, by using the below mentioned list of Note Name as a Template. (Keep it short and simple)
-Existing Names: ${notesN}
-Content: ${cleanedMarkdown}
-NoteName = {'Names': string}
-Return: Array<NoteName>`;
+	let promptAI = "";
+	let includeContent = false;
+
+	// Check if either nameUpdate or tagUpdate requires content
+	if ((nameUpdate === "content" || nameUpdate === "nametagcontent") || 
+		(tagUpdate === "content" || tagUpdate === "existtagcontent")) {
+		includeContent = true;
 	}
 
-    // Prompt for Tag
-	if (tagUpdate === "random") {
-	promptAI = `
-List 5 Random Tags for a note. (Keep it short and simple, And hierarchy is allowed using "/")
-NoteTag = {'Tags': string}
-Return: Array<NoteTag>`;
-	console.log("promptAI",promptAI);
-	} else if (tagUpdate === "content") {
-	promptAI = `
-List 5 Random Tags for a note, by using the below content. (Keep it short and simple, And hierarchy is allowed using "/")
-Content: ${cleanedMarkdown}
-NoteTag = {'Tags': string}
-Return: Array<NoteTag>`;		
-	} else if (tagUpdate === "existtagcontent") {
-	promptAI = `
-List 5 Random Tags for a note, by using the below mentioned list of Tags, if any match. (Keep it short and simple, And hierarchy is allowed using "/")
-Eg Names: ${notesT}
-Content: ${cleanedMarkdown}
-NoteTag = {'Tags': string}
-Return: Array<NoteTag>`;		
+	// Handle Name conditions
+	if (nameUpdate === "random") {
+		promptAI += `
+List 5 Random Names for a note. (Keep it short and simple)
+NoteName = {'Names': string}
+Return using JavaSript: Array<NoteName>`;
+	} else if (nameUpdate === "content") {
+		promptAI += `
+List 5 Note Names for a note, by using the content below. (Keep it short and simple)
+NoteName = {'Names': string}
+Return using JavaSript: Array<NoteName>`;
+	} else if (nameUpdate === "nametagcontent") {
+		promptAI += `
+List 5 Note Names for a note, by using the below-mentioned list of Note Names as a Template. (Keep it short and simple)
+Existing Names: ${JSON.stringify(notesN)}
+NoteName = {'Names': string}
+Return using JavaSript: Array<NoteName>`;
 	}
+
+	// Handle Tag conditions
+	if (tagUpdate === "random") {
+		promptAI += `
+List 5 Random Tags for a note. (Keep it short and simple, hierarchy is allowed using "/")
+NoteTag = {'Tags': string}
+Return using JavaSript: Array<NoteTag>`;
+	} else if (tagUpdate === "content") {
+		promptAI += `
+List 5 Random Tags for a note, using the content below. (Keep it short and simple, hierarchy is allowed using "/")
+NoteTag = {'Tags': string}
+Return using JavaSript: Array<NoteTag>`;
+	} else if (tagUpdate === "existtagcontent") {
+		promptAI += `
+List 5 Random Tags for a note, using the below-mentioned list of Tags, if any match. (Keep it short and simple, hierarchy is allowed using "/")
+Eg Names: ${JSON.stringify(notesT)}
+NoteTag = {'Tags': string}
+Return using JavaSript: Array<NoteTag>`;
+	}
+
+	// Include content if required
+	if (includeContent) {
+		promptAI += `
+Content: ${cleanedMarkdown}`;
+	}
+
+	console.log("promptAI", promptAI);
 
   //---------------------------
   // Load external library for AI response
@@ -436,7 +446,7 @@ Return: Array<NoteTag>`;
     return import(url);
   }
 
-  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, SchemaType, HarmBlockThreshold, HarmCategory }) => {
 	// Safety Settings
 	const safetySettings = [
 	  {
@@ -449,16 +459,91 @@ Return: Array<NoteTag>`;
 	  },
 	];
 
+	const schema = {
+	  description: "List of items with names and tags",
+	  type: SchemaType.ARRAY,
+	  items: {
+		type: SchemaType.OBJECT,
+		properties: {
+		  name: {
+			type: SchemaType.STRING,
+			description: "Name of the item",
+			nullable: true,
+		  },
+		  tag: {
+			type: SchemaType.STRING,
+			description: "Tag associated with the item",
+			nullable: true,
+		  },
+		},
+		// required: ["name"], // Make "name" required, "tag" optional
+	  },
+	};
+
     const API_KEY = app.settings["Gemini API Key"];
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, safetySettings, generationConfig: {
+			responseMimeType: "application/json",
+			responseSchema: schema,
+		  },
+	  });
 	console.log("aiModel",aiModel);
 
     const aiResponse = await aiModel.generateContent(promptAI);
 	console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
 	console.log("finalAIResponse",finalAIResponse);
+
+	// Parse finalAIResponse if it's a JSON string
+	let parsedResponse;
+	try {
+	  parsedResponse = JSON.parse(finalAIResponse);
+	} catch (e) {
+	  console.error("Error parsing finalAIResponse:", e);
+	}
+
+	let namesArray = [];
+	let tagsArray = [];	
+
+	// Check if parsedResponse is an array, then proceed
+	if (Array.isArray(parsedResponse)) {
+	  namesArray = parsedResponse.filter(item => item.name).map(item => item.name);
+	  tagsArray = parsedResponse.filter(item => item.tag).map(item => item.tag);
+
+	  console.log("namesArray:", namesArray);
+	  console.log("tagsArray:", tagsArray);
+	} else {
+	  console.error("finalAIResponse is not an array.");
+	}
+
+  // Prompt the user for desired actions with the note content
+  const resultDecide = await app.prompt("What do you want to do with this Note's Name and Tags. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+    inputs: [
+      { 
+        label: `Update Name.`,
+        type: "radio", 
+        options: namesArray,
+      },
+      { 
+        label: `Update Tags.`,
+        type: "radio", 
+        options: tagsArray,
+      },
+    ]
+  });
+
+  // If the result is falsy, the user canceled the operation
+  if (!resultDecide) {
+    app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+    return;
+  }
+
+  // Extract user-selected inputs
+  const [nameUpdateDecide, tagUpdateDecide] = resultDecide;
+  console.log("resultDecide:", resultDecide);
+  console.log("nameUpdateDecide:", nameUpdateDecide);
+  console.log("tagUpdateDecide:", tagUpdateDecide);
 
     //---------------------------
     // Present the generated AI response to the user with further options
