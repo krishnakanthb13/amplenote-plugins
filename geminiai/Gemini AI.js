@@ -230,7 +230,7 @@ noteOption: {
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
 	console.log("aiModel",aiModel);
 
-    const promptAI = `${promptSelect}.\n Context: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${cleanedMarkdown}`;
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${cleanedMarkdown}`;
 	console.log("promptAI",promptAI);
 
     const aiResponse = await aiModel.generateContent(promptAI);
@@ -607,7 +607,7 @@ appOption: {
 //---------------------------
 // for generating responses via the Gemini AI model. Grounding with Google Search
 //---------------------------
-	"Grounding with Google Search": async function (app) {
+	"Grounding with Google Search (Paid*)": async function (app) {
   // Prompt the user for input on desired actions with the selected text.
 
   const resultz = await app.prompt("Caution: This is a Paid Feature: [$35 / 1K grounding requests (for up to 5K requests per day)]. For latest and additional details visit: https://ai.google.dev/pricing. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -635,7 +635,8 @@ appOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Pro 002", value: "gemini-1.5-flash" },
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
+          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
         ],
         value: "gemini-1.5-flash"
       },
@@ -915,6 +916,152 @@ appOption: {
   }).catch(error => {
     console.error("Failed to load library or execute code:", error);
   });
+},
+},
+//---------------------------
+// For a Task
+//---------------------------
+taskOption: {
+	"Task": async function (app, task) {
+
+	console.log("Task Json Details",JSON.stringify(task));
+	const taskInfo = task;
+	console.log("taskInfo",taskInfo);
+
+  // Prompt the user for input on desired actions with the selected text.
+  const result = await app.prompt("What do you want to do with this Task. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+    inputs: [
+      // Selection for Gemini Model Variants
+      { 
+        label: "Gemini Model variants", 
+        type: "select", 
+        options: [
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
+          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
+          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
+          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+        ],
+        value: "gemini-1.5-flash"
+      },
+      // Options for Prompting Type
+      { 
+        label: "Prompting Type", 
+        type: "select", 
+        options: [
+		  { label: "Give Reasons: Why Should I Do This?", value: "Outline reasons to accomplish this task, adding motivational quotes, affirmations, or positive reinforcements bullet points." },
+		  { label: "Elaborate on the Task", value: "Expand on the task into a 500-word paragraph to gain clarity and depth." },
+		  { label: "Break Task into Smaller Steps", value: "Divide the task into smaller, manageable steps. Assess complexity and prioritize the steps with helpful hints." },
+		  { label: "Break & Assign Deadlines", value: "Divide the task into smaller, manageable steps. Set realistic deadlines for each part of the task to create a timeline for completion." },
+		  { label: "Identify Required Resources", value: "List the tools, information, or resources needed to complete the task efficiently." },
+		  { label: "Identify Potential Obstacles", value: "Anticipate possible challenges and outline solutions to stay prepared and motivated." },
+		  { label: "Define Success Criteria", value: "Describe how you’ll know when the task is complete, establishing clear success markers." },
+		],
+        value: "Outline reasons to accomplish this task, adding motivational quotes, affirmations, or positive reinforcements bullet points."
+	  },
+      // Additional user inputs for customization of the AI response
+	  { label: "AI System Instructions", placeholder: "Eg: You are a cat. Your name is Neko. OR You are a Teacher, Review my Document.", type: "text" },
+      { label: "Add contextual information", placeholder: "Eg: Assume the audience is a group of high school students.", type: "string" },
+      { label: "Specify any constraints", placeholder: "Eg: Summarize in no more than 50 words.", type: "string" },
+      { label: "Define the format of the response", placeholder: "Eg: Provide a list of bullet points.", type: "string" },
+      { label: "Specify the tone or style", placeholder: "Eg: Formal, friendly, persuasive", type: "string" },
+      { label: "Other Free Text requests", placeholder: "Eg: Provide relevant examples or comparisons", type: "string" },
+    ]
+  });
+
+  // Exit if the user cancels the operation
+  if (!result) {
+    app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+    return;
+  }
+
+  // Extract user-selected inputs
+  const [modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
+  console.log("result",result);
+  const modelVariantz = modelVariant;
+  console.log("modelVariantz",modelVariantz);
+  let finalAIResponse;
+
+  //---------------------------
+  // Load the external Google Generative AI library
+  //---------------------------
+  function _loadLibrary(url) {
+    return import(url);
+  }
+
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
+    // Initialize GoogleGenerativeAI instance with API key
+    const API_KEY = app.settings["Gemini API Key"]; // Replace with your actual API key
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    // Fetch the generative model specified by the user
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
+	console.log("aiModel",aiModel);
+
+    // Construct the prompt to be sent to the AI model
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\n\nTask Details\nTask Content: ${taskInfo.content || "None"}.\nImportant: ${taskInfo.important || "No"}.\nUrgent: ${taskInfo.urgent || "No"}.\nStartsAt: ${taskInfo.startAt || "None"}.\nEndsAt: ${taskInfo.endAt || "None"}.\nTaskScore: ${taskInfo.score || 0}`;
+	console.log("promptAI",promptAI);
+    
+    // Generate content based on the constructed prompt
+    const aiResponse = await aiModel.generateContent(promptAI);
+	console.log("aiResponse",aiResponse);
+    finalAIResponse = aiResponse.response.text();
+	console.log("finalAIResponse",finalAIResponse);
+
+    //---------------------------
+    // Present the generated AI response to the user with further options
+	// Prompt user for response handling options (Copy or Replace Note Content)
+    //---------------------------
+    const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
+      actions: [     
+        { label: "Copy", value: "copytxt" },
+        { label: "Linked New Note", value: "newnote" },
+      ]
+    });
+
+    if (!result) { return; }
+    const actionResult = result2;
+
+    // Define a unique filename for the new note, if that option is selected
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `AI_Task_Response_${YYMMDD}_${HHMMSS}`;
+
+	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.\n\n> **Task Details**\n> Task Content: ${taskInfo.content || "None"}.\n> Important: ${taskInfo.important || "No"}.\n> Urgent: ${taskInfo.urgent || "No"}.\n> StartsAt: ${taskInfo.startAt || "None"}.\n> EndsAt: ${taskInfo.endAt || "None"}.\n> TaskScore: ${taskInfo.score || 0}`;
+
+    //---------------------------
+    // Handle user action for AI response (Copy to Clipboard or Create New Note)
+    //---------------------------
+    if (actionResult === "copytxt") {
+      await app.writeClipboardData(finalAIResponse);
+	  console.log("Copied to clipboard.");
+    } else if (actionResult === "newnote") {
+      const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
+	  console.log("New note Created.");
+      await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
+      // await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+	  const noteHandle = await app.findNote({ uuid: noteUUIDNew });
+	  const taskNewContent = `${taskInfo.content} [${filename}](https://www.amplenote.com/notes/${noteHandle.uuid})`;
+	  await app.updateTask(taskInfo.uuid, { content: taskNewContent  });
+    }
+    
+  }).catch(error => {
+    console.error("Failed to load library or execute code:", error);
+  });
+		
 },
 },
 //---------------------------
