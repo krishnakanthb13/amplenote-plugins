@@ -4,7 +4,7 @@
 // for generating responses via the Gemini AI model.
 //---------------------------
 replaceText: {
-	"Text": async function (app, text) {
+	"Selected Text": async function (app, text) {
   // Prompt the user for input on desired actions with the selected text.
   const result = await app.prompt("What do you want to do with this selected Text. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
     inputs: [
@@ -105,6 +105,7 @@ replaceText: {
     const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
       actions: [     
         { label: "Copy", value: "copytxt" },
+		// { label: "Insert", value: "insert" },
         { label: "New Note", value: "newnote" },
       ]
     });
@@ -1063,6 +1064,155 @@ taskOption: {
     console.error("Failed to load library or execute code:", error);
   });
 		
+},
+},
+//---------------------------
+// For a Task
+//---------------------------
+insertText: {
+	"Insert": async function (app) {
+
+  // Prompt the user for input on desired actions with the selected text.
+  const result = await app.prompt("What do you want to Search AI Today. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+    inputs: [
+      { label: "Input your Topic / Prompt of Interest.", placeholder: "Eg: Learning something New / I am feeling Lucky / How to use Amplenote.", type: "text" },
+      // Selection for Gemini Model Variants
+      { 
+        label: "Gemini Model variants", 
+        type: "select", 
+        options: [
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
+          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
+          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
+          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+        ],
+        value: "gemini-1.5-flash"
+      },
+      // Options for Prompting Type
+      { 
+        label: "Prompting Type", 
+        type: "select", 
+        options: [
+          { label: "Explain/Define (Points)", value: "Explain or Define this text as points" },
+          { label: "Explain/Define (Paragraph)", value: "Explain or Define this text as paragraph" },
+          { label: "Summarize", value: "Summarize this text" },
+          { label: "Rephrase", value: "Rephrase this text" },
+          { label: "Actionable Points", value: "Convert into Actionable Points" },
+          { label: "Answer Question", value: "Answer the below question" },
+          { label: "Complete the Sentence", value: "Complete the Sentence" },
+          { label: "Rhymes With (One-word)", value: "Give 5 Rhyming Synonyms and Antonyms" },
+          { label: "Other (Fill following boxes)", value: "Customized - Use the below Details" }
+        ],
+        value: "Explain or Define this text as points"
+      },
+      // Additional user inputs for customization of the AI response
+	  { label: "AI System Instructions", placeholder: "Eg: You are a cat. Your name is Neko. OR You are a Teacher, Review my Document.", type: "text" },
+      { label: "Add contextual information", placeholder: "Eg: Assume the audience is a group of high school students.", type: "string" },
+      { label: "Specify any constraints", placeholder: "Eg: Summarize in no more than 50 words.", type: "string" },
+      { label: "Define the format of the response", placeholder: "Eg: Provide a list of bullet points.", type: "string" },
+      { label: "Specify the tone or style", placeholder: "Eg: Formal, friendly, persuasive", type: "string" },
+      { label: "Other Free Text requests", placeholder: "Eg: Provide relevant examples or comparisons", type: "string" },
+    ]
+  });
+
+  // Exit if the user cancels the operation
+  if (!result) {
+    app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+    return;
+  }
+
+  // Extract user-selected inputs
+  const [inputText, modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
+  console.log("result",result);
+  const modelVariantz = modelVariant;
+  console.log("modelVariantz",modelVariantz);
+  let finalAIResponse;
+
+  //---------------------------
+  // Load the external Google Generative AI library
+  //---------------------------
+  function _loadLibrary(url) {
+    return import(url);
+  }
+
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
+    // Initialize GoogleGenerativeAI instance with API key
+    const API_KEY = app.settings["Gemini API Key"]; // Replace with your actual API key
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    // Fetch the generative model specified by the user
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
+	console.log("aiModel",aiModel);
+
+    // Construct the prompt to be sent to the AI model
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "Keep it as short as possible."}.\nFormat: ${promptFormat || "Simple Markdown based on Prompt"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${inputText}`;
+	console.log("promptAI",promptAI);
+    
+    // Generate content based on the constructed prompt
+    const aiResponse = await aiModel.generateContent(promptAI);
+	console.log("aiResponse",aiResponse);
+    finalAIResponse = aiResponse.response.text();
+	console.log("finalAIResponse",finalAIResponse);
+
+    //---------------------------
+    // Present the generated AI response to the user with further options
+	// Prompt user for response handling options (Copy or Replace Note Content)
+    //---------------------------
+    const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
+      actions: [     
+        { label: "Copy", value: "copytxt" },
+		// { label: "Insert", value: "insert" },
+        { label: "New Note", value: "newnote" },
+      ]
+    });
+
+    if (!result) { return; }
+    const actionResult = result2;
+
+    // Define a unique filename for the new note, if that option is selected
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+
+	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Text: ${inputText}\n`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "Keep it as short as possible."}.\n> Format: ${promptFormat || "Simple Markdown based on Prompt"}.\n> Tone: ${promptTone || "None"}.\n> Additional_Details: ${promptOther || "None"}.`;
+
+    //---------------------------
+    // Handle user action for AI response (Copy to Clipboard or Create New Note)
+    //---------------------------
+    if (actionResult === "copytxt") {
+      await app.writeClipboardData(finalAIResponse);
+	  console.log("Copied to clipboard.");
+    } else if (actionResult === "insert") {
+	  return finalAIResponse;
+	  console.log("AI Response Inserted");
+	} else if (actionResult === "newnote") {
+      const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
+	  console.log("New note Created.");
+      await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
+      await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+	  // const noteHandle = await app.findNote({ uuid: noteUUIDNew });
+	  // const newNoteLink = `[${filename}](https://www.amplenote.com/notes/${noteHandle.uuid})`;
+	  // return newNoteLink;
+    }
+    
+  }).catch(error => {
+    console.error("Failed to load library or execute code:", error);
+  });
 },
 },
 //---------------------------
