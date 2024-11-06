@@ -431,7 +431,7 @@ imageOption: {
 // Function for handling options on a specific set of notes
 //---------------------------
 appOption: {
-  "Multiple Notes": async function (app) {
+  "Include Multiple Notes For AI Prompting": async function (app) {
 
   const result1 = await app.prompt("Select the Notes, that you want to do AI analysis for. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
     inputs: [
@@ -605,13 +605,186 @@ appOption: {
   });
 },
 //---------------------------
+// for generating responses via the Gemini AI model. Grounding with Google Search
+//---------------------------
+	"Grounding with Google Search": async function (app) {
+  // Prompt the user for input on desired actions with the selected text.
+
+  const resultz = await app.prompt("Caution: This is a Paid Feature: [$35 / 1K grounding requests (for up to 5K requests per day)]. For latest and additional details visit: https://ai.google.dev/pricing. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+    inputs: [
+      { 
+        label: "Do you like to proceed?", 
+        type: "radio", 
+        options: [
+          { label: "Yes", value: "Yes" },
+          { label: "No", value: "No" },
+        ]
+      }
+    ]
+  });
+
+  // Exit if the user cancels the operation
+  if (!resultz) { return; }
+  if (resultz !== "Yes") { return; }
+
+  const result = await app.prompt("Do a Simple General AI Text Search. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+    inputs: [
+	  { label: "Input / Paste your Text to be sent to Gemini AI for Text Generation", placeholder: "Eg: Tell me about Amplenote note taking methods.", type: "text" },
+      // Selection for Gemini Model Variants
+      { 
+        label: "Gemini Model variants", 
+        type: "select", 
+        options: [
+          { label: "Gemini 1.5 Pro 002", value: "gemini-1.5-flash" },
+        ],
+        value: "gemini-1.5-flash"
+      },
+      // Options for Prompting Type
+      { 
+        label: "Prompting Type", 
+        type: "select", 
+        options: [
+          { label: "Summarize", value: "Summarize this text" },
+          { label: "Rephrase", value: "Rephrase this text" },
+          { label: "Explain/Define (Points)", value: "Explain or Define this text as points" },
+          { label: "Explain/Define (Paragraph)", value: "Explain or Define this text as paragraph" },
+          { label: "Actionable Points", value: "Convert into Actionable Points" },
+          { label: "Answer Question", value: "Answer the below question" },
+          { label: "Complete the Sentence", value: "Complete the Sentence" },
+          { label: "Rhymes With (One-word)", value: "Give 5 Rhyming Synonyms and Antonyms" },
+          { label: "Other (Fill following boxes)", value: "Customized - Use the below Details" }
+        ],
+        value: "Summarize this text"
+      },
+      // Additional user inputs for customization of the AI response
+	  // { label: "AI System Instructions", placeholder: "Eg: You are a cat. Your name is Neko. OR You are a Teacher, Review my Document.", type: "text" },
+      { label: "Add contextual information", placeholder: "Eg: Assume the audience is a group of high school students.", type: "string" },
+      { label: "Specify any constraints", placeholder: "Eg: Summarize in no more than 50 words.", type: "string" },
+      { label: "Define the format of the response", placeholder: "Eg: Provide a list of bullet points.", type: "string" },
+      { label: "Specify the tone or style", placeholder: "Eg: Formal, friendly, persuasive", type: "string" },
+      { label: "Other Free Text requests", placeholder: "Eg: Provide relevant examples or comparisons", type: "string" },
+    ]
+  });
+
+  // Exit if the user cancels the operation
+  if (!result) {
+    app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+    return;
+  }
+
+  // Extract user-selected inputs
+  // const [inputText, modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
+  const [inputText, modelVariant, promptSelect, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
+  console.log("result",result);
+  const modelVariantz = modelVariant;
+  console.log("modelVariantz",modelVariantz);
+  let finalAIResponse;
+
+  //---------------------------
+  // Load the external Google Generative AI library
+  //---------------------------
+  function _loadLibrary(url) {
+    return import(url);
+  }
+
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ DynamicRetrievalMode, GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
+    // Initialize GoogleGenerativeAI instance with API key
+    const API_KEY = app.settings["Gemini API Key"]; // Replace with your actual API key
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    // Fetch the generative model specified by the user
+	const aiModel = genAI.getGenerativeModel(
+	  {
+		model: `${modelVariantz}`,
+		// safetySettings,
+		tools: [
+		  {
+			googleSearchRetrieval: {
+			  dynamicRetrievalConfig: {
+				mode: DynamicRetrievalMode.MODE_DYNAMIC,
+				dynamicThreshold: 0.7,
+			  },
+			},
+		  },
+		],
+	  },
+	  { apiVersion: "v1beta" },
+	);
+
+	console.log("aiModel",aiModel);
+
+    // Construct the prompt to be sent to the AI model
+    // const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${inputText}`;
+	const promptAI = `${inputText}`;
+	console.log("promptAI",promptAI);
+    
+    // Generate content based on the constructed prompt
+    const aiResponse = await aiModel.generateContent(promptAI);
+	console.log("aiResponse",aiResponse);
+    finalAIResponse = aiResponse.response.candidates[0].groundingMetadata;
+	console.log("finalAIResponse",finalAIResponse);
+
+    //---------------------------
+    // Present the generated AI response to the user with further options
+	// Prompt user for response handling options (Copy or Replace Note Content)
+    //---------------------------
+    const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
+      actions: [     
+        { label: "Copy", value: "copytxt" },
+        { label: "New Note", value: "newnote" },
+      ]
+    });
+
+    if (!result) { return; }
+    const actionResult = result2;
+
+    // Define a unique filename for the new note, if that option is selected
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+
+	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Text: ${inputText}\n`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional_Details: ${promptOther || "None"}.`;
+
+    //---------------------------
+    // Handle user action for AI response (Copy to Clipboard or Create New Note)
+    //---------------------------
+    if (actionResult === "copytxt") {
+      await app.writeClipboardData(finalAIResponse);
+	  console.log("Copied to clipboard.");
+    } else if (actionResult === "newnote") {
+      const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
+	  console.log("New note Created.");
+      await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
+      await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+    }
+    
+  }).catch(error => {
+    console.error("Failed to load library or execute code:", error);
+  });
+},
+//---------------------------
 // for generating responses via the Gemini AI model.
 //---------------------------
-	"General AI Search": async function (app) {
+	"General AI Text Generation": async function (app) {
   // Prompt the user for input on desired actions with the selected text.
   const result = await app.prompt("Do a Simple General AI Text Search. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
     inputs: [
-	  { label: "Input / Paste your Search Text to be sent to Gemini AI", placeholder: "Eg: Tell me about Amplenote note taking methods.", type: "text" },
+	  { label: "Input / Paste your Text to be sent to Gemini AI for Text Generation", placeholder: "Eg: Tell me about Amplenote note taking methods.", type: "text" },
       // Selection for Gemini Model Variants
       { 
         label: "Gemini Model variants", 
