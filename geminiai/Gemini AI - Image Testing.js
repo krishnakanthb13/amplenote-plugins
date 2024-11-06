@@ -404,3 +404,42 @@ imageOption: {
 },
 //---------------------------
 }
+
+
+
+
+
+
+
+
+/*
+//---------------------------
+"Generate Image": async function (app) {
+	
+async function generateImage() {
+  try {
+    if (typeof _loadLibrary === 'function') { // Check if _loadLibrary exists
+      const { GoogleGenerativeAI } = await _loadLibrary("https://esm.run/@google/generativeai");
+    const apiKey = app.settings["Gemini API Key"]; // Replace with your actual API key
+    const prompt = 'A sunny beach with palm trees';
+
+    const client = new GoogleGenerativeAI(apiKey);
+
+    const response = await client.generate({
+      prompt: { text: prompt },
+      model: 'imagen-3.0-generate-001',
+      parameters: { numberOfImages: 1, aspectRatio: '1:1' }
+    });
+    } else {
+      console.error('_loadLibrary function not found. Image generation not supported.');
+    }
+  } catch (error) {
+    console.error('Image generation failed:', error);
+  }
+}
+
+generateImage();
+
+
+},
+*/
