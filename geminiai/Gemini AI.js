@@ -56,9 +56,9 @@ replaceText: {
 
   // Extract user-selected inputs
   const [modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
   //---------------------------
@@ -87,17 +87,17 @@ replaceText: {
 
     // Fetch the generative model specified by the user
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${text}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -130,10 +130,10 @@ replaceText: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
     }
@@ -194,9 +194,9 @@ noteOption: {
 
   // Extract user-selected inputs
   const [modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
 	// Fetch and clean markdown content from the note
@@ -232,15 +232,15 @@ noteOption: {
     const genAI = new GoogleGenerativeAI(API_KEY);
 
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${cleanedMarkdown}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
 
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -272,10 +272,10 @@ noteOption: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
     }
@@ -289,10 +289,10 @@ noteOption: {
 //---------------------------
 // Main Section //
   "Note Name Tag": async function (app, noteUUID) {
-	  console.log("noteUUID", noteUUID);
+	  // console.log("noteUUID", noteUUID);
 	  
 	  const noteHandle = await app.findNote({ uuid: noteUUID });
-	  console.log("noteHandle", noteHandle);
+	  // console.log("noteHandle", noteHandle);
 
   // Prompt the user for desired actions with the note content
   const result = await app.prompt("What do you want to do with this Note's Name and Tags. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -341,9 +341,9 @@ noteOption: {
 
   // Extract user-selected inputs
   const [modelVariant, nameUpdate, tagUpdate] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
 	// Fetch and clean markdown content from the note
@@ -359,7 +359,7 @@ noteOption: {
 	let notesT = [];
 	notesT = await app.filterNotes({ });
 	const noteTags = Array.from(new Set(notesT.flatMap(note => note.tags))).sort();
-	console.log("noteTags", noteTags);
+	// console.log("noteTags", noteTags);
 	
 	// Split tags into an array
 	let notesN = [];
@@ -382,7 +382,7 @@ noteOption: {
 	} 
 	// Step 2: Get unique names and sort them (All Note Names - Linked to the Tag or Tags)
 	const noteNames = Array.from(new Set(notesN.flatMap(note => note.name || []))).sort();
-	console.log("noteNames", noteNames);
+	// console.log("noteNames", noteNames);
 
 	let promptAI = "";
 	let includeContent = false;
@@ -441,7 +441,7 @@ Return using JavaSript: Array<NoteTag>`;
 Content: ${cleanedMarkdown}`;
 	} */
 
-	console.log("promptAI", promptAI);
+	// console.log("promptAI", promptAI);
 
   //---------------------------
   // Load external library for AI response
@@ -492,12 +492,12 @@ Content: ${cleanedMarkdown}`;
 			responseSchema: schema,
 		  },
 	  });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
 	// Parse finalAIResponse if it's a JSON string
 	let parsedResponse;
@@ -527,8 +527,8 @@ Content: ${cleanedMarkdown}`;
 		  value: tag
 		}));
 
-	  console.log("namesArray:", namesArray);
-	  console.log("tagsArray:", tagsArray);
+	  // console.log("namesArray:", namesArray);
+	  // console.log("tagsArray:", tagsArray);
 	} else {
 	  console.error("finalAIResponse is not an array.");
 	}
@@ -557,9 +557,9 @@ Content: ${cleanedMarkdown}`;
 
   // Extract user-selected inputs
   const [nameUpdateDecide, tagUpdateDecide] = resultDecide;
-  console.log("resultDecide:", resultDecide);
-  console.log("nameUpdateDecide:", nameUpdateDecide);
-  console.log("tagUpdateDecide:", tagUpdateDecide);
+  // console.log("resultDecide:", resultDecide);
+  // console.log("nameUpdateDecide:", nameUpdateDecide);
+  // console.log("tagUpdateDecide:", tagUpdateDecide);
 
 	if (nameUpdateDecide) {
 		const nameAdded = await app.setNoteName(noteHandle, nameUpdateDecide);
@@ -583,8 +583,8 @@ Content: ${cleanedMarkdown}`;
 // Main Section //
 imageOption: {
   "Text Image": async function (app, image) {
-  console.log("image: " + image.src);
-  console.log(image);
+  // console.log("image: " + image.src);
+  // console.log(image);
 
   // Prompt the user for desired actions with the note content
   const result = await app.prompt("What do you want to do with this Image. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -631,13 +631,13 @@ imageOption: {
 
   // Extract user-selected inputs
   const [modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
 
 	// Use URL methods to get the filename with extension
 	const filenameWithExtension = image.src.split('/').pop();
@@ -645,8 +645,8 @@ imageOption: {
 	// Separate the name and the extension
 	const [name, extension] = filenameWithExtension.split('.');
 
-	console.log("File name:", name);
-	console.log("Extension:", extension);
+	// console.log("File name:", name);
+	// console.log("Extension:", extension);
 
   //---------------------------
   // Load external library for AI response
@@ -674,17 +674,17 @@ imageOption: {
 
     // Fetch the generative model specified by the user
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${image.caption}. ${image.text}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -716,10 +716,10 @@ imageOption: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
     }
@@ -757,7 +757,7 @@ appOption: {
 
   // Extract user-selected inputs
   const [note1, note2, note3, note4, note5, note6, note7] = result1;
-  console.log("result1",result1);
+  // console.log("result1",result1);
 
   // Prompt the user for desired actions with the note content
   const result = await app.prompt("What do you want to do with this Notes. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -801,9 +801,9 @@ appOption: {
 
   // Extract user-selected inputs
   const [modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
   let markdown;
 
@@ -850,15 +850,15 @@ appOption: {
     const genAI = new GoogleGenerativeAI(API_KEY);
 
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nNote Info: Each Note is separated by #0000#\nNote Collection: ${cleanedMarkdown}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
 
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -897,10 +897,10 @@ appOption: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
     }
@@ -982,9 +982,9 @@ appOption: {
   // Extract user-selected inputs
   // const [inputText, modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
   const [inputText, modelVariant, promptSelect, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
   //---------------------------
@@ -1030,18 +1030,18 @@ appOption: {
 	  { apiVersion: "v1beta" },
 	);
 
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
     // const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${inputText}`;
 	const promptAI = `${inputText}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.candidates[0].groundingMetadata;
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -1073,10 +1073,10 @@ appOption: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
     }
@@ -1141,9 +1141,9 @@ appOption: {
 
   // Extract user-selected inputs
   const [inputText, modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
   //---------------------------
@@ -1172,17 +1172,17 @@ appOption: {
 
     // Fetch the generative model specified by the user
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${inputText}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -1214,10 +1214,10 @@ appOption: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
     }
@@ -1234,9 +1234,9 @@ appOption: {
 taskOption: {
 	"Task": async function (app, task) {
 
-	console.log("Task Json Details",JSON.stringify(task));
+	// console.log("Task Json Details",JSON.stringify(task));
 	const taskInfo = task;
-	console.log("taskInfo",taskInfo);
+	// console.log("taskInfo",taskInfo);
 
   // Prompt the user for input on desired actions with the selected text.
   const result = await app.prompt("What do you want to do with this Task. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -1287,9 +1287,9 @@ taskOption: {
 
   // Extract user-selected inputs
   const [modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
   //---------------------------
@@ -1318,17 +1318,17 @@ taskOption: {
 
     // Fetch the generative model specified by the user
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\n\nTask Details\nTask Content: ${taskInfo.content || "None"}.\nImportant: ${taskInfo.important || "No"}.\nUrgent: ${taskInfo.urgent || "No"}.\nStartsAt: ${taskInfo.startAt || "None"}.\nEndsAt: ${taskInfo.endAt || "None"}.\nTaskScore: ${taskInfo.score || 0}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -1359,10 +1359,10 @@ taskOption: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       // await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 	  const noteHandle = await app.findNote({ uuid: noteUUIDNew });
@@ -1434,9 +1434,9 @@ insertText: {
 
   // Extract user-selected inputs
   const [inputText, modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
   //---------------------------
@@ -1465,17 +1465,17 @@ insertText: {
 
     // Fetch the generative model specified by the user
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "Keep it as short as possible."}.\nFormat: ${promptFormat || "Simple Markdown based on Prompt"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${inputText}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -1508,13 +1508,13 @@ insertText: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "insert") {
 	  return finalAIResponse;
-	  console.log("AI Response Inserted");
+	  // console.log("AI Response Inserted");
 	} else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 	  // const noteHandle = await app.findNote({ uuid: noteUUIDNew });
@@ -1534,13 +1534,13 @@ insertText: {
 // Main Section //
 dailyJotOption: {
 	"Plan Today": async function (app, noteHandle) {
-      console.log("noteHandle",noteHandle);
+      // console.log("noteHandle",noteHandle);
 
 	let dailyJotNote = await app.filterNotes({ tag: `${noteHandle.tags}`, group: "^vault", query: noteHandle.name });
-	console.log("dailyJotNote",dailyJotNote);
-	console.log("dailyJotNote",dailyJotNote[0].uuid);
+	// console.log("dailyJotNote",dailyJotNote);
+	// console.log("dailyJotNote",dailyJotNote[0].uuid);
 	const currentNoteuuid = dailyJotNote[0].uuid;
-	console.log("currentNoteuuid",currentNoteuuid);
+	// console.log("currentNoteuuid",currentNoteuuid);
 
   // Prompt the user for input on desired actions with the selected text.
   const result = await app.prompt("What do you want to Search AI Today. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -1604,9 +1604,9 @@ dailyJotOption: {
 
   // Extract user-selected inputs
   const [inputText, modelVariant, energyLevels, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
     // Define a unique filename for the new note, if that option is selected
@@ -1643,17 +1643,17 @@ dailyJotOption: {
 
     // Fetch the generative model specified by the user
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
     const promptAI = `${promptSelect}.\nEnergy Level: ${energyLevels}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "Keep it as short as possible."}.\nFormat: ${promptFormat || "Simple Markdown based on Prompt"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nCurrent Time: ${now}.\nTask or Plan: ${inputText}. P.S.: The response is to dive deep into a task or plan for the day, consider the energy levels too, and give an affirmation based on task, plan and energy levels.`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse += aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -1680,13 +1680,13 @@ dailyJotOption: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "insert") {
 	  await app.insertNoteContent({ uuid: currentNoteuuid }, finalAIResponse);
-	  console.log("AI Response Inserted");
+	  // console.log("AI Response Inserted");
 	} else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       // await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 	  const noteHandle = await app.findNote({ uuid: noteUUIDNew });
@@ -1707,8 +1707,8 @@ dailyJotOption: {
 // Main Section //
 linkOption: {
 	"Link": async function (app, link) {
-      console.log("link.description",link.description);
-	  console.log("link.href",link.href);
+      // console.log("link.description",link.description);
+	  // console.log("link.href",link.href);
 
   // Prompt the user for input on desired actions with the selected text.
   const result = await app.prompt("What do you want with the Link. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
@@ -1757,9 +1757,9 @@ linkOption: {
 
   // Extract user-selected inputs
   const [inputURL, modelVariant, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
-  console.log("result",result);
+  // console.log("result",result);
   const modelVariantz = modelVariant;
-  console.log("modelVariantz",modelVariantz);
+  // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
   //---------------------------
@@ -1788,17 +1788,17 @@ linkOption: {
 
     // Fetch the generative model specified by the user
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
-	console.log("aiModel",aiModel);
+	// console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
     const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "Keep it as short as possible."}.\nFormat: ${promptFormat || "Simple Markdown based on Prompt"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nURL: ${inputURL}`;
-	console.log("promptAI",promptAI);
+	// console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
     const aiResponse = await aiModel.generateContent(promptAI);
-	console.log("aiResponse",aiResponse);
+	// console.log("aiResponse",aiResponse);
     finalAIResponse = aiResponse.response.text();
-	console.log("finalAIResponse",finalAIResponse);
+	// console.log("finalAIResponse",finalAIResponse);
 
     //---------------------------
     // Present the generated AI response to the user with further options
@@ -1831,14 +1831,14 @@ linkOption: {
     //---------------------------
     if (actionResult === "copytxt") {
       await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
+	  // console.log("Copied to clipboard.");
     } else if (actionResult === "insert") {
 	  const newDescription = finalAIResponse;
 	  app.context.updateLink({ description: newDescription });
-	  console.log("AI Response Inserted");
+	  // console.log("AI Response Inserted");
 	} else if (actionResult === "newnote") {
       const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
+	  // console.log("New note Created.");
       await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
       await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 	  // const noteHandle = await app.findNote({ uuid: noteUUIDNew });
