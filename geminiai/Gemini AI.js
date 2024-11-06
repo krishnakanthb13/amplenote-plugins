@@ -89,7 +89,7 @@ replaceText: {
 	console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
-    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${text}`;
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${text}`;
 	console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
@@ -117,11 +117,12 @@ replaceText: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Text_Res_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
 	finalAIResponse += `> Text: ${text}\n`;
-	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional_Details: ${promptOther || "None"}.`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -231,7 +232,7 @@ noteOption: {
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
 	console.log("aiModel",aiModel);
 
-    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${cleanedMarkdown}`;
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${cleanedMarkdown}`;
 	console.log("promptAI",promptAI);
 
     const aiResponse = await aiModel.generateContent(promptAI);
@@ -257,11 +258,12 @@ noteOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Note_Res_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `\n### *<mark>Expand to Read more: Details of Note considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
 	finalAIResponse += `> Note: ${noteUUID}\n`;
-	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional_Details: ${promptOther || "None"}.`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -339,7 +341,7 @@ imageOption: {
   console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
 
-    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.`;
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.`;
 	console.log("promptAI",promptAI);
 
 	// Use URL methods to get the filename with extension
@@ -380,7 +382,7 @@ imageOption: {
 	console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
-    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${image.caption}. ${image.text}`;
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${image.caption}. ${image.text}`;
 	console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
@@ -407,7 +409,12 @@ imageOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Img_Res_${YYMMDD}_${HHMMSS}`;
+
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Text: ${image.caption}. ${image.text}\n`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Energy Level: ${energyLevels}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "Keep it as short as possible."}.\n> Format: ${promptFormat || "Simple Markdown based on Prompt"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -549,7 +556,7 @@ appOption: {
     const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
 	console.log("aiModel",aiModel);
 
-    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nNote Info: Each Note is separated by #0000#\nNote Collection: ${cleanedMarkdown}`;
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nNote Info: Each Note is separated by #0000#\nNote Collection: ${cleanedMarkdown}`;
 	console.log("promptAI",promptAI);
 
     const aiResponse = await aiModel.generateContent(promptAI);
@@ -575,9 +582,9 @@ appOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_MultiNote_Res_${YYMMDD}_${HHMMSS}`;
 	
-	finalAIResponse += `\n### *<mark>Expand to Read more: Details of notes considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
 
 	for (let i = 0; i < notes.length; i++) {
 		const note = notes[i];
@@ -586,7 +593,8 @@ appOption: {
 		}
 	}
 	
-	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional_Details: ${promptOther || "None"}.`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -728,7 +736,7 @@ appOption: {
 	console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
-    // const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${inputText}`;
+    // const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${inputText}`;
 	const promptAI = `${inputText}`;
 	console.log("promptAI",promptAI);
     
@@ -756,11 +764,12 @@ appOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_GSearch_Res_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
 	finalAIResponse += `> Text: ${inputText}\n`;
-	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional_Details: ${promptOther || "None"}.`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -868,7 +877,7 @@ appOption: {
 	console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
-    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${inputText}`;
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "None"}.\nFormat: ${promptFormat || "Markdown"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${inputText}`;
 	console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
@@ -895,11 +904,12 @@ appOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_General_Res_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
 	finalAIResponse += `> Text: ${inputText}\n`;
-	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional_Details: ${promptOther || "None"}.`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -1039,10 +1049,11 @@ taskOption: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Task_Response_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Task_Res_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
 	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.\n\n> **Task Details**\n> Task Content: ${taskInfo.content || "None"}.\n> Important: ${taskInfo.important || "No"}.\n> Urgent: ${taskInfo.urgent || "No"}.\n> StartsAt: ${taskInfo.startAt || "None"}.\n> EndsAt: ${taskInfo.endAt || "None"}.\n> TaskScore: ${taskInfo.score || 0}`;
+	finalAIResponse += `\n---`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -1157,7 +1168,7 @@ insertText: {
 	console.log("aiModel",aiModel);
 
     // Construct the prompt to be sent to the AI model
-    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "Keep it as short as possible."}.\nFormat: ${promptFormat || "Simple Markdown based on Prompt"}.\nTone: ${promptTone || "None"}.\nAdditional_Details: ${promptOther || "None"}.\nText: ${inputText}`;
+    const promptAI = `${promptSelect}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "Keep it as short as possible."}.\nFormat: ${promptFormat || "Simple Markdown based on Prompt"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nText: ${inputText}`;
 	console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
@@ -1185,11 +1196,12 @@ insertText: {
     const now = new Date();
     const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
     const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Response_${YYMMDD}_${HHMMSS}`;
+    const filename = `AI_Insert_Res_${YYMMDD}_${HHMMSS}`;
 
-	finalAIResponse += `\n### *<mark>Expand to Read more: Details of text considered.</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
 	finalAIResponse += `> Text: ${inputText}\n`;
-	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "Keep it as short as possible."}.\n> Format: ${promptFormat || "Simple Markdown based on Prompt"}.\n> Tone: ${promptTone || "None"}.\n> Additional_Details: ${promptOther || "None"}.`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "Keep it as short as possible."}.\n> Format: ${promptFormat || "Simple Markdown based on Prompt"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
 
     //---------------------------
     // Handle user action for AI response (Copy to Clipboard or Create New Note)
@@ -1213,6 +1225,188 @@ insertText: {
   }).catch(error => {
     console.error("Failed to load library or execute code:", error);
   });
+},
+},
+//---------------------------
+// This function handles replacing selected text by prompting the user with various options 
+// for generating responses via the Gemini AI model.
+//---------------------------
+dailyJotOption: {
+	"Plan Today": async function (app, noteHandle) {
+      console.log("noteHandle",noteHandle);
+
+	let dailyJotNote = await app.filterNotes({ tag: `${noteHandle.tags}`, group: "^vault", query: noteHandle.name });
+	console.log("dailyJotNote",dailyJotNote);
+	console.log("dailyJotNote",dailyJotNote[0].uuid);
+	const currentNoteuuid = dailyJotNote[0].uuid;
+	console.log("currentNoteuuid",currentNoteuuid);
+
+  // Prompt the user for input on desired actions with the selected text.
+  const result = await app.prompt("What do you want to Search AI Today. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+    inputs: [
+      { label: "Input your Task / Plan For Today.", placeholder: "Eg: Cleaning my Cupboard, Rest Day, Movie Time, Family Time, Self-reflecting Day", type: "text" },
+      // Selection for Gemini Model Variants
+      { 
+        label: "Gemini Model variants", 
+        type: "select", 
+        options: [
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
+          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
+          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
+          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+        ],
+        value: "gemini-1.5-flash"
+      },
+      { 
+        label: "Energy Levels", 
+        type: "select", 
+        options: [
+		  { label: "Low - Drained, Need a Gentle Push", value: "Low - Drained, Need a Gentle Push" },
+		  { label: "Normal - Calm, Relaxed", value: "Normal - Calm, Relaxed" },
+		  { label: "High - Excited, Possibility", value: "High - Excited, Possibility" },
+		  { label: "Extra-ordinary - Delighted, Abundance", value: "Extra-ordinary - Delighted, Abundance" },
+        ],
+        value: "Normal - Calm, Relaxed"
+      },
+      // Options for Prompting Type
+      { 
+        label: "Prompting Type", 
+        type: "select", 
+        options: [
+		  { label: "Plan rest of the day", value: "Outline a detailed plan for the entire day in point format for the rest of the day." },
+		  { label: "Plan for Morning", value: "Outline a detailed plan for the morning as a descriptive paragraph." },
+		  { label: "Plan for Midday", value: "Outline a detailed plan of activities and priorities for midday." },
+		  { label: "Plan for Evening", value: "Outline a detailed plan for evening to improve clarity and tone." },
+		  { label: "Plan for 2H: 30M Blocks", value: "Break down tasks into actionable steps fitting within 2 hours and 30 minute blocks." },
+		  { label: "Plan for 4H: 30M Blocks + 1 15M Break", value: "Break down tasks into actionable steps fitting within 4 hours, 30 minute blocks, 15 minute break inbetween." },
+		  { label: "Break down the Task / Plan", value: "Break down the Task / Plan mentioned into actionable steps." },
+		  { label: "Give me Something to Read", value: "Respond with a concise yet detailed content rich 500 word Essay on the Task / Plan to read and act on." },
+          { label: "Other (Fill following boxes)", value: "Customized - Use the below Details" }
+        ],
+        value: "Outline a detailed plan for the entire day in point format for the rest of the day."
+      },
+      // Additional user inputs for customization of the AI response
+	  { label: "AI System Instructions", placeholder: "Eg: You are a cat. Your name is Neko. OR You are a Teacher, Review my Document.", type: "text" },
+      { label: "Add contextual information", placeholder: "Eg: Assume the audience is a group of high school students.", type: "string" },
+      { label: "Specify any constraints", placeholder: "Eg: Summarize in no more than 50 words.", type: "string" },
+      { label: "Define the format of the response", placeholder: "Eg: Provide a list of bullet points.", type: "string" },
+      { label: "Specify the tone or style", placeholder: "Eg: Formal, friendly, persuasive", type: "string" },
+      { label: "Other Free Text requests", placeholder: "Eg: Provide relevant examples or comparisons", type: "string" },
+    ]
+  });
+
+  // Exit if the user cancels the operation
+  if (!result) {
+    app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+    return;
+  }
+
+  // Extract user-selected inputs
+  const [inputText, modelVariant, energyLevels, promptSelect, systemInstruction, promptContext, promptConstraint, promptFormat, promptTone, promptOther] = result;
+  console.log("result",result);
+  const modelVariantz = modelVariant;
+  console.log("modelVariantz",modelVariantz);
+  let finalAIResponse;
+
+    // Define a unique filename for the new note, if that option is selected
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `AI_DailyJot_Res_${YYMMDD}_${HHMMSS}`;
+
+	finalAIResponse += `**Gemini Ai: ${filename}**`;
+  
+  //---------------------------
+  // Load the external Google Generative AI library
+  //---------------------------
+  function _loadLibrary(url) {
+    return import(url);
+  }
+
+  _loadLibrary("https://esm.run/@google/generative-ai").then(async ({ GoogleGenerativeAI, HarmBlockThreshold, HarmCategory }) => {
+	// Safety Settings
+	const safetySettings = [
+	  {
+		category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	  {
+		category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+		threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+	  },
+	];
+
+    // Initialize GoogleGenerativeAI instance with API key
+    const API_KEY = app.settings["Gemini API Key"]; // Replace with your actual API key
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    // Fetch the generative model specified by the user
+    const aiModel = genAI.getGenerativeModel({ model: `${modelVariantz}`, systemInstruction: `${systemInstruction}`, safetySettings });
+	console.log("aiModel",aiModel);
+
+    // Construct the prompt to be sent to the AI model
+    const promptAI = `${promptSelect}.\nEnergy Level: ${energyLevels}.\nContext: ${promptContext || "None"}.\nConstraint: ${promptConstraint || "Keep it as short as possible."}.\nFormat: ${promptFormat || "Simple Markdown based on Prompt"}.\nTone: ${promptTone || "None"}.\nAdditional Details: ${promptOther || "None"}.\nCurrent Time: ${now}.\nTask or Plan: ${inputText}. P.S.: The response is to dive deep into a task or plan for the day, consider the energy levels too, and give an affirmation based on task, plan and energy levels.`;
+	console.log("promptAI",promptAI);
+    
+    // Generate content based on the constructed prompt
+    const aiResponse = await aiModel.generateContent(promptAI);
+	console.log("aiResponse",aiResponse);
+    finalAIResponse += aiResponse.response.text();
+	console.log("finalAIResponse",finalAIResponse);
+
+    //---------------------------
+    // Present the generated AI response to the user with further options
+	// Prompt user for response handling options (Copy or Replace Note Content)
+    //---------------------------
+    const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
+      actions: [     
+        { label: "Copy", value: "copytxt" },
+		{ label: "Insert", value: "insert" },
+        { label: "New Note", value: "newnote" },
+      ]
+    });
+
+    if (!result) { return; }
+    const actionResult = result2;
+
+	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
+	finalAIResponse += `> Text: ${inputText}\n`;
+	finalAIResponse += `> Prompt: ${promptSelect}.\n> Energy Level: ${energyLevels}.\n> Context: ${promptContext || "None"}.\n> Constraint: ${promptConstraint || "Keep it as short as possible."}.\n> Format: ${promptFormat || "Simple Markdown based on Prompt"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
+	finalAIResponse += `\n---`;
+
+    //---------------------------
+    // Handle user action for AI response (Copy to Clipboard or Create New Note)
+    //---------------------------
+    if (actionResult === "copytxt") {
+      await app.writeClipboardData(finalAIResponse);
+	  console.log("Copied to clipboard.");
+    } else if (actionResult === "insert") {
+	  await app.insertNoteContent({ uuid: currentNoteuuid }, finalAIResponse);
+	  console.log("AI Response Inserted");
+	} else if (actionResult === "newnote") {
+      const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
+	  console.log("New note Created.");
+      await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
+      // await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
+	  const noteHandle = await app.findNote({ uuid: noteUUIDNew });
+	  const newNoteLink = `- [${filename}](https://www.amplenote.com/notes/${currentNoteuuid})`;
+	  await app.insertNoteContent({ uuid: currentNoteuuid }, newNoteLink);
+    }
+    
+  }).catch(error => {
+    console.error("Failed to load library or execute code:", error);
+  });
+
+
+},
+},
+//---------------------------
+// This function handles replacing selected text by prompting the user with various options
+// for generating responses via the Gemini AI model.
+//---------------------------
+linkOption: {
+	"Link": async function (app, link) {
+      console.log("link",link);
 },
 },
 //---------------------------
