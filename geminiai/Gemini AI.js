@@ -313,7 +313,7 @@ noteOption: {
         type: "radio", 
         options: [
           { label: `Keep - Current Name: ${noteHandle.name}`, value: "nothing" },
-          { label: "Based on Other Notes in the Same Tag + Content", value: "nametagcontent" },
+          { label: "Based on Other Notes in the Same Tag + Content (Resource Intensive*)", value: "nametagcontent" },
           { label: "Based on only Content", value: "content" },
           { label: "Random Name (Feeling lucky?)", value: "random" }
         ],
@@ -324,7 +324,7 @@ noteOption: {
         type: "radio", 
         options: [
 		  { label: `Keep - Current Tag/s: ${noteHandle.tags}`, value: "nothing" },
-		  { label: "Based on Other Avaliable Tags + Content", value: "existtagcontent" },
+		  { label: "Based on Other Avaliable Tags + Content (Resource Intensive*)", value: "existtagcontent" },
           { label: "Based on only Content", value: "content" },
           { label: "Random Name (Feeling lucky?)", value: "random" }
         ],
@@ -388,10 +388,10 @@ noteOption: {
 	let includeContent = false;
 
 	// Check if either nameUpdate or tagUpdate requires content
-	if ((nameUpdate === "content" || nameUpdate === "nametagcontent") || 
+	/* if ((nameUpdate === "content" || nameUpdate === "nametagcontent") || 
 		(tagUpdate === "content" || tagUpdate === "existtagcontent")) {
 		includeContent = true;
-	}
+	} */
 
 	// Handle Name conditions
 	if (nameUpdate === "random") {
@@ -402,6 +402,7 @@ Return using JavaSript: Array<NoteName>`;
 	} else if (nameUpdate === "content") {
 		promptAI += `
 List 5 Note Names for a note, by using the content below. (Keep it short and simple)
+Content: ${cleanedMarkdown}
 NoteName = {'Names': string}
 Return using JavaSript: Array<NoteName>`;
 	} else if (nameUpdate === "nametagcontent") {
@@ -412,6 +413,8 @@ NoteName = {'Names': string}
 Return using JavaSript: Array<NoteName>`;
 	}
 
+	promptAI += `\n`;
+
 	// Handle Tag conditions
 	if (tagUpdate === "random") {
 		promptAI += `
@@ -421,6 +424,7 @@ Return using JavaSript: Array<NoteTag>`;
 	} else if (tagUpdate === "content") {
 		promptAI += `
 List 5 Random Tags for a note, using the content below. (Keep it short and simple, hierarchy is allowed using "/")
+Content: ${cleanedMarkdown}
 NoteTag = {'Tags': string}
 Return using JavaSript: Array<NoteTag>`;
 	} else if (tagUpdate === "existtagcontent") {
@@ -432,10 +436,10 @@ Return using JavaSript: Array<NoteTag>`;
 	}
 
 	// Include content if required
-	if (includeContent) {
+	/* if (includeContent) {
 		promptAI += `
 Content: ${cleanedMarkdown}`;
-	}
+	} */
 
 	console.log("promptAI", promptAI);
 
@@ -503,13 +507,25 @@ Content: ${cleanedMarkdown}`;
 	  console.error("Error parsing finalAIResponse:", e);
 	}
 
-	let namesArray = [];
-	let tagsArray = [];	
+	let namesArray;
+	let tagsArray;	
 
 	// Check if parsedResponse is an array, then proceed
 	if (Array.isArray(parsedResponse)) {
 	  namesArray = parsedResponse.filter(item => item.name).map(item => item.name);
 	  tagsArray = parsedResponse.filter(item => item.tag).map(item => item.tag);
+	  
+	  // Convert the namesArray and tagsArray to an array of objects
+	  namesArray = namesArray.map((name, index) => ({
+		  label: name,
+		  // value: index + 1  // Assigning an incremental value
+		  value: name
+		}));
+	  tagsArray = tagsArray.map((tag, index) => ({
+		  label: tag,
+		  // value: index + 1  // Assigning an incremental value
+		  value: tag
+		}));
 
 	  console.log("namesArray:", namesArray);
 	  console.log("tagsArray:", tagsArray);
@@ -518,17 +534,17 @@ Content: ${cleanedMarkdown}`;
 	}
 
   // Prompt the user for desired actions with the note content
-  const resultDecide = await app.prompt("What do you want to do with this Note's Name and Tags. Disclaimer: Please be aware that humans may review or read any shared content to ensure compliance, quality, and accuracy in accordance with Gemini's policies.", {
+  const resultDecide = await app.prompt("What do you want to do with this Note's Name and Tags. Caution: Submitting this will make the changes.", {
     inputs: [
       { 
         label: `Update Name.`,
         type: "radio", 
-        options: namesArray,
+		options: namesArray,
       },
       { 
         label: `Update Tags.`,
         type: "radio", 
-        options: tagsArray,
+		options: tagsArray,
       },
     ]
   });
@@ -545,43 +561,15 @@ Content: ${cleanedMarkdown}`;
   console.log("nameUpdateDecide:", nameUpdateDecide);
   console.log("tagUpdateDecide:", tagUpdateDecide);
 
-    //---------------------------
-    // Present the generated AI response to the user with further options
-	// Prompt user for response handling options (Copy or Replace Note Content)
-    //---------------------------
-    /* const result2 = await app.alert(`Gemini AI Response: ${finalAIResponse}`, {
-      actions: [     
-        { label: "Copy", value: "copytxt" },
-        { label: "New Note", value: "newnote" },
-      ]
-    });
+	if (nameUpdateDecide) {
+		const nameAdded = await app.setNoteName(noteHandle, nameUpdateDecide);
+		await app.alert(nameAdded ? "Note Name Updated" : "Failed to Update Note Name");
+	}
 
-    if (!result2) { return; }
-    const actionResult = result2;
-
-    // Define a unique filename for the new note, if that option is selected
-    const now = new Date();
-    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
-    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const filename = `AI_Note_Res_${YYMMDD}_${HHMMSS}`;
-
-	finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `> Note: ${noteUUID}\n`;
-	finalAIResponse += `> Prompt: ${promptSelect}.\n> Context:${promptContext || "None"}.\n> Constraint: ${promptConstraint || "None"}.\n> Format: ${promptFormat || "Markdown"}.\n> Tone: ${promptTone || "None"}.\n> Additional Details: ${promptOther || "None"}.`;
-	finalAIResponse += `\n---`;
-
-    //---------------------------
-    // Handle user action for AI response (Copy to Clipboard or Create New Note)
-    //---------------------------
-    if (actionResult === "copytxt") {
-      await app.writeClipboardData(finalAIResponse);
-	  console.log("Copied to clipboard.");
-    } else if (actionResult === "newnote") {
-      const noteUUIDNew = await app.createNote(`${filename}`, [ "-reports/-gemini-ai" ]);
-	  console.log("New note Created.");
-      await app.insertContent({ uuid: noteUUIDNew }, finalAIResponse);
-      await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
-    } */
+	if (tagUpdateDecide) {
+		const tagAdded = await app.addNoteTag({ uuid: noteUUID }, tagUpdateDecide);
+		await app.alert(tagAdded ? "Tag added" : "Failed to add tag");
+	}
 
   }).catch(error => {
     console.error("Failed to load library or execute code:", error);
