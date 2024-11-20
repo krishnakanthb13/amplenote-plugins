@@ -809,5 +809,306 @@ ${horizontalLine}
 	await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);
 },
 // ************************************************************** //
+	"Download Extract Report!": async function(app) {
+
+	// Prompt the user for tags and object type input
+	const result = await app.prompt(
+		"Select Details on which you want to Download Extract Report on.",
+		{
+		  inputs: [
+			{
+			  label: "Select Tags [OR] (Each tag is searched separately)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select Tags [AND] (Combined tag is searched)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select the Download Format",
+			  type: "radio",
+			  options: [
+				{ label: "Download as markdown Table", value: "download_md" },
+				{ label: "Download as CSV (Recommended)", value: "download_csv" },
+				{ label: "Download as TXT", value: "download_txt" },
+				{ label: "Download as JSON", value: "download_json" }
+			  ]
+			}
+		  ]
+		}
+	  );
+
+	// Log the user input (result)
+	// console.log("User input result:", result);
+
+	// Destructure the inputs for OR/AND tags, object type, and download format
+	const [tagNamesOr, tagNamesAnd, dwFormat] = result;
+	// console.log("tagNamesOr:", tagNamesOr);
+	// console.log("tagNamesAnd:", tagNamesAnd);
+
+	// Handle cancellation scenario
+	if (!result) {
+	  app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+	  return;
+	}
+
+	// Ensure tags and formatting are selected
+	// if (!tagNamesOr && !tagNamesAnd) {
+	  // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+	  // return;
+	// }
+	if (!dwFormat) {
+	  app.alert("Note: Select any one of the Download Format.");
+	  return;
+	}
+
+	// Initialize empty arrays for storing notes and filtered notes
+	let notesG = [];
+	// console.log("Initial notes array:", notes);
+
+	const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
+	// console.log("tagsArray (from tagNamesOr):", tagsArray);
+
+	let filteredNotes = [];
+	// console.log("Initial filteredNotes array:", filteredNotes);
+
+	// Filtering logic based on tags [OR] and [AND]
+	if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+	  // Filter notes by OR tags (separate search for each tag)
+	  if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+		for (const tag of tagsArray) {
+		  const notesByTag = await app.filterNotes({ tag: tag });
+		  // console.log(`Notes filtered by tag "${tag}":`, notesByTag);
+		  filteredNotes = [...filteredNotes, ...notesByTag];
+		  // console.log("filteredNotes after OR filter:", filteredNotes);
+		}
+	  }
+
+	  // Filter notes by AND tags (combined search for all tags)
+	  if (tagNamesAnd) {
+		const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+		// console.log("Notes filtered by AND tags:", notesByGroup);
+		filteredNotes = [...filteredNotes, ...notesByGroup];
+		// console.log("filteredNotes after AND filter:", filteredNotes);
+	  }
+	} else {
+	  // Default filter if no tags are provided
+	  const notesByGroup = await app.filterNotes({ group: "^vault" });
+	  // console.log("Notes filtered by default group (^vault):", notesByGroup);
+	  filteredNotes = [...filteredNotes, ...notesByGroup];
+	  // console.log("filteredNotes after default group filter:", filteredNotes);
+	}
+
+	// Remove duplicate notes
+	filteredNotes = [...new Set(filteredNotes)];
+	// console.log("filteredNotes after removing duplicates:", filteredNotes);
+
+	// Sort the filtered notes by note name in ascending order
+	filteredNotes.sort((a, b) => {
+	  const nameA = (a.name || "").toUpperCase(); // Convert to uppercase to ensure case-insensitive sorting
+	  const nameB = (b.name || "").toUpperCase();
+	  if (nameA < nameB) {
+		return -1;
+	  }
+	  if (nameA > nameB) {
+		return 1;
+	  }
+	  return 0; // Names are equal
+	});
+
+	// console.log("filteredNotes after sorting by name:", filteredNotes);
+
+	notesG = filteredNotes;
+	// console.log("Final notes array:", notesG);
+
+	// Initialize a Set to hold the final results to ensure unique entries.
+	let results = new Set();
+	let allTasks = []; // Array to store all tasks
+
+	/**
+	 * Formats the task's repeat information.
+	 * @param {string} repeatInfo - The task's repeat information in a specific string format.
+	 * @returns {string} - A formatted string displaying the repeat frequency, start date, and time.
+	 */
+	function formatTaskRepeat(repeatInfo) {
+	  if (!repeatInfo || typeof repeatInfo !== 'string') {
+		return "Not Available"; // Return default message if repeatInfo is missing or not a string
+	  }
+
+	  // Split the repeatInfo into lines
+	  const lines = repeatInfo.split('\n').map(line => line.trim());
+
+	  // Extract date and time from DTSTART
+	  const dtstartLine = lines[0];
+	  const rruleLine = lines[1];
+	  
+	  const dtstart = dtstartLine.substring(8); // Remove 'DTSTART:'
+	  const year = dtstart.substring(0, 4);
+	  const month = dtstart.substring(4, 6);
+	  const day = dtstart.substring(6, 8);
+	  const hours = dtstart.substring(8, 10);
+	  const minutes = dtstart.substring(10, 12);
+	  const seconds = dtstart.substring(12, 14);
+
+	  // Format date and time
+	  const formattedDate = `${month}/${day}/${year}`;
+	  const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+	  // Parse RRULE to get the repeat frequency
+	  const rrule = rruleLine.substring(10); // Remove 'RRULE:FREQ='
+	  const repeatFrequency = rrule.toUpperCase(); // Convert frequency to uppercase
+
+	  // Format and return the output
+	  return `${repeatFrequency.charAt(0).toUpperCase() + repeatFrequency.slice(1).toLowerCase()} <b>Starts At:</b> ${formattedDate} at ${formattedTime}`;
+	}
+
+	/**
+	 * Formats a Unix timestamp into a readable date and time string.
+	 * @param {number} timestamp - The Unix timestamp (in seconds).
+	 * @returns {string} - A formatted string with the date and time or "Not Set!" if no timestamp.
+	 */
+	function formatTimestamp(timestamp) {
+	  if (!timestamp) {
+		return 'Not Set!'; // Return if timestamp is null or undefined
+	  }
+
+	  // Create a new Date object from the Unix timestamp (in milliseconds)
+	  const date = new Date(timestamp * 1000);
+
+	  // Extract date and time components
+	  const year = date.getFullYear();
+	  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
+	  const day = String(date.getDate()).padStart(2, '0');
+	  const hours = String(date.getHours()).padStart(2, '0');
+	  const minutes = String(date.getMinutes()).padStart(2, '0');
+	  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+	  // Format and return date and time
+	  const formattedDate = `${month}/${day}/${year}`;
+	  const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+	  return `${formattedDate} at ${formattedTime}`;
+	}
+
+	// ----------- Section: Processing Each Note -----------
+	// Loop through each note in the filtered and sorted list of notes.
+	for (const noteHandleG of notesG) {
+		
+	  // Retrieve all tasks, including completed and dismissed ones
+	  const taskAll = await app.getNoteTasks({ uuid: noteHandleG.uuid }, { includeDone: true });
+	  console.log("taskAll:", taskAll);
+
+		// Process each task and add relevant info
+		for (let i = 0; i < taskAll.length; i++) {
+		  const task = taskAll[i];
+			// Remove unwanted characters and patterns from task.content
+			const sanitizedContent = task.content
+			  .replace(/\n/g, " ") // Replace newline characters with space
+			  .replace(/\*\*|~~/g, "") // Remove markdown formatting like ** and ~~
+			  .replace(/<!--.*?-->/g, "") // Remove HTML comments
+			  .replace(/<[^>]+>/g, ""); // Remove HTML tags, including <mark> and attributes
+			// Sanitize noteHandleG.name to retain only letters and numbers
+			const sanitizedNoteName = noteHandleG.name.replace(/[^a-zA-Z0-9 ]/g, "");
+		  allTasks.push({
+			content: sanitizedContent, // Use the sanitized content
+			notename: sanitizedNoteName,
+			noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
+			tags: `${noteHandleG.tags}`,
+			startAtz: `${formatTimestamp(task.startAt)}`,
+			hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+			endAtz: `${formatTimestamp(task.endAt)}`,
+			repeatz: `${formatTaskRepeat(task.repeat)}`,
+			...task,
+		  });
+		}
+	  
+	}
+
+	// ----------- Section: Preparing the Final Output -----------
+	// Convert the Set of note names to an array and join them into a single string.
+	results = Array.from(allTasks);
+	console.log("results:", results);
+
+	function downloadResults(results, dwFormat) {
+		// Helper function to convert data to CSV
+		function toCSV(data) {
+			if (data.length === 0) return ""; // Handle empty data case
+
+			// Create the header row
+			const headers = Object.keys(data[0]).map(field => `"${field}"`).join(",");
+
+			// Map each object to a CSV row, wrapping each value in double quotes
+			const rows = data.map(obj => 
+				Object.values(obj)
+					.map(value => `"${String(value).replace(/"/g, '""')}"`) // Escape double quotes by doubling them
+					.join(",")
+			);
+
+			return [headers, ...rows].join("\n"); // Combine headers and rows with newline
+		}
+
+		// Helper function to download a file
+		function downloadFile(filename, content, contentType) {
+			const blob = new Blob([content], { type: contentType });
+			const link = document.createElement("a");
+			link.href = URL.createObjectURL(blob);
+			link.download = filename;
+			link.click();
+			URL.revokeObjectURL(link.href);
+		}
+
+		let content = "";
+		let filename = "Task Manager Pro - Export";
+		let contentType = "text/plain";
+
+		switch (dwFormat) {
+			case "download_md":
+				content = results
+					.map(task => `| ${Object.values(task).join(" | ")} |`)
+					.join("\n");
+				const headers = `| ${Object.keys(results[0]).join(" | ")} |`;
+				const divider = `| ${Object.keys(results[0]).map(() => "---").join(" | ")} |`;
+				content = `${headers}\n${divider}\n${content}`;
+				filename += ".md";
+				contentType = "text/markdown";
+				break;
+
+			case "download_csv":
+				content = toCSV(results); // Convert results to CSV with proper escaping
+				filename += ".csv";
+				contentType = "text/csv";
+				break;
+
+			case "download_txt":
+				content = results
+					.map(task => JSON.stringify(task, null, 2))
+					.join("\n\n");
+				filename += ".txt";
+				break;
+
+			case "download_json":
+				content = JSON.stringify(results, null, 2); // Pretty JSON
+				filename += ".json";
+				contentType = "application/json";
+				break;
+
+			default:
+				console.error("Unknown format selected:", dwFormat);
+				return;
+		}
+
+		// Trigger the download
+		downloadFile(filename, content, contentType);
+	}
+	
+	// Set the format based on user selection
+	downloadResults(results, dwFormat);
+
+},
+// ************************************************************** //
   }
 }
