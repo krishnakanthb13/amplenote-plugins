@@ -1,82 +1,86 @@
 {
   async appOption(app) {
-    // Filter notes based on Groups + tags
-    let results = new Set();
-	let notesGroupNames = new Set();
-	let pluginInfo;
-	const notesGroup = "plugin";
-	const searchWords = [
-		"appOption", "dailyJotOption", "eventOption", "imageOption",
-		"insertText", "linkOption", "linkTarget", "noteOption",
-		"onEmbedCall", "renderEmbed", "replaceText", "taskOption"
-	];
-	// Function to find words in code blocks
-	function findWordsInCodeBlocks(markdown, words) {
-		const codeBlockRegex = /```([\s\S]*?)```/g; // Regex to match code blocks
-		const matches = [];
-		let match;
+    // Function to find specific words within code blocks in a markdown string
+    const findWordsInCodeBlocks = (markdown, words) => {
+      const codeBlockRegex = /```([\s\S]*?)```/g; // Matches code blocks enclosed by ```
+      const matches = [];
+      let match;
 
-		while ((match = codeBlockRegex.exec(markdown)) !== null) {
-			const codeContent = match[1]; // Content inside the code block
-			words.forEach(word => {
-				if (codeContent.includes(word)) {
-					// matches.push({ word, block: codeContent });
-                    matches.push(word); // Store the word itself
-				}
-			});
-		}
-		return matches;
-	}
-    pluginInfo = `## Please find below the details of the Active Plugins and its Options.\n\n`;
-	// Filter notes based on empty notes + tags
-	let notesG = await app.filterNotes({ group: notesGroup });
-	// Sort notes by their name in ascending order
-	notesG.sort((a, b) => a.name.localeCompare(b.name));
-	// console.log("Sorted notes by name:", notesG);
-	for (const noteHandleG of notesG) {
-		notesGroupNames.add(`- [${noteHandleG.name || "Untitled Note"}](https://www.amplenote.com/notes/${noteHandleG.uuid})`);
-		const markdown = await app.getNoteContent({ uuid: noteHandleG.uuid });
-		const foundWords = findWordsInCodeBlocks(markdown, searchWords);
-		// Format foundWords as a string with " - " prefix
-		const formattedFoundWords = foundWords.map(word => ` - ${word}`).join("\n");
-		pluginInfo += `### ${noteHandleG.name}<!-- {"collapsed":true} -->\n`;
-		pluginInfo += `${formattedFoundWords}\n\n`;
-		// console.log("Plugin Name:", noteHandleG.name);
-		// console.log("Found words:", foundWords);
-		// console.log("Formatted search words:\n", formattedFoundWords);
-	}
+      // Iterate through all code blocks
+      while ((match = codeBlockRegex.exec(markdown)) !== null) {
+        const codeContent = match[1]; // Extract content inside the code block
+        words.forEach(word => {
+          if (codeContent.includes(word)) {
+            matches.push(word); // Add the word if found in the code block
+          }
+        });
+      }
+      return matches;
+    };
+
+    // Plugin-related constants and search words
+    const notesGroup = "plugin";
+    const searchWords = [
+      "appOption", "dailyJotOption", "eventOption", "imageOption",
+      "insertText", "linkOption", "linkTarget", "noteOption",
+      "onEmbedCall", "renderEmbed", "replaceText", "taskOption"
+    ];
+
+    // Generate a summary report for active plugins and their options
+    let pluginInfo = `## Active Plugins and Their Options\n\n`;
+    let notesGroupNames = new Set();
+
+    // Fetch notes in the specified group and sort them by name
+    const notesG = await app.filterNotes({ group: notesGroup });
+    notesG.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Iterate through notes to extract and format plugin information
+    for (const noteHandleG of notesG) {
+      const noteName = noteHandleG.name || "Untitled Note";
+      const noteUUID = noteHandleG.uuid;
+
+      // Add note name to the group names
+      notesGroupNames.add(`- [${noteName}](https://www.amplenote.com/notes/${noteUUID})`);
+
+      // Extract content and find relevant words in code blocks
+      const markdown = await app.getNoteContent({ uuid: noteUUID });
+      const foundWords = findWordsInCodeBlocks(markdown, searchWords);
+      const formattedFoundWords = foundWords.map(word => ` - ${word}`).join("\n");
+
+      // Append plugin details to the report
+      pluginInfo += `### ${noteName}<!-- {"collapsed":true} -->\n`;
+      pluginInfo += `${formattedFoundWords}\n\n`;
+    }
+
+    // Finalize plugin info and group names
     pluginInfo += `\n---`;
-	results = new Set(notesGroupNames);
-	// console.log("Sorted notesG:", notesG);
-	// console.log("Sorted notesGroupNames:", notesGroupNames);
-	// console.log("pluginInfo\n", pluginInfo);
-	results = Array.from(results);
-	const resultText = results.join("\n");
-	// Generate the filename based on the current date and time
-	const now = new Date();
-	const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
-	const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const results = Array.from(notesGroupNames);
+    const resultText = results.join("\n");
 
-    // Active Plugin List Report
+    // Generate a timestamped filename
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+    const filename = `Active_Plugin_Info_${YYMMDD}_${HHMMSS}`;
+
+    // Create or update the Active Plugins List report note
     const APLNoteName = `Active_Plugin_Info`;
     const APLTagName = ['-reports/-active-plugin-info'];
-	const APLnoteUUID = await (async () => {
-	  const existingUUID = await app.settings["Active Plugins List Note. [Do not Edit!]"];
-	  if (existingUUID)
-		  return existingUUID;
-	  const newUUID = await app.createNote(APLNoteName, APLTagName);
-	  await app.setSetting("Active Plugins List Note. [Do not Edit!]", newUUID);
-	  return newUUID;
-	})();
-    const APLReport = resultText;
-	await app.replaceNoteContent({ uuid: APLnoteUUID }, APLReport);
+    const APLnoteUUID = await (async () => {
+      const existingUUID = await app.settings["Active Plugins List Note. [Do not Edit!]"];
+      if (existingUUID) return existingUUID;
 
-	const filename = `Active_Plugin_Info_${YYMMDD}_${HHMMSS}`;
-	let noteUUID = await app.createNote(`${filename}`, ["-reports/-active-plugin-info"]);
-	await app.replaceNoteContent({
-		uuid: noteUUID
-	}, pluginInfo);
-	// console.log("Inserted text into new note with UUID:", noteUUID);
-	await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
+      const newUUID = await app.createNote(APLNoteName, APLTagName);
+      await app.setSetting("Active Plugins List Note. [Do not Edit!]", newUUID);
+      return newUUID;
+    })();
+
+    // Update or create the report notes
+    await app.replaceNoteContent({ uuid: APLnoteUUID }, resultText);
+    const noteUUID = await app.createNote(`${filename}`, ["-reports/-active-plugin-info"]);
+    await app.replaceNoteContent({ uuid: noteUUID }, pluginInfo);
+
+    // Navigate to the new note
+    await app.navigate(`https://www.amplenote.com/notes/${noteUUID}`);
   }
 }
