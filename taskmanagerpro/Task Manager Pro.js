@@ -1013,17 +1013,34 @@ ${horizontalLine}
 			  .replace(/<[^>]+>/g, ""); // Remove HTML tags, including <mark> and attributes
 			// Sanitize noteHandleG.name to retain only letters and numbers
 			const sanitizedNoteName = noteHandleG.name.replace(/[^a-zA-Z0-9 ]/g, "");
-		  allTasks.push({
-			content: sanitizedContent, // Use the sanitized content
-			notename: sanitizedNoteName,
-			noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
-			tags: `${noteHandleG.tags}`,
-			startAtz: `${formatTimestamp(task.startAt)}`,
-			hideUntilz: `${formatTimestamp(task.hideUntil)}`,
-			endAtz: `${formatTimestamp(task.endAt)}`,
-			repeatz: `${formatTaskRepeat(task.repeat)}`,
-			...task,
-		  });
+		allTasks.push({
+		  content: sanitizedContent, // Use the sanitized content
+
+		  notename: sanitizedNoteName, // Use the sanitized note name
+		  noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
+		  tags: `${noteHandleG.tags}`,
+
+		  startAtz: `${formatTimestamp(task.startAt)}`,
+		  hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+		  endAtz: `${formatTimestamp(task.endAt)}`,
+
+		  repeatz: `${formatTaskRepeat(task.repeat)}`,
+
+		  startAt: task.startAt ?? null,
+		  hideUntil: task.hideUntil ?? null,
+
+		  completedAt: task.completedAt ?? null, // Use null if undefined
+		  dismissedAt: task.dismissedAt ?? null,
+		  endAt: task.endAt ?? null,
+		  repeat: task.repeat ?? null,
+
+		  important: task.important ?? null,
+		  urgent: task.urgent ?? null,
+		  score: task.score ?? null,
+
+		  uuid: task.uuid ?? null,
+		  noteUUID: task.noteUUID ?? null,
+		});
 		}
 	  
 	}
