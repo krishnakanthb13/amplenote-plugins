@@ -69,10 +69,10 @@
     const APLnoteUUID = await (async () => {
       const existingUUID = await app.settings["Active Plugins List Note. [Do not Edit!]"];
       if (existingUUID) return existingUUID;
-
       const newUUID = await app.createNote(APLNoteName, APLTagName);
-      await app.setSetting("Active Plugins List Note. [Do not Edit!]", newUUID);
-      return newUUID;
+	  const noteHandle = await app.findNote({ uuid: newUUID });
+      await app.setSetting("Active Plugins List Note. [Do not Edit!]", noteHandle.uuid);
+      return noteHandle.uuid;
     })();
 
     // Update or create the report notes
