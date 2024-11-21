@@ -1,7 +1,7 @@
 ﻿---
 title: Task Manager Pro
 uuid: 6c5991b0-6457-11ef-b225-22074e34eefe
-version: 618
+version: 661
 created: '2024-08-27T15:03:32+05:30'
 tags:
   - '-9-permanent'
@@ -14,6 +14,7 @@ tags:
 
 ![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/42d002aa-5bc8-41bb-a506-f366a831f6cf.gif)   ![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/ccd1aba5-207e-40e9-b179-a1628ec8dcd1.gif)  ![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/874c561f-1384-48fc-8283-4cb4b40d1965.gif)
 
+
 ---
 
 ### <mark style="color:#BBA215;">**Task Manager Pro: Note!:**<!-- {"cycleColor":"25"} --></mark>
@@ -24,13 +25,15 @@ tags:
 
 Except `Note!` option still accessible from `noteOptions` `(•••)`
 
+![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/3f70430b-4965-49ad-b6cc-270c396a1e9c.png) [^3]
+
 ### <mark style="color:#BBA215;">**Task Manager Pro: Overall Active!**<!-- {"cycleColor":"25"} --></mark>
 
-![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/25436057-7ac2-43aa-9bc4-2dc0c8a36c94.png) [^3]
+![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/25436057-7ac2-43aa-9bc4-2dc0c8a36c94.png) [^4]
 
 ### <mark style="color:#BBA215;">**Task Manager Pro: Overall Finished!**<!-- {"cycleColor":"25"} --></mark>
 
-![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/7b4c0dfd-0399-4f08-898e-36c78e4ff4c5.png) [^4]
+![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/7b4c0dfd-0399-4f08-898e-36c78e4ff4c5.png) [^5]
 
 ### <mark style="color:#BBA215;">**Task Manager Pro: Overall Trend!**<!-- {"cycleColor":"25"} --></mark>
 
@@ -38,9 +41,18 @@ Except `Note!` option still accessible from `noteOptions` `(•••)`
 
 ### <mark style="color:#BBA215;">**Task Manager Pro: Overall Eisenhower Matrix!**<!-- {"cycleColor":"25"} --></mark>
 
-![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/52e37aa4-08ad-4f52-9812-11cfaba0bc69.png) [^5]
+![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/52e37aa4-08ad-4f52-9812-11cfaba0bc69.png) [^6]
 
 \
+
+### <mark style="color:#BBA215;">**Task Manager Pro: Download Extract Report!**<!-- {"cycleColor":"25"} --></mark>
+
+![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/0eeaaf68-e2a7-49c1-9d8d-8608aef9239a.png) [^7]
+
+### <mark style="color:#BBA215;">**Task Manager Pro: Filtered Report - Summary!**<!-- {"cycleColor":"25"} --></mark>
+
+![](https://images.amplenote.com/6c5991b0-6457-11ef-b225-22074e34eefe/357f1922-c14c-4209-9175-c0266aa80c61.png) [^8]
+
 
 ---
 
@@ -168,6 +180,7 @@ Except `Note!` option still accessible from `noteOptions` `(•••)`
 
 These emoji sets give users a wide variety of creative options to visualize their task progress in a way that resonates with their preferences or the context of their project. All they need to do is change the `Plugin Setting: Emoji` variable to any of these predefined emoji sets.
 
+
 ---
 
 ## <mark style="color:#F8D616;">Table - Plugin Parameters:<!-- {"cycleColor":"25"} --></mark>
@@ -177,8 +190,9 @@ These emoji sets give users a wide variety of creative options to visualize thei
 |name|Task Manager Pro|
 |icon|waterfall_chart|
 |description|Have a Clear Idea of `ALL `your Tasks Progress in Amplenote.<br />Inspired from: [Progress Bar (Plugin)](https://public.amplenote.com/hJyajoiWxUJUVCxQQcgjk2i3) <br />Old Version: [Task Manager](https://www.amplenote.com/notes/8563bcd8-72be-11ef-870a-eeba9115991d) |
-|instructions|[Task Manager Pro: Note!](https://www.amplenote.com/notes/139b8070-72c0-11ef-870a-eeba9115991d) <br />[Task Manager Pro: Overall Active!](https://www.amplenote.com/notes/8e0f7a0a-72c0-11ef-870a-eeba9115991d) <br />[Task Manager Pro: Overall Finished!](https://www.amplenote.com/notes/a58a7c70-72c0-11ef-870a-eeba9115991d) <br />[Task Manager Pro: Overall Trend!](https://www.amplenote.com/notes/bab0b638-733c-11ef-bce1-eeba9115991d)<br />[Task Manager Pro: Overall Eisenhower Matrix!](https://www.amplenote.com/notes/bd5244fa-72c0-11ef-870a-eeba9115991d) |
+|instructions|[Task Manager Pro: Note!](https://www.amplenote.com/notes/139b8070-72c0-11ef-870a-eeba9115991d) <br />[Task Manager Pro: Overall Active!](https://www.amplenote.com/notes/8e0f7a0a-72c0-11ef-870a-eeba9115991d) <br />[Task Manager Pro: Overall Finished!](https://www.amplenote.com/notes/a58a7c70-72c0-11ef-870a-eeba9115991d) <br />[Task Manager Pro: Overall Trend!](https://www.amplenote.com/notes/bab0b638-733c-11ef-bce1-eeba9115991d)<br />[Task Manager Pro: Overall Eisenhower Matrix!](https://www.amplenote.com/notes/bd5244fa-72c0-11ef-870a-eeba9115991d) <br />[Task Manager Pro: Download Extract Report!](https://www.amplenote.com/notes/439355fe-a818-11ef-907d-4bc7d87d3384) <br />[Task Manager Pro: Filtered Report - Summary!](https://www.amplenote.com/notes/44d3aa36-a818-11ef-9906-f5274b4ada4c) |
 |setting|Emoji|
+
 ---
 
 ## <mark style="color:#F8D616;">Code Base:<!-- {"cycleColor":"25"} --></mark>
@@ -381,6 +395,931 @@ These emoji sets give users a wide variety of creative options to visualize thei
 },
 // ************************************************************** //
   appOption: {
+// ************************************************************** //
+	"Download Extract Report! (Recommended)": async function(app) {
+
+	// Prompt the user for tags and object type input
+	const result = await app.prompt(
+		"Select Details on which you want to Download Extract Report on.",
+		{
+		  inputs: [
+			{
+			  label: "Select Tags [OR] (Each tag is searched separately)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select Tags [AND] (Combined tag is searched)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select the Download Format",
+			  type: "radio",
+			  options: [
+				{ label: "Download as markdown Table", value: "download_md" },
+				{ label: "Download as CSV (Recommended)", value: "download_csv" },
+				{ label: "Download as TXT", value: "download_txt" },
+				{ label: "Download as JSON", value: "download_json" }
+			  ]
+			}
+		  ]
+		}
+	  );
+
+	// Log the user input (result)
+	// console.log("User input result:", result);
+
+	// Destructure the inputs for OR/AND tags, object type, and download format
+	const [tagNamesOr, tagNamesAnd, dwFormat] = result;
+	// console.log("tagNamesOr:", tagNamesOr);
+	// console.log("tagNamesAnd:", tagNamesAnd);
+
+	// Handle cancellation scenario
+	if (!result) {
+	  app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+	  return;
+	}
+
+	// Ensure tags and formatting are selected
+	// if (!tagNamesOr && !tagNamesAnd) {
+	  // app.alert("Note: At least one of Optional Items (Tag OR, Tag AND) must be selected");
+	  // return;
+	// }
+	if (!dwFormat) {
+	  app.alert("Note: Select any one of the Download Format.");
+	  return;
+	}
+
+	// Initialize empty arrays for storing notes and filtered notes
+	let notesG = [];
+	// console.log("Initial notes array:", notes);
+
+	const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
+	// console.log("tagsArray (from tagNamesOr):", tagsArray);
+
+	let filteredNotes = [];
+	// console.log("Initial filteredNotes array:", filteredNotes);
+
+	// Filtering logic based on tags [OR] and [AND]
+	if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+	  // Filter notes by OR tags (separate search for each tag)
+	  if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+		for (const tag of tagsArray) {
+		  const notesByTag = await app.filterNotes({ tag: tag });
+		  // console.log(`Notes filtered by tag "${tag}":`, notesByTag);
+		  filteredNotes = [...filteredNotes, ...notesByTag];
+		  // console.log("filteredNotes after OR filter:", filteredNotes);
+		}
+	  }
+
+	  // Filter notes by AND tags (combined search for all tags)
+	  if (tagNamesAnd) {
+		const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+		// console.log("Notes filtered by AND tags:", notesByGroup);
+		filteredNotes = [...filteredNotes, ...notesByGroup];
+		// console.log("filteredNotes after AND filter:", filteredNotes);
+	  }
+	} else {
+	  // Default filter if no tags are provided
+	  const notesByGroup = await app.filterNotes({ group: "^vault" });
+	  // console.log("Notes filtered by default group (^vault):", notesByGroup);
+	  filteredNotes = [...filteredNotes, ...notesByGroup];
+	  // console.log("filteredNotes after default group filter:", filteredNotes);
+	}
+
+	// Remove duplicate notes
+	filteredNotes = [...new Set(filteredNotes)];
+	// console.log("filteredNotes after removing duplicates:", filteredNotes);
+
+	// Sort the filtered notes by note name in ascending order
+	filteredNotes.sort((a, b) => {
+	  const nameA = (a.name || "").toUpperCase(); // Convert to uppercase to ensure case-insensitive sorting
+	  const nameB = (b.name || "").toUpperCase();
+	  if (nameA < nameB) {
+		return -1;
+	  }
+	  if (nameA > nameB) {
+		return 1;
+	  }
+	  return 0; // Names are equal
+	});
+
+	// console.log("filteredNotes after sorting by name:", filteredNotes);
+
+	notesG = filteredNotes;
+	// console.log("Final notes array:", notesG);
+
+	// Initialize a Set to hold the final results to ensure unique entries.
+	let results = new Set();
+	let allTasks = []; // Array to store all tasks
+
+	/**
+	 * Formats the task's repeat information.
+	 * @param {string} repeatInfo - The task's repeat information in a specific string format.
+	 * @returns {string} - A formatted string displaying the repeat frequency, start date, and time.
+	 */
+	function formatTaskRepeat(repeatInfo) {
+	  if (!repeatInfo || typeof repeatInfo !== 'string') {
+		return "Not Available"; // Return default message if repeatInfo is missing or not a string
+	  }
+
+	  // Split the repeatInfo into lines
+	  const lines = repeatInfo.split('\n').map(line => line.trim());
+
+	  // Extract date and time from DTSTART
+	  const dtstartLine = lines[0];
+	  const rruleLine = lines[1];
+	  
+	  const dtstart = dtstartLine.substring(8); // Remove 'DTSTART:'
+	  const year = dtstart.substring(0, 4);
+	  const month = dtstart.substring(4, 6);
+	  const day = dtstart.substring(6, 8);
+	  const hours = dtstart.substring(8, 10);
+	  const minutes = dtstart.substring(10, 12);
+	  const seconds = dtstart.substring(12, 14);
+
+	  // Format date and time
+	  const formattedDate = `${month}/${day}/${year}`;
+	  const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+	  // Parse RRULE to get the repeat frequency
+	  const rrule = rruleLine.substring(10); // Remove 'RRULE:FREQ='
+	  const repeatFrequency = rrule.toUpperCase(); // Convert frequency to uppercase
+
+	  // Format and return the output
+	  return `${repeatFrequency.charAt(0).toUpperCase() + repeatFrequency.slice(1).toLowerCase()} <b>Starts At:</b> ${formattedDate} at ${formattedTime}`;
+	}
+
+	/**
+	 * Formats a Unix timestamp into a readable date and time string.
+	 * @param {number} timestamp - The Unix timestamp (in seconds).
+	 * @returns {string} - A formatted string with the date and time or "Not Set!" if no timestamp.
+	 */
+	function formatTimestamp(timestamp) {
+	  if (!timestamp) {
+		return 'Not Set!'; // Return if timestamp is null or undefined
+	  }
+
+	  // Create a new Date object from the Unix timestamp (in milliseconds)
+	  const date = new Date(timestamp * 1000);
+
+	  // Extract date and time components
+	  const year = date.getFullYear();
+	  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
+	  const day = String(date.getDate()).padStart(2, '0');
+	  const hours = String(date.getHours()).padStart(2, '0');
+	  const minutes = String(date.getMinutes()).padStart(2, '0');
+	  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+	  // Format and return date and time
+	  const formattedDate = `${month}/${day}/${year}`;
+	  const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+	  return `${formattedDate} at ${formattedTime}`;
+	}
+
+	// ----------- Section: Processing Each Note -----------
+	// Loop through each note in the filtered and sorted list of notes.
+	for (const noteHandleG of notesG) {
+		
+	  // Retrieve all tasks, including completed and dismissed ones
+	  const taskAll = await app.getNoteTasks({ uuid: noteHandleG.uuid }, { includeDone: true });
+	  console.log("taskAll:", taskAll);
+
+		// Process each task and add relevant info
+		for (let i = 0; i < taskAll.length; i++) {
+		  const task = taskAll[i];
+
+			// Remove unwanted characters and patterns from task.content
+			const sanitizedContent = (task.content ? task.content : "No Task Content")
+			  .replace(/\n/g, " ") // Replace newline characters with space
+			  .replace(/\*\*|~~/g, "") // Remove markdown formatting like ** and ~~
+			  .replace(/<!--.*?-->/g, "") // Remove HTML comments
+			  .replace(/<[^>]+>/g, ""); // Remove HTML tags, including <mark> and attributes
+			// Sanitize noteHandleG.name to retain only letters and numbers
+			const sanitizedNoteName = (noteHandleG.name ? noteHandleG.name : "Untitled Note").replace(/[^a-zA-Z0-9 ]/g, "");
+
+		allTasks.push({
+		  content: sanitizedContent, // Use the sanitized content
+
+		  notename: sanitizedNoteName, // Use the sanitized note name
+		  noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
+		  tags: `${noteHandleG.tags}`,
+
+		  startAtz: `${formatTimestamp(task.startAt)}`,
+		  hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+		  endAtz: `${formatTimestamp(task.endAt)}`,
+
+		  completedAtz: `${formatTimestamp(task.completedAt)}`,
+		  dismissedAtz: `${formatTimestamp(task.dismissedAt)}`,
+
+		  repeatz: `${formatTaskRepeat(task.repeat)}`,
+
+		  startAt: task.startAt ?? null,
+		  hideUntil: task.hideUntil ?? null,
+		  endAt: task.endAt ?? null,
+
+		  completedAt: task.completedAt ?? null, // Use null if undefined
+		  dismissedAt: task.dismissedAt ?? null,
+		  repeat: task.repeat ?? null,
+
+		  important: task.important ?? null,
+		  urgent: task.urgent ?? null,
+		  score: task.score ?? null,
+
+		  uuid: task.uuid ?? null,
+		  noteUUID: task.noteUUID ?? null,
+		});
+		}
+	  
+	}
+
+	// ----------- Section: Preparing the Final Output -----------
+	// Convert the Set of note names to an array and join them into a single string.
+	results = Array.from(allTasks);
+	console.log("results:", results);
+
+	function downloadResults(results, dwFormat) {
+		// Helper function to convert data to CSV
+		function toCSV(data) {
+			if (data.length === 0) return ""; // Handle empty data case
+
+			// Create the header row
+			const headers = Object.keys(data[0]).map(field => `"${field}"`).join(",");
+
+			// Map each object to a CSV row, wrapping each value in double quotes
+			const rows = data.map(obj => 
+				Object.values(obj)
+					.map(value => `"${String(value).replace(/"/g, '""')}"`) // Escape double quotes by doubling them
+					.join(",")
+			);
+
+			return [headers, ...rows].join("\n"); // Combine headers and rows with newline
+		}
+
+		// Helper function to download a file
+		function downloadFile(filename, content, contentType) {
+			const blob = new Blob([content], { type: contentType });
+			const link = document.createElement("a");
+			link.href = URL.createObjectURL(blob);
+			link.download = filename;
+			link.click();
+			URL.revokeObjectURL(link.href);
+		}
+
+		let content = "";
+		let filename = "Task Manager Pro - Export";
+		let contentType = "text/plain";
+
+		switch (dwFormat) {
+			case "download_md":
+				content = results
+					.map(task => `| ${Object.values(task).join(" | ")} |`)
+					.join("\n");
+				const headers = `| ${Object.keys(results[0]).join(" | ")} |`;
+				const divider = `| ${Object.keys(results[0]).map(() => "---").join(" | ")} |`;
+				content = `${headers}\n${divider}\n${content}`;
+				filename += ".md";
+				contentType = "text/markdown";
+				break;
+
+			case "download_csv":
+				content = toCSV(results); // Convert results to CSV with proper escaping
+				filename += ".csv";
+				contentType = "text/csv";
+				break;
+
+			case "download_txt":
+				content = results
+					.map(task => JSON.stringify(task, null, 2))
+					.join("\n\n");
+				filename += ".txt";
+				break;
+
+			case "download_json":
+				content = JSON.stringify(results, null, 2); // Pretty JSON
+				filename += ".json";
+				contentType = "application/json";
+				break;
+
+			default:
+				console.error("Unknown format selected:", dwFormat);
+				return;
+		}
+
+		// Trigger the download
+		downloadFile(filename, content, contentType);
+	}
+	
+	// Set the format based on user selection
+	downloadResults(results, dwFormat);
+
+},
+// ************************************************************** //
+	"Filtered Report - Summary! (Recommended)": async function(app) {
+
+	// Prompt the user for tags and object type input
+	const result = await app.prompt(
+		"Select Details on which you want a Filtered Report - Summary Extract Report on. Note: If Tag selection is not made, all the Notes will be considered.",
+		{
+		  inputs: [
+			{
+			  label: "Select Tags [OR] (Each tag is searched separately)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select Tags [AND] (Combined tag is searched)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select the Time Duration",
+			  type: "select",
+			  options: [
+				{ label: "Today", value: "today" },
+				{ label: "Yesterday", value: "yesterday" },
+				{ label: "This Week", value: "thisweek" },
+				{ label: "Last Week", value: "lastweek" },
+				{ label: "This Month", value: "thismonth" },
+				{ label: "Last Month", value: "lastmonth" },
+				{ label: "ALL", value: "all" },
+				{ label: "Custom Dates", value: "custom" }
+			  ],
+			  value: "today"
+			},
+			{
+			  label: "Select the Task Status",
+			  type: "select",
+			  options: [
+				{ label: "Completed", value: "completed" },
+				{ label: "Dismissed", value: "dismissed" },
+				{ label: "Hidden", value: "hidden" },
+				{ label: "Starts", value: "starts" },
+				{ label: "Ends", value: "ends" }
+			  ],
+			  value: "completed"
+			},
+			{
+			  label: "Select the Priority",
+			  type: "select",
+			  options: [
+				{ label: "All", value: "all" },
+				{ label: "None", value: "none" },
+				{ label: "Important", value: "imp" },
+				{ label: "Urgent", value: "urg" },
+				{ label: "Important & Urgent", value: "imp_urg" }
+			  ],
+			  value: "all"
+			},
+			{
+			  label: "Select the Download/Output Method",
+			  type: "select",
+			  options: [
+				{ label: "Insert into New Note", value: "new" },
+				// { label: "Copy Content", value: "copy" },
+				{ label: "Download as markdown Table", value: "download_md" },
+				{ label: "Download as CSV (Recommended)", value: "download_csv" },
+				{ label: "Download as TXT", value: "download_txt" },
+				{ label: "Download as JSON", value: "download_json" }
+			  ],
+			  value: "new"
+			},			
+		  ]
+		}
+	  );
+
+	// Log the user input (result)
+	// console.log("User input result:", result);
+
+	// Destructure the inputs for OR/AND tags, object type, and download format
+	const [tagNamesOr, tagNamesAnd, timeSpan, taskStatus, taskPriority, dwFormat] = result;
+	// console.log("tagNamesOr:", tagNamesOr);
+	// console.log("tagNamesAnd:", tagNamesAnd);
+
+	// Handle cancellation scenario
+	if (!result) {
+	  app.alert("Operation has been cancelled. Tata! Bye Bye! Cya!");
+	  return;
+	}
+
+	// Ensure tags and formatting are selected
+	/* if (!tagNamesOr && !tagNamesAnd) {
+	  app.alert("Note: Select any one of the Tag condition.");
+	  return;
+	} */
+
+	function formatDate(date) {
+		const day = String(date.getDate()).padStart(2, '0');
+		const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		const month = monthNames[date.getMonth()];
+		const year = date.getFullYear();
+		return `${day}-${month}-${year}`;
+	}
+
+	// Usage
+	const today = new Date();
+	// console.log(formatDate(today)); // Example output: "21-Nov-2024"
+	let fromDate, tillDate;
+
+	if (timeSpan === "custom") {
+	// Prompt the user for tags and object type input
+	const resultDate = await app.prompt(
+		"Select Time Span on which you want a Filtered Report - Summary Extract Report on.",
+		{
+		  inputs: [
+			{ label: "From Date (Edit the Month/Date/Year)", value: formatDate(today), type: "string" },
+			{ label: "Till Date (Edit the Month/Date/Year)", value: formatDate(today), type: "string" }
+		  ]
+		}
+	  );
+	[fromDate, tillDate] = resultDate;
+
+	// Ensure tags and formatting are selected
+	if (!fromDate || !tillDate) {
+	  app.alert("Note: Select both the Date conditions.");
+	  return;
+	}
+
+	}
+
+	// Initialize empty arrays for storing notes and filtered notes
+	let notesG = [];
+	// console.log("Initial notes array:", notes);
+
+	const tagsArray = tagNamesOr ? tagNamesOr.split(',').map(tag => tag.trim()) : [];
+	// console.log("tagsArray (from tagNamesOr):", tagsArray);
+
+	let filteredNotes = [];
+	// console.log("Initial filteredNotes array:", filteredNotes);
+
+	// Filtering logic based on tags [OR] and [AND]
+	if ((Array.isArray(tagsArray) && tagsArray.length > 0) || tagNamesAnd) {
+	  // Filter notes by OR tags (separate search for each tag)
+	  if (Array.isArray(tagsArray) && tagsArray.length > 0) {
+		for (const tag of tagsArray) {
+		  const notesByTag = await app.filterNotes({ tag: tag });
+		  // console.log(`Notes filtered by tag "${tag}":`, notesByTag);
+		  filteredNotes = [...filteredNotes, ...notesByTag];
+		  // console.log("filteredNotes after OR filter:", filteredNotes);
+		}
+	  }
+
+	  // Filter notes by AND tags (combined search for all tags)
+	  if (tagNamesAnd) {
+		const notesByGroup = await app.filterNotes({ tag: tagNamesAnd });
+		// console.log("Notes filtered by AND tags:", notesByGroup);
+		filteredNotes = [...filteredNotes, ...notesByGroup];
+		// console.log("filteredNotes after AND filter:", filteredNotes);
+	  }
+	} else {
+	  // Default filter if no tags are provided
+	  const notesByGroup = await app.filterNotes({ group: "^vault" });
+	  // console.log("Notes filtered by default group (^vault):", notesByGroup);
+	  filteredNotes = [...filteredNotes, ...notesByGroup];
+	  // console.log("filteredNotes after default group filter:", filteredNotes);
+	}
+
+	// Remove duplicate notes
+	filteredNotes = [...new Set(filteredNotes)];
+	// console.log("filteredNotes after removing duplicates:", filteredNotes);
+
+	// Sort the filtered notes by note name in ascending order
+	filteredNotes.sort((a, b) => {
+	  const nameA = (a.name || "").toUpperCase(); // Convert to uppercase to ensure case-insensitive sorting
+	  const nameB = (b.name || "").toUpperCase();
+	  if (nameA < nameB) {
+		return -1;
+	  }
+	  if (nameA > nameB) {
+		return 1;
+	  }
+	  return 0; // Names are equal
+	});
+
+	// console.log("filteredNotes after sorting by name:", filteredNotes);
+
+	notesG = filteredNotes;
+	// console.log("Final notes array:", notesG);
+
+	// Initialize a Set to hold the final results to ensure unique entries.
+	let results = new Set();
+	let allTasks = []; // Array to store all tasks
+
+	/**
+	 * Formats the task's repeat information.
+	 * @param {string} repeatInfo - The task's repeat information in a specific string format.
+	 * @returns {string} - A formatted string displaying the repeat frequency, start date, and time.
+	 */
+	function formatTaskRepeat(repeatInfo) {
+	  if (!repeatInfo || typeof repeatInfo !== 'string') {
+		return "Not Available"; // Return default message if repeatInfo is missing or not a string
+	  }
+
+	  // Split the repeatInfo into lines
+	  const lines = repeatInfo.split('\n').map(line => line.trim());
+
+	  // Extract date and time from DTSTART
+	  const dtstartLine = lines[0];
+	  const rruleLine = lines[1];
+	  
+	  const dtstart = dtstartLine.substring(8); // Remove 'DTSTART:'
+	  const year = dtstart.substring(0, 4);
+	  const month = dtstart.substring(4, 6);
+	  const day = dtstart.substring(6, 8);
+	  const hours = dtstart.substring(8, 10);
+	  const minutes = dtstart.substring(10, 12);
+	  const seconds = dtstart.substring(12, 14);
+
+	  // Format date and time
+	  const formattedDate = `${month}/${day}/${year}`;
+	  const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+	  // Parse RRULE to get the repeat frequency
+	  const rrule = rruleLine.substring(10); // Remove 'RRULE:FREQ='
+	  const repeatFrequency = rrule.toUpperCase(); // Convert frequency to uppercase
+
+	  // Format and return the output
+	  return `${repeatFrequency.charAt(0).toUpperCase() + repeatFrequency.slice(1).toLowerCase()} <b>Starts At:</b> ${formattedDate} at ${formattedTime}`;
+	}
+
+	/**
+	 * Formats a Unix timestamp into a readable date and time string.
+	 * @param {number} timestamp - The Unix timestamp (in seconds).
+	 * @returns {string} - A formatted string with the date and time or "Not Set!" if no timestamp.
+	 */
+	function formatTimestamp(timestamp) {
+	  if (!timestamp) {
+		return 'Not Set!'; // Return if timestamp is null or undefined
+	  }
+
+	  // Create a new Date object from the Unix timestamp (in milliseconds)
+	  const date = new Date(timestamp * 1000);
+
+	  // Extract date and time components
+	  const year = date.getFullYear();
+	  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
+	  const day = String(date.getDate()).padStart(2, '0');
+	  const hours = String(date.getHours()).padStart(2, '0');
+	  const minutes = String(date.getMinutes()).padStart(2, '0');
+	  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+	  // Format and return date and time
+	  const formattedDate = `${month}/${day}/${year}`;
+	  const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+	  return `${formattedDate} at ${formattedTime}`;
+	}
+
+	// Helper function to parse date in "dd-MMM-yyyy" format to a Date object
+	function parseCustomDate(dateStr) {
+	  const [day, monthStr, year] = dateStr.split('-');
+	  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	  const month = monthNames.indexOf(monthStr);
+	  return new Date(year, month, day);
+	}
+
+	// Helper functions to handle time-based filtering
+	function isWithinTimeSpan(taskDate) {
+	  if (!taskDate) return false;
+	  const taskTime = new Date(taskDate * 1000); // Convert UNIX timestamp to Date
+	  const now = new Date();
+	  
+	  // Parse custom date ranges only if needed
+	  const fromParsedDate = timeSpan === "custom" ? parseCustomDate(fromDate) : null;
+	  const tillParsedDate = timeSpan === "custom" ? parseCustomDate(tillDate) : null;
+
+	  switch (timeSpan) {
+		case "today":
+		  return taskTime.toDateString() === now.toDateString();
+		case "yesterday":
+		  const yesterday = new Date(now);
+		  yesterday.setDate(now.getDate() - 1);
+		  return taskTime.toDateString() === yesterday.toDateString();
+		case "thisweek":
+		  const startOfWeek = new Date(now);
+		  startOfWeek.setDate(now.getDate() - now.getDay());
+		  return taskTime >= startOfWeek && taskTime <= now;
+		case "lastweek":
+		  const lastWeekStart = new Date(now);
+		  lastWeekStart.setDate(now.getDate() - now.getDay() - 7);
+		  const lastWeekEnd = new Date(lastWeekStart);
+		  lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
+		  return taskTime >= lastWeekStart && taskTime <= lastWeekEnd;
+		case "thismonth":
+		  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+		  return taskTime >= startOfMonth && taskTime <= now;
+		case "lastmonth":
+		  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+		  const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+		  return taskTime >= lastMonthStart && taskTime <= lastMonthEnd;
+		case "custom":
+			return taskTime >= fromParsedDate && taskTime <= tillParsedDate;
+		case "all":
+		  return true;
+		default:
+		  return false;
+	  }
+	}
+
+	// ----------- Section: Processing Each Note -----------
+	// Loop through each note in the filtered and sorted list of notes.
+	for (const noteHandleG of notesG) {
+		
+	  // Retrieve all tasks, including completed and dismissed ones
+	  const taskAll = await app.getNoteTasks({ uuid: noteHandleG.uuid }, { includeDone: true });
+	  console.log("taskAll:", taskAll);
+	  
+		// Process each task and add relevant info based on filters
+		for (let i = 0; i < taskAll.length; i++) {
+		  const task = taskAll[i];
+  
+		  // Filter by task status
+		  if (
+			(taskStatus === "completed" && !task.completedAt) ||
+			(taskStatus === "dismissed" && !task.dismissedAt) ||
+			(taskStatus === "hidden" && !task.hideUntil) ||
+			(taskStatus === "starts" && !task.startAt) ||
+			(taskStatus === "ends" && !task.endAt)
+		  ) {
+			continue; // Skip tasks that don't match the selected status
+		  }
+		  
+		  // Filter by priority
+		  if (
+			(taskPriority === "imp" && !task.important) ||
+			(taskPriority === "urg" && !task.urgent) ||
+			(taskPriority === "imp_urg" && (!task.important || !task.urgent)) ||
+			(taskPriority === "none" && (task.important || task.urgent))
+		  ) {
+			continue; // Skip tasks that don't match the priority
+		  }
+		  
+		  // Filter by time span
+		  const taskDate = 
+			taskStatus === "completed" ? task.completedAt :
+			taskStatus === "dismissed" ? task.dismissedAt :
+			taskStatus === "hidden" ? task.hideUntil :
+			taskStatus === "starts" ? task.startAt :
+			taskStatus === "ends" ? task.endAt : null;
+
+		  if (!isWithinTimeSpan(taskDate)) {
+			continue; // Skip tasks outside the time span
+		  }
+
+			// Remove unwanted characters and patterns from task.content
+			const sanitizedContent = (task.content ? task.content : "No Task Content")
+			  .replace(/\n/g, " ") // Replace newline characters with space
+			  .replace(/\*\*|~~/g, "") // Remove markdown formatting like ** and ~~
+			  .replace(/<!--.*?-->/g, "") // Remove HTML comments
+			  .replace(/<[^>]+>/g, ""); // Remove HTML tags, including <mark> and attributes
+			// Sanitize noteHandleG.name to retain only letters and numbers
+			const sanitizedNoteName = (noteHandleG.name ? noteHandleG.name : "Untitled Note").replace(/[^a-zA-Z0-9 ]/g, "");
+
+			if (dwFormat === "new") {
+				allTasks.push({
+				  content: task.content, // Use the non sanitized content
+
+				  notename: noteHandleG.name, // Use the sanitized note name
+				  noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
+				  tags: `${noteHandleG.tags}`,
+
+				  startAtz: `${formatTimestamp(task.startAt)}`,
+				  hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+				  endAtz: `${formatTimestamp(task.endAt)}`,
+
+				  completedAtz: `${formatTimestamp(task.completedAt)}`,
+				  dismissedAtz: `${formatTimestamp(task.dismissedAt)}`,
+
+				  repeatz: `${formatTaskRepeat(task.repeat)}`,
+
+				  startAt: task.startAt ?? null,
+				  hideUntil: task.hideUntil ?? null,
+				  endAt: task.endAt ?? null,
+
+				  completedAt: task.completedAt ?? null, // Use null if undefined
+				  dismissedAt: task.dismissedAt ?? null,
+				  repeat: task.repeat ?? null,
+
+				  important: task.important ?? null,
+				  urgent: task.urgent ?? null,
+				  score: task.score ?? null,
+
+				  uuid: task.uuid ?? null,
+				  noteUUID: task.noteUUID ?? null,
+				});
+			} else {
+				allTasks.push({
+				  content: sanitizedContent, // Use the sanitized content
+
+				  notename: sanitizedNoteName, // Use the sanitized note name
+				  noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
+				  tags: `${noteHandleG.tags}`,
+
+				  startAtz: `${formatTimestamp(task.startAt)}`,
+				  hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+				  endAtz: `${formatTimestamp(task.endAt)}`,
+
+				  completedAtz: `${formatTimestamp(task.completedAt)}`,
+				  dismissedAtz: `${formatTimestamp(task.dismissedAt)}`,
+
+				  repeatz: `${formatTaskRepeat(task.repeat)}`,
+
+				  startAt: task.startAt ?? null,
+				  hideUntil: task.hideUntil ?? null,
+				  endAt: task.endAt ?? null,
+
+				  completedAt: task.completedAt ?? null, // Use null if undefined
+				  dismissedAt: task.dismissedAt ?? null,
+				  repeat: task.repeat ?? null,
+
+				  important: task.important ?? null,
+				  urgent: task.urgent ?? null,
+				  score: task.score ?? null,
+
+				  uuid: task.uuid ?? null,
+				  noteUUID: task.noteUUID ?? null,
+				});
+			}
+		}
+	  
+	}
+
+	// Helper function to get the relevant task date based on task status
+	function getTaskDate(task, status) {
+	  switch (status) {
+		case "completed":
+		  return task.completedAt;
+		case "dismissed":
+		  return task.dismissedAt;
+		case "hidden":
+		  return task.hideUntil;
+		case "starts":
+		  return task.startAt;
+		case "ends":
+		  return task.endAt;
+		default:
+		  return null;
+	  }
+	}
+
+	// Function to handle the sorting of tasks based on taskStatus
+	function sortTasksByStatus(tasks, taskStatus) {
+	  return tasks.sort((a, b) => {
+		const taskDateA = getTaskDate(a, taskStatus);
+		const taskDateB = getTaskDate(b, taskStatus);
+
+		if (taskDateA && taskDateB) {
+		  return taskDateA - taskDateB; // Sort in ascending order (oldest first)
+		} else if (taskDateA) {
+		  return -1; // A comes first if only taskDateA is present
+		} else if (taskDateB) {
+		  return 1; // B comes first if only taskDateB is present
+		}
+
+		return 0; // If neither taskDateA nor taskDateB exists, no change in order
+	  });
+	}
+
+	// ----------- Section: Preparing the Final Output -----------
+	// Convert the Set of note names to an array and join them into a single string.
+	console.log("allTasks:", allTasks);
+	// Convert allTasks to a new array and sort by taskStatus
+	results = sortTasksByStatus(Array.from(allTasks), taskStatus);
+	console.log("results:", results);
+	// const dwFormat = "download_json";
+
+		// ----------- Section: Creating a New Note -----------
+		// Define the filename for the new note.
+		const now = new Date();
+		const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+		const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+		const filename = `TM_Filter_Report_${YYMMDD}_${HHMMSS}`;
+
+	if (dwFormat === "new") {
+		let resultText = results
+			  .map(task => {
+				// Determine the status-specific field (e.g., completedAt, dismissedAt, etc.)
+				const statusField = taskStatus === "completed" ? task.completedAtz :
+									taskStatus === "dismissed" ? task.dismissedAtz :
+									taskStatus === "hidden" ? task.hideUntilz :
+									taskStatus === "starts" ? task.startAtz :
+									taskStatus === "ends" ? task.endAtz : null;
+
+				// Handle emojis in a single statement
+				const emojis = `${task.important ? "⭐" : ""} ${task.urgent ? "⚠️" : ""}`.trim();
+
+				// Format the result string as per your requirements
+				return `- [${statusField}] (${task.notename}) ${emojis} ${task.content}`;
+			  })
+			  .join("\n");
+		resultText += `\n>**Decode:** [Time], (Note), Priority Icon, Task Content`;
+		resultText += `\n>**Priority Icon:** ⭐ - Important. ⚠️ - Urgent\n`;
+		resultText += `
+### Readme! - <mark>Task Manager - Filter Report - Summary!</mark> <!-- {"collapsed":true} -->
+> **Tag/s OR:** ${tagNamesOr}
+> **Tag/s AND:** ${tagNamesAnd}
+> **Time Span:** ${timeSpan}
+> **Custom Time Span:** ${fromDate} - **Time Span:** ${tillDate}
+> **Time Status:** ${taskStatus}
+> **Time Priority:** ${taskPriority}
+> **Download/Output Format:** ${dwFormat}
+> **Generated At:** ${YYMMDD}_${HHMMSS}
+
+---
+`;
+
+		// Create a new note with the specified filename and tag, then insert the result text into it.
+		let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
+		await app.insertContent({ uuid: noteUUIDNew }, resultText);
+		await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);		
+	} else {
+
+	function downloadResults(results, dwFormat) {
+		// Helper function to convert data to CSV
+		function toCSV(data) {
+			if (data.length === 0) return ""; // Handle empty data case
+
+			// Create the header row
+			const headers = Object.keys(data[0]).map(field => `"${field}"`).join(",");
+
+			// Map each object to a CSV row, wrapping each value in double quotes
+			const rows = data.map(obj => 
+				Object.values(obj)
+					.map(value => `"${String(value).replace(/"/g, '""')}"`) // Escape double quotes by doubling them
+					.join(",")
+			);
+
+			return [headers, ...rows].join("\n"); // Combine headers and rows with newline
+		}
+
+		// Helper function to download a file
+		function downloadFile(filename, content, contentType) {
+			const blob = new Blob([content], { type: contentType });
+			const link = document.createElement("a");
+			link.href = URL.createObjectURL(blob);
+			link.download = filename;
+			link.click();
+			URL.revokeObjectURL(link.href);
+		}
+
+		let content = "";
+		let filename = "Task Manager Pro - Export";
+		let contentType = "text/plain";
+
+		switch (dwFormat) {
+
+			case "download_md":
+				content = results
+					.map(task => `| ${Object.values(task).join(" | ")} |`)
+					.join("\n");
+				const headers = `| ${Object.keys(results[0]).join(" | ")} |`;
+				const divider = `| ${Object.keys(results[0]).map(() => "---").join(" | ")} |`;
+				content = `${headers}\n${divider}\n${content}`;
+				filename += ".md";
+				contentType = "text/markdown";
+				break;
+
+			case "download_csv":
+				content = toCSV(results); // Convert results to CSV with proper escaping
+				filename += ".csv";
+				contentType = "text/csv";
+				break;
+
+			case "download_txt":
+				content = results
+					.map(task => JSON.stringify(task, null, 2))
+					.join("\n\n");
+				filename += ".txt";
+				break;
+
+			case "download_json":
+				content = JSON.stringify(results, null, 2); // Pretty JSON
+				filename += ".json";
+				contentType = "application/json";
+				break;
+
+			default:
+				console.error("Unknown format selected:", dwFormat);
+				return;
+
+		}
+
+		// Trigger the download
+		downloadFile(filename, content, contentType);
+	}
+
+	// Set the format based on user selection
+	downloadResults(results, dwFormat);
+
+	} // Else condition for download
+
+},
 // ************************************************************** //
 	"Report Active Tasks!": async function(app) {
 
@@ -999,9 +1938,11 @@ ${horizontalLine}
 }
 ```
 
+
 ---
 
 ## <mark style="color:#F8D616;">Additional Information:<!-- {"cycleColor":"25"} --></mark>
+
 
 ---
 
@@ -1018,6 +1959,11 @@ ${horizontalLine}
 - September 15th, 2024: Added the Trend Feature, Tested, Documentation, all the add-on tasks.
 
 - October 14th, 2024: The readme content is collapsed in the report by default. Moved all the options to `appOptions` which can be called using `ctrl + o / cmd + o` . Except `Note!` option still accessible from `noteOptions` `(•••)`. Report Header title level change. Selection name update - Expanded.
+
+- November 20th, 2024 - Completed the exporter / extractor of Task Info.
+
+- November 21st, 2024 - Build a similar summary or report feature to tick tick, with filtering (tags, date, status, priority), and displaying (time, note, priority, content). Filter options: Tasks can be filtered by tags, dates (this week, last week, this month, last month, this quarter, last quarter, and completed), status (active, completed, dismissed), and priority (important, urgent). Display the tasks split by status, with headers for each status (active, completed, dismissed). For "active" tasks, skip those with a "hideUntil" date, for "ended" tasks, skip those with an "endAt" date, and for "no date assigned," skip tasks with no date. For "completed" tasks, show the "completedAt" content, and for "dismissed" tasks, show the "dismissedAt" content. Priority dots should be displayed at the end, with color choices for combinations of important/urgent tasks (five colors) and for both important and urgent tasks (two colors).
+
 
 ---
 
@@ -1053,13 +1999,15 @@ ${horizontalLine}
 
 - [Future Plan - Amplenote Plugins!](https://www.amplenote.com/notes/78995798-3f78-11ef-9b28-26e37c279344) 
 
----
-
-[High-Level Explanation of the Code][^6]  For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
 
 ---
 
-Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m + 1h 2m = \~24h 3m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+[High-Level Explanation of the Code][^9]  For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
+
+
+---
+
+Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m + 1h 2m + 1h 28m + 3h 43m = \~29h 14m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 [^1]: [<mark style="color:#9AD62A;">Welcome Note:<!-- {"cycleColor":"26"} --></mark>]()
 
@@ -1074,7 +2022,19 @@ Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m + 1h 2
     71 Task Manager: Overall E.M.!
     Task Manager: Overall Finished!
 
-[^3]: TM_Overall_Act_240914_224109
+[^3]: task
+    Y
+    X
+    Tasks
+    " Plugin: Task Manager Pro - Test: Download Extract Report! (Recommended)
+    Plugin: Task Manager Pro - Test: Filtered Report - Summary! (Recommended)
+    " Plugin: Task Manager Pro - Test: Report Active Tasks!
+    Plugin: Task Manager Pro - Test: Report Finished Tasks!
+    " Plugin: Task Manager Pro - Test: Trend Over Dates!
+    " Plugin: Task Manager Pro - Test: Eisenhower Matrix!
+    1! to navigate \| @ to open \| Tab to toggle task lookup \| ctrito to toggle dialog
+
+[^4]: TM_Overall_Act_240914_224109
     #-reports/-task-manager . # add a tag
     BI
     H1 H2
@@ -1093,7 +2053,7 @@ Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m + 1h 2
     Progress Bar In
     X
 
-[^4]: TM_Overall_Fin_240914_224422
+[^5]: TM_Overall_Fin_240914_224422
     #-reports/-task-manager . # add a tag
     B
     I
@@ -1115,7 +2075,7 @@ Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m + 1h 2
     Progress Bar In
     X
 
-[^5]: TM_Overall_E_M_240914_224456
+[^6]: TM_Overall_E_M_240914_224456
     #-reports/-task-manager . # add a tag
     BIZ
     H1 H2 H3
@@ -1134,7 +2094,46 @@ Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m + 1h 2
     Tags
     Note Link @
 
-[^6]: [High-Level Explanation of the Code]()
+[^7]: 1 Task Manager Pro - Test
+    X
+    Select Details on which you want to Download Extract Report on.
+    Select Tags \[OR\] (Each tag is searched separately)-
+    Search for a tag
+    Select Tags \[AND\] (Combined tag is searched)
+    Search for a tag
+    Select the Download Format
+    O
+    Download as markdown Table
+    O
+    Download as CSV (Recommended)
+    O
+    Download as TXT
+    O
+    Download as JSON
+    SUBMIT
+    Cancel
+
+[^8]: 1 Task Manager Pro - Test
+    X
+    Select Details on which you want a Filtered Report - Summary Extract
+    Report on. Note: If Tag selection is not made, all the Notes will be
+    considered.
+    -Select Tags \[OR\] (Each tag is searched separately)
+    Search for a tag
+    Select Tags \[AND\] (Combined tag is searched)
+    Search for a tag
+    Select the Time Duration
+    Today
+    Select the Task Status
+    Completed
+    Select the Priority
+    All
+    Select the Download/Output Method
+    Insert into New Note
+    SUBMIT
+    Cancel
+
+[^9]: [High-Level Explanation of the Code]()
 
     ### Code Explanation (Note!):
 
@@ -1172,6 +2171,7 @@ Time Invested For this Plugin: 8h 38m + 6h 17m + 1h 14m + 2h 42m + 4h 10m + 1h 2
 
     This documentation and code structure should help you seamlessly integrate this code into your final project.
 
+    
     ---
 
     ### Explanation of Each Section (Overall!):
