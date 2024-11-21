@@ -1005,14 +1005,16 @@ ${horizontalLine}
 		// Process each task and add relevant info
 		for (let i = 0; i < taskAll.length; i++) {
 		  const task = taskAll[i];
+
 			// Remove unwanted characters and patterns from task.content
-			const sanitizedContent = task.content
+			const sanitizedContent = (task.content ? task.content : "No Task Content")
 			  .replace(/\n/g, " ") // Replace newline characters with space
 			  .replace(/\*\*|~~/g, "") // Remove markdown formatting like ** and ~~
 			  .replace(/<!--.*?-->/g, "") // Remove HTML comments
 			  .replace(/<[^>]+>/g, ""); // Remove HTML tags, including <mark> and attributes
 			// Sanitize noteHandleG.name to retain only letters and numbers
-			const sanitizedNoteName = noteHandleG.name.replace(/[^a-zA-Z0-9 ]/g, "");
+			const sanitizedNoteName = (noteHandleG.name ? noteHandleG.name : "Untitled Note").replace(/[^a-zA-Z0-9 ]/g, "");
+
 		allTasks.push({
 		  content: sanitizedContent, // Use the sanitized content
 
@@ -1204,10 +1206,10 @@ ${horizontalLine}
 	}
 
 	// Ensure tags and formatting are selected
-	if (!tagNamesOr && !tagNamesAnd) {
+	/* if (!tagNamesOr && !tagNamesAnd) {
 	  app.alert("Note: Select any one of the Tag condition.");
 	  return;
-	}
+	} */
 
 	function formatDate(date) {
 		const day = String(date.getDate()).padStart(2, '0');
@@ -1467,7 +1469,19 @@ ${horizontalLine}
 			continue; // Skip tasks outside the time span
 		  }
 
+			// Remove unwanted characters and patterns from task.content
+			const sanitizedContent = (task.content ? task.content : "No Task Content")
+			  .replace(/\n/g, " ") // Replace newline characters with space
+			  .replace(/\*\*|~~/g, "") // Remove markdown formatting like ** and ~~
+			  .replace(/<!--.*?-->/g, "") // Remove HTML comments
+			  .replace(/<[^>]+>/g, ""); // Remove HTML tags, including <mark> and attributes
+			// Sanitize noteHandleG.name to retain only letters and numbers
+			const sanitizedNoteName = (noteHandleG.name ? noteHandleG.name : "Untitled Note").replace(/[^a-zA-Z0-9 ]/g, "");
+
 			allTasks.push({
+			  content: sanitizedContent, // Use the sanitized content
+
+			  notename: sanitizedNoteName, // Use the sanitized note name
 			  noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
 			  tags: `${noteHandleG.tags}`,
 
@@ -1496,10 +1510,47 @@ ${horizontalLine}
 	  
 	}
 
+	// Helper function to get the relevant task date based on task status
+	function getTaskDate(task, status) {
+	  switch (status) {
+		case "completed":
+		  return task.completedAt;
+		case "dismissed":
+		  return task.dismissedAt;
+		case "hidden":
+		  return task.hideUntil;
+		case "starts":
+		  return task.startAt;
+		case "ends":
+		  return task.endAt;
+		default:
+		  return null;
+	  }
+	}
+
+	// Function to handle the sorting of tasks based on taskStatus
+	function sortTasksByStatus(tasks, taskStatus) {
+	  return tasks.sort((a, b) => {
+		const taskDateA = getTaskDate(a, taskStatus);
+		const taskDateB = getTaskDate(b, taskStatus);
+
+		if (taskDateA && taskDateB) {
+		  return taskDateA - taskDateB; // Sort in ascending order (oldest first)
+		} else if (taskDateA) {
+		  return -1; // A comes first if only taskDateA is present
+		} else if (taskDateB) {
+		  return 1; // B comes first if only taskDateB is present
+		}
+
+		return 0; // If neither taskDateA nor taskDateB exists, no change in order
+	  });
+	}
+
 	// ----------- Section: Preparing the Final Output -----------
 	// Convert the Set of note names to an array and join them into a single string.
 	console.log("allTasks:", allTasks);
-	results = Array.from(allTasks);
+	// Convert allTasks to a new array and sort by taskStatus
+	results = sortTasksByStatus(Array.from(allTasks), taskStatus);
 	console.log("results:", results);
 	const dwFormat = "download_json";
 
