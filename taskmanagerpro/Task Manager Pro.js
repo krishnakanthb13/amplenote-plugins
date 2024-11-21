@@ -1026,14 +1026,17 @@ ${horizontalLine}
 		  hideUntilz: `${formatTimestamp(task.hideUntil)}`,
 		  endAtz: `${formatTimestamp(task.endAt)}`,
 
+		  completedAtz: `${formatTimestamp(task.completedAt)}`,
+		  dismissedAtz: `${formatTimestamp(task.dismissedAt)}`,
+
 		  repeatz: `${formatTaskRepeat(task.repeat)}`,
 
 		  startAt: task.startAt ?? null,
 		  hideUntil: task.hideUntil ?? null,
+		  endAt: task.endAt ?? null,
 
 		  completedAt: task.completedAt ?? null, // Use null if undefined
 		  dismissedAt: task.dismissedAt ?? null,
-		  endAt: task.endAt ?? null,
 		  repeat: task.repeat ?? null,
 
 		  important: task.important ?? null,
@@ -1133,9 +1136,21 @@ ${horizontalLine}
 
 	// Prompt the user for tags and object type input
 	const result = await app.prompt(
-		"Select Details on which you want a Filtered Report - Summary Extract Report on.",
+		"Select Details on which you want a Filtered Report - Summary Extract Report on. Note: If Tag selection is not made, all the Notes will be considered.",
 		{
 		  inputs: [
+			{
+			  label: "Select Tags [OR] (Each tag is searched separately)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
+			{
+			  label: "Select Tags [AND] (Combined tag is searched)",
+			  type: "tags",
+			  limit: 10,
+			  placeholder: "Enter tag/'s' (Max 10)"
+			},
 			{
 			  label: "Select the Time Duration",
 			  type: "select",
@@ -1176,17 +1191,18 @@ ${horizontalLine}
 			  value: "all"
 			},
 			{
-			  label: "Select Tags [OR] (Each tag is searched separately)",
-			  type: "tags",
-			  limit: 10,
-			  placeholder: "Enter tag/'s' (Max 10)"
-			},
-			{
-			  label: "Select Tags [AND] (Combined tag is searched)",
-			  type: "tags",
-			  limit: 10,
-			  placeholder: "Enter tag/'s' (Max 10)"
-			}
+			  label: "Select the Download/Output Method",
+			  type: "select",
+			  options: [
+				{ label: "Insert into New Note", value: "new" },
+				// { label: "Copy Content", value: "copy" },
+				{ label: "Download as markdown Table", value: "download_md" },
+				{ label: "Download as CSV (Recommended)", value: "download_csv" },
+				{ label: "Download as TXT", value: "download_txt" },
+				{ label: "Download as JSON", value: "download_json" }
+			  ],
+			  value: "new"
+			},			
 		  ]
 		}
 	  );
@@ -1195,7 +1211,7 @@ ${horizontalLine}
 	// console.log("User input result:", result);
 
 	// Destructure the inputs for OR/AND tags, object type, and download format
-	const [timeSpan, taskStatus, taskPriority, tagNamesOr, tagNamesAnd] = result;
+	const [tagNamesOr, tagNamesAnd, timeSpan, taskStatus, taskPriority, dwFormat] = result;
 	// console.log("tagNamesOr:", tagNamesOr);
 	// console.log("tagNamesAnd:", tagNamesAnd);
 
@@ -1431,7 +1447,7 @@ ${horizontalLine}
 	  // Retrieve all tasks, including completed and dismissed ones
 	  const taskAll = await app.getNoteTasks({ uuid: noteHandleG.uuid }, { includeDone: true });
 	  console.log("taskAll:", taskAll);
-
+	  
 		// Process each task and add relevant info based on filters
 		for (let i = 0; i < taskAll.length; i++) {
 		  const task = taskAll[i];
@@ -1478,34 +1494,71 @@ ${horizontalLine}
 			// Sanitize noteHandleG.name to retain only letters and numbers
 			const sanitizedNoteName = (noteHandleG.name ? noteHandleG.name : "Untitled Note").replace(/[^a-zA-Z0-9 ]/g, "");
 
-			allTasks.push({
-			  content: sanitizedContent, // Use the sanitized content
+			if (dwFormat === "new") {
+				allTasks.push({
+				  content: task.content, // Use the non sanitized content
 
-			  notename: sanitizedNoteName, // Use the sanitized note name
-			  noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
-			  tags: `${noteHandleG.tags}`,
+				  notename: noteHandleG.name, // Use the sanitized note name
+				  noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
+				  tags: `${noteHandleG.tags}`,
 
-			  startAtz: `${formatTimestamp(task.startAt)}`,
-			  hideUntilz: `${formatTimestamp(task.hideUntil)}`,
-			  endAtz: `${formatTimestamp(task.endAt)}`,
+				  startAtz: `${formatTimestamp(task.startAt)}`,
+				  hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+				  endAtz: `${formatTimestamp(task.endAt)}`,
 
-			  repeatz: `${formatTaskRepeat(task.repeat)}`,
+				  completedAtz: `${formatTimestamp(task.completedAt)}`,
+				  dismissedAtz: `${formatTimestamp(task.dismissedAt)}`,
 
-			  startAt: task.startAt ?? null,
-			  hideUntil: task.hideUntil ?? null,
+				  repeatz: `${formatTaskRepeat(task.repeat)}`,
 
-			  completedAt: task.completedAt ?? null, // Use null if undefined
-			  dismissedAt: task.dismissedAt ?? null,
-			  endAt: task.endAt ?? null,
-			  repeat: task.repeat ?? null,
+				  startAt: task.startAt ?? null,
+				  hideUntil: task.hideUntil ?? null,
+				  endAt: task.endAt ?? null,
 
-			  important: task.important ?? null,
-			  urgent: task.urgent ?? null,
-			  score: task.score ?? null,
+				  completedAt: task.completedAt ?? null, // Use null if undefined
+				  dismissedAt: task.dismissedAt ?? null,
+				  repeat: task.repeat ?? null,
 
-			  uuid: task.uuid ?? null,
-			  noteUUID: task.noteUUID ?? null,
-			});
+				  important: task.important ?? null,
+				  urgent: task.urgent ?? null,
+				  score: task.score ?? null,
+
+				  uuid: task.uuid ?? null,
+				  noteUUID: task.noteUUID ?? null,
+				});
+			} else {
+				allTasks.push({
+				  content: sanitizedContent, // Use the sanitized content
+
+				  notename: sanitizedNoteName, // Use the sanitized note name
+				  noteurl: `https://www.amplenote.com/notes/${noteHandleG.uuid}`,
+				  tags: `${noteHandleG.tags}`,
+
+				  startAtz: `${formatTimestamp(task.startAt)}`,
+				  hideUntilz: `${formatTimestamp(task.hideUntil)}`,
+				  endAtz: `${formatTimestamp(task.endAt)}`,
+
+				  completedAtz: `${formatTimestamp(task.completedAt)}`,
+				  dismissedAtz: `${formatTimestamp(task.dismissedAt)}`,
+
+				  repeatz: `${formatTaskRepeat(task.repeat)}`,
+
+				  startAt: task.startAt ?? null,
+				  hideUntil: task.hideUntil ?? null,
+				  endAt: task.endAt ?? null,
+
+				  completedAt: task.completedAt ?? null, // Use null if undefined
+				  dismissedAt: task.dismissedAt ?? null,
+				  repeat: task.repeat ?? null,
+
+				  important: task.important ?? null,
+				  urgent: task.urgent ?? null,
+				  score: task.score ?? null,
+
+				  uuid: task.uuid ?? null,
+				  noteUUID: task.noteUUID ?? null,
+				});
+			}
 		}
 	  
 	}
@@ -1552,7 +1605,53 @@ ${horizontalLine}
 	// Convert allTasks to a new array and sort by taskStatus
 	results = sortTasksByStatus(Array.from(allTasks), taskStatus);
 	console.log("results:", results);
-	const dwFormat = "download_json";
+	// const dwFormat = "download_json";
+
+		// ----------- Section: Creating a New Note -----------
+		// Define the filename for the new note.
+		const now = new Date();
+		const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+		const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+		const filename = `TM_Filter_Report_${YYMMDD}_${HHMMSS}`;
+
+	if (dwFormat === "new") {
+		let resultText = results
+			  .map(task => {
+				// Determine the status-specific field (e.g., completedAt, dismissedAt, etc.)
+				const statusField = taskStatus === "completed" ? task.completedAtz :
+									taskStatus === "dismissed" ? task.dismissedAtz :
+									taskStatus === "hidden" ? task.hideUntilz :
+									taskStatus === "starts" ? task.startAtz :
+									taskStatus === "ends" ? task.endAtz : null;
+
+				// Handle emojis in a single statement
+				const emojis = `${task.important ? "⭐" : ""} ${task.urgent ? "⚠️" : ""}`.trim();
+
+				// Format the result string as per your requirements
+				return `- [${statusField}] (${task.notename}) ${emojis} ${task.content}`;
+			  })
+			  .join("\n");
+		resultText += `\n>**Decode:** [Time], (Note), Priority Icon, Task Content`;
+		resultText += `\n>**Priority Icon:** ⭐ - Important. ⚠️ - Urgent\n`;
+		resultText += `
+### Readme! - <mark>Task Manager - Filter Report - Summary!</mark> <!-- {"collapsed":true} -->
+> **Tag/s OR:** ${tagNamesOr}
+> **Tag/s AND:** ${tagNamesAnd}
+> **Time Span:** ${timeSpan}
+> **Custom Time Span:** ${fromDate} - **Time Span:** ${tillDate}
+> **Time Status:** ${taskStatus}
+> **Time Priority:** ${taskPriority}
+> **Download/Output Format:** ${dwFormat}
+> **Generated At:** ${YYMMDD}_${HHMMSS}
+
+---
+`;
+
+		// Create a new note with the specified filename and tag, then insert the result text into it.
+		let noteUUIDNew = await app.createNote(`${filename}`, ["-reports/-task-manager"]);
+		await app.insertContent({ uuid: noteUUIDNew }, resultText);
+		await app.navigate(`https://www.amplenote.com/notes/${noteUUIDNew}`);		
+	} else {
 
 	function downloadResults(results, dwFormat) {
 		// Helper function to convert data to CSV
@@ -1587,6 +1686,7 @@ ${horizontalLine}
 		let contentType = "text/plain";
 
 		switch (dwFormat) {
+
 			case "download_md":
 				content = results
 					.map(task => `| ${Object.values(task).join(" | ")} |`)
@@ -1620,14 +1720,17 @@ ${horizontalLine}
 			default:
 				console.error("Unknown format selected:", dwFormat);
 				return;
+
 		}
 
 		// Trigger the download
 		downloadFile(filename, content, contentType);
 	}
-	
+
 	// Set the format based on user selection
 	downloadResults(results, dwFormat);
+
+	} // Else condition for download
 
 },
 // ************************************************************** //
