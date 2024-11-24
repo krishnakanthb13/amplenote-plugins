@@ -1,22 +1,24 @@
 ﻿---
 title: Extract to a note 2.0 Docs
 uuid: 1701987e-48c4-11ef-949a-6ef34fa959ce
-version: 221
+version: 239
 created: '2024-07-23T12:50:52+05:30'
 tags:
+  - '-2-literature'
   - '-9-permanent'
-  - '-loc/amp/mine'
+  - '-t/amplenote/mine'
 ---
 
 # <mark style="color:#FFFFFF;">**Welcome Note:**<!-- {"cycleColor":"55"} --></mark>
 
-This Plugin function is designed to facilitate the process of transferring selected content from one note to another within Amplenote. It keeps and maintains the format with respect to the selected content, inserts it into the destination note, and replaces the original selection with a link to the note where the data is transferred to!..
+This Plugin function is designed to facilitate the process of transferring selected content from one note to another within Amplenote. It keeps and maintains the format with respect to the selected content, inserts it into the destination note, and replaces the original selection with a link to the note where the data is transferred to!.
 
 \
 
 This is just an extended version of the inbuild Extract to a note function which comes with Amplenote. 
 
 Limitations: This does not have the feature of handling new note creation process. This can only move the content to a already existing note in Amplenote. 
+
 
 ---
 
@@ -25,6 +27,7 @@ Limitations: This does not have the feature of handling new note creation proces
 ### General - Calling the Plugin - Extract to a note 2.0
 
 ![](https://images.amplenote.com/1701987e-48c4-11ef-949a-6ef34fa959ce/8f9a9fa0-99dd-45fe-8946-d30fd10ce3c2.gif)
+
 
 ---
 
@@ -156,9 +159,11 @@ Limitations: This does not have the feature of handling new note creation proces
 
 This Plugin function is a comprehensive tool for transferring selected content from one note to another. It handles formatting, user input, and content insertion, and it ensures that the original selection is replaced with a link to the new note. This detailed explanation should serve as a reference for understanding and utilizing the function effectively.
 
+
 ---
 
 ## <mark style="color:#FFFFFF;">Additional Information:<!-- {"cycleColor":"55"} --></mark>
+
 
 ---
 
@@ -173,6 +178,9 @@ This Plugin function is a comprehensive tool for transferring selected content f
 - July 28th, 2024: Adding readability by giving source replace-text constructions and destination insert-text constructions.
 
 - July 29th, 2024: Minor Formatting Tweaks, which support both single line extraction and also bullets extractions (without and with markdown formatting!)
+
+- November 24th, 2024: Added the Source location in the Destination reference. Now both-ways it is referenced and it is complete.
+
 
 ---
 
@@ -204,13 +212,16 @@ This Plugin function is a comprehensive tool for transferring selected content f
 
 - [Future Plan - Amplenote Plugins!](https://www.amplenote.com/notes/78995798-3f78-11ef-9b28-26e37c279344) 
 
+
 ---
 
 - [Code Explanation!][^1] For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
 
+
 ---
 
-Time Invested For this Plugin: 4h 24m + 2h 30m +  = Totaling up to 7+h. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+Time Invested For this Plugin: 4h 24m + 2h 30m + 20m = Totaling up to 6h 54m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
+
 
 ---
 
