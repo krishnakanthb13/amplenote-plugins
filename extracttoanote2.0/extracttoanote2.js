@@ -1,8 +1,12 @@
 {
     replaceText: async function (app, text) {
         // Get the selected content from the app's context
-        const textWithFormatting = app.context.selectionContent;
+        const textWithFormatting = app.context.selectionContent.toLocaleString();
         // console.log("Selected Content:", textWithFormatting);
+		// const textNotehandle = app.context.noteUUID;
+		// console.log("Selected Content Location:", textNotehandle);
+		const textNoteHandle = await app.findNote({ uuid: app.context.noteUUID });
+		// console.log("Selected Content Location:", textNoteHandle);
 
         // Prompt the user to select a note to transfer the selected text
         const result = await app.prompt("Extract your selection to a New Note! Formatted!", {
@@ -18,13 +22,16 @@
         // Get the note name selected by the user
         const noteName = result;
         // console.log("Selected note name by the user:", noteName);
+		
+        const srcNoteloc = `[${textNoteHandle.name}](https://www.amplenote.com/notes/${textNoteHandle.uuid})`;
+		// console.log("Placeholder Link to Source Note:", srcNoteloc);		
 
         // Prepare the formatted text to be pasted in the new note
         const hLine = `---`;
         const fDate = new Date();
         const textFinal = `
 ${hLine}
-> Below Data was Extracted here on - *${fDate}*
+> Below Data was Extracted here From: ${srcNoteloc} on - *${fDate}*.
 
 ${textWithFormatting}
 
@@ -33,7 +40,7 @@ ${hLine}
 `;
 
        //- Below Data was Extracted here on - *${fDate}*
-       //    Below Data was Extracted here on - *${fDate}*
+       //  Below Data was Extracted here on - *${fDate}*
        //> Below Data was Extracted here on - *${fDate}*
 
       // console.log("To be Pasted Content:", textFinal);
