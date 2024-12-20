@@ -1,19 +1,27 @@
 {
-  noteOption(app, noteUUID) {
+  async noteOption(app, noteUUID) {
 
     const result = await app.prompt("This is the message", {
       inputs: [ 
         
-        { label: "This is the label", placeholder: "This is the placeholder", type: "text" },
-        { label: "This is the label", type: "checkbox" },
-        { label: "This is the label", type: "select", options: [ { label: "something", value: 1 }, { label: "other", value: 2 } ] },
-        { label: "This is the label", type: "radio", options: [ { label: "something", value: 1 }, { label: "other", value: 2 } ] },
+        { label: "Number of Dice", type: "string" },
+        { label: "Number of Faces", type: "string" },
+        { label: "Minimum Number", type: "string" },
+        { label: "Maximum Number", type: "string" },
+        { label: "Keep Highest Roll", type: "checkbox" },
+        { label: "Keep Highest Roll Count", type: "string" },
+        { label: "Drop Highest Roll", type: "checkbox" },
+        { label: "Drop Highest Roll Count", type: "string" },
+        { label: "Explode", type: "checkbox" },
+        { label: "Explode Target", type: "string" },
+        { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ] },
+        { label: "Unique", type: "checkbox" },
       ] 
     
     });
  
     if (result) {
-      const [ textResult, checkboxResult, selectResult ] = result;
+      const [ numDice, faces, min, max, keep, keepC, drop, dropC, explode, explodeT, sort, unique ] = result;
  
     } else {
       // User canceled
@@ -85,13 +93,13 @@
     }
     
     // Example Usage
-    const result = rollDice({
+    const resultz = rollDice({
       numDice: 5,
       faces: 10
     });
     
-    console.log("Rolls:", result.rolls);
-    console.log("Total:", result.total);
+    console.log("Rolls:", resultz.rolls);
+    console.log("Total:", resultz.total);
 
   }
 }
