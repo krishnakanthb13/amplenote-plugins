@@ -1,7 +1,7 @@
 {
 appOption: {
 /* ----------------------------------- */
-"List!": async function (app) {
+"Basic": async function (app) {
 
     const existingSetting = await app.settings["Previous_Roll"];
     let result;
@@ -249,6 +249,7 @@ appOption: {
 		console.error(error.message);
 	  });
 	} else {
+        console.log("Lookup note option - None selected");
 		// No Lookup. Just Audit.
 	}
 	}
