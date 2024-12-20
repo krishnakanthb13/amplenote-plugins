@@ -19,15 +19,16 @@
       explodeTarget,
       sortOption,
       unique,
+	  lookUp,
     ] = (existingSetting || "") // Ensure existingSetting is not null or undefined
       .split(",")
       .map((value, index) => {
-        const defaults = [1, 6, 1, 6, false, 0, false, 0, false, 0, 1, false]; // Default values
+        const defaults = [1, 6, , , false, 0, false, 0, false, 0, 1, false, 1]; // Default values
         if (value === undefined || value === null || value.trim() === "") {
           return defaults[index]; // Use default if value is missing or empty
         }
         // Parse value based on expected type
-        if ([0, 1, 2, 3, 5, 7, 9, 10].includes(index)) return Number(value) || defaults[index]; // Numbers
+        if ([0, 1, 2, 3, 5, 7, 9, 10, 12].includes(index)) return Number(value) || defaults[index]; // Numbers
         if ([4, 6, 8, 11].includes(index)) return value.toLowerCase() === "true"; // Booleans
         return value; // Strings or other types (not expected here)
       });
@@ -47,6 +48,7 @@
         { label: "Explode Target", type: "string", value: explodeTarget },
         { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ], value: sortOption || 1 },
         { label: "Unique", type: "checkbox", value: unique },
+        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "Random", value: 4 } ], value: lookUp || 1 },
       ] 
     
     });
@@ -68,6 +70,7 @@
         { label: "Explode Target", type: "string" },
         { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ], value: 1 },
         { label: "Unique", type: "checkbox" },
+        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "Random", value: 4 } ], value: lookUp || 1 },
       ] 
     
     });
@@ -138,6 +141,51 @@
         total: rolls.reduce((sum, roll) => sum + roll, 0),
       };
     }
+
+	async function sortNotesByLookUp(lookUp, pickNote) {
+	  // Fetch notes grouped by some criteria
+	  let notesByGroup = await app.filterNotes({});
+	  
+	  // Sorting logic based on lookUp value
+	  switch (lookUp) {
+		case 1: // Sort by Name
+		  notesByGroup.sort((a, b) => a.name.localeCompare(b.name));
+		  break;
+		case 2: // Sort by Created
+		  notesByGroup.sort((a, b) => new Date(a.created) - new Date(b.created));
+		  break;
+		case 3: // Sort by Modified
+		  notesByGroup.sort((a, b) => new Date(a.updated) - new Date(b.updated));
+		  break;
+		case 4: // Random
+		  notesByGroup = shuffleArray(notesByGroup);
+		  break;
+		default: // Default to Name sort
+		  notesByGroup.sort((a, b) => a.name.localeCompare(b.name));
+	  }
+
+	  // Adjust pickNote to be within the bounds of notesByGroup
+	  const totalNotes = notesByGroup.length;
+	  if (totalNotes === 0) {
+		throw new Error("No notes available to pick.");
+	  }
+	  const adjustedPickNote = pickNote % totalNotes; // Calculate the valid index
+
+	  // Select the note based on adjustedPickNote
+	  const selectedNote = notesByGroup[adjustedPickNote];
+
+	  // Return the UUID of the selected note
+	  return selectedNote?.uuid;
+
+	  // Helper function to shuffle an array
+	  function shuffleArray(array) {
+		for (let i = array.length - 1; i > 0; i--) {
+		  const j = Math.floor(Math.random() * (i + 1));
+		  [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+		}
+		return array;
+	  }
+	}
     
     if (result) {
       const [
@@ -153,6 +201,7 @@
         explodeTarget,
         sortOption,
         unique,
+		lookUp,
       ] = result;
 
       await app.setSetting("Previous_Roll", result);
@@ -179,9 +228,19 @@
   
       console.log("Rolls:", diceResult.rolls);
       console.log("Total:", diceResult.total);
-    } else {
-      console.log("User canceled input.");
-    }
+	  
+	  const pickNote = diceResult.total;
 
+	// Example Usage:
+	// const lookUp = 2; // Could be 1 (Name), 2 (Created), 3 (Modified), 4 (Random)
+	sortNotesByLookUp(lookUp, pickNote)
+	  .then((uuid) => {
+		console.log(`Selected Note UUID: ${uuid}`);
+	  })
+	  .catch((error) => {
+		console.error(error.message);
+	  });
+
+	}
   }
 }
