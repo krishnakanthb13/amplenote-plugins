@@ -1,5 +1,7 @@
 {
-  async noteOption(app, noteUUID) {
+appOption: {
+/* ----------------------------------- */
+"List!": async function (app) {
 
     const existingSetting = await app.settings["Previous_Roll"];
     let result;
@@ -23,7 +25,7 @@
     ] = (existingSetting || "") // Ensure existingSetting is not null or undefined
       .split(",")
       .map((value, index) => {
-        const defaults = [1, 6, , , false, 0, false, 0, false, 0, 1, false, 1]; // Default values
+        const defaults = [1, 6, , , false, 0, false, 0, false, 0, 1, false, 0]; // Default values
         if (value === undefined || value === null || value.trim() === "") {
           return defaults[index]; // Use default if value is missing or empty
         }
@@ -48,7 +50,7 @@
         { label: "Explode Target", type: "string", value: explodeTarget },
         { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ], value: sortOption || 1 },
         { label: "Unique", type: "checkbox", value: unique },
-        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "Random", value: 4 } ], value: lookUp || 1 },
+        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "None", value: 5 }, { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "UUID", value: 6 }, { label: "Random", value: 4 } ], value: lookUp || 5 },
       ] 
     
     });
@@ -70,7 +72,7 @@
         { label: "Explode Target", type: "string" },
         { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ], value: 1 },
         { label: "Unique", type: "checkbox" },
-        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "Random", value: 4 } ], value: lookUp || 1 },
+        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "None", value: 5 }, { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "UUID", value: 6 }, { label: "Random", value: 4 } ], value: 5 },
       ] 
     
     });
@@ -148,6 +150,8 @@
 	  
 	  // Sorting logic based on lookUp value
 	  switch (lookUp) {
+		case 5: // Escape / Return
+		  return;
 		case 1: // Sort by Name
 		  notesByGroup.sort((a, b) => a.name.localeCompare(b.name));
 		  break;
@@ -159,6 +163,9 @@
 		  break;
 		case 4: // Random
 		  notesByGroup = shuffleArray(notesByGroup);
+		  break;
+		case 6: // UUID
+		  notesByGroup.sort((a, b) => a.uuid.localeCompare(b.uuid));
 		  break;
 		default: // Default to Name sort
 		  notesByGroup.sort((a, b) => a.name.localeCompare(b.name));
@@ -231,6 +238,7 @@
 	  
 	  const pickNote = diceResult.total;
 
+	if ([1, 2, 3, 4, 6].includes(lookUp)) {
 	// Example Usage:
 	// const lookUp = 2; // Could be 1 (Name), 2 (Created), 3 (Modified), 4 (Random)
 	sortNotesByLookUp(lookUp, pickNote)
@@ -240,7 +248,11 @@
 	  .catch((error) => {
 		console.error(error.message);
 	  });
-
+	} else {
+		// No Lookup. Just Audit.
+	}
+	}
+      
 	}
   }
 }
