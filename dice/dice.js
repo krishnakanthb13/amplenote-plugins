@@ -21,7 +21,7 @@ appOption: {
       explodeTarget,
       sortOption,
       unique,
-	  lookUp,
+	  lookUp
     ] = (existingSetting || "") // Ensure existingSetting is not null or undefined
       .split(",")
       .map((value, index) => {
@@ -193,6 +193,16 @@ appOption: {
 		return array;
 	  }
 	}
+
+	// async function auditNavigate(valueOps) {
+		// if (valueOps = 1) {
+			// await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+			// await app.navigate(`https://www.amplenote.com/notes/${uuid}`);				
+		// } else if (valueOps = 1) {
+			// await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+			// await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);			
+		// }
+	// }
     
     if (result) {
       const [
@@ -208,7 +218,7 @@ appOption: {
         explodeTarget,
         sortOption,
         unique,
-		lookUp,
+		lookUp
       ] = result;
 
       await app.setSetting("Previous_Roll", result);
@@ -238,20 +248,51 @@ appOption: {
 	  
 	  const pickNote = diceResult.total;
 
+    // Generate the filename based on the current date and time
+    const now = new Date();
+    const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+    const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+
+    // Audit Report
+    const auditNoteName = `Dice Results Audit`;
+    const auditTagName = ['-reports/-dice'];
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Dice_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Dice_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+
 	if ([1, 2, 3, 4, 6].includes(lookUp)) {
-	// Example Usage:
-	// const lookUp = 2; // Could be 1 (Name), 2 (Created), 3 (Modified), 4 (Random)
-	sortNotesByLookUp(lookUp, pickNote)
-	  .then((uuid) => {
-		console.log(`Selected Note UUID: ${uuid}`);
-	  })
-	  .catch((error) => {
-		console.error(error.message);
-	  });
+	  // Example Usage:
+	  // const lookUp = 2; // Could be 1 (Name), 2 (Created), 3 (Modified), 4 (Random)
+	  (async () => {
+		try {
+		  const uuid = await sortNotesByLookUp(lookUp, pickNote);
+		  console.log(`Selected Note UUID: ${uuid}`);
+		  const auditReport = `- **When:** *${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Rolls:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **UUID:** ${uuid};`;
+		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+		  await app.navigate(`https://www.amplenote.com/notes/${uuid}`);
+		} catch (error) {
+		  console.error(error.message);
+		}
+	  })();
 	} else {
-        console.log("Lookup note option - None selected");
-		// No Lookup. Just Audit.
+	  (async () => {
+		try {
+		  console.log("Lookup note option - None selected");
+		  // No Lookup. Just Audit.
+		  const auditReport = `- **When:** *${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Rolls:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark>`;
+		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+		  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
+		} catch (error) {
+		  console.error(error.message);
+		}
+	  })();
 	}
+
 	}
       
 	}
