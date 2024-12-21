@@ -307,6 +307,61 @@ appOption: {
 
 	}
       
+},
+/* ----------------------------------- */
+"Fudge/Fate": async function (app) {
+
+	// Fudge/Fate Dice Roller with Custom Prompt Integration
+	async function rollFudgeDice(numDice = 4) {
+	  // Map numeric rolls to Fudge outcomes
+	  const outcomes = ["-", " ", "+"]; // 1, 2 = '-', 3, 4 = ' ', 5, 6 = '+'
+	  let results = [];
+	  let total = 0;
+
+	  // Roll dice and calculate results
+	  for (let i = 0; i < numDice; i++) {
+		const roll = Math.floor(Math.random() * 6); // Random number 0-5
+		const face = outcomes[Math.floor(roll / 2)]; // Map to "-", " ", "+"
+		results.push(face);
+		total += face === "+" ? 1 : face === "-" ? -1 : 0;
+	  }
+
+	  return { results, total };
 	}
+
+	// Main function with custom prompt
+	async function main() {
+	  // Pre-filled number of dice (default to 4)
+	  const numDicez = 4;
+
+	  // Prompt user with pre-filled inputs
+	  const result = await app.prompt("Fudge/Fate, Roll the Dice!", {
+		inputs: [
+		  { label: "Number of Dice", type: "string", value: numDicez.toString() },
+		],
+	  });
+
+	  if (result) {
+		const [numDiceInput] = result;
+		const numDice = parseInt(numDiceInput, 10) || 4;
+
+		if (numDice <= 0) {
+		  console.error("Number of dice must be a positive integer!");
+		  return;
+		}
+
+		const { results, total } = await rollFudgeDice(numDice);
+
+		console.log(
+		  `You rolled ${numDice} dice: [${results.join(", ")}]\nTotal result: ${total}`
+		);
+	  }
+	}
+
+	// Run the program
+	main();
+
+},
+
   }
 }
