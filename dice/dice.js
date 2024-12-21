@@ -337,12 +337,14 @@ appOption: {
 	  // Prompt user with pre-filled inputs
 	  const result = await app.prompt("Fudge/Fate, Roll the Dice!", {
 		inputs: [
-		  { label: "Number of Dice", type: "string", value: numDicez.toString() },
+		  { label: "Number of Dice", type: "string", value: numDicez },
 		],
 	  });
 
+      console.log("result",result);
+
 	  if (result) {
-		const [numDiceInput] = result;
+		const numDiceInput = result;
 		const numDice = parseInt(numDiceInput, 10) || 4;
 
 		if (numDice <= 0) {
@@ -352,9 +354,35 @@ appOption: {
 
 		const { results, total } = await rollFudgeDice(numDice);
 
-		console.log(
-		  `You rolled ${numDice} dice: [${results.join(", ")}]\nTotal result: ${total}`
-		);
+		// Generate the filename based on the current date and time
+		const now = new Date();
+		const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+		const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+
+		// Audit Report
+		const auditNoteName = `Dice Results Audit`;
+		const auditTagName = ['-reports/-dice'];
+		const auditnoteUUID = await (async () => {
+		  const existingUUID = await app.settings["Dice_Audit_UUID [Do not Edit!]"];
+		  if (existingUUID) 
+			  return existingUUID;
+		  const newUUID = await app.createNote(auditNoteName, auditTagName);
+		  await app.setSetting("Dice_Audit_UUID [Do not Edit!]", newUUID);
+		  return newUUID;
+		})();
+
+	  (async () => {
+		try {
+		  console.log(`You rolled ${numDice} dice: [${results.join(", ")}]\nTotal result: ${total}`);
+		  // No Lookup. Just Audit.
+		  const auditReport = `- <mark>Fudge/Fate:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${numDice}**; <mark>**Rolls:** [${results.join(", ")}]; **Total:** ${total};</mark>`;
+		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+		  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
+		} catch (error) {
+		  console.error(error.message);
+		}
+	  })();
+
 	  }
 	}
 
