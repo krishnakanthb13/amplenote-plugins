@@ -5,23 +5,23 @@ appOption: {
 
     const existingSetting = await app.settings["Previous_Roll"];
     let result;
-
+	// ------------------ Initialization ------------------
     if (existingSetting) {
-
+	// Split and map existing settings, using default values where applicable
     const [
-      numDice,
-      faces,
-      min,
-      max,
-      keepHighest,
-      keepCount,
-      dropHighest,
-      dropCount,
-      explode,
-      explodeTarget,
-      sortOption,
-      unique,
-	  lookUp
+      numDicez,
+      facesz,
+      minz,
+      maxz,
+      keepHighestz,
+      keepCountz,
+      dropHighestz,
+      dropCountz,
+      explodez,
+      explodeTargetz,
+      sortOptionz,
+      uniquez,
+	  lookUpz
     ] = (existingSetting || "") // Ensure existingSetting is not null or undefined
       .split(",")
       .map((value, index) => {
@@ -34,29 +34,29 @@ appOption: {
         if ([4, 6, 8, 11].includes(index)) return value.toLowerCase() === "true"; // Booleans
         return value; // Strings or other types (not expected here)
       });
-      
+    // Prompt user with pre-filled inputs
     result = await app.prompt("Roll the Dice!", {
       inputs: [ 
         
-        { label: "Number of Dice", type: "string", value: numDice },
-        { label: "Number of Faces", type: "string", value: faces },
-        { label: "Minimum Number", type: "string", value: min },
-        { label: "Maximum Number", type: "string", value: max },
-        { label: "Keep Highest Roll", type: "checkbox", value: keepHighest },
-        { label: "Keep Highest Roll Count", type: "string", value: keepCount },
-        { label: "Drop Highest Roll", type: "checkbox", value: dropHighest },
-        { label: "Drop Highest Roll Count", type: "string", value: dropCount },
-        { label: "Explode", type: "checkbox", value: explode },
-        { label: "Explode Target", type: "string", value: explodeTarget },
-        { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ], value: sortOption || 1 },
-        { label: "Unique", type: "checkbox", value: unique },
-        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "None", value: 5 }, { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "UUID", value: 6 }, { label: "Random", value: 4 } ], value: lookUp || 5 },
+        { label: "Number of Dice", type: "string", value: numDicez },
+        { label: "Number of Faces", type: "string", value: facesz },
+        { label: "Minimum Number", type: "string", value: minz },
+        { label: "Maximum Number", type: "string", value: maxz },
+        { label: "Keep Highest Roll", type: "checkbox", value: keepHighestz },
+        { label: "Keep Highest Roll Count", type: "string", value: keepCountz },
+        { label: "Drop Highest Roll", type: "checkbox", value: dropHighestz },
+        { label: "Drop Highest Roll Count", type: "string", value: dropCountz },
+        { label: "Explode", type: "checkbox", value: explodez },
+        { label: "Explode Target", type: "string", value: explodeTargetz },
+        { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ], value: sortOptionz || 1 },
+        { label: "Unique", type: "checkbox", value: uniquez },
+        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "None", value: 5 }, { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "UUID", value: 6 }, { label: "Tags", value: 7 }, { label: "Random", value: 4 } ], value: lookUpz || 5 },
       ] 
     
     });
       
     } else {
-
+	// Prompt user with empty inputs for first-time setup
     result = await app.prompt("Roll the Dice!", {
       inputs: [ 
         
@@ -72,13 +72,13 @@ appOption: {
         { label: "Explode Target", type: "string" },
         { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ], value: 1 },
         { label: "Unique", type: "checkbox" },
-        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "None", value: 5 }, { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "UUID", value: 6 }, { label: "Random", value: 4 } ], value: 5 },
+        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "None", value: 5 }, { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "UUID", value: 6 }, { label: "Tags", value: 7 }, { label: "Random", value: 4 } ], value: 5 },
       ] 
     
     });
 
     }
-    
+    // ------------------ Dice Rolling Logic ------------------
     function rollDice({
       numDice = null,
       faces = null,
@@ -150,8 +150,6 @@ appOption: {
 	  
 	  // Sorting logic based on lookUp value
 	  switch (lookUp) {
-		case 5: // Escape / Return
-		  return;
 		case 1: // Sort by Name
 		  notesByGroup.sort((a, b) => a.name.localeCompare(b.name));
 		  break;
@@ -167,6 +165,19 @@ appOption: {
 		case 6: // UUID
 		  notesByGroup.sort((a, b) => a.uuid.localeCompare(b.uuid));
 		  break;
+		case 7: // Tags + Name
+			notesByGroup.sort((a, b) => {
+			  // Compare tags (default to empty string if no tags)
+			  const aTag = a.tags?.[0]?.toLowerCase() || "";
+			  const bTag = b.tags?.[0]?.toLowerCase() || "";
+			  if (aTag !== bTag) {
+				return aTag.localeCompare(bTag); // Sort by tags
+			  }
+			  return a.name.localeCompare(b.name); // Sort by name if tags are equal
+			});
+		  break;
+		case 5: // Escape / Return
+		  return;
 		default: // Default to Name sort
 		  notesByGroup.sort((a, b) => a.name.localeCompare(b.name));
 	  }
@@ -222,6 +233,7 @@ appOption: {
       ] = result;
 
       await app.setSetting("Previous_Roll", result);
+	  console.log("lookUp", lookUp);
   
       const sortMap = { 1: null, 2: "asc", 3: "desc" };
   
@@ -265,14 +277,14 @@ appOption: {
 	  return newUUID;
 	})();
 
-	if ([1, 2, 3, 4, 6].includes(lookUp)) {
+	if ([1, 2, 3, 4, 6, 7].includes(lookUp)) {
 	  // Example Usage:
 	  // const lookUp = 2; // Could be 1 (Name), 2 (Created), 3 (Modified), 4 (Random)
 	  (async () => {
 		try {
 		  const uuid = await sortNotesByLookUp(lookUp, pickNote);
 		  console.log(`Selected Note UUID: ${uuid}`);
-		  const auditReport = `- **When:** *${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Rolls:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **UUID:** ${uuid};`;
+		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Rolls:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **UUID:** ${uuid};`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 		  await app.navigate(`https://www.amplenote.com/notes/${uuid}`);
 		} catch (error) {
@@ -284,7 +296,7 @@ appOption: {
 		try {
 		  console.log("Lookup note option - None selected");
 		  // No Lookup. Just Audit.
-		  const auditReport = `- **When:** *${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Rolls:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark>`;
+		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Rolls:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark>`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 		  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 		} catch (error) {
