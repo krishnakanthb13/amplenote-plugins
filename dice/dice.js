@@ -567,7 +567,6 @@ appOption: {
 
 	// Start the game
 	playFantasyAGE(playerCount, charactersPerPlayer);
-	console.log("finalResult",finalResult);
 
 	// Generate the filename based on the current date and time
 	const now = new Date();
@@ -593,7 +592,10 @@ appOption: {
 	  const auditReport = `- <mark>Fantasy AGE Stunt - All:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Player Count:** ${playerCount}; **Characters Per Player:** ${charactersPerPlayer}; **Stunt Points:**</mark> ${finalResultz}`;
 	  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 	  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
-	
+
+		app.alert(finalResult);
+		console.log(finalResult);
+
 	}
 
 },
