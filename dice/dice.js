@@ -284,7 +284,7 @@ appOption: {
 		try {
 		  const uuid = await sortNotesByLookUp(lookUp, pickNote);
 		  console.log(`Selected Note UUID: ${uuid}`);
-		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Rolls:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **UUID:** ${uuid};`;
+		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Dice rolled:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **UUID:** ${uuid};`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 		  await app.navigate(`https://www.amplenote.com/notes/${uuid}`);
 		} catch (error) {
@@ -296,7 +296,7 @@ appOption: {
 		try {
 		  console.log("Lookup note option - None selected");
 		  // No Lookup. Just Audit.
-		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Rolls:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark>`;
+		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Dice rolled:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark>`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 		  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 		} catch (error) {
@@ -310,6 +310,8 @@ appOption: {
 },
 /* ----------------------------------- */
 "Fudge/Fate": async function (app) {
+
+    const existingSetting = await app.settings["Previous_Roll_FF"];
 
 	// Fudge/Fate Dice Roller with Custom Prompt Integration
 	async function rollFudgeDice(numDice = 4) {
@@ -332,7 +334,7 @@ appOption: {
 	// Main function with custom prompt
 	async function main() {
 	  // Pre-filled number of dice (default to 4)
-	  const numDicez = 4;
+	  const numDicez = existingSetting;
 
 	  // Prompt user with pre-filled inputs
 	  const result = await app.prompt("Fudge/Fate, Roll the Dice!", {
@@ -346,6 +348,7 @@ appOption: {
 	  if (result) {
 		const numDiceInput = result;
 		const numDice = parseInt(numDiceInput, 10) || 4;
+		await app.setSetting("Previous_Roll_FF", numDice);
 
 		if (numDice <= 0) {
 		  console.error("Number of dice must be a positive integer!");
@@ -375,7 +378,7 @@ appOption: {
 		try {
 		  console.log(`You rolled ${numDice} dice: [${results.join(", ")}]\nTotal result: ${total}`);
 		  // No Lookup. Just Audit.
-		  const auditReport = `- <mark>Fudge/Fate:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${numDice}**; <mark>**Rolls:** [${results.join(", ")}]; **Total:** ${total};</mark>`;
+		  const auditReport = `- <mark>Fudge/Fate:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${numDice}**; <mark>**Dice rolled:** [${results.join(", ")}]; **Total:** ${total};</mark>`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 		  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 		} catch (error) {
@@ -390,6 +393,209 @@ appOption: {
 	main();
 
 },
+/* ----------------------------------- */
+"Fantasy AGE Stunt - Single Roll": async function (app) {
 
+	// Function to roll a single six-sided die
+	function rollDie() {
+		return Math.floor(Math.random() * 6) + 1;
+	}
+
+	// Function to roll Fantasy AGE Stunt Dice
+	async function rollFantasyAGE() {
+		// Roll three six-sided dice
+		let dice = [rollDie(), rollDie(), rollDie()];
+		let total = dice.reduce((sum, die) => sum + die, 0);
+		let stuntDie = dice[0]; // Assume the first die is the stunt die by convention
+
+		// Check if there's a stunt (any two dice showing the same number)
+		let hasStunt = new Set(dice).size < 3; // Less than 3 unique numbers means doubles exist
+		let stuntPoints = hasStunt ? stuntDie : 0;
+
+		// Generate the filename based on the current date and time
+		const now = new Date();
+		const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+		const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+
+		// Audit Report
+		const auditNoteName = `Dice Results Audit`;
+		const auditTagName = ['-reports/-dice'];
+		const auditnoteUUID = await (async () => {
+		  const existingUUID = await app.settings["Dice_Audit_UUID [Do not Edit!]"];
+		  if (existingUUID) 
+			  return existingUUID;
+		  const newUUID = await app.createNote(auditNoteName, auditTagName);
+		  await app.setSetting("Dice_Audit_UUID [Do not Edit!]", newUUID);
+		  return newUUID;
+		})();
+
+		// Display results
+		console.log(`Dice rolled: ${dice.join(', ')}`);
+		console.log(`Total: ${total}`);
+		if (hasStunt) {
+
+		  (async () => {
+			try {
+			  const auditReport = `- <mark>Fantasy AGE Stunt - Single:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Stunt Points:** ${stuntPoints}; **Dice rolled:** [${dice.join(', ')}]; **Total:** ${total};</mark>`;
+			  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+			  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
+			} catch (error) {
+			  console.error(error.message);
+			}
+		  })();
+
+			const messageResult = `Fantasy AGE Stunt Dice Result:\n> AYE! You rolled doubles! Stunt Points: ${stuntPoints}.\nDice rolled: [${dice.join(', ')}].\nTotal: ${total}.`;
+			app.alert(messageResult);
+			console.log(messageResult);
+		} else {
+
+		  (async () => {
+			try {
+			  const auditReport = `- <mark>Fantasy AGE Stunt - Single:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Stunt Points:** No stunt this time.; **Dice rolled:** [${dice.join(', ')}]; **Total:** ${total};</mark>`;
+			  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+			  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
+			} catch (error) {
+			  console.error(error.message);
+			}
+		  })();
+
+			const messageResult = `Fantasy AGE Stunt Dice Result:\n> No stunt this time. Better Luck Next Time!\nDice rolled: ${dice.join(', ')}.\nTotal: ${total}.`;
+			app.alert(messageResult);
+			console.log(messageResult);
+		}
+	}
+
+	// Run the function
+	rollFantasyAGE();
+
+},
+/* ----------------------------------- */
+"Fantasy AGE Stunt - Roll All At Once": async function (app) {
+
+    const existingSetting = await app.settings["Previous_Roll_AGE"];
+	let result;
+    if (existingSetting) {
+	// Split and map existing settings, using default values where applicable
+    const [
+      playerCountz,
+      charactersPerPlayerz
+    ] = (existingSetting || "") // Ensure existingSetting is not null or undefined
+      .split(",")
+      .map((value, index) => {
+        const defaults = [3, 2]; // Default values
+        if (value === undefined || value === null || value.trim() === "") {
+          return defaults[index]; // Use default if value is missing or empty
+        }
+        // Parse value based on expected type
+        if ([0, 1].includes(index)) return Number(value) || defaults[index]; // Numbers
+        return value; // Strings or other types (not expected here)
+      });
+
+
+	  // Prompt user with pre-filled inputs
+	  result = await app.prompt("Fantasy AGE Stunt - Roll All At Once!", {
+		inputs: [
+		  { label: "Number of Players", type: "string", value: playerCountz },
+		  { label: "Number of Characters Per Player", type: "string", value: charactersPerPlayerz },
+		],
+	  });
+	  
+	} else {
+	  // Prompt user with pre-filled inputs
+	  result = await app.prompt("Fantasy AGE Stunt - Roll All At Once!", {
+		inputs: [
+		  { label: "Number of Players", type: "string", value: 3 },
+		  { label: "Number of Characters Per Player", type: "string", value: 2 },
+		],
+	  });		
+	}
+	  
+	  let finalResult = `**Fantasy AGE Stunt - Roll All At Once**`;
+
+	// Function to roll a single six-sided die
+	function rollDie() {
+		return Math.floor(Math.random() * 6) + 1;
+	}
+
+	// Function to roll Fantasy AGE Stunt Dice for one character
+	function rollFantasyAGE(playerName, characterName) {
+		// Roll three six-sided dice
+		let dice = [rollDie(), rollDie(), rollDie()];
+		let total = dice.reduce((sum, die) => sum + die, 0);
+		let stuntDie = dice[0]; // Assume the first die is the stunt die by convention
+
+		// Check if there's a stunt (any two dice showing the same number)
+		let hasStunt = new Set(dice).size < 3; // Less than 3 unique numbers means doubles exist
+		let stuntPoints = hasStunt ? stuntDie : 0;
+
+		// Display results
+		console.log(`-- ${playerName}'s Character: ${characterName} --`);
+		console.log(`Dice rolled: ${dice.join(', ')}`);
+		console.log(`Total: ${total}`);
+		finalResult += `<mark>\n-- ${playerName}'s Character: ${characterName} --</mark>`;
+		finalResult += `\nDice rolled: ${dice.join(', ')}`;
+		finalResult += `\nTotal: ${total}`;
+		if (hasStunt) {
+			console.log(`AYE! You rolled doubles! Stunt Points: ${stuntPoints}`);
+			finalResult += `\nAYE! You rolled doubles! Stunt Points: ${stuntPoints}`;
+		} else {
+			console.log("No stunt this time. Better Luck Next Time!");
+			finalResult += `\nNo stunt this time. Better Luck Next Time!`;
+		}
+	}
+
+	// Main Function to handle multiple players and characters
+	function playFantasyAGE(playerCount, charactersPerPlayer) {
+		console.log(`Starting Fantasy AGE with ${playerCount} players and ${charactersPerPlayer} characters each.`);
+		for (let i = 1; i <= playerCount; i++) {
+			let playerName = `Player ${i}`;
+			for (let j = 1; j <= charactersPerPlayer; j++) {
+				let characterName = `Character ${j}`;
+				rollFantasyAGE(playerName, characterName);
+			}
+		}
+	}
+
+    if (result) {
+	// Variables and constants to define the game setup
+      const [
+        playerCount, // Total number of players
+        charactersPerPlayer // Number of characters each player controls
+      ] = result;
+	  
+	  await app.setSetting("Previous_Roll_AGE", result);
+
+	// Start the game
+	playFantasyAGE(playerCount, charactersPerPlayer);
+	console.log("finalResult",finalResult);
+
+	// Generate the filename based on the current date and time
+	const now = new Date();
+	const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+	const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+
+	// Audit Report
+	const auditNoteName = `Dice Results Audit`;
+	const auditTagName = ['-reports/-dice'];
+	const auditnoteUUID = await (async () => {
+	  const existingUUID = await app.settings["Dice_Audit_UUID [Do not Edit!]"];
+	  if (existingUUID) 
+		  return existingUUID;
+	  const newUUID = await app.createNote(auditNoteName, auditTagName);
+	  await app.setSetting("Dice_Audit_UUID [Do not Edit!]", newUUID);
+	  return newUUID;
+	})();
+
+	const finalResultz = `[Report][^AGER]
+[^AGER]: []()${finalResult}
+`;
+
+	  const auditReport = `- <mark>Fantasy AGE Stunt - All:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Player Count:** ${playerCount}; **Characters Per Player:** ${charactersPerPlayer}; **Stunt Points:**</mark> ${finalResultz}`;
+	  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+	  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
+	
+	}
+
+},
   }
 }
