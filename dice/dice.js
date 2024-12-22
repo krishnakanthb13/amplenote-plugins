@@ -339,7 +339,7 @@ appOption: {
 	  // Prompt user with pre-filled inputs
 	  const result = await app.prompt("Fudge/Fate, Roll the Dice!", {
 		inputs: [
-		  { label: "Number of Dice", type: "string", value: numDicez },
+		  { label: "Number of Dice", type: "string", value: numDicez || 4 },
 		],
 	  });
 
@@ -436,7 +436,7 @@ appOption: {
 
 		  (async () => {
 			try {
-			  const auditReport = `- <mark>Fantasy AGE Stunt - Single:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Stunt Points:** ${stuntPoints}; **Dice rolled:** [${dice.join(', ')}]; **Total:** ${total};</mark>`;
+			  const auditReport = `- <mark>Fantasy AGE Stunt - Single:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Dice rolled:** [${dice.join(', ')}]; **Total:** ${total}; AYE! You rolled doubles! **Stunt Points:** ${stuntPoints};</mark>`;
 			  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 			  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 			} catch (error) {
@@ -444,14 +444,14 @@ appOption: {
 			}
 		  })();
 
-			const messageResult = `Fantasy AGE Stunt Dice Result:\n> AYE! You rolled doubles! Stunt Points: ${stuntPoints}.\nDice rolled: [${dice.join(', ')}].\nTotal: ${total}.`;
+			const messageResult = `Fantasy AGE Stunt Dice Result:\nDice rolled: [${dice.join(', ')}].\nTotal: ${total}.\n> AYE! You rolled doubles! Stunt Points: ${stuntPoints}.`;
 			app.alert(messageResult);
 			console.log(messageResult);
 		} else {
 
 		  (async () => {
 			try {
-			  const auditReport = `- <mark>Fantasy AGE Stunt - Single:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Stunt Points:** No stunt this time.; **Dice rolled:** [${dice.join(', ')}]; **Total:** ${total};</mark>`;
+			  const auditReport = `- <mark>Fantasy AGE Stunt - Single:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Dice rolled:** [${dice.join(', ')}]; **Total:** ${total}; **Stunt Points:** No stunt this time. Better Luck Next Time!;</mark>`;
 			  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 			  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 			} catch (error) {
@@ -459,7 +459,7 @@ appOption: {
 			}
 		  })();
 
-			const messageResult = `Fantasy AGE Stunt Dice Result:\n> No stunt this time. Better Luck Next Time!\nDice rolled: ${dice.join(', ')}.\nTotal: ${total}.`;
+			const messageResult = `Fantasy AGE Stunt Dice Result:\nDice rolled: ${dice.join(', ')}.\nTotal: ${total}.\n> No stunt this time. Better Luck Next Time!`;
 			app.alert(messageResult);
 			console.log(messageResult);
 		}
