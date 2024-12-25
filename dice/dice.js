@@ -232,6 +232,25 @@ appOption: {
 		lookUp
       ] = result;
 
+      const resultx = 
+`numDice: ${numDice},
+faces: ${faces},
+min: ${min},
+max: ${max},
+keepHighest: ${keepHighest},
+keepCount: ${keepCount},
+dropHighest: ${dropHighest},
+dropCount: ${dropCount},
+explode: ${explode},
+explodeTarget: ${explodeTarget},
+sortOption: ${sortOption},
+unique: ${unique},
+lookUp: ${lookUp},`;
+
+	const finalResultx = `[Report][^ADV]
+[^ADV]: []()${resultx}
+`;
+
       await app.setSetting("Previous_Roll", result);
 	  console.log("lookUp", lookUp);
   
@@ -284,7 +303,7 @@ appOption: {
 		try {
 		  const uuid = await sortNotesByLookUp(lookUp, pickNote);
 		  console.log(`Selected Note UUID: ${uuid}`);
-		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Dice rolled:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **UUID:** ${uuid};`;
+		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Dice rolled:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **UUID:** ${uuid}; **Options:** ${finalResultx}`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 		  await app.navigate(`https://www.amplenote.com/notes/${uuid}`);
 		} catch (error) {
@@ -296,7 +315,7 @@ appOption: {
 		try {
 		  console.log("Lookup note option - None selected");
 		  // No Lookup. Just Audit.
-		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${result}**; <mark>**Dice rolled:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark>`;
+		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Dice rolled:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **Options:** ${finalResultx}`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 		  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 		} catch (error) {
