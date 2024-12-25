@@ -233,19 +233,19 @@ appOption: {
       ] = result;
 
       const resultx = 
-`numDice: ${numDice},
-faces: ${faces},
-min: ${min},
-max: ${max},
-keepHighest: ${keepHighest},
-keepCount: ${keepCount},
-dropHighest: ${dropHighest},
-dropCount: ${dropCount},
-explode: ${explode},
-explodeTarget: ${explodeTarget},
-sortOption: ${sortOption},
-unique: ${unique},
-lookUp: ${lookUp},`;
+`**NumDice**: ${numDice},
+**Faces**: ${faces},
+**Min**: ${min},
+**Max**: ${max},
+**Keep Highest**: ${keepHighest},
+**Keep Count**: ${keepCount},
+**Drop Highest**: ${dropHighest},
+**Drop Count**: ${dropCount},
+**Explode**: ${explode},
+**Explode Target**: ${explodeTarget},
+**Sort Option**: ${sortOption},
+**Unique**: ${unique},
+**LookUp**: ${lookUp},`;
 
 	const finalResultx = `[Report][^ADV]
 [^ADV]: []()${resultx}
