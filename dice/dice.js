@@ -1410,7 +1410,7 @@ noteOption: {
 [^AGER]: []()${finalOutput}
 `;
 
-	  const auditReport = `- <mark>Table - Randomizer:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Data:**</mark> ${finalResultz}`;
+	  const auditReport = `- <mark>Table - Randomizer:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **UUID:** ${noteUUID} ; <mark>**Data:**</mark> ${finalResultz}`;
 	  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 	  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 
