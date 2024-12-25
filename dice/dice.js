@@ -35,22 +35,22 @@ appOption: {
         return value; // Strings or other types (not expected here)
       });
     // Prompt user with pre-filled inputs
-    result = await app.prompt("Roll the Dice!", {
+    result = await app.prompt("Roll the Dice! (Previous Roll is remembered)", {
       inputs: [ 
         
         { label: "Number of Dice", type: "string", value: numDicez },
         { label: "Number of Faces", type: "string", value: facesz },
-        { label: "Minimum Number", type: "string", value: minz },
-        { label: "Maximum Number", type: "string", value: maxz },
-        { label: "Keep Highest Roll", type: "checkbox", value: keepHighestz },
+        { label: "Minimum Number (Limit)", type: "string", value: minz },
+        { label: "Maximum Number (Limit)", type: "string", value: maxz },
+        { label: "Keep Highest Roll (Drop the remaining)", type: "checkbox", value: keepHighestz },
         { label: "Keep Highest Roll Count", type: "string", value: keepCountz },
-        { label: "Drop Highest Roll", type: "checkbox", value: dropHighestz },
+        { label: "Drop Highest Roll (keep the remaining)", type: "checkbox", value: dropHighestz },
         { label: "Drop Highest Roll Count", type: "string", value: dropCountz },
-        { label: "Explode", type: "checkbox", value: explodez },
+        { label: "Explode (An additional Die)", type: "checkbox", value: explodez },
         { label: "Explode Target", type: "string", value: explodeTargetz },
         { label: "Sort the output", type: "select", options: [ { label: "None", value: 1 }, { label: "Ascending", value: 2 }, { label: "Decending", value: 3 } ], value: sortOptionz || 1 },
-        { label: "Unique", type: "checkbox", value: uniquez },
-        { label: "Look Up in your Notes (Sorted By)", type: "select", options: [ { label: "None", value: 5 }, { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "UUID", value: 6 }, { label: "Tags", value: 7 }, { label: "Random", value: 4 } ], value: lookUpz || 5 },
+        { label: "Unique (Every Die is Unique)", type: "checkbox", value: uniquez },
+        { label: "Look Up in your Notes (Sorted By) - Navigate to", type: "select", options: [ { label: "None", value: 5 }, { label: "Name", value: 1 }, { label: "Created", value: 2 }, { label: "Modified", value: 3 }, { label: "UUID", value: 6 }, { label: "Tags", value: 7 }, { label: "Random", value: 4 } ], value: lookUpz || 5 },
       ] 
     
     });
