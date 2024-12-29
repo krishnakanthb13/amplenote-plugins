@@ -252,7 +252,7 @@ appOption: {
 `;
 
       await app.setSetting("Previous_Roll", result);
-	  console.log("lookUp", lookUp);
+	  // console.log("lookUp", lookUp);
   
       const sortMap = { 1: null, 2: "asc", 3: "desc" };
   
@@ -274,8 +274,8 @@ appOption: {
         unique: !!unique,
       });
   
-      console.log("Rolls:", diceResult.rolls);
-      console.log("Total:", diceResult.total);
+      // console.log("Rolls:", diceResult.rolls);
+      // console.log("Total:", diceResult.total);
 	  
 	  const pickNote = diceResult.total;
 
@@ -302,7 +302,7 @@ appOption: {
 	  (async () => {
 		try {
 		  const uuid = await sortNotesByLookUp(lookUp, pickNote);
-		  console.log(`Selected Note UUID: ${uuid}`);
+		  // console.log(`Selected Note UUID: ${uuid}`);
 		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Dice rolled:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **UUID:** ${uuid}; **Options:** ${finalResultx}`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 		  await app.navigate(`https://www.amplenote.com/notes/${uuid}`);
@@ -313,7 +313,7 @@ appOption: {
 	} else {
 	  (async () => {
 		try {
-		  console.log("Lookup note option - None selected");
+		  // console.log("Lookup note option - None selected");
 		  // No Lookup. Just Audit.
 		  const auditReport = `- <mark>Basic:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Dice rolled:** ${diceResult.rolls}; **Total:** ${diceResult.total};</mark> **Options:** ${finalResultx}`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
@@ -507,7 +507,7 @@ appOption: {
 		],
 	  });
 
-      console.log("result",result);
+      // console.log("result",result);
 
 	  if (result) {
 		const [singleDice, multipleDice] = result;
@@ -520,9 +520,9 @@ appOption: {
 		if (singleDice) {
 				finalResult += `<mark>-- **Expression:** ${singleDice} --</mark>\n`;
 				finalResult += `**Result:** ${evaluateDiceExpression(singleDice)}\n`;
-				console.log(`Expression: ${singleDice}`);
-				console.log(`Result: ${evaluateDiceExpression(singleDice)}`);
-				console.log('---');			
+				// console.log(`Expression: ${singleDice}`);
+				// console.log(`Result: ${evaluateDiceExpression(singleDice)}`);
+				// console.log('---');			
 		}
 		
 		if (multipleDice) {
@@ -536,9 +536,9 @@ appOption: {
 				const dice = multipleDicez[i];
 				finalResult += `<mark>-- **Expression:** ${dice} --</mark>\n`;
 				finalResult += `**Result:** ${evaluateDiceExpression(dice)}\n`;
-				console.log(`Expression: ${dice}`);
-				console.log(`Result: ${evaluateDiceExpression(dice)}`);
-				console.log('---');
+				// console.log(`Expression: ${dice}`);
+				// console.log(`Result: ${evaluateDiceExpression(dice)}`);
+				// console.log('---');
 			}		
 		}
 
@@ -844,7 +844,7 @@ appOption: {
 	// Basic usage
 	/*
 	const sichermanResult1 = simulateDice("poker", 5);
-	console.log(sichermanResult1);  // Shows rolls and probabilities
+	// console.log(sichermanResult1);  // Shows rolls and probabilities
 
 	// Poker dice with custom variation
 	// Adding custom dice
@@ -855,7 +855,7 @@ appOption: {
 		}
 	};
 	const customResult = simulateDice("poker", 5, customOptions);
-	console.log(customResult);
+	// console.log(customResult);
 	*/
 	
 	let finalResult = ``;
@@ -868,11 +868,11 @@ appOption: {
 		// Check array format
 		if (Array.isArray(sichermanResult.probabilities)) {
 			finalResult += "**Probabilities:**\n";
-			console.log("**Probabilities:**");
+			// console.log("**Probabilities:**");
 			sichermanResult.probabilities.forEach(item => {
 				if (item.sum !== undefined && item.probability !== undefined) {
 					finalResult += `Sum: ${item.sum}, Probability: ${item.probability}\n`;
-					console.log(`Sum: ${item.sum}, Probability: ${item.probability}`);
+					// console.log(`Sum: ${item.sum}, Probability: ${item.probability}`);
 				} else {
 					console.error("Invalid item structure:", item);
 				}
@@ -881,22 +881,22 @@ appOption: {
 			console.error("Probabilities is not an array:", sichermanResult.probabilities);
 		}
 		}
-		console.log(sichermanResult.rolls);  // Shows rolls and probabilities
-		console.log(sichermanResult.probabilities);  // Shows rolls and probabilities
-		console.log(finalResult);  // Shows rolls and probabilities		
+		// console.log(sichermanResult.rolls);  // Shows rolls and probabilities
+		// console.log(sichermanResult.probabilities);  // Shows rolls and probabilities
+		// console.log(finalResult);  // Shows rolls and probabilities		
 	} else if (specializedDice === "intransitive") {
 		const intransitiveResult = simulateDice("intransitive", numDice);
 		finalResult += `<mark>-- **Intransitive Dice. Dice#:** ${numDice} --</mark>\n`;
 		finalResult += `**Rolls:**\n${intransitiveResult.rolls}\n`;
 		if (addProb) { 
 			finalResult += "**Probabilities:**\n";
-			console.log("**Probabilities:**");
+			// console.log("**Probabilities:**");
 			finalResult += `"A vs B": "55.56%",\n"B vs C": "55.56%",\n"C vs A": "55.56%"`;
-			console.log(`"A vs B": "55.56%",\n"B vs C": "55.56%",\n"C vs A": "55.56%"`);
+			// console.log(`"A vs B": "55.56%",\n"B vs C": "55.56%",\n"C vs A": "55.56%"`);
 		}
-		console.log(intransitiveResult.rolls);  // Shows rolls and probabilities
-		console.log(intransitiveResult.probabilities);  // Shows rolls and probabilities
-		console.log(finalResult);  // Shows rolls and probabilities	
+		// console.log(intransitiveResult.rolls);  // Shows rolls and probabilities
+		// console.log(intransitiveResult.probabilities);  // Shows rolls and probabilities
+		// console.log(finalResult);  // Shows rolls and probabilities	
 	} else if (specializedDice === "poker") {
 		const pokerResult = simulateDice("poker", numDice, { pokerVariation: pokerVari });
 		finalResult += `<mark>-- **Poker Dice. Variation: ${pokerVari}. Dice#:** ${numDice}. --</mark>\n`;
@@ -904,14 +904,14 @@ appOption: {
 		finalResult += `**Hand:** ${pokerResult.hand}\n`;
 		if (addProb) { 
 			finalResult += "**Probabilities:**\n";
-			console.log("**Probabilities:**");
+			// console.log("**Probabilities:**");
 			finalResult += `"Five of a kind": "0.08%",\n"Four of a kind": "1.93%",\n"Full house": "3.86%",\n"Three of a kind": "15.43%",\n"Two pair": "23.15%",\n"One pair": "46.30%",\n"Straight": "1.54%",\n"High card": "7.71%"`;
-			console.log(`"Five of a kind": "0.08%",\n"Four of a kind": "1.93%",\n"Full house": "3.86%",\n"Three of a kind": "15.43%",\n"Two pair": "23.15%",\n"One pair": "46.30%",\n"Straight": "1.54%",\n"High card": "7.71%"`);
+			// console.log(`"Five of a kind": "0.08%",\n"Four of a kind": "1.93%",\n"Full house": "3.86%",\n"Three of a kind": "15.43%",\n"Two pair": "23.15%",\n"One pair": "46.30%",\n"Straight": "1.54%",\n"High card": "7.71%"`);
 		}
-		console.log(pokerResult.analysis);  // Shows hand, analysis, and probabilities
-		console.log(pokerResult.hand);  // Shows hand, analysis, and probabilities
-		console.log(pokerResult.probabilities);  // Shows hand, analysis, and probabilities
-		console.log(finalResult);  // Shows rolls and probabilities	
+		// console.log(pokerResult.analysis);  // Shows hand, analysis, and probabilities
+		// console.log(pokerResult.hand);  // Shows hand, analysis, and probabilities
+		// console.log(pokerResult.probabilities);  // Shows hand, analysis, and probabilities
+		// console.log(finalResult);  // Shows rolls and probabilities	
 	}
 
 		// Generate the filename based on the current date and time
@@ -991,7 +991,7 @@ appOption: {
 	  const randomIndex = Math.floor(normalized * answers.length); 
 
 	  answer = answers[randomIndex];
-	  console.log(answer);
+	  // console.log(answer);
 	}
 
 	magic8Ball();
@@ -1015,7 +1015,7 @@ appOption: {
 
   (async () => {
 	try {
-	  const auditReport = `- <mark>8 Ball:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Question: ${result}**; <mark>**Answer:** ${answer}</mark>`;
+	  const auditReport = `- <mark>8 Ball:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Question: ${result || "In Memory!"}**; <mark>**Answer:** ${answer}</mark>`;
 	  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 	  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 	} catch (error) {
@@ -1144,7 +1144,7 @@ appOption: {
 		],
 	  });
 
-      console.log("result",result);
+      // console.log("result",result);
 
 	  if (result) {
 		const numDiceInput = result;
@@ -1177,7 +1177,7 @@ appOption: {
 
 	  (async () => {
 		try {
-		  console.log(`You rolled ${numDice} dice: [${results.join(", ")}]\nTotal result: ${total}`);
+		  // console.log(`You rolled ${numDice} dice: [${results.join(", ")}]\nTotal result: ${total}`);
 		  // No Lookup. Just Audit.
 		  const auditReport = `- <mark>Fudge/Fate:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Options: ${numDice}**; <mark>**Dice rolled:** [${results.join(", ")}]; **Total:** ${total};</mark>`;
 		  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
@@ -1231,8 +1231,8 @@ appOption: {
 		})();
 
 		// Display results
-		console.log(`Dice rolled: ${dice.join(', ')}`);
-		console.log(`Total: ${total}`);
+		// console.log(`Dice rolled: ${dice.join(', ')}`);
+		// console.log(`Total: ${total}`);
 		if (hasStunt) {
 
 		  (async () => {
@@ -1247,7 +1247,7 @@ appOption: {
 
 			const messageResult = `Fantasy AGE Stunt Dice Result:\nDice rolled: [${dice.join(', ')}].\nTotal: ${total}.\n> AYE! You rolled doubles! Stunt Points: ${stuntPoints}.`;
 			app.alert(messageResult);
-			console.log(messageResult);
+			// console.log(messageResult);
 		} else {
 
 		  (async () => {
@@ -1262,7 +1262,7 @@ appOption: {
 
 			const messageResult = `Fantasy AGE Stunt Dice Result:\nDice rolled: ${dice.join(', ')}.\nTotal: ${total}.\n> No stunt this time. Better Luck Next Time!`;
 			app.alert(messageResult);
-			console.log(messageResult);
+			// console.log(messageResult);
 		}
 	}
 
@@ -1330,24 +1330,24 @@ appOption: {
 		let stuntPoints = hasStunt ? stuntDie : 0;
 
 		// Display results
-		console.log(`-- ${playerName}'s Character: ${characterName} --`);
-		console.log(`Dice rolled: ${dice.join(', ')}`);
-		console.log(`Total: ${total}`);
+		// console.log(`-- ${playerName}'s Character: ${characterName} --`);
+		// console.log(`Dice rolled: ${dice.join(', ')}`);
+		// console.log(`Total: ${total}`);
 		finalResult += `<mark>\n-- ${playerName}'s Character: ${characterName} --</mark>`;
 		finalResult += `\nDice rolled: ${dice.join(', ')}`;
 		finalResult += `\nTotal: ${total}`;
 		if (hasStunt) {
-			console.log(`AYE! You rolled doubles! Stunt Points: ${stuntPoints}`);
+			// console.log(`AYE! You rolled doubles! Stunt Points: ${stuntPoints}`);
 			finalResult += `\nAYE! You rolled doubles! Stunt Points: ${stuntPoints}`;
 		} else {
-			console.log("No stunt this time. Better Luck Next Time!");
+			// console.log("No stunt this time. Better Luck Next Time!");
 			finalResult += `\nNo stunt this time. Better Luck Next Time!`;
 		}
 	}
 
 	// Main Function to handle multiple players and characters
 	function playFantasyAGE(playerCount, charactersPerPlayer) {
-		console.log(`Starting Fantasy AGE with ${playerCount} players and ${charactersPerPlayer} characters each.`);
+		// console.log(`Starting Fantasy AGE with ${playerCount} players and ${charactersPerPlayer} characters each.`);
 		for (let i = 1; i <= playerCount; i++) {
 			let playerName = `Player ${i}`;
 			for (let j = 1; j <= charactersPerPlayer; j++) {
@@ -1395,7 +1395,7 @@ appOption: {
 	  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 
 		app.alert(finalResult);
-		console.log(finalResult);
+		// console.log(finalResult);
 
 	}
 },
@@ -1532,7 +1532,7 @@ noteOption: {
     // console.log("Processed content before removing HTML comments:", processedContent);
 
     const cleanedContent = removeHtmlComments(processedContent);
-    console.log("Cleaned content after removing HTML comments:", cleanedContent);
+    // console.log("Cleaned content after removing HTML comments:", cleanedContent);
 	
 	const markdownText = cleanedContent;
 
@@ -1566,7 +1566,7 @@ noteOption: {
 
 	// Count the number of tables
 	const numberOfTables = getTableDetails(markdownText);
-	console.log("Number of tables found:", numberOfTables);
+	// console.log("Number of tables found:", numberOfTables);
 	
 	if (numberOfTables < 1) {
 		app.alert("Warning: This Note does not contain any Tables. Select this option on Notes which contain Tables.")
@@ -1587,7 +1587,7 @@ noteOption: {
 				value: "All"
             },
 			{ label: "Select number of Randomizations.", type: "string", value: existingSetting || 3 },
-			{ label: "Does the Table has Headers", type: "checkbox", value: true }
+			{ label: "The Table has Headers", type: "checkbox", value: true }
             ]
         }
     );
@@ -1749,12 +1749,12 @@ noteOption: {
 	if (nthTable === "All") {
 		// Generate multiple combinations for each table
 		const multipleCombinations = picker.generateCombinationsForAllTables(numberCombo);
-		console.log(picker.formatAsMarkdown(multipleCombinations));
+		// console.log(picker.formatAsMarkdown(multipleCombinations));
 		finalOutput = picker.formatAsMarkdown(multipleCombinations);
 	} else {
 		// Get one random combination for Table 1
 		const tableCombo = picker.generateCombinationsForOneTable(nthTable, numberCombo);
-		console.log(picker.formatAsMarkdown(tableCombo));
+		// console.log(picker.formatAsMarkdown(tableCombo));
 		finalOutput = picker.formatAsMarkdown(tableCombo);
 	}
 
@@ -1784,7 +1784,7 @@ noteOption: {
 	  await app.navigate(`https://www.amplenote.com/notes/${auditnoteUUID}`);
 
 		app.alert(finalOutput);
-		console.log(finalOutput);
+		// console.log(finalOutput);
 
 	}
 	},
