@@ -584,13 +584,23 @@ appOption: {
 /* ----------------------------------- */
 "Specialized": async function (app) {
 
+    const existingSetting = await app.settings["Previous_Roll_Spc"];
+
+      const [
+        numDicez,
+        specializedDicez,
+        pokerVariz,
+		addProbz
+      ] = (existingSetting || "")
+	  .split(",");
+
   // Prompt user with pre-filled inputs - 4
   const result = await app.prompt("Select the approprate parameters!", {
 	inputs: [
-        { label: "Number of Dice", type: "string", value: 5 },
-        { label: "Select the Specialized Dice.", type: "select", options: [ { label: "Sicherman", value: "sicherman" }, { label: "Intransitive", value: "intransitive" }, { label: "Poker", value: "poker" } ], value: "poker" },
-        { label: "Select the Poker Variation.", type: "select", options: [ { label: "Standard", value: "standard" }, { label: "Numeric", value: "numeric" }, { label: "Crown", value: "crown" } ], value: "standard" },
-        { label: "Add probabilities", type: "checkbox" }
+        { label: "Number of Dice", type: "string", value: numDicez || 5 },
+        { label: "Select the Specialized Dice.", type: "select", options: [ { label: "Sicherman Dice", value: "sicherman" }, { label: "Intransitive Dice", value: "intransitive" }, { label: "Poker Dice", value: "poker" } ], value: specializedDicez || "poker" },
+        { label: "Select the Poker Variation.", type: "select", options: [ { label: "Standard", value: "standard" }, { label: "Numeric", value: "numeric" }, { label: "Crown", value: "crown" } ], value: pokerVariz || "standard" },
+        { label: "Add probabilities", type: "checkbox", value: addProbz || false }
 	],
   });
 
@@ -600,6 +610,8 @@ appOption: {
         pokerVari,
 		addProb
       ] = result;
+
+      await app.setSetting("Previous_Roll_Spc", result);
 
 	// Dice configurations
 	const DICE_VARIATIONS = {
