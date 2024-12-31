@@ -1,5 +1,5 @@
 {
-  async noteOption(app) {
+  async appOption(app) {
 
     const existingSetting1 = await app.settings["YTD_Year"];
     const existingSetting2 = await app.settings["Top_Number_of_Words"];
@@ -9,7 +9,7 @@
 	// console.log(currentYear); // Outputs the current year, e.g., 2024
 
   // Prompt user with pre-filled inputs - 4
-  const result = await app.prompt("Select the parameters!", {
+  const result = await app.prompt("Update the parameters!", {
 	inputs: [
         { label: "Update Year for YTD Wrapper / Annual Reviewer", type: "string", value: existingSetting1 || currentYear },
         { label: "Limit Number - List of Top Words Trend", type: "string", value: existingSetting2 || 25 },
