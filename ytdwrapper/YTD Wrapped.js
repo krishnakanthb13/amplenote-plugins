@@ -1,13 +1,91 @@
 {
   async noteOption(app) {
 
-    const noteHandles = await app.filterNotes({ tag: "daily-jots" });
-	const noteUUIDs = noteHandles.map(item => item.uuid);
+    const existingSetting1 = await app.settings["YTD_Year"];
+    const existingSetting2 = await app.settings["Top_Number_of_Words"];
+    const existingSetting3 = await app.settings["TagS"];
+
+	const currentYear = new Date().getFullYear();
+	// console.log(currentYear); // Outputs the current year, e.g., 2024
+
+  // Prompt user with pre-filled inputs - 4
+  const result = await app.prompt("Select the parameters!", {
+	inputs: [
+        { label: "Update Year for YTD Wrapper / Annual Reviewer", type: "string", value: existingSetting1 || currentYear },
+        { label: "Limit Number - List of Top Words Trend", type: "string", value: existingSetting2 || 25 },
+        { label: "Select any Particular Tag/s. (Leave it blank for All Tags).", type: "tags", limit: 10, value: existingSetting3 || "" }
+	],
+  });
+
+      let [
+        zYear,
+        topWords,
+        tagNames
+      ] = result;
+	  
+	  zYear = parseInt(zYear, 10);
+	  topWords = parseInt(topWords, 10);
+	  
+	  console.log (result);
+	  console.log (zYear);
+	  console.log (topWords);
+	  console.log (tagNames);
+
+	await app.setSetting("YTD_Year", zYear);
+	await app.setSetting("Top_Number_of_Words", topWords);
+	await app.setSetting("TagS", tagNames || "");
+
+	app.alert("YTD Wrapper is working in the background to get you various insigts and information for the Year Wrapper / Annual Reviewer; this may take a few minutes depending on the number of notes and their data.");
+
+	const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
+	let noteHandlesz = [];
+	// Filter notes based on tags
+	if (tagsArray.length > 0) {
+		for (let tag of tagsArray) {
+			let taggedNotes = await app.filterNotes({ tag, group: "^vault" });
+			noteHandlesz = noteHandlesz.concat(taggedNotes);
+		}
+	}
+	else {
+		noteHandlesz = await app.filterNotes({ group: "^vault" });
+	}
+	
+/* 	// Get notes based on tags or all notes
+	const noteHandlesz = tagS
+	  ? await app.filterNotes({ tagS })
+	  : await app.filterNotes({}); 
+
+	// Ensure notes is an array
+	if (!Array.isArray(noteHandlesz)) {
+		console.error("Notes is not an array");
+	} else {
+		console.log("Notes array:", noteHandlesz);
+	} */
+
+	// Ensure zYear is a valid year
+	// console.log("zYear:", zYear);
+
+ 	// Filter the notes by creation year
+	noteHandlesz = noteHandlesz.filter(item => {
+		const createdYear = new Date(item.created).getFullYear();
+		// console.log(`Note: ${item.name}, Created Year: ${createdYear}, zYear: ${zYear}`);
+		return createdYear === zYear;
+	});
+	console.log("Filtered Notes:", noteHandlesz);
+
+	// Map to UUIDs
+	const noteUUIDs = noteHandlesz
+		// .filter(item => new Date(item.created).getFullYear() === zYear) // Filter by year
+		.map(item => item.uuid); // Map to get the UUIDs
+	console.log("Note UUIDs:", noteUUIDs);
+
+    // console.log (noteHandlesz);
     // console.log (noteHandles);
+    // console.log (noteUUIDs);
     // console.log (noteHandles.length);
     // return `note count: ${ noteHandles.length }`;
 
-	const createYTDWrapper = async (noteHandles, app, year = new Date().getFullYear()) => {
+	const createYTDWrapper = async (noteHandlesz, app, year = new Date().getFullYear()) => {
 		// Helper function to get month from date string
 		const getMonth = (dateStr) => new Date(dateStr).getMonth() + 1;
 		
@@ -27,7 +105,7 @@
 		};
 
 		// Process each note
-		for (const note of noteHandles) {
+		for (const note of noteHandlesz) {
 			const createdDate = new Date(note.created);
 			const updatedDate = new Date(note.updated);
 			const createdYear = createdDate.getFullYear();
@@ -103,7 +181,7 @@
 /* 	// Example usage:
 	const runYTDAnalysis = async () => {
 		const year = 2024; // Can be changed to any year
-		const wrapper = await createYTDWrapper(noteHandles, app, year);
+		const wrapper = await createYTDWrapper(notes, app, year);
 		const stats = wrapper.getFormattedStats();
 		
 		console.log(stats.summary);
@@ -116,7 +194,7 @@
 	let finalResutls = ``;
 	let finalResutls2 = ``;
 
-	const yearEndStats = await createYTDWrapper(noteHandles, app, 2024);
+	const yearEndStats = await createYTDWrapper(noteHandlesz, app, zYear);
 	const formattedStats = yearEndStats.getFormattedStats();
 	// console.log(formattedStats);
 	
@@ -152,7 +230,7 @@
 	// ---------------------------------------------------------------
 
 	// Configuration
-	const TOP_WORDS_TO_SHOW = 25;  // Change this number to show more/less words
+	const TOP_WORDS_TO_SHOW = topWords || 25;  // Change this number to show more/less words
 
 	// Common filler words to exclude
 	const FILLER_WORDS = new Set([
@@ -247,6 +325,8 @@
 		finalResutls += `\n\nTotal unique words found: ${uniqueWords}.\n\n`;
 		console.log(`Total unique words found: ${uniqueWords}.`);
 		finalResutls += `---`;
+		const pluginSettingUrl = `https://www.amplenote.com/account/plugins/${app.context.pluginUUID}`;
+		finalResutls += `\n> You can navigate to the [AN Plugin Settings](${pluginSettingUrl}) and update the parameters in the settings based on your requirements.\n> This report is generated at: ${new Date()}.\n> *User Input Details:* **Year:** ${zYear}; **Limit:** ${topWords}; **Tags:** [${tagNames || "All"}]`;
 	};
 
 	// Example usage:
@@ -258,6 +338,27 @@
 	// await analyzeMultipleNotes(['uuid1', 'uuid2', 'uuid3']);
 
 	// ---------------------------------------------------------------
+
+	// Generate the filename based on the current date and time
+	const now = new Date();
+	const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+	const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+
+	// Audit Report
+	const ytdwNoteName = `${YYMMDD}_${HHMMSS} YTD Wrapper`;
+	const ytdwTagName = ['-reports/-ytd-wrapper'];
+	const ytdwnoteUUID = await app.createNote(ytdwNoteName, ytdwTagName);
+
+	  (async () => {
+		try {
+		  await app.replaceNoteContent({ uuid: ytdwnoteUUID }, finalResutls);
+		  await app.navigate(`https://www.amplenote.com/notes/${ytdwnoteUUID}`);
+		} catch (error) {
+		  console.error(error.message);
+		}
+	  })();
+
+	app.alert("YTD Wrapper has completed, View the Note for the details.");
 
   }
 }
