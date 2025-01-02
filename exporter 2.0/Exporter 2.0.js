@@ -4,13 +4,13 @@
       try {
         await this._loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js");
         const result = await app.prompt(
-          "What tags' do you want to export? (Obsidian Compatible)", 
+          "What tag' do you want to export? (Obsidian Compatible)", 
           {
             inputs: [
               {
-                label: "Select Tags",
+                label: "Select Tag",
                 type: "tags",
-                limit: 5,
+                limit: 1,
               },
             ]
           }
@@ -19,7 +19,8 @@
           await app.alert("Please select a Tag, upto 5 Tags at a Time.");
           return;
         }
-        const searchResults = await app.filterNotes({tag: result});
+		const searchResults = await app.filterNotes({tag: result});
+
         if (!searchResults) {
           await app.alert("No notes found with this tag.");
           return;
@@ -88,6 +89,7 @@
 
 			// Replace `**xyz**` with `*xyz*` (expandable for other patterns)
 			const replacePatterns = [
+				// { pattern: /^---$/gm, replacement: '\n---\n' }, // --- into a line break with \n---\n
 				{ pattern: /\*\*(.*?)\*\*/g, replacement: '<b>$1</b>' }, // To replace markdown-style **Bold Text** with HTML <b>Bold Text</b>
 				{ pattern: /\*(.*?)\*/g, replacement: '<i>$1</i>' }, // To replace markdown-style *Italic Text* with HTML <i>Italic Text</i>
 				{ pattern: /~~(.*?)~~/g, replacement: '<del>$1</del>' }, // To replace markdown-style ~~Strikethrough Text~~ with HTML <del>Strikethrough Text</del>
@@ -111,11 +113,11 @@
 			  // Replace markdown marks and comments with HTML
 			  const patterns = [
 				{
-				  pattern: /<mark style="color:(#[A-F0-9]{6});">(.*?)<!--\s*\{"cycleColor":"\d+"\}\s*--><\/mark>/g,
+				  pattern: /<mark style="color:(#[A-F0-9a-f]{3,6});">(.*?)<!--\s*\{"cycleColor":"\d+"\}\s*--><\/mark>/g,
 				  replacement: (_, colorCode, content) => `<span style="color: ${colorCode};">${content}</span>`
 				},
 				{
-				  pattern: /<mark style="background-color:(#[A-F0-9]{6});">(.*?)<!--\s*\{"backgroundCycleColor":"\d+"\}\s*--><\/mark>/g,
+				  pattern: /<mark style="background-color:(#[A-F0-9a-f]{3,6});">(.*?)<!--\s*\{"backgroundCycleColor":"\d+"\}\s*--><\/mark>/g,
 				  replacement: (_, backgroundColorCode, content) => `<span style="background-color: ${backgroundColorCode};">${content}</span>`
 				}
 			  ];
