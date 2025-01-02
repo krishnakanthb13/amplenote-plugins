@@ -46,7 +46,7 @@
 		})();
 
         let fileContents = [];
-        const progressNotename = `${YYMMDD}_${HHMMSS} Exporter 2.0 Report`
+        const progressNotename = `${YYMMDD}_${HHMMSS} Log Report`
 		const progressNoteUUID = await app.createNote(progressNotename, auditTagName);
         const progressNote = await app.findNote({uuid: progressNoteUUID});
         await app.navigate(
@@ -63,10 +63,10 @@
 			}
 		  })();
 
-          await app.insertNoteContent(
-            progressNote,
-            `Export 2.0 has started...`
-          );
+		await app.insertNoteContent(
+		 progressNote,
+		 `Export 2.0 has started... ${new Date().toLocaleTimeString()}`
+		);
  
         let index = 0;
         for (const noteHandle of searchResults) {
@@ -77,7 +77,7 @@
           const note = await app.findNote(noteHandle);
           const content = await app.getNoteContent(note);
 		  const yamlFormatted = noteHandle.tags.map(item => `- '${item}'`).join('\n');
-		  const allContent = `---\ntitle: ${noteHandle.name}\nuuid: ${noteHandle.uuid}\ncreated: ${noteHandle.created}\ntags:\n${yamlFormatted}\n---\n${content}`;
+		  const allContent = `---\ntitle: ${noteHandle.name}\nuuid: ${noteHandle.uuid}\ncreated: ${noteHandle.created}\ntag:\n${yamlFormatted}\n---\n${content}`;
 
 			// Remove empty lines
 			const allContentWithoutEmptyLines = allContent
@@ -88,6 +88,10 @@
 
 			// Replace `**xyz**` with `*xyz*` (expandable for other patterns)
 			const replacePatterns = [
+				{ pattern: /\*\*(.*?)\*\*/g, replacement: '<b>$1</b>' }, // To replace markdown-style **Bold Text** with HTML <b>Bold Text</b>
+				{ pattern: /\*(.*?)\*/g, replacement: '<i>$1</i>' }, // To replace markdown-style *Italic Text* with HTML <i>Italic Text</i>
+				{ pattern: /~~(.*?)~~/g, replacement: '<del>$1</del>' }, // To replace markdown-style ~~Strikethrough Text~~ with HTML <del>Strikethrough Text</del>
+				{ pattern: /`(.*?)`/g, replacement: '<code>$1</code>' }, // To replace markdown-style `Inline code` with HTML <code>Inline code</code>
 				{ pattern: /<mark>(.*?)<\/mark>/g, replacement: '==$1==' }, // <mark>xyz</mark> to ==xyz== (Hightlight)
 				{ pattern: /<!--\s*\{"fullWidth":true\}\s*-->/g, replacement: '' }, // removing - Toggle full width of table
 				{ pattern: /<!--\s*\{"collapsed":true\}\s*-->/g, replacement: '' }, // removing - Collapsed Header
@@ -107,12 +111,12 @@
 			  // Replace markdown marks and comments with HTML
 			  const patterns = [
 				{
-				  pattern: /<mark style="color:#[A-F0-9]{6};">(.*?)<!--\s*\{"cycleColor":"(\d+)"\}\s*--><\/mark>/g,
-				  replacement: (_, content, colorCode) => `<span style="color: #F5614C;">${content}</span>`
+				  pattern: /<mark style="color:(#[A-F0-9]{6});">(.*?)<!--\s*\{"cycleColor":"\d+"\}\s*--><\/mark>/g,
+				  replacement: (_, colorCode, content) => `<span style="color: ${colorCode};">${content}</span>`
 				},
 				{
-				  pattern: /<mark style="background-color:#[A-F0-9]{6};">(.*?)<!--\s*\{"backgroundCycleColor":"(\d+)"\}\s*--><\/mark>/g,
-				  replacement: (_, content, colorCode) => `<span style="background-color: #F5614C;">${content}</span>`
+				  pattern: /<mark style="background-color:(#[A-F0-9]{6});">(.*?)<!--\s*\{"backgroundCycleColor":"\d+"\}\s*--><\/mark>/g,
+				  replacement: (_, backgroundColorCode, content) => `<span style="background-color: ${backgroundColorCode};">${content}</span>`
 				}
 			  ];
 
@@ -127,16 +131,21 @@
           });
           index = index + 1;
         }
- 
-        await app.insertNoteContent(
+/* 		  if (searchResults.length > 100) {
+		  await app.insertNoteContent(
+			progressNote,
+			`For Notes more than 100, it usually takes longer... (Depends on the PC configuration as well!)`
+		  );
+		  }  */
+		await app.insertNoteContent(
           progressNote,
-          `Started - Creating zip file...`
+          `Note: For Larger number of notes, it might take a longer time to complete (Depends on the device configuration as well).\nStarted - Creating zip file... ${new Date().toLocaleTimeString()}.`
         );
         const zipBlob = await this._createZipBlob(fileContents);
         await app.saveFile(zipBlob, `${ result.trim() }.zip`);
         await app.insertNoteContent(
           progressNote,
-          `Successfully Completed!`
+          `Successfully Completed! ${new Date().toLocaleTimeString()}`
         );
 
 		app.alert("Exporter 2.0 has Successfully Completed.");
@@ -147,20 +156,59 @@
     },
   },
  
-  async _createZipBlob(notes) {
+	async _createZipBlob(notes) {
+	   const zip = new JSZip();
+	   const CHUNK_SIZE = 50; // Larger chunks for speed
+	   
+	   for (let i = 0; i < notes.length; i += CHUNK_SIZE) {
+		   const chunk = notes.slice(i, i + CHUNK_SIZE);
+		   await Promise.all(chunk.map(note => {
+			   const sanitizedTitle = note.title.replace(/\//g, '-');
+			   return zip.file(`${sanitizedTitle}.md`, note.content, {
+				   compression: 'STORE', // No compression
+				   streamFiles: true,
+				   compressionOptions: { level: 0 }
+			   });
+		   }));
+	   }
+
+	   return zip.generateAsync({
+		   type: "uint8array",
+		   streamFiles: true,
+		   compression: 'STORE',
+		   compressionOptions: { level: 0 }
+	   }).then(data => new Blob([data], {type: "application/zip"}));
+	},
+
+/* // For maximum speed
+compressionOptions: { level: 1 }
+
+// For smallest file size
+compressionOptions: { level: 9 }
+
+// For memory optimization
+{
+    streamFiles: true,
+    compression: 'STORE'  // No compression
+}
+
+// Parallel processing adjustment
+const CHUNK_SIZE = 100; // Increase/decrease based on your system */
+
+/*   async _createZipBlob(notes) {
     let zip = new JSZip();
     notes.forEach((note, index) => {
       const sanitizedTitle = note.title.replace(/\//g, '-'); // Replace any '/' with '-'
       zip.file(`${sanitizedTitle}.md`, note.content);
     });
- 
+ 
     // Generate ZIP data in Uint8Array format
     return zip.generateAsync({type: "uint8array"}).then(data => {
         // Convert data to a Blob using the Blob constructor
         return new Blob([data], {type: "application/zip"});
     });
-  },
- 
+  }, */
+
   async _loadScript(url) {
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
