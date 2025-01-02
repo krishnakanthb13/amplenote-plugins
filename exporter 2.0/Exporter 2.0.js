@@ -25,7 +25,7 @@
           return;
         }
 		
-		app.alert("Exporter 2.0 is working in the background to get you an Export that you can utilize; this may take a few minutes depending on the number of notes and their data.");
+		app.alert("Exporter 2.0 is working in the background to get you an Export that you can utilize; this may take a few minutes depending on the number of notes and their data. Note: For best experience, use Desktop Application. (It would be slow in the Web App or the Web Version of the Application.)");
 
 		// Generate the filename based on the current date and time
 		const now = new Date();
@@ -55,7 +55,7 @@
 
 		  (async () => {
 			try {
-			  const auditReport = `- <mark>Exporter 2.0:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Selected Tags:** [${result}]</mark>; **Report Status:** [${progressNotename}](https://www.amplenote.com/notes/${progressNote.uuid})`;
+			  const auditReport = `- <mark>Exporter 2.0 (Obsidian):</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Selected Tags:** [${result}]</mark>; **Report Status:** [${progressNotename}](https://www.amplenote.com/notes/${progressNote.uuid})`;
 			  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
 			  await app.navigate(`https://www.amplenote.com/notes/${uuid}`);
 			} catch (error) {
@@ -84,16 +84,42 @@
 			  .split('\n')
 			  .filter(line => line.trim() !== '' && !line.trim().startsWith('\\'))
 			  .join('\n');
-			console.log(allContentWithoutEmptyLines);
+			// console.log(allContentWithoutEmptyLines);
+
 			// Replace `**xyz**` with `*xyz*` (expandable for other patterns)
 			const replacePatterns = [
-				{ pattern: /\*\*(.*?)\*\*/g, replacement: '~$1~' } // Replace **xyz** with *xyz*
+				{ pattern: /<mark>(.*?)<\/mark>/g, replacement: '==$1==' }, // <mark>xyz</mark> to ==xyz== (Hightlight)
+				{ pattern: /<!--\s*\{"fullWidth":true\}\s*-->/g, replacement: '' }, // removing - Toggle full width of table
+				{ pattern: /<!--\s*\{"collapsed":true\}\s*-->/g, replacement: '' }, // removing - Collapsed Header
+				// { pattern: /\\*$/g, replacement: '' }, // removes "\" at the end of the sentence
+				// { pattern: /\\\s*$/g, replacement: '' },
+				{ pattern: /\\\s*$/gm, replacement: ''}, // Removes trailing backslash followed by optional whitespace at end of line
+				{ pattern: /\\\\\s*$/gm, replacement: ''}, // Removes escaped backslash followed by optional whitespace at end of line
+				{ pattern: /<!--\s*\{"omit":true\}\s*-->/g, replacement: '' } // removes omit at the end of the page
 			];
 			let processedContent = allContentWithoutEmptyLines;
 			replacePatterns.forEach(({ pattern, replacement }) => {
 				processedContent = processedContent.replace(pattern, replacement);
 			});
-			console.log(processedContent);
+			// console.log(processedContent);
+
+			function processMarkdownToHtml(text) {
+			  // Replace markdown marks and comments with HTML
+			  const patterns = [
+				{
+				  pattern: /<mark style="color:#[A-F0-9]{6};">(.*?)<!--\s*\{"cycleColor":"(\d+)"\}\s*--><\/mark>/g,
+				  replacement: (_, content, colorCode) => `<span style="color: #F5614C;">${content}</span>`
+				},
+				{
+				  pattern: /<mark style="background-color:#[A-F0-9]{6};">(.*?)<!--\s*\{"backgroundCycleColor":"(\d+)"\}\s*--><\/mark>/g,
+				  replacement: (_, content, colorCode) => `<span style="background-color: #F5614C;">${content}</span>`
+				}
+			  ];
+
+			  return patterns.reduce((str, { pattern, replacement }) => 
+				str.replace(pattern, replacement), text);
+			}
+			processedContent = processMarkdownToHtml(processedContent);
 
           fileContents.push({
             title: note.name,
@@ -112,6 +138,9 @@
           progressNote,
           `Successfully Completed!`
         );
+
+		app.alert("Exporter 2.0 has Successfully Completed.");
+
       } catch (err) {
         await app.alert(err);
       }
