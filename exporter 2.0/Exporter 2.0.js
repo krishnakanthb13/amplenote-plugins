@@ -1,0 +1,144 @@
+{
+  appOption: {
+    "Tag - Obsidian": async function(app) {
+      try {
+        await this._loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js");
+        const result = await app.prompt(
+          "What tags' do you want to export? (Obsidian Compatible)", 
+          {
+            inputs: [
+              {
+                label: "Select Tags",
+                type: "tags",
+                limit: 5,
+              },
+            ]
+          }
+        );
+        if (!result) {
+          await app.alert("Please select a Tag, upto 5 Tags at a Time.");
+          return;
+        }
+        const searchResults = await app.filterNotes({tag: result});
+        if (!searchResults) {
+          await app.alert("No notes found with this tag.");
+          return;
+        }
+		
+		app.alert("Exporter 2.0 is working in the background to get you an Export that you can utilize; this may take a few minutes depending on the number of notes and their data.");
+
+		// Generate the filename based on the current date and time
+		const now = new Date();
+		const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+		const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+
+		// Audit Report
+		const auditNoteName = `Exporter 2.0 Audit`;
+		const auditTagName = ['-reports/-exporter-2'];
+
+		const auditnoteUUID = await (async () => {
+		  const existingUUID = await app.settings["Exporter_2.0_Audit_UUID [Do not Edit!]"];
+		  if (existingUUID) 
+			  return existingUUID;
+		  const newUUID = await app.createNote(auditNoteName, auditTagName);
+		  await app.setSetting("Exporter_2.0_Audit_UUID [Do not Edit!]", newUUID);
+		  return newUUID;
+		})();
+
+        let fileContents = [];
+        const progressNotename = `${YYMMDD}_${HHMMSS} Exporter 2.0 Report`
+		const progressNoteUUID = await app.createNote(progressNotename, auditTagName);
+        const progressNote = await app.findNote({uuid: progressNoteUUID});
+        await app.navigate(
+          `https://www.amplenote.com/notes/${progressNote.uuid}`
+        );
+
+		  (async () => {
+			try {
+			  const auditReport = `- <mark>Exporter 2.0:</mark> ***When:** ${YYMMDD}_${HHMMSS}*; <mark>**Selected Tags:** [${result}]</mark>; **Report Status:** [${progressNotename}](https://www.amplenote.com/notes/${progressNote.uuid})`;
+			  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+			  await app.navigate(`https://www.amplenote.com/notes/${uuid}`);
+			} catch (error) {
+			  console.error(error.message);
+			}
+		  })();
+
+          await app.insertNoteContent(
+            progressNote,
+            `Export 2.0 has started...`
+          );
+ 
+        let index = 0;
+        for (const noteHandle of searchResults) {
+          await app.insertNoteContent(
+            progressNote,
+            `Processing note ${ index + 1}/${ searchResults.length }...`
+          );
+          const note = await app.findNote(noteHandle);
+          const content = await app.getNoteContent(note);
+		  const yamlFormatted = noteHandle.tags.map(item => `- '${item}'`).join('\n');
+		  const allContent = `---\ntitle: ${noteHandle.name}\nuuid: ${noteHandle.uuid}\ncreated: ${noteHandle.created}\ntags:\n${yamlFormatted}\n---\n${content}`;
+
+			// Remove empty lines
+			const allContentWithoutEmptyLines = allContent
+			  .split('\n')
+			  .filter(line => line.trim() !== '' && !line.trim().startsWith('\\'))
+			  .join('\n');
+			console.log(allContentWithoutEmptyLines);
+			// Replace `**xyz**` with `*xyz*` (expandable for other patterns)
+			const replacePatterns = [
+				{ pattern: /\*\*(.*?)\*\*/g, replacement: '~$1~' } // Replace **xyz** with *xyz*
+			];
+			let processedContent = allContentWithoutEmptyLines;
+			replacePatterns.forEach(({ pattern, replacement }) => {
+				processedContent = processedContent.replace(pattern, replacement);
+			});
+			console.log(processedContent);
+
+          fileContents.push({
+            title: note.name,
+            content: processedContent
+          });
+          index = index + 1;
+        }
+ 
+        await app.insertNoteContent(
+          progressNote,
+          `Started - Creating zip file...`
+        );
+        const zipBlob = await this._createZipBlob(fileContents);
+        await app.saveFile(zipBlob, `${ result.trim() }.zip`);
+        await app.insertNoteContent(
+          progressNote,
+          `Successfully Completed!`
+        );
+      } catch (err) {
+        await app.alert(err);
+      }
+    },
+  },
+ 
+  async _createZipBlob(notes) {
+    let zip = new JSZip();
+    notes.forEach((note, index) => {
+      const sanitizedTitle = note.title.replace(/\//g, '-'); // Replace any '/' with '-'
+      zip.file(`${sanitizedTitle}.md`, note.content);
+    });
+ 
+    // Generate ZIP data in Uint8Array format
+    return zip.generateAsync({type: "uint8array"}).then(data => {
+        // Convert data to a Blob using the Blob constructor
+        return new Blob([data], {type: "application/zip"});
+    });
+  },
+ 
+  async _loadScript(url) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = url;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  },
+}
