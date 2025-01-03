@@ -20,6 +20,7 @@
           return;
         }
 		const searchResults = await app.filterNotes({tag: result});
+		console.log(searchResults);
 
         if (!searchResults) {
           await app.alert("No notes found with this tag.");
@@ -27,7 +28,7 @@
         }
 		
 		app.alert("Exporter 2.0 is working in the background to get you an Export that you can utilize; this may take a few minutes depending on the number of notes and their data. Note: For best experience, use Desktop Application. (It would be slow in the Web App or the Web Version of the Application.)");
-
+		
 		// Generate the filename based on the current date and time
 		const now = new Date();
 		const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
@@ -89,16 +90,73 @@
       }
     },
   },
+  noteOption: {
+    "Obsidian": async function(app, noteUUID) {
+      try {
+        await this._loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js");
+		
+		const searchResults = [await app.findNote({ uuid: noteUUID })];
+		console.log(searchResults);
+		
+		// Generate the filename based on the current date and time
+		const now = new Date();
+		const YYMMDD = now.toISOString().slice(2, 10).replace(/-/g, '');
+		const HHMMSS = now.toTimeString().slice(0, 8).replace(/:/g, '');
+
+		// Audit Report
+		const auditNoteName = `Exporter 2.0 Audit`;
+		const auditTagName = ['-reports/-exporter-2'];
+
+		const auditnoteUUID = await (async () => {
+		  const existingUUID = await app.settings["Exporter_2.0_Audit_UUID [Do not Edit!]"];
+		  if (existingUUID) 
+			  return existingUUID;
+		  const newUUID = await app.createNote(auditNoteName, auditTagName);
+		  await app.setSetting("Exporter_2.0_Audit_UUID [Do not Edit!]", newUUID);
+		  return newUUID;
+		})();
+
+        let fileContents = [];
+
+		  (async () => {
+			try {
+			  const auditReport = `- <mark>Exporter 2.0 (Obsidian):</mark> ***When:** ${YYMMDD}_${HHMMSS}*; **Export UUID:** [${noteUUID}]`;
+			  await app.insertNoteContent({ uuid: auditnoteUUID }, auditReport);
+			  await app.navigate(`https://www.amplenote.com/notes/${uuid}`);
+			} catch (error) {
+			  console.error(error.message);
+			}
+		  })();
+		  
+		const progressNote = "";
+
+		await this._noteprocessingcode(app, searchResults, progressNote, fileContents);
+		
+		const sanitizedTitle = `${fileContents[0].title.replace(/\//g, '-')}`;
+		const sanitizedContent = `${fileContents[0].content}`;
+		
+		await this._downloadMarkdown(sanitizedContent, sanitizedTitle);
+
+		app.alert("Exporter 2.0 has Successfully Completed.");
+
+      } catch (err) {
+        await app.alert(err);
+      }		
+
+	},
+  },
 
 	async _noteprocessingcode(app, searchResults, progressNote, fileContents) {
 		 
         let index = 0;
         for (const noteHandle of searchResults) {
 
-          await app.insertNoteContent(
-            progressNote,
-            `Processing note ${ index + 1}/${ searchResults.length }...`
-          );
+          if (progressNote) {
+			  await app.insertNoteContent(
+				progressNote,
+				`Processing note ${ index + 1}/${ searchResults.length }...`
+			  );
+		  }
           const note = await app.findNote(noteHandle);
           const content = await app.getNoteContent(note);
 		  const yamlFormatted = noteHandle.tags.map(item => `  - '${item}'`).join('\n');
@@ -184,8 +242,8 @@
 			processedContent = await updateMarkdownContent(processedContent);
 
           fileContents.push({
-            title: note.name,
-            content: processedContent
+            title: note.name || "Untitled Note",
+            content: processedContent || "Empty Content"
           });
           index = index + 1;
 
@@ -225,6 +283,18 @@
 		script.onerror = reject;
 		document.head.appendChild(script);
 	  });
+	},
+
+	_downloadMarkdown(content, filename) {
+		const blob = new Blob([content], {
+			type: "text/markdown;charset=utf-8"
+		});
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = `${filename}.md`;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
 	},
 
 }
