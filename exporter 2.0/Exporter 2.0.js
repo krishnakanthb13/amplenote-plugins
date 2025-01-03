@@ -68,7 +68,30 @@
 		 progressNote,
 		 `Export 2.0 has started... ${new Date().toLocaleTimeString()}`
 		);
- 
+
+		await this._noteprocessingcode(app, searchResults, progressNote, fileContents);
+
+		await app.insertNoteContent(
+          progressNote,
+          `Note: For Larger number of notes, it might take a longer time to complete (Depends on the device configuration as well).\nStarted - Creating zip file... ${new Date().toLocaleTimeString()}.`
+        );
+        const zipBlob = await this._createZipBlob(fileContents);
+        await app.saveFile(zipBlob, `${ result.trim() }.zip`);
+        await app.insertNoteContent(
+          progressNote,
+          `Successfully Completed! ${new Date().toLocaleTimeString()}`
+        );
+
+		app.alert("Exporter 2.0 has Successfully Completed.");
+
+      } catch (err) {
+        await app.alert(err);
+      }
+    },
+  },
+
+	async _noteprocessingcode(app, searchResults, progressNote, fileContents) {
+		 
         let index = 0;
         for (const noteHandle of searchResults) {
 
@@ -167,31 +190,9 @@
           index = index + 1;
 
         }
-/* 		  if (searchResults.length > 100) {
-		  await app.insertNoteContent(
-			progressNote,
-			`For Notes more than 100, it usually takes longer... (Depends on the PC configuration as well!)`
-		  );
-		  }  */
-		await app.insertNoteContent(
-          progressNote,
-          `Note: For Larger number of notes, it might take a longer time to complete (Depends on the device configuration as well).\nStarted - Creating zip file... ${new Date().toLocaleTimeString()}.`
-        );
-        const zipBlob = await this._createZipBlob(fileContents);
-        await app.saveFile(zipBlob, `${ result.trim() }.zip`);
-        await app.insertNoteContent(
-          progressNote,
-          `Successfully Completed! ${new Date().toLocaleTimeString()}`
-        );
 
-		app.alert("Exporter 2.0 has Successfully Completed.");
+	},
 
-      } catch (err) {
-        await app.alert(err);
-      }
-    },
-  },
- 
 	async _createZipBlob(notes) {
 	   const zip = new JSZip();
 	   const CHUNK_SIZE = 50; // Larger chunks for speed
@@ -216,42 +217,14 @@
 	   }).then(data => new Blob([data], {type: "application/zip"}));
 	},
 
-/* // For maximum speed
-compressionOptions: { level: 1 }
+	async _loadScript(url) {
+	  return new Promise((resolve, reject) => {
+		const script = document.createElement("script");
+		script.src = url;
+		script.onload = resolve;
+		script.onerror = reject;
+		document.head.appendChild(script);
+	  });
+	},
 
-// For smallest file size
-compressionOptions: { level: 9 }
-
-// For memory optimization
-{
-    streamFiles: true,
-    compression: 'STORE'  // No compression
-}
-
-// Parallel processing adjustment
-const CHUNK_SIZE = 100; // Increase/decrease based on your system */
-
-/*   async _createZipBlob(notes) {
-    let zip = new JSZip();
-    notes.forEach((note, index) => {
-      const sanitizedTitle = note.title.replace(/\//g, '-'); // Replace any '/' with '-'
-      zip.file(`${sanitizedTitle}.md`, note.content);
-    });
- 
-    // Generate ZIP data in Uint8Array format
-    return zip.generateAsync({type: "uint8array"}).then(data => {
-        // Convert data to a Blob using the Blob constructor
-        return new Blob([data], {type: "application/zip"});
-    });
-  }, */
-
-  async _loadScript(url) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = url;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  },
 }
