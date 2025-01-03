@@ -4,13 +4,13 @@
       try {
         await this._loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js");
         const result = await app.prompt(
-          "What tag' do you want to export? (Obsidian Compatible)", 
+          "What tags' do you want to export? (Obsidian Compatible)", 
           {
             inputs: [
               {
-                label: "Select Tag",
+                label: "Select Tags (Limit upto 10 Tags)",
                 type: "tags",
-                limit: 1,
+                limit: 10,
               },
             ]
           }
@@ -19,7 +19,18 @@
           await app.alert("Please select a Tag, upto 5 Tags at a Time.");
           return;
         }
-		const searchResults = await app.filterNotes({tag: result});
+		const tagNames = result;
+		const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
+		let searchResults = [];
+		if (tagsArray.length > 0) {
+			for (let tag of tagsArray) {
+				let taggedNotes = await app.filterNotes({
+					tag, group: "^vault"
+				});
+				searchResults = searchResults.concat(taggedNotes);
+			}
+		}
+		// const searchResults = await app.filterNotes({tag: result});
 		console.log(searchResults);
 
         if (!searchResults) {
@@ -192,22 +203,53 @@
 			// console.log(processedContent);
 
 			function processMarkdownToHtml(text) {
-			  // Replace markdown marks and comments with HTML
+			  // Define gradient mappings for each cycleColor and backgroundCycleColor
+				const gradientColors = {
+					"56": "linear-gradient(to right, #FF6B6B, #FF8E3C)", // Bright orange-red
+					"57": "linear-gradient(to right, #FF8E3C, #FFA600)", // Orange
+					"58": "linear-gradient(to right, #FFA600, #FFD000)", // Orange to yellow
+					"59": "linear-gradient(to right, #FFD000, #E8FF00)", // Yellow
+					"60": "linear-gradient(to right, #E8FF00, #ADFF00)"  // Yellow-green
+				};
+
+			  // Define patterns for replacing content
 			  const patterns = [
 				{
+				  // Handle <mark> with a defined color
 				  pattern: /<mark style="color:(#[A-F0-9a-f]{3,6});">(.*?)<!--\s*\{"cycleColor":"\d+"\}\s*--><\/mark>/g,
-				  replacement: (_, colorCode, content) => `<span style="color: ${colorCode};">${content}</span>`
+				  replacement: (_, colorCode, content) =>
+					`<span style="color: ${colorCode};">${content}</span>`
 				},
 				{
+				  // Handle <mark> with a defined background color
 				  pattern: /<mark style="background-color:(#[A-F0-9a-f]{3,6});">(.*?)<!--\s*\{"backgroundCycleColor":"\d+"\}\s*--><\/mark>/g,
-				  replacement: (_, backgroundColorCode, content) => `<span style="background-color: ${backgroundColorCode};">${content}</span>`
+				  replacement: (_, backgroundColorCode, content) =>
+					`<span style="background-color: ${backgroundColorCode};">${content}</span>`
+				},
+				{
+				  // Handle <mark> with an undefined color, applying gradient
+				  pattern: /<mark style="color:undefined;">(.*?)<!--\s*\{"cycleColor":"(\d+)"\}\s*--><\/mark>/g,
+				  replacement: (_, content, cycleColor) => {
+					const gradient = gradientColors[cycleColor] || "transparent";
+					return `<span style="background-image: ${gradient}; -webkit-background-clip: text; color: transparent;">${content}</span>`;
+				  }
+				},
+				{
+				  // Handle <mark> with an undefined background color, applying gradient
+				  pattern: /<mark style="background-color:undefined;">(.*?)<!--\s*\{"backgroundCycleColor":"(\d+)"\}\s*--><\/mark>/g,
+				  replacement: (_, content, backgroundCycleColor) => {
+					const gradient = gradientColors[backgroundCycleColor] || "transparent";
+					return `<span style="background-image: ${gradient}; padding: 2px; border-radius: 5px; display: inline-block; color: #000;">${content}</span>`;
+				  }
 				}
 			  ];
 
-			  return patterns.reduce((str, { pattern, replacement }) => 
-				str.replace(pattern, replacement), text);
+			  // Apply patterns sequentially
+			  return patterns.reduce((str, { pattern, replacement }) => str.replace(pattern, replacement), text);
 			}
+
 			processedContent = processMarkdownToHtml(processedContent);
+			console.log(processedContent);
 
 			async function updateMarkdownContent(markdown) {
 			  // Split the markdown content into lines
