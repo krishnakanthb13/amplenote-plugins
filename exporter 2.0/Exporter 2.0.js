@@ -184,7 +184,7 @@
 			const replacePatterns = [
 				// { pattern: /^---$/gm, replacement: '\n---\n' }, // --- into a line break with \n---\n
 				{ pattern: /\*\*(.*?)\*\*/g, replacement: '<b>$1</b>' }, // To replace markdown-style **Bold Text** with HTML <b>Bold Text</b>
-				{ pattern: /\*(.*?)\*/g, replacement: '<i>$1</i>' }, // To replace markdown-style *Italic Text* with HTML <i>Italic Text</i>
+				// { pattern: /\*(.*?)\*/g, replacement: '<i>$1</i>' }, // To replace markdown-style *Italic Text* with HTML <i>Italic Text</i>
 				{ pattern: /~~(.*?)~~/g, replacement: '<del>$1</del>' }, // To replace markdown-style ~~Strikethrough Text~~ with HTML <del>Strikethrough Text</del>
 				{ pattern: /`(.*?)`/g, replacement: '<code>$1</code>' }, // To replace markdown-style `Inline code` with HTML <code>Inline code</code>
 				{ pattern: /<mark>(.*?)<\/mark>/g, replacement: '==$1==' }, // <mark>xyz</mark> to ==xyz== (Hightlight)
