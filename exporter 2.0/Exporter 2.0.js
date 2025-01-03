@@ -71,13 +71,14 @@
  
         let index = 0;
         for (const noteHandle of searchResults) {
+
           await app.insertNoteContent(
             progressNote,
             `Processing note ${ index + 1}/${ searchResults.length }...`
           );
           const note = await app.findNote(noteHandle);
           const content = await app.getNoteContent(note);
-		  const yamlFormatted = noteHandle.tags.map(item => `- '${item}'`).join('\n');
+		  const yamlFormatted = noteHandle.tags.map(item => `  - '${item}'`).join('\n');
 		  const allContent = `---\ntitle: ${noteHandle.name}\nuuid: ${noteHandle.uuid}\ncreated: ${noteHandle.created}\ntag:\n${yamlFormatted}\n---\n${content}`;
 
 			// Remove empty lines
@@ -127,11 +128,44 @@
 			}
 			processedContent = processMarkdownToHtml(processedContent);
 
+			async function updateMarkdownContent(markdown) {
+			  // Split the markdown content into lines
+			  const lines = markdown.split('\n');
+
+			  // Process each line to find UUID comments
+			  for (let i = 0; i < lines.length; i++) {
+				const match = lines[i].match(/<!--\s*\{"uuid":"([a-f0-9\-]+)"\}\s*-->/);
+
+				if (match) {
+				  const taskUUID = match[1]; // Extract the UUID from the match
+				  try {
+					// Fetch the task details
+					const task = await app.getTask(taskUUID);
+					const taskDetails = JSON.stringify(task)
+					  .replace(/{|}/g, '') // Remove curly braces
+					  .replace(/"/g, "'") // Replace double quotes with single quotes
+					  .replace(/,/g, ',\n - '); // Add a newline after each comma
+
+					// Replace the UUID comment with the task details
+					lines[i] = lines[i].replace(match[0], `\n- ${taskDetails}`);
+				  } catch (error) {
+					console.error(`Error fetching task for UUID ${taskUUID}:`, error);
+				  }
+				}
+			  }
+
+			  // Join the lines back into a single markdown string
+			  return lines.join('\n');
+			}
+
+			processedContent = await updateMarkdownContent(processedContent);
+
           fileContents.push({
             title: note.name,
             content: processedContent
           });
           index = index + 1;
+
         }
 /* 		  if (searchResults.length > 100) {
 		  await app.insertNoteContent(
