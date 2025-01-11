@@ -574,22 +574,27 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
     const totalDays = (new Date(year, today.getMonth() + 1, 0)).getDate();
     const daysToPrint = Array.from(" ".repeat(dayOfWeek)).concat(Array.from({ length: totalDays }, (e, i) => `${i + 1}`));
 
-    // Calculate week number for the first day of the month
-    const firstDayOfMonth = new Date(year, today.getMonth(), 1);
-    let currentWeek = this._getWeekNumber(firstDayOfMonth);
+    // Calculate week number for the first visible day of the calendar
+    let currentWeek;
+    if (dayOfWeek > 0) {
+      // If month doesn't start on first day of week, get week number from last day of previous week
+      const lastDayPrevWeek = new Date(year, today.getMonth(), 1 - dayOfWeek);
+      currentWeek = this._getWeekNumber(lastDayPrevWeek);
+    } else {
+      // If month starts on first day of week, get week number from first day
+      currentWeek = this._getWeekNumber(today);
+    }
 
     const reducer = (content, day, index) => {
       let newContent = content;
       
       // Add week number at the start of each week
       if (index % 7 === 0) {
-        if (day === " " && index === 0) {
-          // First week might be incomplete
-          newContent += `|${this.CALENDAR_CONFIG.prefixWeek}${currentWeek}`; // Not getting correctly populated.
-          // newContent += `|${this.CALENDAR_CONFIG.prefixWeek}`;
-        } else if (day !== " ") {
-          newContent += `|${this.CALENDAR_CONFIG.prefixWeek}${currentWeek}`;
-          currentWeek = this._getWeekNumber(new Date(year, today.getMonth(), parseInt(day)));
+        newContent += `|${this.CALENDAR_CONFIG.prefixWeek}${currentWeek}`;
+        if (day !== " ") {
+          // Only increment week number if we're not in empty cells
+          const nextWeekDate = new Date(year, today.getMonth(), parseInt(day) + 7);
+          currentWeek = this._getWeekNumber(nextWeekDate);
         }
       }
 
@@ -604,7 +609,7 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
       return newContent;
     };
 
-    // Modify header to include week number column
+    // Modified header to include week number column
     const weekDays = this.CALENDAR_CONFIG.weekStartsOnMonday 
       ? ['M', 'T', 'W', 'T', 'F', 'S', 'S']
       : ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -614,7 +619,6 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
     const calendar = daysToPrint.reduce(reducer, initialValue);
     return calendar;
   },
-
 
   // --------------------------------------------------------------------------
   // Helper function to get the current month and year in "Month-Year" format.
@@ -629,17 +633,37 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
   },
 
   // --------------------------------------------------------------------------
-  // Add helper function to calculate week number
+  // Modified week number calculation
   _getWeekNumber(date) {
+    // Copy the date to avoid modifying the original
     const target = new Date(date.valueOf());
-    const dayNr = (this.CALENDAR_CONFIG.weekStartsOnMonday ? date.getDay() + 6 : date.getDay()) % 7;
-    target.setDate(target.getDate() - dayNr);
-    const firstThursday = target.valueOf();
-    target.setMonth(0, 1);
-    if (target.getDay() !== 4) {
-      target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+  
+    // Adjust the day number based on week start configuration (Monday = 1, Sunday = 7)
+    const dayNr = this.CALENDAR_CONFIG.weekStartsOnMonday 
+      ? (target.getDay() === 0 ? 7 : target.getDay()) 
+      : target.getDay();
+  
+    // Move to the nearest Thursday for ISO 8601 week number calculation
+    target.setDate(target.getDate() - dayNr + 4);
+  
+    // Get the first Thursday of the year
+    const yearStart = new Date(target.getFullYear(), 0, 4); // Jan 4 is always in week 1
+    const yearStartDayNr = this.CALENDAR_CONFIG.weekStartsOnMonday 
+      ? (yearStart.getDay() === 0 ? 7 : yearStart.getDay()) 
+      : yearStart.getDay();
+    yearStart.setDate(yearStart.getDate() - yearStartDayNr + 4);
+  
+    // Calculate the difference in days and determine the week number
+    const weekNumber = Math.floor((target - yearStart) / (7 * 24 * 60 * 60 * 1000)) + 1;
+  
+    // Handle edge cases for week 53 and week 1
+    if (weekNumber === 53 && new Date(target.getFullYear(), 11, 31).getDay() < 4) {
+      return 1;
+    } else if (weekNumber === 0) {
+      return this._getWeekNumber(new Date(target.getFullYear() - 1, 11, 31));
     }
-    return 1 + Math.ceil((firstThursday - target) / 604800000);
+  
+    return weekNumber;
   },
 
   // --------------------------------------------------------------------------
