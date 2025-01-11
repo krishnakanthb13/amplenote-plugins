@@ -1,7 +1,7 @@
 ﻿---
 title: Calendar Pro
 uuid: 02a65ee0-639b-11ef-96c6-b6c19b417745
-version: 408
+version: 422
 created: '2024-08-26T16:34:49+05:30'
 tags:
   - '-t/amplenote/mine'
@@ -16,6 +16,7 @@ Thank you for checking out this plugin! If you've ever wanted to bring a little 
 
 No matter if you're a productivity enthusiast or just someone looking for a better way to organize your notes, this plugin is designed with you in mind. Let's dive in and see how this can help you transform your note-taking experience! 🌟
 
+
 ---
 
 ## <mark style="color:#F8D616;">Demo:<!-- {"cycleColor":"25"} --></mark>
@@ -29,6 +30,7 @@ No matter if you're a productivity enthusiast or just someone looking for a bett
 ### <mark style="color:#BBA215;">Calendar 2.0:<!-- {"cycleColor":"25"} --></mark>
 
 ![](https://images.amplenote.com/02a65ee0-639b-11ef-96c6-b6c19b417745/3bcfb3c6-7628-4d0b-b8a3-4f7f8a066ade.gif)
+
 
 ---
 
@@ -104,6 +106,7 @@ Thank you for choosing the Calendar Creation Plugin! We hope it helps you stay o
 
 `Happy planning! 📅✨`
 
+
 ---
 
 ## <mark style="color:#F8D616;">Table - Plugin Parameters:<!-- {"cycleColor":"25"} --></mark>
@@ -118,6 +121,7 @@ Thank you for choosing the Calendar Creation Plugin! We hope it helps you stay o
 |Setting|Monthly Option \[Do not Edit!\]<!-- {"cell":{"colwidth":834}} -->|
 |Description|[^1]<!-- {"cell":{"colwidth":834}} -->|
 |Instructions|[Calendar Pro Docs](https://www.amplenote.com/notes/c13a4d68-6ad4-11ef-b13d-126797ff7670) <!-- {"cell":{"colwidth":834}} -->|
+
 ---
 
 ## <mark style="color:#F8D616;">Code Base:<!-- {"cycleColor":"25"} --></mark>
@@ -133,6 +137,13 @@ Thank you for choosing the Calendar Creation Plugin! We hope it helps you stay o
       this.monthYear = monthYear;
     }
   },
+
+  // Add week start configuration constant
+  CALENDAR_CONFIG: {
+    weekStartsOnMonday: false, // Set to true for Monday, false for Sunday (Update avaliable in users selection option!)
+	prefixWeek: `CW` // Update for KW for Kalendarwoche (German) / CW for calendar Week / just W for Week.
+  },
+
   // --------------------------------------------------------------------------
   // Function to handle month and year selection from a prompt, including calendar creation. -- noteOption
   appOption: {
@@ -174,14 +185,21 @@ Thank you for choosing the Calendar Creation Plugin! We hope it helps you stay o
             type: "tags", 
             limit: 1, 
             placeholder: "Enter tag (Max 1)" 
+          },
+          { 
+            label: "Week Starts with Monday? (Default: Sunday)", 
+            type: "checkbox" 
           }
         ]
       });
 
       // ----------------------------------------------------------------------
       // Extract results from the prompt and handle default values.
-      let [monthNum, yearNum, calWolinks, dailyJotreplace] = result;
+      let [monthNum, yearNum, calWolinks, dailyJotreplace, weekStartsOnMonday] = result;
       // console.log("dailyJotreplace:", dailyJotreplace);
+
+      // Update calendar configuration based on user selection
+      this.CALENDAR_CONFIG.weekStartsOnMonday = weekStartsOnMonday;
 	  
       // Reverse the checkbox boolean value.
       calWolinks = !calWolinks;
@@ -288,14 +306,21 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 				type: "tags", 
 				limit: 1, 
 				placeholder: "Enter tag (Max 1)" 
+			  },
+			  { 
+				label: "Week Starts with Monday? (Default: Sunday)", 
+				type: "checkbox" 
 			  }
 			]
 		  });
 
 		  // ----------------------------------------------------------------------
 		  // Extract results from the prompt and handle default values.
-		  let [yearNum, calWolinks, dailyJotreplace] = result;
+		  let [yearNum, calWolinks, dailyJotreplace, weekStartsOnMonday] = result;
 		  // console.log("dailyJotreplace:", dailyJotreplace);
+
+		  // Update calendar configuration based on user selection
+		  this.CALENDAR_CONFIG.weekStartsOnMonday = weekStartsOnMonday;
 		  
 		  // Reverse the checkbox boolean value.
 		  calWolinks = !calWolinks;
@@ -404,14 +429,21 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 				type: "tags", 
 				limit: 1, 
 				placeholder: "Enter tag (Max 1)" 
+			  },
+			  { 
+				label: "Week Starts with Monday? (Default: Sunday)", 
+				type: "checkbox" 
 			  }
 			]
 		  });
 
 		  // ----------------------------------------------------------------------
 		  // Extract results from the prompt and handle default values.
-		  let [calWolinks, dailyJotreplace] = result;
+		  let [calWolinks, dailyJotreplace, weekStartsOnMonday] = result;
 		  // console.log("dailyJotreplace:", dailyJotreplace);
+
+		  // Update calendar configuration based on user selection
+		  this.CALENDAR_CONFIG.weekStartsOnMonday = weekStartsOnMonday;
 		  
 		  // Reverse the checkbox boolean value.
 		  calWolinks = !calWolinks;
@@ -555,14 +587,21 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
             type: "tags", 
             limit: 1, 
             placeholder: "Enter tag (Max 1)" 
+          },
+          { 
+            label: "Week Starts with Monday? (Default: Sunday)", 
+            type: "checkbox" 
           }
         ]
       });
 
       // ----------------------------------------------------------------------
       // Extract results from the prompt and handle default values.
-      let [monthNum, yearNum, calWolinks, dailyJotreplace] = result;
+      let [monthNum, yearNum, calWolinks, dailyJotreplace, weekStartsOnMonday] = result;
       // console.log("dailyJotreplace:", dailyJotreplace);
+
+      // Update calendar configuration based on user selection
+      this.CALENDAR_CONFIG.weekStartsOnMonday = weekStartsOnMonday;
 	  
       // Reverse the checkbox boolean value.
       calWolinks = !calWolinks;
@@ -650,22 +689,61 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 
   // --------------------------------------------------------------------------
   // Function to create a formatted calendar for the month, including links to notes if applicable.
+  // Modified calendar creation function to handle week start and add week numbers
   _createMonthlyCalendar(dailyJots, monthYear) {
     const [month, year] = this._parseMonthYear(monthYear);
     const today = new Date(`${month} 1, ${year}`);
-    const dayOfWeek = today.getDay();
+    let dayOfWeek = today.getDay();
+    
+    // Adjust dayOfWeek if week starts on Monday
+    if (this.CALENDAR_CONFIG.weekStartsOnMonday) {
+      dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    }
+    
     const totalDays = (new Date(year, today.getMonth() + 1, 0)).getDate();
     const daysToPrint = Array.from(" ".repeat(dayOfWeek)).concat(Array.from({ length: totalDays }, (e, i) => `${i + 1}`));
 
+    // Calculate week number for the first visible day of the calendar
+    let currentWeek;
+    if (dayOfWeek > 0) {
+      // If month doesn't start on first day of week, get week number from last day of previous week
+      const lastDayPrevWeek = new Date(year, today.getMonth(), 1 - dayOfWeek);
+      currentWeek = this._getWeekNumber(lastDayPrevWeek);
+    } else {
+      // If month starts on first day of week, get week number from first day
+      currentWeek = this._getWeekNumber(today);
+    }
+
     const reducer = (content, day, index) => {
+      let newContent = content;
+      
+      // Add week number at the start of each week
+      if (index % 7 === 0) {
+        newContent += `|${this.CALENDAR_CONFIG.prefixWeek}${currentWeek}`;
+        if (day !== " ") {
+          // Only increment week number if we're not in empty cells
+          const nextWeekDate = new Date(year, today.getMonth(), parseInt(day) + 7);
+          currentWeek = this._getWeekNumber(nextWeekDate);
+        }
+      }
+
       const dayCell = dailyJots.has(day) ? `[${day}](https://www.amplenote.com/notes/${dailyJots.get(day).uuid})` : day;
-      return content +
-        "|" +
-        dayCell +
-        ((index + 1) % 7 === 0 ? "|\n" : ""); // If we have reached Sunday, start a new row
+      newContent += "|" + dayCell;
+      
+      // End of week
+      if ((index + 1) % 7 === 0) {
+        newContent += "|\n";
+      }
+      
+      return newContent;
     };
 
-    const initialValue = `${this._getMonthYearHeader(monthYear)}\n|-|-|-|-|-|-|-|\n|S|M|T|W|T|F|S|\n`;
+    // Modified header to include week number column
+    const weekDays = this.CALENDAR_CONFIG.weekStartsOnMonday 
+      ? ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+      : ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    
+    const initialValue = `${this._getMonthYearHeader(monthYear)}\n|-|-|-|-|-|-|-|-|-|\n|${this.CALENDAR_CONFIG.prefixWeek}#|${weekDays.join('|')}|\n`;
 
     const calendar = daysToPrint.reduce(reducer, initialValue);
     return calendar;
@@ -673,13 +751,48 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 
   // --------------------------------------------------------------------------
   // Helper function to get the current month and year in "Month-Year" format.
+  // Modify month/year header to accommodate the extra column
   _getMonthYearHeader(monthYear) {
     const [month, year] = monthYear.split("-");
     const monthNames = ["J|A|N", "F|E|B", "M|A|R", "A|P|R", "M|A|Y", "J|U|N", "J|U|L", "A|U|G", "S|E|P", "O|C|T", "N|O|V", "D|E|C"];
     const lastTwoDigits = year.toString().slice(-2);
     const [firstDigit, secondDigit] = lastTwoDigits;
-    const header = `|-|${monthNames[parseInt(month) - 1]}|${firstDigit}|${secondDigit}|-|`;
+    const header = `|-|${monthNames[parseInt(month) - 1]}|-|${firstDigit}|${secondDigit}|-|`;
     return header;
+  },
+
+  // --------------------------------------------------------------------------
+  // Modified week number calculation
+  _getWeekNumber(date) {
+    // Copy the date to avoid modifying the original
+    const target = new Date(date.valueOf());
+  
+    // Adjust the day number based on week start configuration (Monday = 1, Sunday = 7)
+    const dayNr = this.CALENDAR_CONFIG.weekStartsOnMonday 
+      ? (target.getDay() === 0 ? 7 : target.getDay()) 
+      : target.getDay();
+  
+    // Move to the nearest Thursday for ISO 8601 week number calculation
+    target.setDate(target.getDate() - dayNr + 4);
+  
+    // Get the first Thursday of the year
+    const yearStart = new Date(target.getFullYear(), 0, 4); // Jan 4 is always in week 1
+    const yearStartDayNr = this.CALENDAR_CONFIG.weekStartsOnMonday 
+      ? (yearStart.getDay() === 0 ? 7 : yearStart.getDay()) 
+      : yearStart.getDay();
+    yearStart.setDate(yearStart.getDate() - yearStartDayNr + 4);
+  
+    // Calculate the difference in days and determine the week number
+    const weekNumber = Math.floor((target - yearStart) / (7 * 24 * 60 * 60 * 1000)) + 1;
+  
+    // Handle edge cases for week 53 and week 1
+    if (weekNumber === 53 && new Date(target.getFullYear(), 11, 31).getDay() < 4) {
+      return 1;
+    } else if (weekNumber === 0) {
+      return this._getWeekNumber(new Date(target.getFullYear() - 1, 11, 31));
+    }
+  
+    return weekNumber;
   },
 
   // --------------------------------------------------------------------------
@@ -711,9 +824,11 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 }
 ```
 
+
 ---
 
 ## <mark style="color:#F8D616;">Additional Information:<!-- {"cycleColor":"25"} --></mark>
+
 
 ---
 
@@ -726,6 +841,9 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 - September 4th, 2024: Added Month to the Table Format itself. Preparation for Quarter and Yearly! Renamed Calendar 2.0 to Calendar Pro. Add Calendar Pro through insert-Option, Generate Report using note-Options for Monthly, Quarterly and Yearly, and they sit in a generic reports Tag. Added some colors for each type of Options that you choose [Template][^2], and the `date_time `info when the report has been generated!
 
 - October 13th, 2024: Changed the calling the plugin from `noteOptions` to `appOptions`, as these do not require the need of a specific note UUID to pick up on.
+
+- January 11th, 2025: Added week starts with Monday or Sunday Option. Added week number, still the starting of the month, it is getting the week number incorrect, if the month did not start from Monday, needs a future fix.
+
 
 ---
 
@@ -837,16 +955,18 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 
 - [Future Plan - Amplenote Plugins!](https://www.amplenote.com/notes/78995798-3f78-11ef-9b28-26e37c279344) 
 
+
 ---
 
 [High-Level Explanation of the Code][^3] For Curious Readers and Explores! Thank you if you have made till here. You are Awesome, if you are reading this! 😀. Have a Great Day Ahead!
+
 
 ---
 
 Time Invested For this Plugin: 3h 40m + 8h 36m + 6h 42m + 20m = \~12h 36m. \[Not including the ideas popping up randomly when doing daily rituals, only Screen Time.\]
 
 [^1]: 
-    - <mark style="color:#F8914D;">**Calendar Pro**<!-- {"cycleColor":"24"} --></mark> - Now Supports Quarterly, Yearly, along with the Monthly Template. And Monthly can also be accessed from insert Options.
+    - <mark style="color:#F8914D;">**Calendar Pro**<!-- {"cycleColor":"24"} --></mark> - New: Now this plugin support week starts with Monday or Sunday. Also week number, update week number prefix. And Supports Quarterly, Yearly, along with the Monthly Template. And Monthly can also be accessed from insert Options. - <mark>January 11th, 2025</mark>
 
     - <mark style="color:#BBA215;">**Calendar 2.0**<!-- {"cycleColor":"25"} --></mark> - A plugin that prompts users to select a month and year, then generates and inserts a customizable calendar with optional links to daily notes. Inspired from: [Calendar Plugin](https://public.amplenote.com/F69rH25euLVVrzxZ1M1YGe2v) ,  [Calendar 2.0 Docs](https://www.amplenote.com/notes/82057ddc-639c-11ef-843f-22074e34eefe) 
 
