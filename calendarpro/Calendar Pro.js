@@ -8,6 +8,13 @@
       this.monthYear = monthYear;
     }
   },
+
+  // Add week start configuration constant
+  CALENDAR_CONFIG: {
+    weekStartsOnMonday: false, // Set to true for Monday, false for Sunday (Update avaliable in users selection option!)
+	prefixWeek: `CW` // Update for KW for Kalendarwoche (German) / CW for calendar Week / just W for Week.
+  },
+
   // --------------------------------------------------------------------------
   // Function to handle month and year selection from a prompt, including calendar creation. -- noteOption
   appOption: {
@@ -49,14 +56,21 @@
             type: "tags", 
             limit: 1, 
             placeholder: "Enter tag (Max 1)" 
+          },
+          { 
+            label: "Week Starts with Monday? (Default: Sunday)", 
+            type: "checkbox" 
           }
         ]
       });
 
       // ----------------------------------------------------------------------
       // Extract results from the prompt and handle default values.
-      let [monthNum, yearNum, calWolinks, dailyJotreplace] = result;
+      let [monthNum, yearNum, calWolinks, dailyJotreplace, weekStartsOnMonday] = result;
       // console.log("dailyJotreplace:", dailyJotreplace);
+
+      // Update calendar configuration based on user selection
+      this.CALENDAR_CONFIG.weekStartsOnMonday = weekStartsOnMonday;
 	  
       // Reverse the checkbox boolean value.
       calWolinks = !calWolinks;
@@ -163,14 +177,21 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 				type: "tags", 
 				limit: 1, 
 				placeholder: "Enter tag (Max 1)" 
+			  },
+			  { 
+				label: "Week Starts with Monday? (Default: Sunday)", 
+				type: "checkbox" 
 			  }
 			]
 		  });
 
 		  // ----------------------------------------------------------------------
 		  // Extract results from the prompt and handle default values.
-		  let [yearNum, calWolinks, dailyJotreplace] = result;
+		  let [yearNum, calWolinks, dailyJotreplace, weekStartsOnMonday] = result;
 		  // console.log("dailyJotreplace:", dailyJotreplace);
+
+		  // Update calendar configuration based on user selection
+		  this.CALENDAR_CONFIG.weekStartsOnMonday = weekStartsOnMonday;
 		  
 		  // Reverse the checkbox boolean value.
 		  calWolinks = !calWolinks;
@@ -279,14 +300,21 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 				type: "tags", 
 				limit: 1, 
 				placeholder: "Enter tag (Max 1)" 
+			  },
+			  { 
+				label: "Week Starts with Monday? (Default: Sunday)", 
+				type: "checkbox" 
 			  }
 			]
 		  });
 
 		  // ----------------------------------------------------------------------
 		  // Extract results from the prompt and handle default values.
-		  let [calWolinks, dailyJotreplace] = result;
+		  let [calWolinks, dailyJotreplace, weekStartsOnMonday] = result;
 		  // console.log("dailyJotreplace:", dailyJotreplace);
+
+		  // Update calendar configuration based on user selection
+		  this.CALENDAR_CONFIG.weekStartsOnMonday = weekStartsOnMonday;
 		  
 		  // Reverse the checkbox boolean value.
 		  calWolinks = !calWolinks;
@@ -430,14 +458,21 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
             type: "tags", 
             limit: 1, 
             placeholder: "Enter tag (Max 1)" 
+          },
+          { 
+            label: "Week Starts with Monday? (Default: Sunday)", 
+            type: "checkbox" 
           }
         ]
       });
 
       // ----------------------------------------------------------------------
       // Extract results from the prompt and handle default values.
-      let [monthNum, yearNum, calWolinks, dailyJotreplace] = result;
+      let [monthNum, yearNum, calWolinks, dailyJotreplace, weekStartsOnMonday] = result;
       // console.log("dailyJotreplace:", dailyJotreplace);
+
+      // Update calendar configuration based on user selection
+      this.CALENDAR_CONFIG.weekStartsOnMonday = weekStartsOnMonday;
 	  
       // Reverse the checkbox boolean value.
       calWolinks = !calWolinks;
@@ -525,36 +560,86 @@ ${this._createMonthlyCalendar(dailyJots, settings.monthYear)}
 
   // --------------------------------------------------------------------------
   // Function to create a formatted calendar for the month, including links to notes if applicable.
+  // Modified calendar creation function to handle week start and add week numbers
   _createMonthlyCalendar(dailyJots, monthYear) {
     const [month, year] = this._parseMonthYear(monthYear);
     const today = new Date(`${month} 1, ${year}`);
-    const dayOfWeek = today.getDay();
+    let dayOfWeek = today.getDay();
+    
+    // Adjust dayOfWeek if week starts on Monday
+    if (this.CALENDAR_CONFIG.weekStartsOnMonday) {
+      dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    }
+    
     const totalDays = (new Date(year, today.getMonth() + 1, 0)).getDate();
     const daysToPrint = Array.from(" ".repeat(dayOfWeek)).concat(Array.from({ length: totalDays }, (e, i) => `${i + 1}`));
 
+    // Calculate week number for the first day of the month
+    const firstDayOfMonth = new Date(year, today.getMonth(), 1);
+    let currentWeek = this._getWeekNumber(firstDayOfMonth);
+
     const reducer = (content, day, index) => {
+      let newContent = content;
+      
+      // Add week number at the start of each week
+      if (index % 7 === 0) {
+        if (day === " " && index === 0) {
+          // First week might be incomplete
+          newContent += `|${this.CALENDAR_CONFIG.prefixWeek}${currentWeek}`; // Not getting correctly populated.
+          // newContent += `|${this.CALENDAR_CONFIG.prefixWeek}`;
+        } else if (day !== " ") {
+          newContent += `|${this.CALENDAR_CONFIG.prefixWeek}${currentWeek}`;
+          currentWeek = this._getWeekNumber(new Date(year, today.getMonth(), parseInt(day)));
+        }
+      }
+
       const dayCell = dailyJots.has(day) ? `[${day}](https://www.amplenote.com/notes/${dailyJots.get(day).uuid})` : day;
-      return content +
-        "|" +
-        dayCell +
-        ((index + 1) % 7 === 0 ? "|\n" : ""); // If we have reached Sunday, start a new row
+      newContent += "|" + dayCell;
+      
+      // End of week
+      if ((index + 1) % 7 === 0) {
+        newContent += "|\n";
+      }
+      
+      return newContent;
     };
 
-    const initialValue = `${this._getMonthYearHeader(monthYear)}\n|-|-|-|-|-|-|-|\n|S|M|T|W|T|F|S|\n`;
+    // Modify header to include week number column
+    const weekDays = this.CALENDAR_CONFIG.weekStartsOnMonday 
+      ? ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+      : ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    
+    const initialValue = `${this._getMonthYearHeader(monthYear)}\n|-|-|-|-|-|-|-|-|-|\n|${this.CALENDAR_CONFIG.prefixWeek}#|${weekDays.join('|')}|\n`;
 
     const calendar = daysToPrint.reduce(reducer, initialValue);
     return calendar;
   },
 
+
   // --------------------------------------------------------------------------
   // Helper function to get the current month and year in "Month-Year" format.
+  // Modify month/year header to accommodate the extra column
   _getMonthYearHeader(monthYear) {
     const [month, year] = monthYear.split("-");
     const monthNames = ["J|A|N", "F|E|B", "M|A|R", "A|P|R", "M|A|Y", "J|U|N", "J|U|L", "A|U|G", "S|E|P", "O|C|T", "N|O|V", "D|E|C"];
     const lastTwoDigits = year.toString().slice(-2);
     const [firstDigit, secondDigit] = lastTwoDigits;
-    const header = `|-|${monthNames[parseInt(month) - 1]}|${firstDigit}|${secondDigit}|-|`;
+    const header = `|-|${monthNames[parseInt(month) - 1]}|-|${firstDigit}|${secondDigit}|-|`;
     return header;
+  },
+
+  // --------------------------------------------------------------------------
+  // Add helper function to calculate week number
+  _getWeekNumber(date) {
+    const target = new Date(date.valueOf());
+    const dayNr = (this.CALENDAR_CONFIG.weekStartsOnMonday ? date.getDay() + 6 : date.getDay()) % 7;
+    target.setDate(target.getDate() - dayNr);
+    const firstThursday = target.valueOf();
+    target.setMonth(0, 1);
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+    }
+    return 1 + Math.ceil((firstThursday - target) / 604800000);
   },
 
   // --------------------------------------------------------------------------
