@@ -80,25 +80,28 @@
 
 	class FormatBrush {
 	  constructor() {
-		this.formatSequence = [];
+		this.wordFormats = [];
 	  }
 
-	  // Capture formats and their sequence from input text
+	  // Extract the actual text content from a formatted word
+	  extractText(word) {
+		return word.replace(/[*~`]|<.*?>/g, '').trim();
+	  }
+
+	  // Capture the exact format string for each word
 	  captureFormats(inputText) {
-		this.formatSequence = [];
+		this.wordFormats = [];
 		const words = inputText.split(' ');
 		
 		words.forEach(word => {
-		  const formats = [];
-		  for (const [formatName, pattern] of Object.entries(formatPatterns)) {
-			if (pattern.regex.test(word)) {
-			  formats.push(formatName);
-			}
-		  }
-		  this.formatSequence.push(formats);
+		  // Store the original format pattern with placeholder
+		  let format = word;
+		  const plainText = this.extractText(word);
+		  format = format.replace(plainText, '{{TEXT}}');
+		  this.wordFormats.push(format);
 		});
 		
-		return this.formatSequence;
+		return this.wordFormats;
 	  }
 
 	  // Apply captured formats to new text
@@ -106,46 +109,20 @@
 		const words = inputText.split(' ');
 		
 		return words.map((word, index) => {
-		  const formats = this.formatSequence[index] || [];
-		  let formattedWord = word;
-		  
-		  formats.forEach(format => {
-			const pattern = formatPatterns[format];
-			if (pattern) {
-			  formattedWord = pattern.template(formattedWord);
-			}
-		  });
-		  
-		  return formattedWord;
+		  if (index < this.wordFormats.length) {
+			return this.wordFormats[index].replace('{{TEXT}}', word);
+		  }
+		  return word;
 		}).join(' ');
 	  }
 	}
 
-	// Example usage:
+	// Test the updated implementation
 	const formatBrush = new FormatBrush();
 
-	// Test cases
-	const input1 = "**Bold** *Italic*";
-	const input2 = "New text";
-
-	// Capture formats from input1
-	formatBrush.captureFormats(input1);
-
-	// Apply formats to input2
-	const result = formatBrush.applyFormats(input2);
-	console.log(result); // Output: "**New** *text*"
-
-	/* // Additional test cases
-	const test1 = formatBrush.applyFormats("Hello world");  // "**Hello** *world*"
-	const test2 = formatBrush.applyFormats("Testing format"); // "**Testing** *format*"
-
-	const input1 = "**Bold** *Italic*";
-	const input2 = "New text";
-
-	const formatBrush = new FormatBrush();
 	formatBrush.captureFormats(input1);
 	const result = formatBrush.applyFormats(input2);
-	console.log(result); // Outputs: "**New** *text*" */
+	console.log(result); // Should output: "**New** *text*"
 
   }
 }
