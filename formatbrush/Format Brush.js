@@ -1,8 +1,21 @@
 {
-  replaceText(app, text) {
-    const textWithFormatting = app.context.selectionContent.toLocaleString();
-    console.log(textWithFormatting);
-    console.log(text);
+  async replaceText(app, text) {
+
+  const textWithFormatting = app.context.selectionContent.toLocaleString();
+  console.log(textWithFormatting);
+  console.log(text);
+
+  const result = await app.prompt("This is the message", {
+    inputs: [ 
+      { label: "This is the label", type: "radio", options: [
+        { label: "Copy", value: 1 },
+        { label: "Paste", value: 2 },
+        { label: "Trends", value: 3 }
+      ]}
+    ]
+  });
+ 
+    if (result) {
 
 	// Format patterns with their corresponding regex and replacement templates
 	const formatPatterns = {
@@ -78,51 +91,99 @@
 	  }
 	};
 
-	class FormatBrush {
-	  constructor() {
-		this.wordFormats = [];
-	  }
+class FormatBrush {
+  constructor() {
+    this.wordFormats = [];
+  }
 
-	  // Extract the actual text content from a formatted word
-	  extractText(word) {
-		return word.replace(/[*~`]|<.*?>/g, '').trim();
-	  }
+  // Extract the actual text content from a formatted word
+  extractText(word) {
+    if (!word) return '';
+    return word.replace(/[*~`]|<.*?>/g, '').trim();
+  }
 
-	  // Capture the exact format string for each word
-	  captureFormats(inputText) {
-		this.wordFormats = [];
-		const words = inputText.split(' ');
-		
-		words.forEach(word => {
-		  // Store the original format pattern with placeholder
-		  let format = word;
-		  const plainText = this.extractText(word);
-		  format = format.replace(plainText, '{{TEXT}}');
-		  this.wordFormats.push(format);
-		});
-		
-		return this.wordFormats;
-	  }
+  // Capture the exact format string for each word
+  captureFormats(inputText) {
+    if (!inputText) {
+      console.log('No input text provided to capture formats');
+      return [];
+    }
 
-	  // Apply captured formats to new text
-	  applyFormats(inputText) {
-		const words = inputText.split(' ');
-		
-		return words.map((word, index) => {
-		  if (index < this.wordFormats.length) {
-			return this.wordFormats[index].replace('{{TEXT}}', word);
-		  }
-		  return word;
-		}).join(' ');
-	  }
-	}
+    // Store formats string directly to prevent comma issues
+    const storedFormats = {
+      formats: inputText,
+      plainText: this.extractText(inputText)
+    };
+    
+    console.log('Captured format data:', storedFormats);
+    return storedFormats;
+  }
 
-	// Test the updated implementation
-	const formatBrush = new FormatBrush();
+  // Apply captured formats to new text
+  applyFormats(inputText, storedFormat) {
+    if (!inputText || !storedFormat) {
+      console.log('Missing input text or stored format');
+      return inputText;
+    }
 
-	formatBrush.captureFormats(input1);
-	const result = formatBrush.applyFormats(input2);
-	console.log(result); // Should output: "**New** *text*"
+    console.log('Applying format:', storedFormat);
+    console.log('To text:', inputText);
+
+    // Replace the original plain text with new text while keeping the formatting
+    let result = storedFormat.formats.replace(storedFormat.plainText, inputText);
+    console.log('Formatted result:', result);
+    return result;
+  }
+}
+
+  try {
+
+      if (!result) {
+        console.log('User canceled the operation');
+        return text; // Exit if the user cancels
+      }
+
+      const formatBrush = new FormatBrush();
+
+      if (result === 1) {
+        // Copy operation
+        const storedFormat = formatBrush.captureFormats(textWithFormatting);
+        if (storedFormat) {
+          await app.setSetting("Format Storage", storedFormat);
+          console.log("Format captured and stored successfully:", storedFormat);
+        } else {
+          console.log("Failed to capture format.");
+        }
+        // return textWithFormatting; // Return original text with formatting
+      }
+
+      if (result === 2) {
+        // Paste operation
+        const storedFormat = await app.settings["Format Storage"];
+        if (storedFormat && storedFormat.formats) {
+          const formattedResult = formatBrush.applyFormats(text, storedFormat);
+          console.log("Formatted result after applying stored format:", formattedResult);
+          return formattedResult; // Return the newly formatted text
+        } else {
+          console.log("No valid format found in storage.");
+          // return text; // Return the input text if no format found
+        }
+      }
+
+      if (result === 3) {
+        console.log("Trends option selected. Returning original text.");
+        // return text; // Return the text unchanged for 'Trends'
+      }
+    } catch (error) {
+      console.error("Error in replaceText:", error);
+      // return text; // Fallback to original text in case of error
+    }
+    
+    // return text;
+
+    } else {
+      // User canceled
+    }
 
   }
 }
