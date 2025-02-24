@@ -157,21 +157,6 @@
 	},
   },
 
-	// Function to clean the note name of various formatting
-	function cleanNoteName(noteName) {
-	  return noteName
-		// Remove HTML bold tags
-		.replace(/<b>(.*?)<\/b>/g, '$1')
-		// Remove markdown asterisk formatting
-		.replace(/\*(.*?)\*/g, '$1')
-		// Remove HTML del tags
-		.replace(/<del>(.*?)<\/del>/g, '$1')
-		// Remove markdown highlight formatting
-		.replace(/==(.*?)==/g, '$1')
-		// Trim any resulting extra spaces
-		.trim();
-	}
-
 	async _noteprocessingcode(app, searchResults, progressNote, fileContents) {
 		 
         let index = 0;
@@ -195,6 +180,21 @@
 			  .join('\n');
 			// console.log(allContentWithoutEmptyLines);
 
+			// Function to clean the note name of various formatting
+			function cleanNoteName(noteName) {
+			  return noteName
+				// Remove HTML bold tags
+				.replace(/<b>(.*?)<\/b>/g, '$1')
+				// Remove markdown asterisk formatting
+				.replace(/\*(.*?)\*/g, '$1')
+				// Remove HTML del tags
+				.replace(/<del>(.*?)<\/del>/g, '$1')
+				// Remove markdown highlight formatting
+				.replace(/==(.*?)==/g, '$1')
+				// Trim any resulting extra spaces
+				.trim();
+			}
+
 			// Replace `**xyz**` with `*xyz*` (expandable for other patterns)
 			const replacePatterns = [
 				// { pattern: /^---$/gm, replacement: '\n---\n' }, // --- into a line break with \n---\n
@@ -209,17 +209,23 @@
 				// { pattern: /\\\s*$/g, replacement: '' },
 				{ pattern: /\\\s*$/gm, replacement: ''}, // Removes trailing backslash followed by optional whitespace at end of line
 				{ pattern: /\\\\\s*$/gm, replacement: ''}, // Removes escaped backslash followed by optional whitespace at end of line
-				{ pattern: /<!--\s*\{"omit":true\}\s*-->/g, replacement: '' } // removes omit at the end of the page
-				  {
-					// Pattern for links with hash fragments
-					pattern: /\[([^\]]+)\]\(https:\/\/www\.amplenote\.com\/notes\/([a-f0-9-]{8,36})(#[^\)]*)\)/g,
-					replacement: (match, noteName, uuid, hash) => `[[${noteName}]] - ${uuid}${hash}`
-				  },
-				  {
-					// Pattern for links without hash fragments
-					pattern: /\[([^\]]+)\]\(https:\/\/www\.amplenote\.com\/notes\/([a-f0-9-]{8,36})\)/g,
-					replacement: (match, noteName, uuid) => `[[${noteName}]] - ${uuid}`
+				{ pattern: /<!--\s*\{"omit":true\}\s*-->/g, replacement: '' }, // removes omit at the end of the page
+				{
+				  // Pattern for links with hash fragments
+				  pattern: /\[([^\]]+)\]\(https:\/\/www\.amplenote\.com\/notes\/([a-f0-9-]{8,36})(#[^\)]*)\)/g,
+				  replacement: (match, noteName, uuid, hash) => {
+					const cleanedName = cleanNoteName(noteName);
+					return `[[${cleanedName}]] - ${uuid}${hash}`;
 				  }
+				},
+				{
+				  // Pattern for links without hash fragments
+				  pattern: /\[([^\]]+)\]\(https:\/\/www\.amplenote\.com\/notes\/([a-f0-9-]{8,36})\)/g,
+				  replacement: (match, noteName, uuid) => {
+					const cleanedName = cleanNoteName(noteName);
+					return `[[${cleanedName}]] - ${uuid}`;
+				  }
+				}
 			];
 			let processedContent = allContentWithoutEmptyLines;
 			replacePatterns.forEach(({ pattern, replacement }) => {
