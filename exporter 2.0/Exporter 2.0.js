@@ -207,15 +207,16 @@
 				{ pattern: /<!--\s*\{"collapsed":true\}\s*-->/g, replacement: '' }, // removing - Collapsed Header
 				// { pattern: /\\*$/g, replacement: '' }, // removes "\" at the end of the sentence
 				// { pattern: /\\\s*$/g, replacement: '' },
-				{ pattern: /\\\s*$/gm, replacement: ''}, // Removes trailing backslash followed by optional whitespace at end of line
-				{ pattern: /\\\\\s*$/gm, replacement: ''}, // Removes escaped backslash followed by optional whitespace at end of line
-				{ pattern: /<!--\s*\{"omit":true\}\s*-->/g, replacement: '' }, // removes omit at the end of the page
+				// { pattern: /\\\s*$/gm, replacement: ''}, // Removes trailing backslash followed by optional whitespace at end of line
+				// { pattern: /\\\\\s*$/gm, replacement: ''}, // Removes escaped backslash followed by optional whitespace at end of line
+				// { pattern: /<!--\s*\{"omit":true\}\s*-->/g, replacement: '' }, // removes omit at the end of the page
 				{
 				  // Pattern for links with hash fragments
 				  pattern: /\[([^\]]+)\]\(https:\/\/www\.amplenote\.com\/notes\/([a-f0-9-]{8,36})(#[^\)]*)\)/g,
 				  replacement: (match, noteName, uuid, hash) => {
 					const cleanedName = cleanNoteName(noteName);
-					return `[[${cleanedName}]] - ${uuid}${hash}`;
+					// return `[[${cleanedName}]] - ${uuid}${hash}`;
+					return `[[${cleanedName}]]`;
 				  }
 				},
 				{
@@ -223,7 +224,8 @@
 				  pattern: /\[([^\]]+)\]\(https:\/\/www\.amplenote\.com\/notes\/([a-f0-9-]{8,36})\)/g,
 				  replacement: (match, noteName, uuid) => {
 					const cleanedName = cleanNoteName(noteName);
-					return `[[${cleanedName}]] - ${uuid}`;
+					// return `[[${cleanedName}]] - ${uuid}`;
+					return `[[${cleanedName}]]`;
 				  }
 				}
 			];
