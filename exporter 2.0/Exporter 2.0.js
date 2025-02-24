@@ -272,7 +272,8 @@
 				  pattern: /<mark style="background-color:undefined;">(.*?)<!--\s*\{"backgroundCycleColor":"(\d+)"\}\s*--><\/mark>/g,
 				  replacement: (_, content, backgroundCycleColor) => {
 					const gradient = gradientColors[backgroundCycleColor] || "transparent";
-					return `<span style="background-image: ${gradient}; padding: 2px; border-radius: 5px; display: inline-block; color: #000;">${content}</span>`;
+					return `<span style="background-image: ${gradient}; color: #000;">${content}</span>`;
+					// return `<span style="background-image: ${gradient}; padding: 1px; border-radius: 2px; display: inline-block; color: #000;">${content}</span>`;
 				  }
 				}
 			  ];
