@@ -172,7 +172,8 @@
           const content = await app.getNoteContent(note);
 		  // const yamlFormatted = noteHandle.tags.map(item => `  - '${item}'`).join('\n');
 		  const yamlFormatted = noteHandle.tags.map(item => `  - '${item.replace(/^-\s*/, '')}'`).join('\n');
-		  const allContent = `---\ntitle: ${noteHandle.name}\nuuid: ${noteHandle.uuid}\ncreated: ${noteHandle.created}\ntags:\n${yamlFormatted}\n---\n${content}`;
+		  const allContent = `---\ntags:\n${yamlFormatted}\n---\n${content}`;
+		  // const allContent = `---\ntitle: ${noteHandle.name}\nuuid: ${noteHandle.uuid}\ncreated: ${noteHandle.created}\ntags:\n${yamlFormatted}\n---\n${content}`;
 
 			// Remove empty lines
 			const allContentWithoutEmptyLines = allContent
