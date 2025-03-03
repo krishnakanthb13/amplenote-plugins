@@ -17,7 +17,7 @@
         );
         if (!result) {
           await app.alert("Please select a Tag, upto 5 Tags at a Time.");
-          return;
+          // return;
         }
 		const tagNames = result;
 		const tagsArray = tagNames ? tagNames.split(',').map(tag => tag.trim()) : [];
@@ -29,7 +29,14 @@
 				});
 				searchResults = searchResults.concat(taggedNotes);
 			}
-		}
+		} else {
+			// for (let tag of tagsArray) {
+				let taggedNotes = await app.filterNotes({
+					group: "^vault"
+				});
+				searchResults = searchResults.concat(taggedNotes);
+			// }        
+        }
 		// const searchResults = await app.filterNotes({tag: result});
 		console.log(searchResults);
 
