@@ -331,7 +331,7 @@
 
 	async _createZipBlob(notes) {
 	   const zip = new JSZip();
-	   const CHUNK_SIZE = 50; // Larger chunks for speed
+	   const CHUNK_SIZE = 5000000; // Larger chunks for speed
 	   
 	   for (let i = 0; i < notes.length; i += CHUNK_SIZE) {
 		   const chunk = notes.slice(i, i + CHUNK_SIZE);
