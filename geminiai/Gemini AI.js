@@ -19,7 +19,7 @@ replaceText: {
           { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
           { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       // Options for Prompting Type
       { 
@@ -161,7 +161,7 @@ noteOption: {
           { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
           { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       { 
         label: "Prompting Type", 
@@ -306,7 +306,7 @@ noteOption: {
           { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
           { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       { 
         label: `Update Name.`,
@@ -598,7 +598,7 @@ imageOption: {
           { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
           { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       { 
         label: "Prompting Type", 
@@ -944,7 +944,7 @@ appOption: {
           { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
           { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       // Options for Prompting Type
       { 
@@ -1104,7 +1104,7 @@ appOption: {
           { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
           { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       // Options for Prompting Type
       { 
@@ -1251,7 +1251,7 @@ taskOption: {
           { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
           { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       // Options for Prompting Type
       { 
@@ -1397,7 +1397,7 @@ insertText: {
           { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
           { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       // Options for Prompting Type
       { 
@@ -1556,7 +1556,7 @@ dailyJotOption: {
           { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
           { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       { 
         label: "Energy Levels", 
@@ -1724,7 +1724,7 @@ linkOption: {
           { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" },
           { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
         ],
-        value: "gemini-1.5-flash"
+        value: "gemini-2.5-flash"
       },
       // Options for Prompting Type
       { 
