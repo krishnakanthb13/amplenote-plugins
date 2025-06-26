@@ -14,10 +14,10 @@ replaceText: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
         value: "gemini-1.5-flash"
       },
@@ -156,10 +156,10 @@ noteOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
         value: "gemini-1.5-flash"
       },
@@ -301,10 +301,10 @@ noteOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
         value: "gemini-1.5-flash"
       },
@@ -593,10 +593,10 @@ imageOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
         value: "gemini-1.5-flash"
       },
@@ -941,8 +941,8 @@ appOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
         ],
         value: "gemini-1.5-flash"
       },
@@ -1099,10 +1099,10 @@ appOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
         value: "gemini-1.5-flash"
       },
@@ -1246,10 +1246,10 @@ taskOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
         value: "gemini-1.5-flash"
       },
@@ -1392,10 +1392,10 @@ insertText: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
         value: "gemini-1.5-flash"
       },
@@ -1551,10 +1551,10 @@ dailyJotOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }, 
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" }, 
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
+          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
+          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
         ],
         value: "gemini-1.5-flash"
       },
