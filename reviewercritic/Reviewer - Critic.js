@@ -19,6 +19,8 @@
       // Additional user inputs for customization of the AI response
 	  { label: "Topic", placeholder: "Eg: The value of remote work, AI in daily life, social media addiction, electric vehicles, privacy online, fast fashion, renewable energy, universal healthcare, online education, and productivity tools, etc,.", type: "text" },
       { label: "Keep It Simple (Default: Extensive!)", type: "checkbox" },
+      { label: "Brainstorm the Details", type: "checkbox" },
+      { label: "Multi-level Explanation", type: "checkbox" },
     ]
   });
 
@@ -31,12 +33,14 @@
   app.alert("Operation has started. It may take a couple of seconds for it to complete!");
 
   // Extract user-selected inputs
-  const [modelVariant, promptDetails, keepSimple] = result;
+  const [modelVariant, promptDetails, keepSimple, brainStorm, multiLevel] = result;
   // console.log("result",result);  
   const modelVariantz = modelVariant;
   // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
   const keepsimple1 = keepSimple ? "\nNote: Keep it short and simple!" : "";
+  const brainStorm1 = brainStorm ? "\nNote: Add a Brainstorm the Idea!" : "";
+  const multiLevel1 = multiLevel ? "\nNote: Add a Multi-Level Explanation!" : "";
 
   //---------------------------
   // Load the external Google Generative AI library
@@ -72,7 +76,7 @@
 Analyze the following context for logical, ethical, strategic, and practical weaknesses. 
 Identify blind spots, opposing viewpoints, and areas where the reasoning could fail under scrutiny. 
 Then, suggest how these weaknesses could be strengthened or defended. 
-Topic: ${promptDetails || "Random Topic"}..${keepsimple1}`;
+Topic: ${promptDetails || "Random Topic"}..${keepsimple1}.${brainStorm1}.${multiLevel1}`;
       
 /* `Act as a devil’s advocate and provide a critical review of the following context. 
 Challenge its assumptions, point out weaknesses, alternative perspectives, and potential flaws in reasoning. 
