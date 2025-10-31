@@ -21,7 +21,7 @@
     const moodRatings = await app.getMoodRatings(from);
     // console.log(JSON.stringify(moodRatings));
     // console.log("- Mood ratings:\n\n```\n" + JSON.stringify(moodRatings, null, 1) + "\n```");
-    const finalResponse = "- Mood Ratings:\n\n```\n" + JSON.stringify(moodRatings, null, 1) + "\n```";
+    const finalResponse = "- Mood Ratings for the Last " + numberOfDays + " Days:\n\n```\n" + JSON.stringify(moodRatings, null, 1) + "\n```";
     
     // Define a unique filename for the new note, if that option is selected
     const now = new Date();
