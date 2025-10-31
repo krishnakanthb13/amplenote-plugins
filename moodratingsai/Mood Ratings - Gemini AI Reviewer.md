@@ -1,9 +1,9 @@
 ﻿---
 title: Mood Ratings - Gemini AI Reviewer
 uuid: 2bd60d56-b5b6-11f0-a446-9bd5537bb236
-version: 7
+version: 17
 created: '2025-10-30T23:00:49+05:30'
-updated: '2025-10-30T23:08:37+05:30'
+updated: '2025-10-31T17:38:45+05:30'
 tags:
   - '-amplenote/mine'
   - '-9-permanent'
@@ -61,6 +61,10 @@ tags:
 
   const from = Math.floor(Date.now() / 1000) - (60 * 60 * 24 * numberOfDays);
   const moodRatings = await app.getMoodRatings(from);
+  // Sort moodRatings by timestamp (ascending)
+  // moodRatings.sort((a, b) => a.timestamp - b.timestamp);
+  // Sort moodRatings by timestamp (decending)
+  moodRatings.sort((a, b) => b.timestamp - a.timestamp);
   // console.log(JSON.stringify(moodRatings));
   console.log("Mood ratings:\n" + JSON.stringify(moodRatings, ["note", "rating", "timestamp"], 0));
   const promptDetails = JSON.stringify(moodRatings, ["note", "rating", "timestamp"], 0);
@@ -94,16 +98,23 @@ tags:
 	// console.log("aiModel",aiModel);
     let promptAI = ``;
 
-    // Construct the prompt to be sent to the AI model
-    if (!compreReport && !simpleReport) {
-      promptAI = `Review Mood Ratings: ${promptDetails}.\nFinal out put should be in a Markdown Formatted and the response should guide the user to navigate through the Mood Ratings Mentioned.\nEg: - 1:\n - 2:\n - 3:\n`;
-	} else if (compreReport && !simpleReport) {
-      promptAI = `Review Mood Ratings: ${promptDetails}.\nFinal out put should be in a Markdown Formatted and the response should be Comprehensive for all Mood Ratings combined`;
-    } else if (!compreReport && simpleReport) {
-      promptAI = `Review Mood Ratings: ${promptDetails}.\nFinal out put should be in a Markdown Formatted and the response should have a one paragraph reviewing all Mood Ratings combined`;
-    } else if (compreReport && simpleReport) {
-      promptAI = `Review Mood Ratings: ${promptDetails}.\nFinal out put should be in a Markdown Formatted and the response should be Comprehensive and have a one paragraph reviewing all Mood Ratings combined`;
-    }
+	// Construct the prompt to be sent to the AI model
+	if (!compreReport && !simpleReport) {
+	  promptAI = `You are an analytical assistant reviewing a series of Mood Ratings.\n\nData:\n${promptDetails}\n\nTask:\nWrite a Markdown-formatted summary that helps the user navigate through each mood rating individually.\nProvide insights or short observations under each mood rating.\n\nFormat example:\n- Mood 1: [Your analysis]\n- Mood 2: [Your analysis]\n- Mood 3: [Your analysis]\n`;
+	}
+
+	else if (compreReport && !simpleReport) {
+	  promptAI = `You are an analytical assistant reviewing a series of Mood Ratings.\n\nData:\n${promptDetails}\n\nTask:\nWrite a **comprehensive Markdown-formatted report** that combines and analyzes all mood ratings together.\nHighlight key trends, emotional patterns, and correlations across the ratings.\n`;
+	}
+
+	else if (!compreReport && simpleReport) {
+	  promptAI = `You are an analytical assistant reviewing a series of Mood Ratings.\n\nData:\n${promptDetails}\n\nTask:\nWrite a **concise, one-paragraph Markdown-formatted summary** reviewing all mood ratings together.\nFocus on the general tone, key emotions, and overall pattern observed.\n`;
+	}
+
+	else if (compreReport && simpleReport) {
+	  promptAI = `You are an analytical assistant reviewing a series of Mood Ratings.\n\nData:\n${promptDetails}\n\nTask:\nWrite a **comprehensive yet concise Markdown-formatted one-paragraph summary** that reviews all mood ratings together.\nCapture overall emotional trends, highlight contrasts, and provide meaningful takeaways.\n`;
+	}
+
     // console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
@@ -119,7 +130,7 @@ tags:
     const filename = `MRReview_${YYMMDD}_${HHMMSS}`;
 	
 	// finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `\n> Mood Ratings: ${promptDetails}.\n> When: ${filename}`;
+	finalAIResponse += `\n> Mood Ratings: ${promptDetails}.\n> When: ${filename}.\n> Data Range: For the Last ${numberOfDays} Days.`;
     if (compreReport || simpleReport) {
       finalAIResponse += `\n> Include Comprehensive Review Report: ${compreReport}.\n> Simple Paragraph Review Report: ${simpleReport}`;
     }
