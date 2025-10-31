@@ -97,7 +97,7 @@ Topic: ${promptDetails || "Random Topic"}..${keepsimple1}`; Simpler Prompt */
     const filename = `Reviewer_Critic_${YYMMDD}_${HHMMSS}`;
 	
 	// finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}`;
+	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}.\n> Keep It Simple: ${keepSimple}.\n> Brainstorm the Details: ${brainStorm}.\n> Multi-level Explanation: ${multiLevel}.`;
 	// finalAIResponse += `\n---`;
 
 	// return finalAIResponse;

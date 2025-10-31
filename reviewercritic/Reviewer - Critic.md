@@ -1,9 +1,9 @@
 ﻿---
 title: Reviewer - Critic
 uuid: c5d02d0c-a395-11f0-bc07-33be5b20a6f9
-version: 82
+version: 86
 created: '2025-10-07T21:24:22+05:30'
-updated: '2025-10-16T21:41:01+05:30'
+updated: '2025-10-31T17:51:15+05:30'
 tags:
   - '-9-permanent'
   - '-amplenote/mine'
@@ -40,6 +40,8 @@ tags:
       // Additional user inputs for customization of the AI response
 	  { label: "Topic", placeholder: "Eg: The value of remote work, AI in daily life, social media addiction, electric vehicles, privacy online, fast fashion, renewable energy, universal healthcare, online education, and productivity tools, etc,.", type: "text" },
       { label: "Keep It Simple (Default: Extensive!)", type: "checkbox" },
+      { label: "Brainstorm the Details", type: "checkbox" },
+      { label: "Multi-level Explanation", type: "checkbox" },
     ]
   });
 
@@ -52,12 +54,14 @@ tags:
   app.alert("Operation has started. It may take a couple of seconds for it to complete!");
 
   // Extract user-selected inputs
-  const [modelVariant, promptDetails, keepSimple] = result;
+  const [modelVariant, promptDetails, keepSimple, brainStorm, multiLevel] = result;
   // console.log("result",result);  
   const modelVariantz = modelVariant;
   // console.log("modelVariantz",modelVariantz);
   let finalAIResponse;
   const keepsimple1 = keepSimple ? "\nNote: Keep it short and simple!" : "";
+  const brainStorm1 = brainStorm ? "\nNote: Add a Brainstorm the Idea!" : "";
+  const multiLevel1 = multiLevel ? "\nNote: Add a Multi-Level Explanation!" : "";
 
   //---------------------------
   // Load the external Google Generative AI library
@@ -93,7 +97,7 @@ tags:
 Analyze the following context for logical, ethical, strategic, and practical weaknesses. 
 Identify blind spots, opposing viewpoints, and areas where the reasoning could fail under scrutiny. 
 Then, suggest how these weaknesses could be strengthened or defended. 
-Topic: ${promptDetails || "Random Topic"}..${keepsimple1}`;
+Topic: ${promptDetails || "Random Topic"}..${keepsimple1}.${brainStorm1}.${multiLevel1}`;
       
 /* `Act as a devil’s advocate and provide a critical review of the following context. 
 Challenge its assumptions, point out weaknesses, alternative perspectives, and potential flaws in reasoning. 
@@ -114,7 +118,7 @@ Topic: ${promptDetails || "Random Topic"}..${keepsimple1}`; Simpler Prompt */
     const filename = `Reviewer_Critic_${YYMMDD}_${HHMMSS}`;
 	
 	// finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}`;
+	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}.\n> Keep It Simple: ${keepSimple}.\n> Brainstorm the Details: ${brainStorm}.\n> Multi-level Explanation: ${multiLevel}.`;
 	// finalAIResponse += `\n---`;
 
 	// return finalAIResponse;
