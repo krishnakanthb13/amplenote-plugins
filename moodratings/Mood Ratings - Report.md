@@ -1,9 +1,9 @@
 ﻿---
 title: Mood Ratings - Report
 uuid: 0ed87950-b5b6-11f0-b232-256886a0b077
-version: 5
+version: 19
 created: '2025-10-30T23:00:00+05:30'
-updated: '2025-10-31T17:09:29+05:30'
+updated: '2025-10-31T17:33:19+05:30'
 tags:
   - '-amplenote/mine'
   - '-9-permanent'
@@ -39,9 +39,16 @@ tags:
       
     const from = Math.floor(Date.now() / 1000) - (60 * 60 * 24 * numberOfDays);
     const moodRatings = await app.getMoodRatings(from);
+    // Sort moodRatings by timestamp (ascending)
+    // moodRatings.sort((a, b) => a.timestamp - b.timestamp);
+    // Sort moodRatings by timestamp (decending)
+    moodRatings.sort((a, b) => b.timestamp - a.timestamp);
     // console.log(JSON.stringify(moodRatings));
     // console.log("- Mood ratings:\n\n```\n" + JSON.stringify(moodRatings, null, 1) + "\n```");
-    const finalResponse = "- Mood Ratings for the Last " + numberOfDays + " Days:\n\n```\n" + JSON.stringify(moodRatings, null, 1) + "\n```";
+    const finalResponse = 
+      "- Mood Ratings for the Last **" + numberOfDays + " Days**:\n\n```\n" + 
+      JSON.stringify(moodRatings, null, 1) + 
+      "\n```";
     
     // Define a unique filename for the new note, if that option is selected
     const now = new Date();
