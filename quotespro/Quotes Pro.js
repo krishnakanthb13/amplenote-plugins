@@ -84,7 +84,7 @@
     const filename = `Quotes_Pro_${YYMMDD}_${HHMMSS}`;
 	
 	// finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}`;
+	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}.\n> Keep It Simple: ${keepSimple}.`;
 	// finalAIResponse += `\n---`;
 
 	// return finalAIResponse;
