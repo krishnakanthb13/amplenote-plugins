@@ -1,9 +1,9 @@
 ﻿---
 title: Quotes Pro
 uuid: e26c4194-9ed1-11f0-a5d0-2374c354183a
-version: 122
+version: 126
 created: '2025-10-01T19:51:12+05:30'
-updated: '2025-10-01T20:26:44+05:30'
+updated: '2025-10-31T17:42:05+05:30'
 tags:
   - '-9-permanent'
   - '-amplenote/mine'
@@ -105,7 +105,7 @@ tags:
     const filename = `Quotes_Pro_${YYMMDD}_${HHMMSS}`;
 	
 	// finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}`;
+	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}.\n> Keep It Simple: ${keepSimple}.`;
 	// finalAIResponse += `\n---`;
 
 	// return finalAIResponse;
