@@ -73,16 +73,23 @@
 	// console.log("aiModel",aiModel);
     let promptAI = ``;
 
-    // Construct the prompt to be sent to the AI model
-    if (!compreReport && !simpleReport) {
-      promptAI = `Review Mood Ratings: ${promptDetails}.\nFinal out put should be in a Markdown Formatted and the response should guide the user to navigate through the Mood Ratings Mentioned.\nEg: - 1:\n - 2:\n - 3:\n`;
-	} else if (compreReport && !simpleReport) {
-      promptAI = `Review Mood Ratings: ${promptDetails}.\nFinal out put should be in a Markdown Formatted and the response should be Comprehensive for all Mood Ratings combined`;
-    } else if (!compreReport && simpleReport) {
-      promptAI = `Review Mood Ratings: ${promptDetails}.\nFinal out put should be in a Markdown Formatted and the response should have a one paragraph reviewing all Mood Ratings combined`;
-    } else if (compreReport && simpleReport) {
-      promptAI = `Review Mood Ratings: ${promptDetails}.\nFinal out put should be in a Markdown Formatted and the response should be Comprehensive and have a one paragraph reviewing all Mood Ratings combined`;
-    }
+	// Construct the prompt to be sent to the AI model
+	if (!compreReport && !simpleReport) {
+	  promptAI = `You are an analytical assistant reviewing a series of Mood Ratings.\n\nData:\n${promptDetails}\n\nTask:\nWrite a Markdown-formatted summary that helps the user navigate through each mood rating individually.\nProvide insights or short observations under each mood rating.\n\nFormat example:\n- Mood 1: [Your analysis]\n- Mood 2: [Your analysis]\n- Mood 3: [Your analysis]\n`;
+	}
+
+	else if (compreReport && !simpleReport) {
+	  promptAI = `You are an analytical assistant reviewing a series of Mood Ratings.\n\nData:\n${promptDetails}\n\nTask:\nWrite a **comprehensive Markdown-formatted report** that combines and analyzes all mood ratings together.\nHighlight key trends, emotional patterns, and correlations across the ratings.\n`;
+	}
+
+	else if (!compreReport && simpleReport) {
+	  promptAI = `You are an analytical assistant reviewing a series of Mood Ratings.\n\nData:\n${promptDetails}\n\nTask:\nWrite a **concise, one-paragraph Markdown-formatted summary** reviewing all mood ratings together.\nFocus on the general tone, key emotions, and overall pattern observed.\n`;
+	}
+
+	else if (compreReport && simpleReport) {
+	  promptAI = `You are an analytical assistant reviewing a series of Mood Ratings.\n\nData:\n${promptDetails}\n\nTask:\nWrite a **comprehensive yet concise Markdown-formatted one-paragraph summary** that reviews all mood ratings together.\nCapture overall emotional trends, highlight contrasts, and provide meaningful takeaways.\n`;
+	}
+
     // console.log("promptAI",promptAI);
     
     // Generate content based on the constructed prompt
@@ -98,7 +105,7 @@
     const filename = `MRReview_${YYMMDD}_${HHMMSS}`;
 	
 	// finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `\n> Mood Ratings: ${promptDetails}.\n> When: ${filename}`;
+	finalAIResponse += `\n> Mood Ratings: ${promptDetails}.\n> When: ${filename}.\n> Data Range: For the Last ${numberOfDays} Days.`;
     if (compreReport || simpleReport) {
       finalAIResponse += `\n> Include Comprehensive Review Report: ${compreReport}.\n> Simple Paragraph Review Report: ${simpleReport}`;
     }

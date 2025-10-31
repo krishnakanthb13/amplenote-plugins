@@ -19,9 +19,16 @@
       
     const from = Math.floor(Date.now() / 1000) - (60 * 60 * 24 * numberOfDays);
     const moodRatings = await app.getMoodRatings(from);
+    // Sort moodRatings by timestamp (ascending)
+    // moodRatings.sort((a, b) => a.timestamp - b.timestamp);
+    // Sort moodRatings by timestamp (decending)
+    moodRatings.sort((a, b) => b.timestamp - a.timestamp);
     // console.log(JSON.stringify(moodRatings));
     // console.log("- Mood ratings:\n\n```\n" + JSON.stringify(moodRatings, null, 1) + "\n```");
-    const finalResponse = "- Mood Ratings for the Last " + numberOfDays + " Days:\n\n```\n" + JSON.stringify(moodRatings, null, 1) + "\n```";
+    const finalResponse = 
+      "- Mood Ratings for the Last **" + numberOfDays + " Days**:\n\n```\n" + 
+      JSON.stringify(moodRatings, null, 1) + 
+      "\n```";
     
     // Define a unique filename for the new note, if that option is selected
     const now = new Date();
