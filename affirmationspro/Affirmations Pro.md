@@ -1,9 +1,9 @@
 ﻿---
 title: Affirmations Pro
 uuid: f0a28052-9edb-11f0-bd30-e5493cbe279d
-version: 80
+version: 84
 created: '2025-10-01T21:03:12+05:30'
-updated: '2025-10-03T14:38:56+05:30'
+updated: '2025-10-31T17:44:59+05:30'
 tags:
   - '-amplenote/mine'
   - '-9-permanent'
@@ -103,7 +103,7 @@ tags:
     const filename = `Affirmations_Pro_${YYMMDD}_${HHMMSS}`;
 	
 	// finalAIResponse += `\n### *<mark>Expand to Read more: Input Details:</mark>* <!-- {"collapsed":true} -->\n`;
-	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}`;
+	finalAIResponse += `\n> Topic: ${promptDetails || "Random Topic"}.\n> When: ${filename}.\n> Number of Question?: ${numberOfQuestions}.`;
 	// finalAIResponse += `\n---`;
 
 	// return finalAIResponse;
