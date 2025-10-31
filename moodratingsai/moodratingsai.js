@@ -40,6 +40,10 @@
 
   const from = Math.floor(Date.now() / 1000) - (60 * 60 * 24 * numberOfDays);
   const moodRatings = await app.getMoodRatings(from);
+  // Sort moodRatings by timestamp (ascending)
+  // moodRatings.sort((a, b) => a.timestamp - b.timestamp);
+  // Sort moodRatings by timestamp (decending)
+  moodRatings.sort((a, b) => b.timestamp - a.timestamp);
   // console.log(JSON.stringify(moodRatings));
   console.log("Mood ratings:\n" + JSON.stringify(moodRatings, ["note", "rating", "timestamp"], 0));
   const promptDetails = JSON.stringify(moodRatings, ["note", "rating", "timestamp"], 0);
