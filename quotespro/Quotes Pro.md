@@ -1,9 +1,9 @@
 ﻿---
 title: Quotes Pro
 uuid: e26c4194-9ed1-11f0-a5d0-2374c354183a
-version: 126
+version: 127
 created: '2025-10-01T19:51:12+05:30'
-updated: '2025-10-31T17:42:05+05:30'
+updated: '2025-12-18T15:13:20+05:30'
 tags:
   - '-9-permanent'
   - '-amplenote/mine'
@@ -30,12 +30,19 @@ tags:
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Additional user inputs for customization of the AI response
 	  // { label: "Quote Genre", placeholder: "Eg: Love, Life, Inspirational, Humor, Philosophy, God, Truth, Wisdom, Romance, Poetry, Life Lessons, Death, Happiness, Hope, Faith, Motivation, Success, Time, Science, Friendship, Relationships, Religion, Writing, Travel, Leadership, Kindness, Knowledge, Justice, Politics, Art, Education, Freedom, Family, Courage, Beauty, Failure, Dreams, Change, Attitude, Forgiveness, Gratitude, Self-Improvement, Personal Growth, Funny, Sadness, Adventure, Health, Parenting, History, Work, Passion, Respect, Peace, Emotions, etc,.", type: "text" },

@@ -1,9 +1,9 @@
 ﻿---
 title: Get AI Advice
 uuid: b064eed2-cb48-11f0-bc18-d9369ad8bd4c
-version: 8
+version: 9
 created: '2025-11-27T09:52:31+05:30'
-updated: '2025-11-27T10:01:06+05:30'
+updated: '2025-12-18T14:58:05+05:30'
 tags:
   - '-9-permanent'
   - '-amplenote/mine'
@@ -30,12 +30,19 @@ tags:
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Additional user inputs for customization of the AI response
 	  { label: "Advice On Topic",  placeholder: "Self-Love, Confidence, Motivation, Success, Health, Happiness, Personal Growth, Clarity, Spirituality, Relationships, Career, Mindfulness, Resilience, Inner Peace, Abundance.", type: "text" },

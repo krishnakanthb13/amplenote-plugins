@@ -1,11 +1,12 @@
 ﻿---
 title: Journaling Ques
 uuid: aec483a2-d3f1-11ef-9626-c346aae5dae7
-version: 4
+version: 9
 created: '2025-01-16T15:37:50+05:30'
+updated: '2025-12-18T15:02:40+05:30'
 tags:
   - '-9-permanent'
-  - '-t/amplenote/mine'
+  - '-amplenote/mine'
 ---
 
 | | |
@@ -29,13 +30,21 @@ tags:
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash-exp" }, 
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-1.5-pro"
+        value: "gemini-2.5-flash-lite"
       },
-/*       // Options for Prompting Type
+      /*// Options for Prompting Type
       { 
         label: "Prompting Type", 
         type: "select", 
@@ -54,7 +63,7 @@ tags:
       }, */
       // Additional user inputs for customization of the AI response
 	  { label: "Topic that you are tyring to Jounal About?", placeholder: "Eg: Self-Reflection, Self-Exploratory, Loneliness, Love, Hatred, Emotional State, Money, etc,.", type: "text" },
-	  { label: "Number of Question?", type: "text", value: 5 },
+	  { label: "Number of Question?", type: "string", value: 5 },
     ]
   });
 

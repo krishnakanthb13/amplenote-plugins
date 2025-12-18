@@ -1,9 +1,9 @@
 ﻿---
 title: Reviewer - Critic
 uuid: c5d02d0c-a395-11f0-bc07-33be5b20a6f9
-version: 86
+version: 87
 created: '2025-10-07T21:24:22+05:30'
-updated: '2025-10-31T17:51:15+05:30'
+updated: '2025-12-18T15:14:38+05:30'
 tags:
   - '-9-permanent'
   - '-amplenote/mine'
@@ -30,12 +30,19 @@ tags:
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Additional user inputs for customization of the AI response
 	  { label: "Topic", placeholder: "Eg: The value of remote work, AI in daily life, social media addiction, electric vehicles, privacy online, fast fashion, renewable energy, universal healthcare, online education, and productivity tools, etc,.", type: "text" },

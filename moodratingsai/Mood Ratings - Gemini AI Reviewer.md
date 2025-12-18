@@ -1,9 +1,9 @@
 ﻿---
 title: Mood Ratings - Gemini AI Reviewer
 uuid: 2bd60d56-b5b6-11f0-a446-9bd5537bb236
-version: 17
+version: 18
 created: '2025-10-30T23:00:49+05:30'
-updated: '2025-10-31T17:38:45+05:30'
+updated: '2025-12-18T15:08:56+05:30'
 tags:
   - '-amplenote/mine'
   - '-9-permanent'
@@ -30,12 +30,19 @@ tags:
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Additional user inputs for customization of the AI response
       { label: "Number of Days Prior too?", type: "string", value: 10 },
