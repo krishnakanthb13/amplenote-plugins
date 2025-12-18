@@ -1,3 +1,23 @@
+﻿---
+title: Backlinks
+uuid: 20c32cea-b59e-11f0-8c06-cd24a2982805
+version: 30
+created: '2025-10-30T20:08:43+05:30'
+updated: '2025-12-18T13:04:24+05:30'
+tags:
+  - '-amplenote/mine'
+  - '-9-permanent'
+---
+
+| | |
+|-|-|
+|Name<!-- {"cell":{"colwidth":102}} -->|Backlinks|
+|Icon<!-- {"cell":{"colwidth":105}} -->|menu_open|
+|Description|Fetch all the Backlinks to a specific note.|
+|Instructions|Output is in an alert form. User can either `Insert into a New Note` or `Download as a Markdown file`.|
+\
+
+```
 {
   async noteOption(app, noteUUID) {
     const targetNoteHandle = { uuid: noteUUID };
@@ -54,3 +74,4 @@
     }
   }
 }
+```
