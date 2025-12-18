@@ -63,10 +63,18 @@
   
   app.alert("Operation has started. It may take a couple of seconds for it to complete!");
   
+  // GEMINI MODELS
+  // const modelVariant = "gemini-2.5-flash-lite";
   const modelVariant = "gemini-2.5-flash";
-  // const modelVariant = "gemini-2.0-flash";
-  // const modelVariant = "gemini-2.5-pro";
-  // const modelVariant = "gemini-1.5-flash";
+  // const modelVariant = "gemini-3-flash";
+
+  // GEMMA MODELS (Instruction Tuned)
+  // const modelVariant = "gemma-3-27b-it";
+  // const modelVariant = "gemma-3-12b-it";
+  // const modelVariant = "gemma-3-4b-it";
+  // const modelVariant = "gemma-3-2b-it";
+  // const modelVariant = "gemma-3-1b-it";
+
 
   // Extract user-selected inputs
   const [starterVariant, promptDetails, aiPrompt] = result;

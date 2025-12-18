@@ -14,12 +14,19 @@ replaceText: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Options for Prompting Type
       { 
@@ -156,12 +163,19 @@ noteOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       { 
         label: "Prompting Type", 
@@ -301,12 +315,19 @@ noteOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       { 
         label: `Update Name.`,
@@ -593,12 +614,19 @@ imageOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       { 
         label: "Prompting Type", 
@@ -766,10 +794,19 @@ appOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" }, 
-		  { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-1.5-pro"
+        value: "gemini-2.5-flash"
       },
       { 
         label: "Prompting Type", 
@@ -941,8 +978,17 @@ appOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
         value: "gemini-2.5-flash"
       },
@@ -1099,12 +1145,19 @@ appOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Options for Prompting Type
       { 
@@ -1246,12 +1299,19 @@ taskOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Options for Prompting Type
       { 
@@ -1392,12 +1452,19 @@ insertText: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Options for Prompting Type
       { 
@@ -1551,12 +1618,19 @@ dailyJotOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 2.5 Flash", value: "gemini-2.5-flash" }, 
-          { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" }, 
-          { label: "Gemini 2.5 Pro", value: "gemini-2.5-pro" }, 
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       { 
         label: "Energy Levels", 
@@ -1719,12 +1793,19 @@ linkOption: {
         label: "Gemini Model variants", 
         type: "select", 
         options: [
-          { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" },
-          { label: "Gemini 1.5 Flash-8B", value: "gemini-1.5-flash-8b" },
-          { label: "Gemini 1.5 Pro", value: "gemini-1.5-pro" },
-          { label: "Gemini 1.0 Pro", value: "gemini-1.0-pro" }
+          // GEMINI MODELS
+          { label: "Gemini 2.5 Flash Lite (10 RPM / 20 RPD)", value: "gemini-2.5-flash-lite" },
+          { label: "Gemini 2.5 Flash (5 RPM / 20 RPD)", value: "gemini-2.5-flash" },
+          { label: "Gemini 3 Flash (5 RPM / 20 RPD)", value: "gemini-3-flash-preview" },
+
+          // GEMMA MODELS — Instruction Tuned
+          { label: "Gemma 3 27B (30 RPM / 14K RPD)", value: "gemma-3-27b-it" },
+          { label: "Gemma 3 12B (30 RPM / 14K RPD)", value: "gemma-3-12b-it" },
+          { label: "Gemma 3 4B (30 RPM / 14K RPD)", value: "gemma-3-4b-it" },
+          { label: "Gemma 3 2B (30 RPM / 14K RPD)", value: "gemma-3-2b-it" },
+          { label: "Gemma 3 1B (30 RPM / 14K RPD)", value: "gemma-3-1b-it" }
         ],
-        value: "gemini-2.5-flash"
+        value: "gemini-2.5-flash-lite"
       },
       // Options for Prompting Type
       { 
